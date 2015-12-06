@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="${manifest.version.code}" android:versionName="${manifest.version.name}" package="com.tastybug.timetracker">
+
+    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="22"/>
+
+
+    <application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:largeHeap="true">
+        <activity android:name="com.tastybug.timetracker.PlaceholderActivity" android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!--database stuff-->
+        <meta-data android:name="database.schema.version.lowestcompatible" android:value="3"/>
+        <meta-data android:name="database.schema.version.current" android:value="10"/>
+        <meta-data android:name="database.name" android:value="teacherstudiodb"/>
+        <meta-data android:name="database.scripts.folder" android:value="common/sql"/>
+        <meta-data android:name="database.scripts.prefix.model" android:value="db_"/>
+        <meta-data android:name="database.scripts.prefix.data" android:value="data_"/>
+
+        <!-- feedback -->
+        <meta-data android:name="feedback.mail" android:value="support@teacherstudio.de"/>
+        <meta-data android:name="feedback.uservoice" android:value="https://teacherstudio.uservoice.com/"/>
+
+        <!-- changelog -->
+        <meta-data android:name="changelog.www" android:value="http://teacherstudio.de/"/>
+        <meta-data android:name="changelog.assets" android:value="changelog"/>
+
+        <!-- help -->
+        <meta-data android:name="www.knowledgebase.import.student" android:value="http://teacherstudio.de/teacherstudio-android-schueler-per-csv-importieren/"/>
+        <meta-data android:name="www.knowledgebase.synchronization" android:value="http://teacherstudio.de/einrichtung-des-datenabgleichs-unter-teacherstudio-android/"/>
+
+        <!-- misc -->
+        <meta-data android:name="service.tmpfile_cleanup.enabled" android:value="true"/>
+        <meta-data android:name="service.tmpfile_cleanup.interval_in_minutes" android:value="720"/>
+
+    </application>
+</manifest>
