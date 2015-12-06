@@ -32,6 +32,8 @@
         <!-- misc -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <joda-time.version>2.8.2</joda-time.version>
+        <android-joda-time.version>2.9.1</android-joda-time.version>
+        <guava.version>18.0</guava.version>
     </properties>
 
     <dependencies>
@@ -76,10 +78,15 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>${joda-time.version}</version>
-            <scope>test</scope>
+            <groupId>net.danlew</groupId>
+            <artifactId>android.joda</artifactId>
+            <version>${android-joda-time.version}</version>
+            <type>aar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
     </dependencies>
 
