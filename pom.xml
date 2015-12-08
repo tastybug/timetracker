@@ -188,7 +188,7 @@
                                 <platform>15</platform>
                             </sdk>
                             <lint>
-                                <skip>false</skip> <!--currently bugged-->
+                                <skip>true</skip> <!--bugged: also checks aar libraries-->
                                 <failOnError>true</failOnError>
                                 <enableHtml>true</enableHtml>
                             </lint>
@@ -345,7 +345,7 @@
                                 <outputApk>${project.build.directory}/${assembly.name}-signed-aligned.apk</outputApk>
                             </zipalign>
                             <lint>
-                                <skip>false</skip> <!-- possibly bugged -->
+                                <skip>true</skip> <!--bugged: also checks aar libraries-->
                                 <failOnError>true</failOnError>
                             </lint>
                             <sdk>
