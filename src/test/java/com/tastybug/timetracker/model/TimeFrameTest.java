@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 
 public class TimeFrameTest {
 
-
     @Test
     public void canStartATimeframeAndStopItLater() {
         // given:
@@ -37,7 +36,7 @@ public class TimeFrameTest {
         assertFalse(timeFrame.isRunning());
 
         // and
-        assertNotNull(timeFrame.getAsDuration().get());
+        assertNotNull(timeFrame.toDuration().get());
     }
 
     @Test
@@ -87,18 +86,18 @@ public class TimeFrameTest {
     public void canOnlyGetAsJodaDurationWhenFinished() {
         // given
         TimeFrame timeFrame = new TimeFrame();
-        assertFalse(timeFrame.getAsDuration().isPresent());
+        assertFalse(timeFrame.toDuration().isPresent());
 
         // when
         timeFrame.start();
 
         // then
-        assertFalse(timeFrame.getAsDuration().isPresent());
+        assertFalse(timeFrame.toDuration().isPresent());
 
         // when
         timeFrame.stop();
 
         // then
-        assertTrue(timeFrame.getAsDuration().isPresent());
+        assertTrue(timeFrame.toDuration().isPresent());
     }
 }

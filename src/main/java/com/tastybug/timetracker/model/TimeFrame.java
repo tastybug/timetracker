@@ -59,7 +59,7 @@ public class TimeFrame {
         return description;
     }
 
-    public Optional<Duration> getAsDuration() {
+    public Optional<Duration> toDuration() {
         if (hasStart() && hasEnd()) {
             return Optional.of(new Duration(start.getTime(), end.getTime()));
         }

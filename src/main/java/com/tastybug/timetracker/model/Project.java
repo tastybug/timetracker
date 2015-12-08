@@ -2,7 +2,8 @@ package com.tastybug.timetracker.model;
 
 import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
 public class Project {
 
@@ -11,12 +12,24 @@ public class Project {
     @Nullable
     private String description;
 
-    private ArrayList<TimeFrame> timeFrames = new ArrayList<TimeFrame>();
-
     public Project(String title) {
         this.title = title;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        Preconditions.checkNotNull(title);
+        this.title = title;
+    }
 
+    public Optional<String> getDescription() {
+        return Optional.fromNullable(description);
+    }
+
+    public void setDescription(@Nullable String description) {
+        this.description = description;
+    }
 }
