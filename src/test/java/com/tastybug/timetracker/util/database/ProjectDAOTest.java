@@ -8,9 +8,15 @@ import com.tastybug.timetracker.model.Project;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -56,12 +62,79 @@ public class ProjectDAOTest {
         assertNull(project);
     }
 
+    @Test public void getAllWorksForExistingProjects() {
+        // given
+        Cursor multipleProjects = aCursorWith2Projects();
+        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+                .thenReturn(multipleProjects);
+
+        // when
+        ArrayList<Project> projects = projectDAO.getAll();
+
+        // then
+        assertEquals(2, projects.size());
+    }
+
+    @Test public void getAllReturnsEmptyListForLackOfEntities() {
+        // given
+        Cursor noProjects = anEmptyCursor();
+        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+                .thenReturn(noProjects);
+
+        // when
+        ArrayList<Project> projects = projectDAO.getAll();
+
+        // then
+        assertEquals(0, projects.size());
+    }
+
+    @Test public void canCreateProject() {
+        fail("");
+    }
+
+    @Test public void canUpdateProject() {
+        fail("");
+    }
+
+    @Test public void canDeleteProject() {
+        fail("");
+    }
+
+    @Test public void providesCorrectPrimaryKeyColumn() {
+        // expect
+        assertEquals(ProjectDAO.ID_COLUMN, projectDAO.getPKColumn());
+    }
+
+    @Test public void knowsAllColumns() {
+        // expect
+        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.ID_COLUMN));
+        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.TITLE_COLUMN));
+        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.DESCRIPTION_COLUMN));
+    }
+
     private Cursor aProjectCursor(int id, String title, String description) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getInt(0)).thenReturn(id);
         when(cursor.getString(1)).thenReturn(title);
         when(cursor.getString(2)).thenReturn(description);
         when(cursor.moveToFirst()).thenReturn(true);
+
+        return cursor;
+    }
+
+    private Cursor anEmptyCursor() {
+        Cursor cursor = mock(Cursor.class);
+        when(cursor.moveToNext()).thenReturn(false);
+
+        return cursor;
+    }
+
+    private Cursor aCursorWith2Projects() {
+        Cursor cursor = mock(Cursor.class);
+        when(cursor.getInt(0)).thenReturn(1);
+        when(cursor.getString(1)).thenReturn("title");
+        when(cursor.getString(2)).thenReturn("desc");
+        when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;
     }
