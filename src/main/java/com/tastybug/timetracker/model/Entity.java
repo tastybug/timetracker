@@ -36,8 +36,6 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
 		return context != null;
 	}
 
-    public abstract ContentValues toContentValues();
-
 	public abstract Integer getId();
 
 	public abstract void setId(Integer id);

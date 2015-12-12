@@ -49,14 +49,14 @@ public abstract class EntityDAO<T extends Entity> {
     }
 
     public Uri create (T entity) {
-        Uri uri = contentResolverProvider.insert(entity.toContentValues());
+        Uri uri = contentResolverProvider.insert(getContentValues(entity));
         entity.setId(Integer.parseInt(uri.getLastPathSegment()));
         entity.setContext(context);
         return uri;
     }
 
     public int update(T entity) {
-        int rowsUpdated = contentResolverProvider.update(entity.toContentValues(), getPKColumn() + "=?", new String[]{entity.getId() + ""});
+        int rowsUpdated = contentResolverProvider.update(getContentValues(entity), getPKColumn() + "=?", new String[]{entity.getId() + ""});
         return rowsUpdated;
     }
 
@@ -69,11 +69,13 @@ public abstract class EntityDAO<T extends Entity> {
 
     public abstract String[] getColumns();
 
-    protected abstract T createEntityFromCursor(Context context, Cursor mCursor);
+    protected abstract T createEntityFromCursor(Context context, Cursor mCursor) throws IllegalArgumentException;
 
     public void setContentResolverProvider(ContentResolverProvider provider) {
         this.contentResolverProvider = provider;
     }
+
+    protected abstract ContentValues getContentValues(T entity);
 
     private class DefaultContentResolverProvider implements ContentResolverProvider {
 

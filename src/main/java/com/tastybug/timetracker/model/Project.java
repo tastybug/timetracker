@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.model;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
@@ -44,11 +43,6 @@ public class Project extends Entity {
 
     public void setDescription(@Nullable String description) {
         this.description = description;
-    }
-
-    @Override
-    public ContentValues toContentValues() {
-        return null;
     }
 
     @Override

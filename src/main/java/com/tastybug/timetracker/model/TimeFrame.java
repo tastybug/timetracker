@@ -1,14 +1,19 @@
 package com.tastybug.timetracker.model;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.util.database.EntityDAO;
+import com.tastybug.timetracker.util.database.TimeFrameDAO;
 
 import java.util.Date;
 import org.joda.time.Duration;
 
-public class TimeFrame {
+public class TimeFrame extends Entity {
+
+    private Integer id;
 
     private Date start, end;
 
@@ -17,9 +22,30 @@ public class TimeFrame {
 
     public TimeFrame() {}
 
+    @Override
+    protected EntityDAO getDefaultDAOInstance(Context context) {
+        return new TimeFrameDAO(context);
+    }
+
     public TimeFrame(Date start, Date end) {
         this.start = start;
         this.end = end;
+    }
+
+    public TimeFrame(int id, Date start, Date end) {
+        this.id = id;
+        this.start = start;
+        this.end = end;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void start() {
@@ -27,6 +53,14 @@ public class TimeFrame {
             throw new IllegalStateException(toString() + " is already started!");
         }
         this.start = new Date();
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public Date getEnd() {
+        return end;
     }
 
     public boolean hasStart() {

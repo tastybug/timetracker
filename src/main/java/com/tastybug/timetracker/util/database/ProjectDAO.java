@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.util.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -32,7 +33,7 @@ public class ProjectDAO extends EntityDAO<Project> {
 
     @Override
     public String getPKColumn() {
-        return "_id";
+        return ID_COLUMN;
     }
 
     @Override
@@ -48,5 +49,15 @@ public class ProjectDAO extends EntityDAO<Project> {
                 cursor.getString(colsList.indexOf(TITLE_COLUMN)),
                 cursor.getString(colsList.indexOf(DESCRIPTION_COLUMN))
                 );
+    }
+
+    @Override
+    protected ContentValues getContentValues(Project entity) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID_COLUMN, entity.getId());
+        contentValues.put(TITLE_COLUMN, entity.getTitle());
+        contentValues.put(DESCRIPTION_COLUMN, entity.getDescription().orNull());
+
+        return contentValues;
     }
 }
