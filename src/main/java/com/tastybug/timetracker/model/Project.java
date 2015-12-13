@@ -8,6 +8,8 @@ import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.util.database.EntityDAO;
 import com.tastybug.timetracker.util.database.ProjectDAO;
 
+import java.beans.PropertyChangeEvent;
+
 public class Project extends Entity {
 
     private Integer id;
@@ -34,7 +36,10 @@ public class Project extends Entity {
 
     public void setTitle(String title) {
         Preconditions.checkNotNull(title);
+
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "title", this.title, title);
         this.title = title;
+        propertyChange(e);
     }
 
     public Optional<String> getDescription() {
@@ -42,7 +47,9 @@ public class Project extends Entity {
     }
 
     public void setDescription(@Nullable String description) {
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
         this.description = description;
+        propertyChange(e);
     }
 
     @Override

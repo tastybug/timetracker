@@ -1,15 +1,30 @@
 package com.tastybug.timetracker.model;
 
+import android.content.Context;
+import android.os.Build;
+
+import com.tastybug.timetracker.util.database.ProjectDAO;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class ProjectTest {
 
-    @Test
-    public void canCreateProjectWithTitle() {
+    Context contextMock = mock(Context.class);
+    ProjectDAO daoMock = mock(ProjectDAO.class);
+
+    @Test public void canCreateProjectWithTitle() {
         // when
         Project project = new Project("name");
 
@@ -18,8 +33,7 @@ public class ProjectTest {
         assertEquals("name", project.getTitle());
     }
 
-    @Test
-    public void noProjectDescriptionIsHandledWell() {
+    @Test public void noProjectDescriptionIsHandledWell() {
         // given
         Project project = new Project("name");
 
@@ -43,6 +57,32 @@ public class ProjectTest {
 
         // when
         project.setTitle(null);
+    }
+
+    @Test public void changingTitleLeadsToDatabaseUpdate() {
+        // given
+        Project project = new Project("name");
+        project.setContext(contextMock);
+        project.setDAO(daoMock);
+
+        // when
+        project.setTitle("new title");
+
+        // then
+        verify(daoMock, times(1)).update(project);
+    }
+
+    @Test public void changingDescriptionLeadsToDatabaseUpdate() {
+        // given
+        Project project = new Project("name");
+        project.setContext(contextMock);
+        project.setDAO(daoMock);
+
+        // when
+        project.setDescription("bla");
+
+        // then
+        verify(daoMock, times(1)).update(project);
     }
 
 }

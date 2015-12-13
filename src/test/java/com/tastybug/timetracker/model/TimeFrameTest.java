@@ -1,14 +1,22 @@
 package com.tastybug.timetracker.model;
 
 
+import android.os.Build;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class TimeFrameTest {
 
     @Test
@@ -99,5 +107,13 @@ public class TimeFrameTest {
 
         // then
         assertTrue(timeFrame.toDuration().isPresent());
+    }
+
+    @Test public void changingStartDateLeadsToDatabaseUpdate() {
+        fail("impl");
+    }
+
+    @Test public void changingEndDateLeadsToDatabaseUpdate() {
+        fail("impl");
     }
 }

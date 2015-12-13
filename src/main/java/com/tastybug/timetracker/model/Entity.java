@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.model;
 
-import android.content.ContentValues;
 import android.content.Context;
 
 import com.tastybug.timetracker.util.database.EntityDAO;
