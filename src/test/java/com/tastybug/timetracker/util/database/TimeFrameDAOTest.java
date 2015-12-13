@@ -1,44 +1,52 @@
 package com.tastybug.timetracker.util.database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 
-import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TimeFrame;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class TimeFrameDAOTest {
 
     Context context = mock(Context.class);
-    ContentResolverProvider provider = mock(ContentResolverProvider.class);
+    ContentResolver resolver = mock(ContentResolver.class);
 
     // test subject
-    TimeFrameDAO timeFrameDAO;
+    TimeFrameDAO timeFrameDAO = new TimeFrameDAO(context);
 
-
-    @Before
-    public void setup() {
-        timeFrameDAO = new TimeFrameDAO(context);
-        timeFrameDAO.setContentResolverProvider(provider);
+    @Before public void setup() {
+        when(context.getContentResolver()).thenReturn(resolver);
     }
 
     @Test
     public void canGetExistingTimeFrameById() {
         // given
         Cursor cursor = aTimeframeCursor(1);
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -53,7 +61,7 @@ public class TimeFrameDAOTest {
 
     @Test public void gettingNonexistingProjectByIdYieldsNull() {
         // given
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(null);
 
         // when
@@ -67,7 +75,7 @@ public class TimeFrameDAOTest {
     public void malformedStartDateStringLeadsToException() {
         // given
         Cursor cursor = aTimeframeCursor(1, "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -84,7 +92,7 @@ public class TimeFrameDAOTest {
     public void malformedEndDateStringLeadsToException() {
         // given
         Cursor cursor = aTimeframeCursor(1, getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -100,7 +108,7 @@ public class TimeFrameDAOTest {
     @Test public void getAllWorksForExistingTimeFrames() {
         // given
         Cursor aCursorWith2TimeFrames = aCursorWith2TimeFrames();
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(aCursorWith2TimeFrames);
 
         // when
@@ -113,7 +121,7 @@ public class TimeFrameDAOTest {
     @Test public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(noProjects);
 
         // when

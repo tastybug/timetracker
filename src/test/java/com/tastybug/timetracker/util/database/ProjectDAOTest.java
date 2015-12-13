@@ -1,16 +1,22 @@
 package com.tastybug.timetracker.util.database;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 
 import com.tastybug.timetracker.model.Project;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,23 +27,24 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class ProjectDAOTest {
 
     Context context = mock(Context.class);
-    ContentResolverProvider provider = mock(ContentResolverProvider.class);
+    ContentResolver resolver = mock(ContentResolver.class);
 
     // test subject
-    ProjectDAO projectDAO;
+    ProjectDAO projectDAO = new ProjectDAO(context);
 
     @Before public void setup() {
-        projectDAO = new ProjectDAO(context);
-        projectDAO.setContentResolverProvider(provider);
+        when(context.getContentResolver()).thenReturn(resolver);
     }
 
     @Test public void canGetExistingProjectById() {
         // given
         Cursor cursor = aProjectCursor(1, "title", "desc");
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -52,7 +59,7 @@ public class ProjectDAOTest {
 
     @Test public void gettingNonexistingProjectByIdYieldsNull() {
         // given
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(null);
 
         // when
@@ -65,7 +72,7 @@ public class ProjectDAOTest {
     @Test public void getAllWorksForExistingProjects() {
         // given
         Cursor multipleProjects = aCursorWith2Projects();
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(multipleProjects);
 
         // when
@@ -78,7 +85,7 @@ public class ProjectDAOTest {
     @Test public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(provider.query(any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(noProjects);
 
         // when
@@ -89,7 +96,17 @@ public class ProjectDAOTest {
     }
 
     @Test public void canCreateProject() {
-        fail("");
+        // given
+        Project project = new Project("title");
+        Uri uriMock = mock(Uri.class);
+        when(uriMock.getLastPathSegment()).thenReturn("1");
+        when(resolver.insert(any(Uri.class), any(ContentValues.class))).thenReturn(uriMock);
+
+        // when
+        projectDAO.create(project);
+
+        // then
+        assertEquals(1, project.getId().intValue());
     }
 
     @Test public void canUpdateProject() {
