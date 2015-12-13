@@ -15,9 +15,9 @@
         <!--database stuff-->
         <meta-data android:name="database.schema.version.current" android:value="1"/>
         <meta-data android:name="database.name" android:value="timetracker.database"/>
-        <meta-data android:name="database.scripts.folder" android:value="common/sql"/>
-        <meta-data android:name="database.scripts.prefix.model" android:value="db_"/>
-        <meta-data android:name="database.scripts.prefix.data" android:value="data_"/>
+        <meta-data android:name="database.scripts.folder" android:value="sql"/>
+        <meta-data android:name="database.scripts.prefix.model" android:value="ddl_"/>
+        <meta-data android:name="database.scripts.prefix.data" android:value="dml_"/>
 
     </application>
 </manifest>
