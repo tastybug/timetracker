@@ -11,9 +11,9 @@ import java.util.List;
 
 public class ProjectDAO extends EntityDAO<Project> {
 
-    static String ID_COLUMN = "_ID";
-    static String TITLE_COLUMN = "TITLE";
-    static String DESCRIPTION_COLUMN = "DESCRIPTION";
+    static String ID_COLUMN = "_id";
+    static String TITLE_COLUMN = "title";
+    static String DESCRIPTION_COLUMN = "description";
 
     static String[] COLUMNS = new String[] {
             ID_COLUMN,
@@ -28,7 +28,7 @@ public class ProjectDAO extends EntityDAO<Project> {
 
     @Override
     protected String getTableName() {
-        return "PROJECT";
+        return "project";
     }
 
     @Override

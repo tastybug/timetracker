@@ -13,9 +13,9 @@ import java.util.List;
 
 public class TimeFrameDAO extends EntityDAO<TimeFrame> {
 
-    static String ID_COLUMN = "_ID";
-    static String START_DATE_COLUMN = "START_DATE";
-    static String END_DATE_COLUMN = "END_DATE";
+    static String ID_COLUMN = "_id";
+    static String START_DATE_COLUMN = "start_date";
+    static String END_DATE_COLUMN = "end_date";
 
     static String[] COLUMNS = new String[] {
             ID_COLUMN,
@@ -29,7 +29,7 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
 
     @Override
     protected String getTableName() {
-        return "TIMEFRAME";
+        return "time_frame";
     }
 
     @Override
