@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.util.database;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -131,16 +132,54 @@ public class TimeFrameDAOTest {
         assertEquals(0, timeFrames.size());
     }
 
-    @Test public void canCreateProject() {
-        fail("");
+    @Test public void canCreateTimeframe() {
+        // given
+        TimeFrame timeFrame = new TimeFrame();
+        Uri uriMock = mock(Uri.class);
+        when(uriMock.getLastPathSegment()).thenReturn("5");
+        when(resolver.insert(any(Uri.class), any(ContentValues.class))).thenReturn(uriMock);
+
+        // when
+        timeFrameDAO.create(timeFrame);
+
+        // then
+        assertEquals(5, timeFrame.getId().intValue());
     }
 
-    @Test public void canUpdateProject() {
-        fail("");
+    @Test public void canUpdateTimeframe() {
+        // given
+        TimeFrame timeFrame = new TimeFrame();
+        when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
+
+        // when
+        int updateCount = timeFrameDAO.update(timeFrame);
+
+        // then
+        assertEquals(1, updateCount);
     }
 
-    @Test public void canDeleteProject() {
-        fail("");
+    @Test public void canDeleteTimeframe() {
+        // given
+        TimeFrame timeFrame = new TimeFrame();
+        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
+
+        // when
+        boolean success = timeFrameDAO.delete(timeFrame);
+
+        // then
+        assertTrue(success);
+    }
+
+    @Test public void deleteReturnsFalseWhenNotSuccessful() {
+        // given
+        TimeFrame timeFrame = new TimeFrame();
+        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
+
+        // when
+        boolean success = timeFrameDAO.delete(timeFrame);
+
+        // then
+        assertFalse(success);
     }
 
     @Test public void providesCorrectPrimaryKeyColumn() {

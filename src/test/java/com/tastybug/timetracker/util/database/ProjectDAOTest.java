@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -110,11 +110,39 @@ public class ProjectDAOTest {
     }
 
     @Test public void canUpdateProject() {
-        fail("");
+        // given
+        Project project = new Project(1, "title", null);
+        when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
+
+        // when
+        int updateCount = projectDAO.update(project);
+
+        // then
+        assertEquals(1, updateCount);
     }
 
     @Test public void canDeleteProject() {
-        fail("");
+        // given
+        Project project = new Project(1, "title", null);
+        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
+
+        // when
+        boolean success = projectDAO.delete(project);
+
+        // then
+        assertTrue(success);
+    }
+
+    @Test public void deleteReturnsFalseWhenNotSuccessful() {
+        // given
+        Project project = new Project(1, "title", null);
+        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
+
+        // when
+        boolean success = projectDAO.delete(project);
+
+        // then
+        assertFalse(success);
     }
 
     @Test public void providesCorrectPrimaryKeyColumn() {
