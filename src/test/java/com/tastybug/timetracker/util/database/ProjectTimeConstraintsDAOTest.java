@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
-import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.model.ProjectTimeConstraints;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -31,80 +31,83 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
-public class TimeFrameDAOTest {
+public class ProjectTimeConstraintsDAOTest {
 
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
 
     // test subject
-    TimeFrameDAO timeFrameDAO = new TimeFrameDAO(context);
+    ProjectTimeConstraintsDAO projectTimeConstraintsDAO = new ProjectTimeConstraintsDAO(context);
 
     @Before
     public void setup() {
         when(context.getContentResolver()).thenReturn(resolver);
     }
 
-    @Test public void canGetExistingTimeFrameById() {
+
+    @Test public void canGetExistingEntityById() {
         // given
-        Cursor cursor = aTimeframeCursor(1);
+        Cursor cursor = aProjectTimeContraintsCursor(1);
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        TimeFrame tf = timeFrameDAO.get(1);
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get(1);
 
         // then
-        assertNotNull(tf);
-        assertEquals(1, tf.getId().intValue());
-        assertNotNull(tf.getStart());
-        assertNotNull(tf.getEnd());
+        assertNotNull(constraints);
+        assertEquals(1, constraints.getId().intValue());
+        assertEquals(2, constraints.getProjectId().intValue());
+        assertEquals(5, constraints.getHourLimit().get().intValue());
+        assertNotNull(constraints.getStart());
+        assertNotNull(constraints.getEnd());
     }
 
-    @Test public void gettingNonexistingProjectByIdYieldsNull() {
+    @Test public void gettingNonexistingEntityByIdYieldsNull() {
         // given
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(null);
 
         // when
-        TimeFrame tf = timeFrameDAO.get(1);
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get(1);
 
         // then
-        assertNull(tf);
+        assertNull(constraints);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void malformedStartDateStringLeadsToException() {
         // given
-        Cursor cursor = aTimeframeCursor(1, "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
+        Cursor cursor = aProjectTimeContraintsCursor(1, "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        timeFrameDAO.get(1);
+        projectTimeConstraintsDAO.get(1);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void malformedEndDateStringLeadsToException() {
         // given
-        Cursor cursor = aTimeframeCursor(1, getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
+        Cursor cursor = aProjectTimeContraintsCursor(1, getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        timeFrameDAO.get(1);
+        projectTimeConstraintsDAO.get(1);
     }
 
     @Test public void getAllWorksForExistingTimeFrames() {
         // given
-        Cursor aCursorWith2TimeFrames = aCursorWith2TimeFrames();
+        Cursor aCursorWith2TimeFrames = aCursorWith2Entities();
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(aCursorWith2TimeFrames);
 
         // when
-        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getAll();
+        ArrayList<ProjectTimeConstraints> entities = projectTimeConstraintsDAO.getAll();
 
         // then
-        assertEquals(2, timeFrames.size());
+        assertEquals(2, entities.size());
     }
 
     @Test public void getAllReturnsEmptyListForLackOfEntities() {
@@ -114,45 +117,45 @@ public class TimeFrameDAOTest {
                 .thenReturn(noProjects);
 
         // when
-        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getAll();
+        ArrayList<ProjectTimeConstraints> entities = projectTimeConstraintsDAO.getAll();
 
         // then
-        assertEquals(0, timeFrames.size());
+        assertEquals(0, entities.size());
     }
 
-    @Test public void canCreateTimeframe() {
+    @Test public void canCreateEntity() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
         Uri uriMock = mock(Uri.class);
         when(uriMock.getLastPathSegment()).thenReturn("5");
         when(resolver.insert(any(Uri.class), any(ContentValues.class))).thenReturn(uriMock);
 
         // when
-        timeFrameDAO.create(timeFrame);
+        projectTimeConstraintsDAO.create(constraints);
 
         // then
-        assertEquals(5, timeFrame.getId().intValue());
+        assertEquals(5, constraints.getId().intValue());
     }
 
-    @Test public void canUpdateTimeframe() {
+    @Test public void canUpdateEntity() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
-        int updateCount = timeFrameDAO.update(timeFrame);
+        int updateCount = projectTimeConstraintsDAO.update(constraints);
 
         // then
         assertEquals(1, updateCount);
     }
 
-    @Test public void canDeleteTimeframe() {
+    @Test public void canDeleteEntity() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
-        boolean success = timeFrameDAO.delete(timeFrame);
+        boolean success = projectTimeConstraintsDAO.delete(constraints);
 
         // then
         assertTrue(success);
@@ -160,11 +163,11 @@ public class TimeFrameDAOTest {
 
     @Test public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when
-        boolean success = timeFrameDAO.delete(timeFrame);
+        boolean success = projectTimeConstraintsDAO.delete(constraints);
 
         // then
         assertFalse(success);
@@ -172,32 +175,49 @@ public class TimeFrameDAOTest {
 
     @Test public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(TimeFrameDAO.ID_COLUMN, timeFrameDAO.getPKColumn());
+        assertEquals(TimeFrameDAO.ID_COLUMN, projectTimeConstraintsDAO.getPKColumn());
     }
 
     @Test public void knowsAllColumns() {
         // expect
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.ID_COLUMN));
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.START_DATE_COLUMN));
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.END_DATE_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.ID_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.PROJECT_FK_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.HOUR_LIMIT_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.STARTS_AT_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.ENDS_AT_COLUMN));
     }
 
-    private Cursor aTimeframeCursor(int id) {
+    private Cursor aProjectTimeContraintsCursor(int id) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getInt(0)).thenReturn(id);
-        when(cursor.getString(1)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
+        when(cursor.getInt(1)).thenReturn(2);
+        when(cursor.getInt(2)).thenReturn(5);
+        when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
     }
 
-    private Cursor aTimeframeCursor(int id, String startDateString, String endDateString) {
+    private Cursor aProjectTimeContraintsCursor(int id, String startDateString, String endDateString) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getInt(0)).thenReturn(id);
-        when(cursor.getString(1)).thenReturn(startDateString);
-        when(cursor.getString(2)).thenReturn(endDateString);
+        when(cursor.getInt(1)).thenReturn(2);
+        when(cursor.getInt(2)).thenReturn(5);
+        when(cursor.getString(3)).thenReturn(startDateString);
+        when(cursor.getString(4)).thenReturn(endDateString);
         when(cursor.moveToFirst()).thenReturn(true);
+
+        return cursor;
+    }
+    private Cursor aCursorWith2Entities() {
+        Cursor cursor = mock(Cursor.class);
+        when(cursor.getInt(0)).thenReturn(1);
+        when(cursor.getInt(1)).thenReturn(2);
+        when(cursor.getInt(2)).thenReturn(5);
+        when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
+        when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;
     }
@@ -205,16 +225,6 @@ public class TimeFrameDAOTest {
     private Cursor anEmptyCursor() {
         Cursor cursor = mock(Cursor.class);
         when(cursor.moveToNext()).thenReturn(false);
-
-        return cursor;
-    }
-
-    private Cursor aCursorWith2TimeFrames() {
-        Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(1);
-        when(cursor.getString(1)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;
     }

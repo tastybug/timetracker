@@ -30,6 +30,16 @@ public class Project extends Entity {
         this.title = title;
     }
 
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -50,16 +60,6 @@ public class Project extends Entity {
         PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
         this.description = description;
         propertyChange(e);
-    }
-
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     @Override
