@@ -59,30 +59,18 @@ public class ProjectTest {
         project.setTitle(null);
     }
 
-    @Test public void changingTitleLeadsToDatabaseUpdate() {
+    @Test public void fieldChangesLeadToDatabaseUpdates() {
         // given
         Project project = new Project("name");
         project.setContext(contextMock);
         project.setDAO(daoMock);
 
         // when
+        project.setId(10000); // this does not trigger
         project.setTitle("new title");
-
-        // then
-        verify(daoMock, times(1)).update(project);
-    }
-
-    @Test public void changingDescriptionLeadsToDatabaseUpdate() {
-        // given
-        Project project = new Project("name");
-        project.setContext(contextMock);
-        project.setDAO(daoMock);
-
-        // when
         project.setDescription("bla");
 
         // then
-        verify(daoMock, times(1)).update(project);
+        verify(daoMock, times(2)).update(project);
     }
-
 }

@@ -8,8 +8,10 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.util.database.EntityDAO;
 import com.tastybug.timetracker.util.database.TimeFrameDAO;
 
-import java.util.Date;
 import org.joda.time.Duration;
+
+import java.beans.PropertyChangeEvent;
+import java.util.Date;
 
 public class TimeFrame extends Entity {
 
@@ -52,7 +54,10 @@ public class TimeFrame extends Entity {
         if (hasStart()) {
             throw new IllegalStateException(toString() + " is already started!");
         }
-        this.start = new Date();
+        Date newDate = new Date();
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "start", this.start, newDate);
+        this.start = newDate;
+        propertyChange(e);
     }
 
     public Date getStart() {
@@ -74,7 +79,10 @@ public class TimeFrame extends Entity {
         if (hasEnd()) {
             throw new IllegalStateException(toString() + " is already stopped!");
         }
-        this.end = new Date();
+        Date newDate = new Date();
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, newDate);
+        this.end = newDate;
+        propertyChange(e);
     }
 
     public boolean hasEnd() {
@@ -86,7 +94,9 @@ public class TimeFrame extends Entity {
     }
 
     public void setDescription(String description) {
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
         this.description = description;
+        propertyChange(e);
     }
 
     public String getDescription() {

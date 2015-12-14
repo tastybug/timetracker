@@ -1,7 +1,10 @@
 package com.tastybug.timetracker.model;
 
 
+import android.content.Context;
 import android.os.Build;
+
+import com.tastybug.timetracker.util.database.TimeFrameDAO;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +16,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class TimeFrameTest {
+
+    Context contextMock = mock(Context.class);
+    TimeFrameDAO daoMock = mock(TimeFrameDAO.class);
 
     @Test
     public void canStartATimeframeAndStopItLater() {
@@ -109,11 +117,19 @@ public class TimeFrameTest {
         assertTrue(timeFrame.toDuration().isPresent());
     }
 
-    @Test public void changingStartDateLeadsToDatabaseUpdate() {
-        fail("impl");
-    }
+    @Test public void fieldChangesLeadToDatabaseUpdates() {
+        // given
+        TimeFrame timeframe = new TimeFrame();
+        timeframe.setContext(contextMock);
+        timeframe.setDAO(daoMock);
 
-    @Test public void changingEndDateLeadsToDatabaseUpdate() {
-        fail("impl");
+        // when
+        timeframe.setId(10000); // this does not trigger
+        timeframe.start();
+        timeframe.stop();
+        timeframe.setDescription("blablabla");
+
+        // then
+        verify(daoMock, times(3)).update(timeframe);
     }
 }
