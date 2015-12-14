@@ -49,18 +49,17 @@ public abstract class EntityDAO<T extends Entity> {
 
     public Uri create (T entity) {
         Uri uri = context.getContentResolver().insert(getQueryUri(), getContentValues(entity));
-        entity.setId(Integer.parseInt(uri.getLastPathSegment()));
         entity.setContext(context);
         return uri;
     }
 
     public int update(T entity) {
-        int rowsUpdated = context.getContentResolver().update(getQueryUri(), getContentValues(entity), getPKColumn() + "=?", new String[]{entity.getId() + ""});
+        int rowsUpdated = context.getContentResolver().update(getQueryUri(), getContentValues(entity), getPKColumn() + "=?", new String[]{entity.getUuid()});
         return rowsUpdated;
     }
 
     public boolean delete(T entity) {
-        int deletionCount = context.getContentResolver().delete(getQueryUri(), getPKColumn() + "=?", new String[]{entity.getId() + ""});
+        int deletionCount = context.getContentResolver().delete(getQueryUri(), getPKColumn() + "=?", new String[]{entity.getUuid()});
         return deletionCount == 1;
     }
 

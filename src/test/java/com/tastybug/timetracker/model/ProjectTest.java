@@ -51,6 +51,15 @@ public class ProjectTest {
     }
 
     @Test(expected = NullPointerException.class)
+    public void canNotSetNullUuid() {
+        // given
+        Project project = new Project("name");
+
+        // when
+        project.setUuid(null);
+    }
+
+    @Test(expected = NullPointerException.class)
     public void canNotSetNullProjectTitle() {
         // given
         Project project = new Project("name");
@@ -66,7 +75,7 @@ public class ProjectTest {
         project.setDAO(daoMock);
 
         // when
-        project.setId(10000); // this does not trigger
+        project.setUuid("123"); // this does not trigger
         project.setTitle("new title");
         project.setDescription("bla");
 

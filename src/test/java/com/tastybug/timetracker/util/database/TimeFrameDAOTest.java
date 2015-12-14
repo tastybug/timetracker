@@ -46,7 +46,7 @@ public class TimeFrameDAOTest {
 
     @Test public void canGetExistingTimeFrameById() {
         // given
-        Cursor cursor = aTimeframeCursor(1);
+        Cursor cursor = aTimeframeCursor("1");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -55,7 +55,7 @@ public class TimeFrameDAOTest {
 
         // then
         assertNotNull(tf);
-        assertEquals(1, tf.getId().intValue());
+        assertEquals("1", tf.getUuid());
         assertNotNull(tf.getStart());
         assertNotNull(tf.getEnd());
     }
@@ -75,7 +75,7 @@ public class TimeFrameDAOTest {
     @Test(expected = IllegalArgumentException.class)
     public void malformedStartDateStringLeadsToException() {
         // given
-        Cursor cursor = aTimeframeCursor(1, "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
+        Cursor cursor = aTimeframeCursor("1", "2", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -86,7 +86,7 @@ public class TimeFrameDAOTest {
     @Test(expected = IllegalArgumentException.class)
     public void malformedEndDateStringLeadsToException() {
         // given
-        Cursor cursor = aTimeframeCursor(1, getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
+        Cursor cursor = aTimeframeCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -120,21 +120,19 @@ public class TimeFrameDAOTest {
         assertEquals(0, timeFrames.size());
     }
 
-    @Test public void canCreateTimeframe() {
+    @Test public void canCreateTimeFrame() {
         // given
         TimeFrame timeFrame = new TimeFrame();
-        Uri uriMock = mock(Uri.class);
-        when(uriMock.getLastPathSegment()).thenReturn("5");
-        when(resolver.insert(any(Uri.class), any(ContentValues.class))).thenReturn(uriMock);
 
         // when
         timeFrameDAO.create(timeFrame);
 
         // then
-        assertEquals(5, timeFrame.getId().intValue());
+        assertNotNull(timeFrame.getUuid());
+        assertNotNull(timeFrame.getContext());
     }
 
-    @Test public void canUpdateTimeframe() {
+    @Test public void canUpdateTimeFrame() {
         // given
         TimeFrame timeFrame = new TimeFrame();
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
@@ -146,7 +144,7 @@ public class TimeFrameDAOTest {
         assertEquals(1, updateCount);
     }
 
-    @Test public void canDeleteTimeframe() {
+    @Test public void canDeleteTimeFrame() {
         // given
         TimeFrame timeFrame = new TimeFrame();
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
@@ -177,26 +175,30 @@ public class TimeFrameDAOTest {
 
     @Test public void knowsAllColumns() {
         // expect
+        assertEquals(4, timeFrameDAO.getColumns().length);
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.ID_COLUMN));
+        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.PROJECT_UUID_COLUMN));
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.START_DATE_COLUMN));
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.END_DATE_COLUMN));
     }
 
-    private Cursor aTimeframeCursor(int id) {
+    private Cursor aTimeframeCursor(String uuid) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(id);
-        when(cursor.getString(1)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
+        when(cursor.getString(0)).thenReturn(uuid);
+        when(cursor.getString(1)).thenReturn("2");
+        when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
     }
 
-    private Cursor aTimeframeCursor(int id, String startDateString, String endDateString) {
+    private Cursor aTimeframeCursor(String uuid, String projectUuid, String startDateString, String endDateString) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(id);
-        when(cursor.getString(1)).thenReturn(startDateString);
-        when(cursor.getString(2)).thenReturn(endDateString);
+        when(cursor.getString(0)).thenReturn(uuid);
+        when(cursor.getString(1)).thenReturn(projectUuid);
+        when(cursor.getString(2)).thenReturn(startDateString);
+        when(cursor.getString(3)).thenReturn(endDateString);
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -211,9 +213,10 @@ public class TimeFrameDAOTest {
 
     private Cursor aCursorWith2TimeFrames() {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(1);
-        when(cursor.getString(1)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        when(cursor.getString(0)).thenReturn("1");
+        when(cursor.getString(1)).thenReturn("2");
         when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;

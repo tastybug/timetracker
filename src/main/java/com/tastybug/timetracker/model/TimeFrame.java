@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.util.database.EntityDAO;
 import com.tastybug.timetracker.util.database.TimeFrameDAO;
 
@@ -12,11 +13,12 @@ import org.joda.time.Duration;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Date;
+import java.util.UUID;
 
 public class TimeFrame extends Entity {
 
-    private Integer id;
-
+    private String uuid = UUID.randomUUID().toString();
+    private String projectUuid;
     private Date start, end;
 
     @Nullable
@@ -24,34 +26,39 @@ public class TimeFrame extends Entity {
 
     public TimeFrame() {}
 
-    @Override
-    protected EntityDAO getDefaultDAOInstance(Context context) {
-        return new TimeFrameDAO(context);
-    }
-
-    public TimeFrame(Date start, Date end) {
-        this.start = start;
-        this.end = end;
-    }
-
-    public TimeFrame(int id, Date start, Date end) {
-        this.id = id;
+    public TimeFrame(String uuid, String projectUuid, Date start, Date end) {
+        this.uuid = uuid;
+        this.projectUuid = projectUuid;
         this.start = start;
         this.end = end;
     }
 
     @Override
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
     @Override
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        Preconditions.checkNotNull(uuid);
+
+        this.uuid = uuid;
+    }
+
+    public String getProjectUuid() {
+        return projectUuid;
+    }
+
+    public void setProjectUuid(String projectUuid) {
+        Preconditions.checkNotNull(projectUuid);
+
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "projectUuid", this.projectUuid, projectUuid);
+        this.projectUuid = projectUuid;
+        propertyChange(e);
     }
 
     public void start() {
-        if (hasStart()) {
+        if (getStart().isPresent()) {
             throw new IllegalStateException(toString() + " is already started!");
         }
         Date newDate = new Date();
@@ -60,23 +67,19 @@ public class TimeFrame extends Entity {
         propertyChange(e);
     }
 
-    public Date getStart() {
-        return start;
+    public Optional<Date> getStart() {
+        return Optional.fromNullable(start);
     }
 
-    public Date getEnd() {
-        return end;
-    }
-
-    public boolean hasStart() {
-        return start != null;
+    public Optional<Date> getEnd() {
+        return Optional.fromNullable(end);
     }
 
     public void stop() {
-        if (!hasStart()) {
+        if (!getStart().isPresent()) {
             throw new IllegalStateException(toString() + " is not started yet!");
         }
-        if (hasEnd()) {
+        if (getEnd().isPresent()) {
             throw new IllegalStateException(toString() + " is already stopped!");
         }
         Date newDate = new Date();
@@ -85,26 +88,22 @@ public class TimeFrame extends Entity {
         propertyChange(e);
     }
 
-    public boolean hasEnd() {
-        return end != null;
-    }
-
     public boolean isRunning() {
-        return start != null && end == null;
+        return getStart().isPresent() && !getEnd().isPresent();
     }
 
-    public void setDescription(String description) {
+    public void setDescription(Optional<String> description) {
         PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
-        this.description = description;
+        this.description = description.orNull();
         propertyChange(e);
     }
 
-    public String getDescription() {
-        return description;
+    public Optional<String> getDescription() {
+        return Optional.fromNullable(description);
     }
 
     public Optional<Duration> toDuration() {
-        if (hasStart() && hasEnd()) {
+        if (getStart().isPresent() && getEnd().isPresent()) {
             return Optional.of(new Duration(start.getTime(), end.getTime()));
         }
         return Optional.absent();
@@ -112,9 +111,17 @@ public class TimeFrame extends Entity {
 
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("start", start)
-                .add("end", end)
-                .add("description", description)
+                .add("uuid", getUuid())
+                .add("projectUuid", getProjectUuid())
+                .add("start", getStart().orNull())
+                .add("end", getEnd().orNull())
+                .add("description", getDescription().orNull())
                 .toString();
     }
+
+    @Override
+    protected EntityDAO getDefaultDAOInstance(Context context) {
+        return new TimeFrameDAO(context);
+    }
+
 }

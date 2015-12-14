@@ -2,50 +2,55 @@ package com.tastybug.timetracker.model;
 
 import android.content.Context;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.util.database.EntityDAO;
+import com.tastybug.timetracker.util.database.ProjectTimeConstraintsDAO;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Date;
+import java.util.UUID;
 
 public class ProjectTimeConstraints extends Entity {
 
-    private Integer id, projectId;
-
+    private String uuid = UUID.randomUUID().toString();
+    private String projectUuid;
     private Integer hourLimit;
-
     private Date start, end;
 
 
     public ProjectTimeConstraints() {}
 
-    public ProjectTimeConstraints(int id, int projectId, Integer hourLimit, Date start, Date end) {
-        this.id = id;
-        this.projectId = projectId;
+    public ProjectTimeConstraints(String uuid, String projectUuid, Integer hourLimit, Date start, Date end) {
+        this.uuid = uuid;
+        this.projectUuid = projectUuid;
         this.hourLimit = hourLimit;
         this.start = start;
         this.end = end;
     }
 
     @Override
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
     @Override
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        Preconditions.checkNotNull(uuid);
+
+        this.uuid = uuid;
     }
 
-    public Integer getProjectId() {
-        return projectId;
+    public String getProjectUuid() {
+        return projectUuid;
     }
 
-    public void setProjectId(Integer projectId) {
-        Preconditions.checkNotNull(projectId);
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "projectId", this.projectId, projectId);
-        this.projectId = projectId;
+    public void setProjectUuid(String projectUuid) {
+        Preconditions.checkNotNull(projectUuid);
+
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "projectUuid", this.projectUuid, projectUuid);
+        this.projectUuid = projectUuid;
         propertyChange(e);
     }
 
@@ -79,8 +84,18 @@ public class ProjectTimeConstraints extends Entity {
         propertyChange(e);
     }
 
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("uuid", getUuid())
+                .add("projectUuid", getProjectUuid())
+                .add("hourLimit", getHourLimit().orNull())
+                .add("start", getStart().orNull())
+                .add("end", getEnd().orNull())
+                .toString();
+    }
+
     @Override
     protected EntityDAO getDefaultDAOInstance(Context context) {
-        return null;
+        return new ProjectTimeConstraintsDAO(context);
     }
 }

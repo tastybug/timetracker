@@ -4,6 +4,7 @@ package com.tastybug.timetracker.model;
 import android.content.Context;
 import android.os.Build;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.util.database.TimeFrameDAO;
 
 import org.junit.Test;
@@ -14,7 +15,6 @@ import org.robolectric.annotation.Config;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -31,24 +31,24 @@ public class TimeFrameTest {
     public void canStartATimeframeAndStopItLater() {
         // given:
         TimeFrame timeFrame = new TimeFrame();
-        assertFalse(timeFrame.hasStart());
+        assertFalse(timeFrame.getStart().isPresent());
         assertFalse(timeFrame.isRunning());
-        assertFalse(timeFrame.hasEnd());
+        assertFalse(timeFrame.getEnd().isPresent());
 
         // when
         timeFrame.start();
 
         // then
-        assertTrue(timeFrame.hasStart());
+        assertTrue(timeFrame.getStart().isPresent());
         assertTrue(timeFrame.isRunning());
-        assertFalse(timeFrame.hasEnd());
+        assertFalse(timeFrame.getEnd().isPresent());
 
         // when
         timeFrame.stop();
 
         // then
-        assertTrue(timeFrame.hasStart());
-        assertTrue(timeFrame.hasEnd());
+        assertTrue(timeFrame.getStart().isPresent());
+        assertTrue(timeFrame.getEnd().isPresent());
         assertFalse(timeFrame.isRunning());
 
         // and
@@ -56,20 +56,20 @@ public class TimeFrameTest {
     }
 
     @Test
-    public void canSetDescriptionAtTimeframe() {
+    public void canSetDescriptionAtTimeFrame() {
         // given
         TimeFrame timeFrame = new TimeFrame();
-        assertNull(timeFrame.getDescription());
+        assertFalse(timeFrame.getDescription().isPresent());
 
         // when
-        timeFrame.setDescription("bla");
+        timeFrame.setDescription(Optional.of("bla"));
 
         // then
-        assertEquals("bla", timeFrame.getDescription());
+        assertEquals("bla", timeFrame.getDescription().get());
     }
 
     @Test(expected = IllegalStateException.class)
-    public void startingAnAlreadyStartedTimeframeYieldsException() {
+    public void startingAnAlreadyStartedTimeFrameYieldsException() {
         // given
         TimeFrame timeFrame = new TimeFrame();
         timeFrame.start();
@@ -79,7 +79,7 @@ public class TimeFrameTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void stoppingAnAlreadyStoppedTimeframeYieldsException() {
+    public void stoppingAnAlreadyStoppedTimeFrameYieldsException() {
         // given
         TimeFrame timeFrame = new TimeFrame();
         timeFrame.start();
@@ -96,6 +96,15 @@ public class TimeFrameTest {
 
         // when
         timeFrame.stop();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullProjectUuid() {
+        // given
+        TimeFrame timeFrame = new TimeFrame();
+
+        // when
+        timeFrame.setProjectUuid(null);
     }
 
     @Test
@@ -124,10 +133,10 @@ public class TimeFrameTest {
         timeframe.setDAO(daoMock);
 
         // when
-        timeframe.setId(10000); // this does not trigger
+        timeframe.setUuid("10000"); // this does not trigger
         timeframe.start();
         timeframe.stop();
-        timeframe.setDescription("blablabla");
+        timeframe.setDescription(Optional.of("blablabla"));
 
         // then
         verify(daoMock, times(3)).update(timeframe);

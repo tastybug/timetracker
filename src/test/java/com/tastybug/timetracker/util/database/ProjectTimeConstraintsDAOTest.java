@@ -47,7 +47,7 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void canGetExistingEntityById() {
         // given
-        Cursor cursor = aProjectTimeContraintsCursor(1);
+        Cursor cursor = aProjectTimeContraintsCursor("1");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -56,8 +56,8 @@ public class ProjectTimeConstraintsDAOTest {
 
         // then
         assertNotNull(constraints);
-        assertEquals(1, constraints.getId().intValue());
-        assertEquals(2, constraints.getProjectId().intValue());
+        assertEquals("1", constraints.getUuid());
+        assertEquals("2", constraints.getProjectUuid());
         assertEquals(5, constraints.getHourLimit().get().intValue());
         assertNotNull(constraints.getStart());
         assertNotNull(constraints.getEnd());
@@ -78,7 +78,7 @@ public class ProjectTimeConstraintsDAOTest {
     @Test(expected = IllegalArgumentException.class)
     public void malformedStartDateStringLeadsToException() {
         // given
-        Cursor cursor = aProjectTimeContraintsCursor(1, "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
+        Cursor cursor = aProjectTimeContraintsCursor("1", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -89,7 +89,7 @@ public class ProjectTimeConstraintsDAOTest {
     @Test(expected = IllegalArgumentException.class)
     public void malformedEndDateStringLeadsToException() {
         // given
-        Cursor cursor = aProjectTimeContraintsCursor(1, getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
+        Cursor cursor = aProjectTimeContraintsCursor("1", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -126,15 +126,13 @@ public class ProjectTimeConstraintsDAOTest {
     @Test public void canCreateEntity() {
         // given
         ProjectTimeConstraints constraints = new ProjectTimeConstraints();
-        Uri uriMock = mock(Uri.class);
-        when(uriMock.getLastPathSegment()).thenReturn("5");
-        when(resolver.insert(any(Uri.class), any(ContentValues.class))).thenReturn(uriMock);
 
         // when
         projectTimeConstraintsDAO.create(constraints);
 
         // then
-        assertEquals(5, constraints.getId().intValue());
+        assertNotNull(constraints.getUuid());
+        assertNotNull(constraints.getContext());
     }
 
     @Test public void canUpdateEntity() {
@@ -180,17 +178,18 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void knowsAllColumns() {
         // expect
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.ID_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.PROJECT_FK_COLUMN));
+        assertEquals(5, projectTimeConstraintsDAO.getColumns().length);
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.UUID_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.PROJECT_UUID_COLUMN));
         assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.HOUR_LIMIT_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.STARTS_AT_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.ENDS_AT_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.START_DATE_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.END_DATE_COLUMN));
     }
 
-    private Cursor aProjectTimeContraintsCursor(int id) {
+    private Cursor aProjectTimeContraintsCursor(String uuid) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(id);
-        when(cursor.getInt(1)).thenReturn(2);
+        when(cursor.getString(0)).thenReturn(uuid);
+        when(cursor.getString(1)).thenReturn("2");
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
@@ -199,10 +198,10 @@ public class ProjectTimeConstraintsDAOTest {
         return cursor;
     }
 
-    private Cursor aProjectTimeContraintsCursor(int id, String startDateString, String endDateString) {
+    private Cursor aProjectTimeContraintsCursor(String uuid, String startDateString, String endDateString) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(id);
-        when(cursor.getInt(1)).thenReturn(2);
+        when(cursor.getString(0)).thenReturn(uuid);
+        when(cursor.getString(1)).thenReturn("2");
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(startDateString);
         when(cursor.getString(4)).thenReturn(endDateString);
@@ -212,8 +211,8 @@ public class ProjectTimeConstraintsDAOTest {
     }
     private Cursor aCursorWith2Entities() {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(1);
-        when(cursor.getInt(1)).thenReturn(2);
+        when(cursor.getString(0)).thenReturn("1");
+        when(cursor.getString(1)).thenReturn("2");
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));

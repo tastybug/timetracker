@@ -15,18 +15,18 @@ import java.util.List;
 
 public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints> {
 
-    static String ID_COLUMN = "_id";
-    static String PROJECT_FK_COLUMN = "project_fk";
+    static String UUID_COLUMN = "uuid";
+    static String PROJECT_UUID_COLUMN = "project_uuid";
     static String HOUR_LIMIT_COLUMN = "hour_limit";
-    static String STARTS_AT_COLUMN = "starts_at";
-    static String ENDS_AT_COLUMN = "ends_at";
+    static String START_DATE_COLUMN = "start_date";
+    static String END_DATE_COLUMN = "end_date";
 
     static String[] COLUMNS = new String[] {
-            ID_COLUMN,
-            PROJECT_FK_COLUMN,
+            UUID_COLUMN,
+            PROJECT_UUID_COLUMN,
             HOUR_LIMIT_COLUMN,
-            STARTS_AT_COLUMN,
-            ENDS_AT_COLUMN
+            START_DATE_COLUMN,
+            END_DATE_COLUMN
     };
 
     public ProjectTimeConstraintsDAO(Context context) {
@@ -40,7 +40,7 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
 
     @Override
     public String getPKColumn() {
-        return ID_COLUMN;
+        return UUID_COLUMN;
     }
 
     @Override
@@ -54,13 +54,13 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
         try {
             Integer hourLimit = cursor.isNull(colsList.indexOf(HOUR_LIMIT_COLUMN))
                     ? null : cursor.getInt(colsList.indexOf(HOUR_LIMIT_COLUMN));
-            String startDateString = cursor.isNull(colsList.indexOf(STARTS_AT_COLUMN))
-                    ? null : cursor.getString(colsList.indexOf(STARTS_AT_COLUMN));
-            String endDateString = cursor.isNull(colsList.indexOf(ENDS_AT_COLUMN))
-                    ? null : cursor.getString(colsList.indexOf(ENDS_AT_COLUMN));
+            String startDateString = cursor.isNull(colsList.indexOf(START_DATE_COLUMN))
+                    ? null : cursor.getString(colsList.indexOf(START_DATE_COLUMN));
+            String endDateString = cursor.isNull(colsList.indexOf(END_DATE_COLUMN))
+                    ? null : cursor.getString(colsList.indexOf(END_DATE_COLUMN));
             return new ProjectTimeConstraints(
-                    cursor.getInt(colsList.indexOf(ID_COLUMN)),
-                    cursor.getInt(colsList.indexOf(PROJECT_FK_COLUMN)),
+                    cursor.getString(colsList.indexOf(UUID_COLUMN)),
+                    cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN)),
                     hourLimit,
                     startDateString != null ? getIso8601DateFormatter().parse(startDateString) : null,
                     endDateString != null ? getIso8601DateFormatter().parse(endDateString) : null
@@ -73,11 +73,11 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
     @Override
     protected ContentValues getContentValues(ProjectTimeConstraints entity) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID_COLUMN, entity.getId());
-        contentValues.put(PROJECT_FK_COLUMN, entity.getProjectId());
+        contentValues.put(UUID_COLUMN, entity.getUuid());
+        contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());
         contentValues.put(HOUR_LIMIT_COLUMN, entity.getHourLimit().orNull());
-        contentValues.put(STARTS_AT_COLUMN, formatDate(entity.getStart()));
-        contentValues.put(ENDS_AT_COLUMN, formatDate(entity.getEnd()));
+        contentValues.put(START_DATE_COLUMN, formatDate(entity.getStart()));
+        contentValues.put(END_DATE_COLUMN, formatDate(entity.getEnd()));
 
         return contentValues;
     }

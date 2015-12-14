@@ -33,12 +33,12 @@ public class ProjectTimeConstraintsTest {
         // when
         DateTime start = new DateTime();
         DateTime end = start.plusDays(5);
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints(1, 2, 3, start.toDate(), end.toDate());
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints("1", "2", 3, start.toDate(), end.toDate());
 
         // then
         assertNotNull(constraints);
-        assertEquals(1, constraints.getId().intValue());
-        assertEquals(2, constraints.getProjectId().intValue());
+        assertEquals("1", constraints.getUuid());
+        assertEquals("2", constraints.getProjectUuid());
         assertEquals(3, constraints.getHourLimit().get().intValue());
         assertEquals(start.toDate(), constraints.getStart().get());
         assertEquals(end.toDate(), constraints.getEnd().get());
@@ -98,12 +98,21 @@ public class ProjectTimeConstraintsTest {
     }
 
     @Test(expected = NullPointerException.class)
+    public void canNotSetNullUuid() {
+        // given
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+
+        // when
+        constraints.setUuid(null);
+    }
+
+    @Test(expected = NullPointerException.class)
     public void canNotSetNullProjectFk() {
         // given
         ProjectTimeConstraints constraints = new ProjectTimeConstraints();
 
         // when
-        constraints.setProjectId(null);
+        constraints.setProjectUuid(null);
     }
 
     @Test public void fieldChangesLeadToDatabaseUpdates() {
@@ -113,8 +122,8 @@ public class ProjectTimeConstraintsTest {
         constraints.setDAO(daoMock);
 
         // when
-        constraints.setId(10000); // this does not trigger
-        constraints.setProjectId(1000);
+        constraints.setUuid("10000"); // this does not trigger
+        constraints.setProjectUuid("1234");
         constraints.setHourLimit(Optional.of(10));
         constraints.setStart(Optional.of(new Date()));
         constraints.setEnd(Optional.of(new Date()));

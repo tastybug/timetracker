@@ -11,12 +11,12 @@ import java.util.List;
 
 public class ProjectDAO extends EntityDAO<Project> {
 
-    static String ID_COLUMN = "_id";
+    static String UUID_COLUMN = "uuid";
     static String TITLE_COLUMN = "title";
     static String DESCRIPTION_COLUMN = "description";
 
     static String[] COLUMNS = new String[] {
-            ID_COLUMN,
+            UUID_COLUMN,
             TITLE_COLUMN,
             DESCRIPTION_COLUMN
     };
@@ -33,7 +33,7 @@ public class ProjectDAO extends EntityDAO<Project> {
 
     @Override
     public String getPKColumn() {
-        return ID_COLUMN;
+        return UUID_COLUMN;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ProjectDAO extends EntityDAO<Project> {
     protected Project createEntityFromCursor(Context context, Cursor cursor) {
         List<String> colsList = Arrays.asList(COLUMNS);
         return new Project(
-                cursor.getInt(colsList.indexOf(ID_COLUMN)),
+                cursor.getString(colsList.indexOf(UUID_COLUMN)),
                 cursor.getString(colsList.indexOf(TITLE_COLUMN)),
                 cursor.getString(colsList.indexOf(DESCRIPTION_COLUMN))
                 );
@@ -54,7 +54,7 @@ public class ProjectDAO extends EntityDAO<Project> {
     @Override
     protected ContentValues getContentValues(Project entity) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID_COLUMN, entity.getId());
+        contentValues.put(UUID_COLUMN, entity.getUuid());
         contentValues.put(TITLE_COLUMN, entity.getTitle());
         contentValues.put(DESCRIPTION_COLUMN, entity.getDescription().orNull());
 

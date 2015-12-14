@@ -35,9 +35,9 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
 		return context != null;
 	}
 
-	public abstract Integer getId();
+	public abstract String getUuid();
 
-	public abstract void setId(Integer id);
+	public abstract void setUuid(String uuid);
 
 	protected void setDAO(EntityDAO dao) {
         this.dao = dao;
@@ -53,7 +53,7 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
 		if (hasContext()) { // access available to the DB? if not, simply ignore it
             Object oldValue = event.getOldValue(), newValue = event.getNewValue();
             logger.debug("Propertychange: property= " + event.getPropertyName()
-                    + ",sourceId=" + ((Entity) event.getSource()).getId()
+                    + ",sourceId=" + ((Entity) event.getSource()).getUuid()
                     + ", oldValue=" + event.getOldValue()
                     + ", newValue=" + event.getNewValue());
 			EntityDAO dao;

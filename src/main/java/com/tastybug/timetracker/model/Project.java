@@ -3,25 +3,24 @@ package com.tastybug.timetracker.model;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.util.database.EntityDAO;
 import com.tastybug.timetracker.util.database.ProjectDAO;
 
 import java.beans.PropertyChangeEvent;
+import java.util.UUID;
 
 public class Project extends Entity {
 
-    private Integer id;
-
+    private String uuid = UUID.randomUUID().toString();
     private String title;
-
-    @Nullable
     private String description;
 
 
-    public Project(int id, String title, String description) {
-        this.id = id;
+    public Project(String uuid, String title, String description) {
+        this.uuid = uuid;
         this.title = title;
         this.description = description;
     }
@@ -31,13 +30,15 @@ public class Project extends Entity {
     }
 
     @Override
-    public Integer getId() {
-        return id;
+    public String getUuid() {
+        return uuid;
     }
 
     @Override
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUuid(String uuid) {
+        Preconditions.checkNotNull(uuid);
+
+        this.uuid = uuid;
     }
 
     public String getTitle() {
@@ -60,6 +61,14 @@ public class Project extends Entity {
         PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
         this.description = description;
         propertyChange(e);
+    }
+
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("uuid", getUuid())
+                .add("title", getTitle())
+                .add("description", getDescription().orNull())
+                .toString();
     }
 
     @Override

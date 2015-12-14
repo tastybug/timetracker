@@ -4,21 +4,25 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TimeFrame;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class TimeFrameDAO extends EntityDAO<TimeFrame> {
 
-    static String ID_COLUMN = "_id";
+    static String ID_COLUMN = "uuid";
+    static String PROJECT_UUID_COLUMN = "project_uuid";
     static String START_DATE_COLUMN = "start_date";
     static String END_DATE_COLUMN = "end_date";
 
     static String[] COLUMNS = new String[] {
             ID_COLUMN,
+            PROJECT_UUID_COLUMN,
             START_DATE_COLUMN,
             END_DATE_COLUMN
     };
@@ -46,11 +50,13 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
     protected TimeFrame createEntityFromCursor(Context context, Cursor cursor) {
         List<String> colsList = Arrays.asList(COLUMNS);
         try {
-            int id = cursor.getInt(colsList.indexOf(ID_COLUMN));
+            String uuid = cursor.getString(colsList.indexOf(ID_COLUMN));
+            String projectUuid = cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN));
             String startAsString = cursor.getString(colsList.indexOf(START_DATE_COLUMN));
             String endAsString = cursor.getString(colsList.indexOf(END_DATE_COLUMN));
             return new TimeFrame(
-                    id,
+                    uuid,
+                    projectUuid,
                     startAsString != null ? getIso8601DateFormatter().parse(startAsString) : null,
                     endAsString != null ? getIso8601DateFormatter().parse(endAsString) : null
             );
@@ -62,11 +68,19 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
     @Override
     protected ContentValues getContentValues(TimeFrame entity) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID_COLUMN, entity.getId());
-        contentValues.put(START_DATE_COLUMN, entity.hasStart() ? getIso8601DateFormatter().format(entity.getStart()) : null);
-        contentValues.put(END_DATE_COLUMN, entity.hasEnd() ? getIso8601DateFormatter().format(entity.getEnd()) : null);
+        contentValues.put(ID_COLUMN, entity.getUuid());
+        contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());
+        contentValues.put(START_DATE_COLUMN, formatDate(entity.getStart()));
+        contentValues.put(END_DATE_COLUMN, formatDate(entity.getEnd()));
 
         return contentValues;
+    }
+
+    private String formatDate(Optional<Date> date) {
+        if (date.isPresent()) {
+            return getIso8601DateFormatter().format(date);
+        }
+        return null;
     }
 
     private static SimpleDateFormat getIso8601DateFormatter() {

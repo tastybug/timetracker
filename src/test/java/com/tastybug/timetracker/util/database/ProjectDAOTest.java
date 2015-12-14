@@ -43,7 +43,7 @@ public class ProjectDAOTest {
 
     @Test public void canGetExistingProjectById() {
         // given
-        Cursor cursor = aProjectCursor(1, "title", "desc");
+        Cursor cursor = aProjectCursor("1", "title", "desc");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -52,7 +52,7 @@ public class ProjectDAOTest {
 
         // then
         assertNotNull(project);
-        assertEquals(1, project.getId().intValue());
+        assertEquals("1", project.getUuid());
         assertEquals("title", project.getTitle());
         assertEquals("desc", project.getDescription().get());
     }
@@ -98,20 +98,18 @@ public class ProjectDAOTest {
     @Test public void canCreateProject() {
         // given
         Project project = new Project("title");
-        Uri uriMock = mock(Uri.class);
-        when(uriMock.getLastPathSegment()).thenReturn("1");
-        when(resolver.insert(any(Uri.class), any(ContentValues.class))).thenReturn(uriMock);
 
         // when
         projectDAO.create(project);
 
         // then
-        assertEquals(1, project.getId().intValue());
+        assertNotNull(project.getUuid());
+        assertNotNull(project.getContext());
     }
 
     @Test public void canUpdateProject() {
         // given
-        Project project = new Project(1, "title", null);
+        Project project = new Project("1", "title", null);
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -123,7 +121,7 @@ public class ProjectDAOTest {
 
     @Test public void canDeleteProject() {
         // given
-        Project project = new Project(1, "title", null);
+        Project project = new Project("1", "title", null);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -135,7 +133,7 @@ public class ProjectDAOTest {
 
     @Test public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        Project project = new Project(1, "title", null);
+        Project project = new Project("1", "title", null);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when
@@ -147,19 +145,20 @@ public class ProjectDAOTest {
 
     @Test public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(ProjectDAO.ID_COLUMN, projectDAO.getPKColumn());
+        assertEquals(ProjectDAO.UUID_COLUMN, projectDAO.getPKColumn());
     }
 
     @Test public void knowsAllColumns() {
         // expect
-        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.ID_COLUMN));
+        assertEquals(3, projectDAO.getColumns().length);
+        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.UUID_COLUMN));
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.TITLE_COLUMN));
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.DESCRIPTION_COLUMN));
     }
 
-    private Cursor aProjectCursor(int id, String title, String description) {
+    private Cursor aProjectCursor(String uuid, String title, String description) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(id);
+        when(cursor.getString(0)).thenReturn(uuid);
         when(cursor.getString(1)).thenReturn(title);
         when(cursor.getString(2)).thenReturn(description);
         when(cursor.moveToFirst()).thenReturn(true);
