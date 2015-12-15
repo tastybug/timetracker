@@ -5,8 +5,8 @@ import android.content.Context;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.util.database.EntityDAO;
-import com.tastybug.timetracker.util.database.ProjectTimeConstraintsDAO;
+import com.tastybug.timetracker.database.dao.EntityDAO;
+import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Date;

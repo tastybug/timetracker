@@ -3,7 +3,7 @@ package com.tastybug.timetracker.model;
 import android.content.Context;
 import android.os.Build;
 
-import com.tastybug.timetracker.util.database.ProjectDAO;
+import com.tastybug.timetracker.database.dao.ProjectDAO;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

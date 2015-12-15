@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.util.database.ProjectTimeConstraintsDAO;
+import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

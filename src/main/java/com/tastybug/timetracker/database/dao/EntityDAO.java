@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.util.database;
+package com.tastybug.timetracker.database.dao;
 
 import android.content.ContentValues;
 import android.content.Context;

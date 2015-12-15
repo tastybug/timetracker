@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.util.database.EntityDAO;
-import com.tastybug.timetracker.util.database.ProjectDAO;
+import com.tastybug.timetracker.database.dao.EntityDAO;
+import com.tastybug.timetracker.database.dao.ProjectDAO;
 
 import java.beans.PropertyChangeEvent;
 import java.util.UUID;

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.util.database.TimeFrameDAO;
+import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

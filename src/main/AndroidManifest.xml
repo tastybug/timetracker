@@ -19,5 +19,7 @@
         <meta-data android:name="database.scripts.prefix.model" android:value="ddl_"/>
         <meta-data android:name="database.scripts.prefix.data" android:value="dml_"/>
 
+        <provider android:authorities="com.tastybug.timetracker" android:exported="false" android:multiprocess="true" android:name=".database.DatabaseContentProvider" android:launchMode="singleTask"/>
+
     </application>
 </manifest>

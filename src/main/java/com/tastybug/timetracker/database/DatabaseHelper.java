@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.util.database;
+package com.tastybug.timetracker.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

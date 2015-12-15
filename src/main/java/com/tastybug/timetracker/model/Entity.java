@@ -2,7 +2,7 @@ package com.tastybug.timetracker.model;
 
 import android.content.Context;
 
-import com.tastybug.timetracker.util.database.EntityDAO;
+import com.tastybug.timetracker.database.dao.EntityDAO;
 
 import org.slf4j.Logger;
 
