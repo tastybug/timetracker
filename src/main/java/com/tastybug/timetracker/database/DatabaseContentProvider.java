@@ -14,9 +14,9 @@ public class DatabaseContentProvider extends android.content.ContentProvider {
 
     protected DatabaseHelper databaseHelper;
 
+    @Override
 	public boolean onCreate() {
 		databaseHelper = DatabaseHelper.getInstance(getContext());
-
         return true;
     }
 
