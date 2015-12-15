@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.database.dao;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 
 public abstract class EntityDAO<T extends Entity> {
 
-    static final String AUTHORITY = "com.tastybug.timetracker";
+    public static final String AUTHORITY = "com.tastybug.timetracker";
 
     protected Context context;
 
@@ -61,6 +62,10 @@ public abstract class EntityDAO<T extends Entity> {
     public boolean delete(T entity) {
         int deletionCount = context.getContentResolver().delete(getQueryUri(), getPKColumn() + "=?", new String[]{entity.getUuid()});
         return deletionCount == 1;
+    }
+
+    public ContentProviderOperation getBatchCreate(T entity) {
+        return ContentProviderOperation.newInsert(getQueryUri()).withValues(getContentValues(entity)).build();
     }
 
     public abstract String getPKColumn();

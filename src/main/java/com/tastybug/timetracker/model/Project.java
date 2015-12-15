@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.model;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -57,9 +56,9 @@ public class Project extends Entity {
         return Optional.fromNullable(description);
     }
 
-    public void setDescription(@Nullable String description) {
+    public void setDescription(Optional<String> description) {
         PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
-        this.description = description;
+        this.description = description.orNull();
         propertyChange(e);
     }
 

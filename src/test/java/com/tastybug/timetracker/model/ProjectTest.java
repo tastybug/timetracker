@@ -3,6 +3,7 @@ package com.tastybug.timetracker.model;
 import android.content.Context;
 import android.os.Build;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 
 import org.junit.Test;
@@ -38,13 +39,13 @@ public class ProjectTest {
         Project project = new Project("name");
 
         // when
-        project.setDescription("desc");
+        project.setDescription(Optional.of("bla"));
 
         // then
-        assertEquals("desc", project.getDescription().get());
+        assertEquals("bla", project.getDescription().get());
 
         // when
-        project.setDescription(null);
+        project.setDescription(Optional.<String>absent());
 
         // then
         assertFalse(project.getDescription().isPresent());
@@ -77,7 +78,7 @@ public class ProjectTest {
         // when
         project.setUuid("123"); // this does not trigger
         project.setTitle("new title");
-        project.setDescription("bla");
+        project.setDescription(Optional.of("bla"));
 
         // then
         verify(daoMock, times(2)).update(project);

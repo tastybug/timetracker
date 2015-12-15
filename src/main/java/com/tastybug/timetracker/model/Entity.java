@@ -19,10 +19,6 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
 
     public Entity() {}
 
-	public Entity(Context c) {
-		this.context = c;
-	}
-
 	public Context getContext() {
 		return context;
 	}
@@ -43,7 +39,7 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
         this.dao = dao;
 	}
 
-	protected EntityDAO getDAO(Context context) {
+	public EntityDAO getDAO(Context context) {
         return dao != null ? dao : getDefaultDAOInstance(context);
     }
 
