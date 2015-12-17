@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.model;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -21,7 +20,6 @@ public class TimeFrame extends Entity {
     private String projectUuid;
     private Date start, end;
 
-    @Nullable
     private String description;
 
     public TimeFrame() {}
@@ -71,10 +69,6 @@ public class TimeFrame extends Entity {
         return Optional.fromNullable(start);
     }
 
-    public Optional<Date> getEnd() {
-        return Optional.fromNullable(end);
-    }
-
     public void stop() {
         if (!getStart().isPresent()) {
             throw new IllegalStateException(toString() + " is not started yet!");
@@ -86,6 +80,10 @@ public class TimeFrame extends Entity {
         PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, newDate);
         this.end = newDate;
         propertyChange(e);
+    }
+
+    public Optional<Date> getEnd() {
+        return Optional.fromNullable(end);
     }
 
     public boolean isRunning() {
