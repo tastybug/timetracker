@@ -48,7 +48,7 @@ public class ProjectDAOTest {
                 .thenReturn(cursor);
 
         // when
-        Project project = projectDAO.get(1);
+        Project project = projectDAO.get("1");
 
         // then
         assertNotNull(project);
@@ -63,7 +63,7 @@ public class ProjectDAOTest {
                 .thenReturn(null);
 
         // when
-        Project project = projectDAO.get(1);
+        Project project = projectDAO.get("1");
 
         // then
         assertNull(project);
@@ -126,6 +126,18 @@ public class ProjectDAOTest {
 
         // when
         boolean success = projectDAO.delete(project);
+
+        // then
+        assertTrue(success);
+    }
+
+    @Test public void canDeleteProjectByUuid() {
+        // given
+        Project project = new Project("1", "title", null);
+        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
+
+        // when
+        boolean success = projectDAO.delete(project.getUuid());
 
         // then
         assertTrue(success);

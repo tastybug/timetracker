@@ -22,12 +22,12 @@ public abstract class EntityDAO<T extends Entity> {
 
     protected abstract String getTableName();
 
-    protected Uri getQueryUri() {
+    public Uri getQueryUri() {
         return Uri.parse("content://" + AUTHORITY + "/" + getTableName());
     }
 
-    public T get(int id) {
-        Cursor mCursor = context.getContentResolver().query(getQueryUri(), getColumns(), getPKColumn() + "=?", new String[]{id + ""}, null);
+    public T get(String uuid) {
+        Cursor mCursor = context.getContentResolver().query(getQueryUri(), getColumns(), getPKColumn() + "=?", new String[]{uuid}, null);
         T t = null;
         if (mCursor != null && mCursor.moveToFirst()) {
             t = createEntityFromCursor(context, mCursor);
@@ -61,6 +61,11 @@ public abstract class EntityDAO<T extends Entity> {
 
     public boolean delete(T entity) {
         int deletionCount = context.getContentResolver().delete(getQueryUri(), getPKColumn() + "=?", new String[]{entity.getUuid()});
+        return deletionCount == 1;
+    }
+
+    public boolean delete(String uuid) {
+        int deletionCount = context.getContentResolver().delete(getQueryUri(), getPKColumn() + "=?", new String[]{uuid});
         return deletionCount == 1;
     }
 

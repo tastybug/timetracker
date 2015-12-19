@@ -51,7 +51,7 @@ public class TimeFrameDAOTest {
                 .thenReturn(cursor);
 
         // when
-        TimeFrame tf = timeFrameDAO.get(1);
+        TimeFrame tf = timeFrameDAO.get("1");
 
         // then
         assertNotNull(tf);
@@ -66,7 +66,7 @@ public class TimeFrameDAOTest {
                 .thenReturn(null);
 
         // when
-        TimeFrame tf = timeFrameDAO.get(1);
+        TimeFrame tf = timeFrameDAO.get("1");
 
         // then
         assertNull(tf);
@@ -80,7 +80,7 @@ public class TimeFrameDAOTest {
                 .thenReturn(cursor);
 
         // when
-        timeFrameDAO.get(1);
+        timeFrameDAO.get("1");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -91,7 +91,7 @@ public class TimeFrameDAOTest {
                 .thenReturn(cursor);
 
         // when
-        timeFrameDAO.get(1);
+        timeFrameDAO.get("1");
     }
 
     @Test public void getAllWorksForExistingTimeFrames() {

@@ -52,7 +52,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get(1);
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1");
 
         // then
         assertNotNull(constraints);
@@ -69,7 +69,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(null);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get(1);
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1");
 
         // then
         assertNull(constraints);
@@ -83,7 +83,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        projectTimeConstraintsDAO.get(1);
+        projectTimeConstraintsDAO.get("1");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -94,7 +94,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        projectTimeConstraintsDAO.get(1);
+        projectTimeConstraintsDAO.get("1");
     }
 
     @Test public void getAllWorksForExistingTimeFrames() {
