@@ -1,4 +1,9 @@
 <resources>
+
     <string name="app_name">TimeTracker</string>
+
+    <!-- project activity -->
+    <string name="activity_project_title">Time Tracking Projects</string>
+    <string name="menu_add_project">Add Project</string>
 
 </resources>
