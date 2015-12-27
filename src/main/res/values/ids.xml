@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- fragments -->
+    <item name="fragment_project_list" type="id"/>
+    <item name="fragment_project_detail" type="id"/>
+
+</resources>
