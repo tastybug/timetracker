@@ -59,8 +59,9 @@ public class ProjectDAOTest {
 
     @Test public void gettingNonexistingProjectByIdYieldsNull() {
         // given
+        Cursor cursor = anEmptyCursor();
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
-                .thenReturn(null);
+                .thenReturn(cursor);
 
         // when
         Project project = projectDAO.get("1");

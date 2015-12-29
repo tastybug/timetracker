@@ -169,6 +169,8 @@ public class ProjectTest {
         // given
         Project project = new Project("project title");
         project.setContext(context);
+        project.setDAOFactory(daoFactory);
+        when(timeFrameDAO.getByProjectUuid(project.getUuid())).thenReturn(new ArrayList<TimeFrame>());
 
         // when
         boolean result = project.removeTimeFrame(new TimeFrame());
@@ -233,7 +235,7 @@ public class ProjectTest {
         project.setContext(context);
         project.setDAOFactory(daoFactory);
         ProjectTimeConstraints expectedConstraints = new ProjectTimeConstraints("1", project.getUuid(), null, null, null);
-        when(timeConstraintsDAO.getByProjectUuid(project.getUuid())).thenReturn(expectedConstraints);
+        when(timeConstraintsDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConstraints));
 
         // when
         ProjectTimeConstraints projectTimeConstraints = project.getTimeConstraints();

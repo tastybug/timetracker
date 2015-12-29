@@ -27,24 +27,22 @@ public abstract class EntityDAO<T extends Entity> {
     }
 
     public T get(String uuid) {
-        Cursor mCursor = context.getContentResolver().query(getQueryUri(), getColumns(), getPKColumn() + "=?", new String[]{uuid}, null);
+        Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), getPKColumn() + "=?", new String[]{uuid}, null);
         T t = null;
-        if (mCursor != null && mCursor.moveToFirst()) {
-            t = createEntityFromCursor(context, mCursor);
-            mCursor.close();
+        if (cursor.moveToFirst()) {
+            t = createEntityFromCursor(context, cursor);
+            cursor.close();
         }
         return t;
     }
 
     public ArrayList<T> getAll () {
-        Cursor mCursor = context.getContentResolver().query(getQueryUri(), getColumns(), null, null, null);
+        Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), null, null, null);
         ArrayList<T> list = new ArrayList<T>();
-        if (mCursor != null) {
-            while (mCursor.moveToNext()) {
-                list.add(createEntityFromCursor(context, mCursor));
-            }
-            mCursor.close();
+        while (cursor.moveToNext()) {
+            list.add(createEntityFromCursor(context, cursor));
         }
+        cursor.close();
         return list;
     }
 

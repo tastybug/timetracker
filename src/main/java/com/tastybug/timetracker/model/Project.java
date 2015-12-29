@@ -104,7 +104,7 @@ public class Project extends Entity {
                         "no context available!");
             }
             timeConstraints = ((ProjectTimeConstraintsDAO)daoFactory.getDao(ProjectTimeConstraints.class, getContext()))
-                    .getByProjectUuid(getUuid());
+                    .getByProjectUuid(getUuid()).orNull();
         }
         return timeConstraints;
     }

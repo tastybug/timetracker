@@ -65,8 +65,9 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void gettingNonexistingEntityByIdYieldsNull() {
         // given
+        Cursor cursor = anEmptyCursor();
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
-                .thenReturn(null);
+                .thenReturn(cursor);
 
         // when
         ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1");
@@ -199,7 +200,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1");
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1").orNull();
 
         // then
         assertNull(constraints);
@@ -212,7 +213,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1");
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1").get();
 
         // then
         assertNotNull(constraints);

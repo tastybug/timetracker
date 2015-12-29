@@ -38,13 +38,10 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
 
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), PROJECT_UUID_COLUMN + "=?", new String[]{uuid}, null);
         ArrayList<TimeFrame> list = new ArrayList<TimeFrame>();
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                list.add(createEntityFromCursor(context, cursor));
-            }
-            cursor.close();
+        while (cursor.moveToNext()) {
+            list.add(createEntityFromCursor(context, cursor));
         }
-        // TODO: stellt es nicht einen Fehler dar, wenn hier nix gefunden wird?
+        cursor.close();
         return list;
     }
 

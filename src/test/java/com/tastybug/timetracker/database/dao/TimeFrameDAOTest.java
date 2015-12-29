@@ -63,8 +63,9 @@ public class TimeFrameDAOTest {
 
     @Test public void gettingNonexistingProjectByIdYieldsNull() {
         // given
+        Cursor cursor = anEmptyCursor();
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
-                .thenReturn(null);
+                .thenReturn(cursor);
 
         // when
         TimeFrame tf = timeFrameDAO.get("1");
