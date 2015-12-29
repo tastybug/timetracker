@@ -1,14 +1,12 @@
 package com.tastybug.timetracker.model;
 
-import android.content.Context;
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.database.dao.EntityDAO;
-import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Project extends Entity {
@@ -16,6 +14,9 @@ public class Project extends Entity {
     private String uuid = UUID.randomUUID().toString();
     private String title;
     private String description;
+
+    private ProjectTimeConstraints timeConstraints;
+    private ArrayList<TimeFrame> timeFrames;
 
 
     public Project(String uuid, String title, String description) {
@@ -62,16 +63,64 @@ public class Project extends Entity {
         propertyChange(e);
     }
 
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("uuid", getUuid())
-                .add("title", getTitle())
-                .add("description", getDescription().orNull())
-                .toString();
+
+    public ArrayList<TimeFrame> getTimeFrames() {
+        if (timeFrames == null) {
+            if (!hasContext()) {
+                throw new IllegalStateException("Failed to fetch timeframes lazily, no context available.");
+            }
+            timeFrames = ((TimeFrameDAO)daoFactory.getDao(TimeFrame.class, getContext()))
+                    .getByProjectUuid(getUuid());
+        }
+        return timeFrames;
     }
 
-    @Override
-    protected EntityDAO getDefaultDAOInstance(Context context) {
-        return new ProjectDAO(context);
+    public TimeFrame createTimeFrame() {
+        if (!hasContext()) {
+            throw new IllegalStateException("Failed to create time frame, no context available.");
+        }
+        TimeFrame timeFrame = new TimeFrame();
+        timeFrame.setProjectUuid(getUuid());
+        timeFrame.setContext(getContext());
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "createTimeFrame", null, timeFrame);
+        getTimeFrames().add(timeFrame);
+        propertyChange(e);
+
+        return timeFrame;
+    }
+
+    public boolean removeTimeFrame(TimeFrame timeFrame) {
+        Preconditions.checkNotNull(timeFrame, "Cannot remove null time frame.");
+
+        boolean success = getTimeFrames().remove(timeFrame);
+        if(success) {
+            PropertyChangeEvent e = new PropertyChangeEvent(this, "removeTimeFrame", timeFrame, null);
+            propertyChange(e);
+        }
+        return success;
+    }
+
+    public ProjectTimeConstraints getTimeConstraints() {
+        throw new RuntimeException("impl");
+    }
+
+    public String toString() {
+        if (hasContext()) {
+            return MoreObjects.toStringHelper(this)
+                    .add("uuid", getUuid())
+                    .add("title", getTitle())
+                    .add("description", getDescription().orNull())
+                    .add("timeConstraints", getTimeConstraints())
+                    .add("timeFrames", getTimeFrames())
+                    .toString();
+        } else {
+            return MoreObjects.toStringHelper(this)
+                    .add("uuid", getUuid())
+                    .add("title", getTitle())
+                    .add("description", getDescription().orNull())
+                    .add("timeConstraints", "skipped, no context")
+                    .add("timeFrames", "skipped, no context")
+                    .toString();
+        }
     }
 }

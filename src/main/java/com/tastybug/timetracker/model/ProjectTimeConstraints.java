@@ -93,9 +93,4 @@ public class ProjectTimeConstraints extends Entity {
                 .add("end", getEnd().orNull())
                 .toString();
     }
-
-    @Override
-    protected EntityDAO getDefaultDAOInstance(Context context) {
-        return new ProjectTimeConstraintsDAO(context);
-    }
 }

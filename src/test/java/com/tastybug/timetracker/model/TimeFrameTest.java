@@ -5,8 +5,10 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -16,16 +18,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class TimeFrameTest {
 
     Context contextMock = mock(Context.class);
-    TimeFrameDAO daoMock = mock(TimeFrameDAO.class);
+    DAOFactory daoFactory = mock(DAOFactory.class);
+    TimeFrameDAO timeFrameDAO = mock(TimeFrameDAO.class);
+
+    @Before
+    public void setup() {
+        when(daoFactory.getDao(eq(TimeFrame.class), isA(Context.class))).thenReturn(timeFrameDAO);
+    }
 
     @Test
     public void canStartATimeframeAndStopItLater() {
@@ -130,7 +142,7 @@ public class TimeFrameTest {
         // given
         TimeFrame timeframe = new TimeFrame();
         timeframe.setContext(contextMock);
-        timeframe.setDAO(daoMock);
+        timeframe.setDAOFactory(daoFactory);
 
         // when
         timeframe.setUuid("10000"); // this does not trigger
@@ -139,6 +151,6 @@ public class TimeFrameTest {
         timeframe.setDescription(Optional.of("blablabla"));
 
         // then
-        verify(daoMock, times(3)).update(timeframe);
+        verify(timeFrameDAO, times(3)).update(timeframe);
     }
 }

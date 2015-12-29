@@ -116,10 +116,4 @@ public class TimeFrame extends Entity {
                 .add("description", getDescription().orNull())
                 .toString();
     }
-
-    @Override
-    protected EntityDAO getDefaultDAOInstance(Context context) {
-        return new TimeFrameDAO(context);
-    }
-
 }

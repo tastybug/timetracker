@@ -46,7 +46,7 @@ public class TimeFrameDAOTest {
 
     @Test public void canGetExistingTimeFrameById() {
         // given
-        Cursor cursor = aTimeframeCursor("1");
+        Cursor cursor = aTimeframeCursor("1", "2");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
@@ -56,6 +56,7 @@ public class TimeFrameDAOTest {
         // then
         assertNotNull(tf);
         assertEquals("1", tf.getUuid());
+        assertEquals("2", tf.getProjectUuid());
         assertNotNull(tf.getStart());
         assertNotNull(tf.getEnd());
     }
@@ -182,10 +183,53 @@ public class TimeFrameDAOTest {
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.END_DATE_COLUMN));
     }
 
-    private Cursor aTimeframeCursor(String uuid) {
+    @Test(expected = NullPointerException.class)
+    public void gettingAllTimeFramesByNullProjectUuidYieldsException() {
+        // given
+        Cursor cursor = aTimeframeCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+                .thenReturn(cursor);
+        when(cursor.moveToNext()).thenReturn(true);
+
+        // when
+        timeFrameDAO.getByProjectUuid(null);
+    }
+
+    @Test public void canGetTimeFramesByProjectUuid() {
+        // given
+        Cursor cursor = aTimeframeCursor("1", "2");
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+                .thenReturn(cursor);
+        when(cursor.moveToNext()).thenReturn(true, false);
+
+        // when
+        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getByProjectUuid("1");
+
+        // then
+        assertEquals(1, timeFrames.size());
+        assertEquals("1", timeFrames.get(0).getUuid());
+        assertEquals("2", timeFrames.get(0).getProjectUuid());
+        assertNotNull(timeFrames.get(0).getStart());
+        assertNotNull(timeFrames.get(0).getEnd());
+    }
+
+    @Test public void gettingTimeFramesByUnknownProjectUuidYieldsEmptyList() {
+        // given
+        Cursor cursor = anEmptyCursor();
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+                .thenReturn(cursor);
+
+        // when
+        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getByProjectUuid("1");
+
+        // then
+        assertTrue(timeFrames.isEmpty());
+    }
+
+    private Cursor aTimeframeCursor(String uuid, String projectUuid) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getString(0)).thenReturn(uuid);
-        when(cursor.getString(1)).thenReturn("2");
+        when(cursor.getString(1)).thenReturn(projectUuid);
         when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
         when(cursor.moveToFirst()).thenReturn(true);

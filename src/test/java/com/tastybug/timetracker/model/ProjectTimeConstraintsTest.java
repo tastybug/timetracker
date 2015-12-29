@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -17,16 +19,26 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class ProjectTimeConstraintsTest {
 
     Context contextMock = mock(Context.class);
-    ProjectTimeConstraintsDAO daoMock = mock(ProjectTimeConstraintsDAO.class);
+    DAOFactory daoFactory = mock(DAOFactory.class);
+    ProjectTimeConstraintsDAO projectTimeConstraintsDAO = mock(ProjectTimeConstraintsDAO.class);
+
+    @Before
+    public void setup() {
+        when(daoFactory.getDao(eq(ProjectTimeConstraints.class), isA(Context.class))).thenReturn(projectTimeConstraintsDAO);
+    }
 
     @Test
     public void canCreateProjectTimeConstraints() {
@@ -119,7 +131,7 @@ public class ProjectTimeConstraintsTest {
         // given
         ProjectTimeConstraints constraints = new ProjectTimeConstraints();
         constraints.setContext(contextMock);
-        constraints.setDAO(daoMock);
+        constraints.setDAOFactory(daoFactory);
 
         // when
         constraints.setUuid("10000"); // this does not trigger
@@ -129,6 +141,6 @@ public class ProjectTimeConstraintsTest {
         constraints.setEnd(Optional.of(new Date()));
 
         // then
-        verify(daoMock, times(4)).update(constraints);
+        verify(projectTimeConstraintsDAO, times(4)).update(constraints);
     }
 }

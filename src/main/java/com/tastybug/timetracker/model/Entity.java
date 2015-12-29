@@ -2,6 +2,7 @@ package com.tastybug.timetracker.model;
 
 import android.content.Context;
 
+import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.EntityDAO;
 
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
     private Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
 	protected Context   context;
-	protected EntityDAO dao;
+	protected DAOFactory daoFactory = new DAOFactory();
 
     public Entity() {}
 
@@ -31,19 +32,17 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
 		return context != null;
 	}
 
+    public void setDAOFactory(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
+    }
+
 	public abstract String getUuid();
 
 	public abstract void setUuid(String uuid);
 
-	protected void setDAO(EntityDAO dao) {
-        this.dao = dao;
-	}
-
-	public EntityDAO getDAO(Context context) {
-        return dao != null ? dao : getDefaultDAOInstance(context);
+    public EntityDAO getDAO(Context context) {
+        return daoFactory.getDao(getClass(), context);
     }
-
-    protected abstract EntityDAO getDefaultDAOInstance(Context context);
 
     public void propertyChange(PropertyChangeEvent event) {
 		if (hasContext()) { // access available to the DB? if not, simply ignore it
@@ -55,14 +54,14 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
 			EntityDAO dao;
 			if (oldValue instanceof Entity || newValue instanceof Entity) { // must be an association
 				if (oldValue == null) { // add
-					dao = ((Entity)newValue).getDAO(context);
+					dao = daoFactory.getDao(newValue.getClass(), context);
 					dao.create((Entity)newValue);
 				} else { // remove
-					dao = ((Entity)oldValue).getDAO(context);
+                    dao = daoFactory.getDao(oldValue.getClass(), context);
 					dao.delete((Entity)oldValue);
 				}
 			} else {
-				dao = getDAO(context);
+                dao = getDAO(context);
 				if (oldValue != null && newValue != null && oldValue.equals(newValue)) {
                     logger.debug(getClass().getSimpleName(), "Property unchanged, skipping update.");
 				} else {

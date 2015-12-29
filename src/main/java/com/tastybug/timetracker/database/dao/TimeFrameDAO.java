@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TimeFrame;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,20 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
 
     public TimeFrameDAO(Context context) {
         super(context);
+    }
+
+    public ArrayList<TimeFrame> getByProjectUuid(String uuid) {
+        Preconditions.checkNotNull(uuid, "Cannot get time frames by project uuid, null given!");
+
+        Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), PROJECT_UUID_COLUMN + "=?", new String[]{uuid}, null);
+        ArrayList<TimeFrame> list = new ArrayList<TimeFrame>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                list.add(createEntityFromCursor(context, cursor));
+            }
+            cursor.close();
+        }
+        return list;
     }
 
     @Override
