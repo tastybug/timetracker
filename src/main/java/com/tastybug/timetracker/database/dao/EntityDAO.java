@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Entity;
 
 import java.util.ArrayList;
@@ -26,14 +27,14 @@ public abstract class EntityDAO<T extends Entity> {
         return Uri.parse("content://" + AUTHORITY + "/" + getTableName());
     }
 
-    public T get(String uuid) {
+    public Optional<T> get(String uuid) {
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), getPKColumn() + "=?", new String[]{uuid}, null);
         T t = null;
         if (cursor.moveToFirst()) {
             t = createEntityFromCursor(context, cursor);
             cursor.close();
         }
-        return t;
+        return Optional.fromNullable(t);
     }
 
     public ArrayList<T> getAll () {

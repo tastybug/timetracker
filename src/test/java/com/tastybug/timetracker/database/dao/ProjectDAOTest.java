@@ -48,7 +48,7 @@ public class ProjectDAOTest {
                 .thenReturn(cursor);
 
         // when
-        Project project = projectDAO.get("1");
+        Project project = projectDAO.get("1").get();
 
         // then
         assertNotNull(project);
@@ -64,7 +64,7 @@ public class ProjectDAOTest {
                 .thenReturn(cursor);
 
         // when
-        Project project = projectDAO.get("1");
+        Project project = projectDAO.get("1").orNull();
 
         // then
         assertNull(project);

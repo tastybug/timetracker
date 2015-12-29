@@ -51,7 +51,7 @@ public class TimeFrameDAOTest {
                 .thenReturn(cursor);
 
         // when
-        TimeFrame tf = timeFrameDAO.get("1");
+        TimeFrame tf = timeFrameDAO.get("1").get();
 
         // then
         assertNotNull(tf);
@@ -68,7 +68,7 @@ public class TimeFrameDAOTest {
                 .thenReturn(cursor);
 
         // when
-        TimeFrame tf = timeFrameDAO.get("1");
+        TimeFrame tf = timeFrameDAO.get("1").orNull();
 
         // then
         assertNull(tf);

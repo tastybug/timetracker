@@ -52,7 +52,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1");
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1").get();
 
         // then
         assertNotNull(constraints);
@@ -70,7 +70,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1");
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1").orNull();
 
         // then
         assertNull(constraints);
