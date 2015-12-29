@@ -7,6 +7,7 @@ import android.os.Build;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 
 import org.junit.Before;
@@ -15,10 +16,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -36,6 +39,7 @@ public class ProjectTest {
     DAOFactory daoFactory = mock(DAOFactory.class);
     ProjectDAO projectDAO = mock(ProjectDAO.class);
     TimeFrameDAO timeFrameDAO = mock(TimeFrameDAO.class);
+    ProjectTimeConstraintsDAO timeConstraintsDAO = mock(ProjectTimeConstraintsDAO.class);
     ContentResolver contentResolver = mock(ContentResolver.class);
 
     @Before
@@ -43,6 +47,7 @@ public class ProjectTest {
         when(context.getContentResolver()).thenReturn(contentResolver);
         when(daoFactory.getDao(eq(Project.class), isA(Context.class))).thenReturn(projectDAO);
         when(daoFactory.getDao(eq(TimeFrame.class), isA(Context.class))).thenReturn(timeFrameDAO);
+        when(daoFactory.getDao(eq(ProjectTimeConstraints.class), isA(Context.class))).thenReturn(timeConstraintsDAO);
     }
 
     @Test public void canCreateProjectWithTitle() {
@@ -176,16 +181,68 @@ public class ProjectTest {
     }
 
     @Test public void canRemoveTimeFrame() {
-        fail();
+        // given
+        Project project = new Project("project title");
+        project.setContext(context);
+        project.setDAOFactory(daoFactory);
+        ArrayList<TimeFrame> timeFrames = twoTimeFrames(project);
+        when(timeFrameDAO.getByProjectUuid(project.getUuid())).thenReturn(timeFrames);
+        TimeFrame timeFrame1 = timeFrames.get(0);
+        TimeFrame timeFrame2 = timeFrames.get(1);
+
+        // when
+        boolean success = project.removeTimeFrame(timeFrame1);
+
+        // then
+        assertTrue(success);
+
+        // and
+        assertFalse(project.getTimeFrames().contains(timeFrame1));
+
+        // and
+        assertFalse(project.getTimeFrames().isEmpty());
+
+        // and
+        verify(timeFrameDAO, times(1)).delete(timeFrame1);
+
+        // when
+        success = project.removeTimeFrame(timeFrame2);
+
+        // then
+        assertTrue(success);
+
+        // and
+        assertTrue(project.getTimeFrames().isEmpty());
+
+        // and
+        verify(timeFrameDAO, times(1)).delete(timeFrame2);
     }
 
     @Test(expected = IllegalStateException.class)
     public void gettingTimeConstraintsWithoutContextYieldsException() {
-        fail();
+        // given
+        Project project = new Project("project title");
+
+        // when
+        project.getTimeConstraints();
     }
 
     @Test public void canGetTimeConstraints() {
-        fail();
+        // given
+        Project project = new Project("project title");
+        project.setContext(context);
+        project.setDAOFactory(daoFactory);
+        ProjectTimeConstraints expectedConstraints = new ProjectTimeConstraints("1", project.getUuid(), null, null, null);
+        when(timeConstraintsDAO.getByProjectUuid(project.getUuid())).thenReturn(expectedConstraints);
+
+        // when
+        ProjectTimeConstraints projectTimeConstraints = project.getTimeConstraints();
+
+        // then
+        assertEquals(expectedConstraints, projectTimeConstraints);
+
+        // and
+        verify(timeConstraintsDAO, times(1)).getByProjectUuid(project.getUuid());
     }
 
     @Test public void fieldChangesLeadToDatabaseUpdates() {
@@ -201,5 +258,14 @@ public class ProjectTest {
 
         // then
         verify(projectDAO, times(2)).update(project);
+    }
+
+    private ArrayList<TimeFrame> twoTimeFrames(Project project) {
+        ArrayList<TimeFrame> list = new ArrayList<TimeFrame>();
+
+        list.add(new TimeFrame("1", project.getUuid(), null, null));
+        list.add(new TimeFrame("2", project.getUuid(), null, null));
+
+        return list;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
 
 import java.text.ParseException;
@@ -31,6 +32,19 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
 
     public ProjectTimeConstraintsDAO(Context context) {
         super(context);
+    }
+
+    public ProjectTimeConstraints getByProjectUuid(String uuid) {
+        Preconditions.checkNotNull(uuid, "Cannot get time frames by project uuid, null given!");
+
+        Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), PROJECT_UUID_COLUMN + "=?", new String[]{uuid}, null);
+        ProjectTimeConstraints constraints = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            constraints = createEntityFromCursor(context, cursor);
+            cursor.close();
+        }
+        // TODO: stellt es nicht einen Fehler dar, wenn hier nix gefunden wird?
+        return constraints;
     }
 
     @Override

@@ -44,6 +44,7 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
             }
             cursor.close();
         }
+        // TODO: stellt es nicht einen Fehler dar, wenn hier nix gefunden wird?
         return list;
     }
 

@@ -3,6 +3,7 @@ package com.tastybug.timetracker.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 
 import java.beans.PropertyChangeEvent;
@@ -76,15 +77,11 @@ public class Project extends Entity {
     }
 
     public TimeFrame createTimeFrame() {
-        if (!hasContext()) {
-            throw new IllegalStateException("Failed to create time frame, no context available.");
-        }
         TimeFrame timeFrame = new TimeFrame();
         timeFrame.setProjectUuid(getUuid());
         timeFrame.setContext(getContext());
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "createTimeFrame", null, timeFrame);
+        propertyChange(new PropertyChangeEvent(this, "createTimeFrame", null, timeFrame));
         getTimeFrames().add(timeFrame);
-        propertyChange(e);
 
         return timeFrame;
     }
@@ -101,7 +98,15 @@ public class Project extends Entity {
     }
 
     public ProjectTimeConstraints getTimeConstraints() {
-        throw new RuntimeException("impl");
+        if (timeConstraints == null) {
+            if(!hasContext()) {
+                throw new IllegalStateException("Failed to fetch time constraints lazily, " +
+                        "no context available!");
+            }
+            timeConstraints = ((ProjectTimeConstraintsDAO)daoFactory.getDao(ProjectTimeConstraints.class, getContext()))
+                    .getByProjectUuid(getUuid());
+        }
+        return timeConstraints;
     }
 
     public String toString() {

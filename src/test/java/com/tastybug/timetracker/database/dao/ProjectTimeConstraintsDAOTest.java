@@ -186,6 +186,39 @@ public class ProjectTimeConstraintsDAOTest {
         assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.END_DATE_COLUMN));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void gettingTimeConstraintsByNullProjectUuidYieldsException() {
+        // expect
+        projectTimeConstraintsDAO.getByProjectUuid(null);
+    }
+
+    @Test public void gettingTimeConstraintsByUnknownProjectUuidYieldsNull() {
+        // given
+        Cursor cursor = anEmptyCursor();
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+                .thenReturn(cursor);
+
+        // when
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1");
+
+        // then
+        assertNull(constraints);
+    }
+
+    @Test public void canGetTimeConstraintsByProjectUuid() {
+        // given
+        Cursor cursor = aProjectTimeContraintsCursor("111");
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+                .thenReturn(cursor);
+
+        // when
+        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1");
+
+        // then
+        assertNotNull(constraints);
+        assertEquals(constraints.getUuid(), "111");
+    }
+
     private Cursor aProjectTimeContraintsCursor(String uuid) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getString(0)).thenReturn(uuid);
@@ -223,6 +256,7 @@ public class ProjectTimeConstraintsDAOTest {
 
     private Cursor anEmptyCursor() {
         Cursor cursor = mock(Cursor.class);
+        when(cursor.moveToFirst()).thenReturn(false);
         when(cursor.moveToNext()).thenReturn(false);
 
         return cursor;
