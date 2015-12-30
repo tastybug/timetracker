@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 
 import com.tastybug.timetracker.database.dao.EntityDAO;
+import com.tastybug.timetracker.task.OttoProvider;
 
 import org.slf4j.Logger;
 
@@ -19,6 +20,7 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
 
     private Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
 
+    protected OttoProvider ottoProvider = new OttoProvider();
     protected Bundle arguments = new Bundle();
     protected Context context;
     protected ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
@@ -28,6 +30,10 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
     }
 
     protected abstract void validateArguments() throws NullPointerException;
+
+    public void setOttoProvider(OttoProvider ottoProvider) {
+        this.ottoProvider = ottoProvider;
+    }
 
     public void execute() throws NullPointerException {
         validateArguments();

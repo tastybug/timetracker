@@ -4,6 +4,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Build;
 
+import com.squareup.otto.Bus;
+import com.tastybug.timetracker.task.OttoProvider;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +16,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -24,22 +28,28 @@ public class CreateProjectTaskTest {
 
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
+    OttoProvider ottoProvider = mock(OttoProvider.class);
+    Bus ottoBus = mock(Bus.class);
 
     @Before
     public void setup() {
         when(context.getContentResolver()).thenReturn(resolver);
+        when(ottoProvider.getSharedBus()).thenReturn(ottoBus);
     }
 
+    // TODO der Test prueft nicht den Inhalt der Batchoperation
     @Test
     public void happyPath() throws Exception {
         // given
         CreateProjectTask task = CreateProjectTask.aTask(context).withProjectTitle("a title").withProjectDescription("a desc");
+        task.setOttoProvider(ottoProvider);
 
         // when
         task.execute();
 
-        // then
+        // then: a sql batch operation is executed
         verify(resolver, times(1)).applyBatch(any(String.class), any(ArrayList.class));
+        verify(ottoBus, times(1)).post(isA(ProjectCreatedEvent.class));
     }
 
     @Test(expected = NullPointerException.class)

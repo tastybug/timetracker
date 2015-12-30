@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.task.project.CreateProjectTask;
+
+import java.util.Date;
 
 public class ProjectListFragment extends ListFragment {
 
@@ -44,6 +47,7 @@ public class ProjectListFragment extends ListFragment {
         switch (item.getItemId()) {
             case R.id.menu_add_project:
                 Toast.makeText(getActivity(), "Add project", Toast.LENGTH_SHORT).show();
+                CreateProjectTask.aTask(getActivity()).withProjectTitle(new Date().toString()).execute();
                 return true;
             default:
                 super.onOptionsItemSelected(item);

@@ -5,23 +5,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.squareup.otto.Subscribe;
+import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.view.ProjectView;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.task.project.ProjectCreatedEvent;
 
 import java.util.ArrayList;
 
 public class ProjectListAdapter extends BaseAdapter {
 
     private ArrayList<Project> projectArrayList = new ArrayList<Project>();
-
     private Activity activity;
 
     public ProjectListAdapter(Activity activity) {
-        projectArrayList.add(new Project("project 1"));
-        projectArrayList.add(new Project("project 2"));
-        projectArrayList.add(new Project("project 3"));
-
+        projectArrayList = new ProjectDAO(activity).getAll();
         this.activity = activity;
+
+        new OttoProvider().getSharedBus().register(this);
+    }
+
+    @Subscribe public void handleProjectCreatedEvent(ProjectCreatedEvent event) {
+        this.projectArrayList.add(event.getProject());
+        this.notifyDataSetChanged();
     }
 
     @Override
