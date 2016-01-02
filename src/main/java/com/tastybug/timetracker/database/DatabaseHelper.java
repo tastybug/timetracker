@@ -38,9 +38,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private DatabaseHelper(Context context, DatabaseAppConfig config) {
 		super(context,
-              config.getDatabaseFileName(),
-              null,
-              config.getCurrentSchemaVersion());
+				config.getDatabaseFileName(),
+				null,
+				config.getCurrentSchemaVersion());
 		this.dbVersion = config.getCurrentSchemaVersion();
 		this.context = context;
         this.appConfig = config;
@@ -73,30 +73,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	private void performDbUpgrade (SQLiteDatabase db, int oldVersion, int newVersion) {
-		int result;
 		String scriptFolder = appConfig.getDatabaseScriptsFolder();
 		String modelScriptPrefix = appConfig.getDatabaseScriptsModelPrefix();
 		String defaultScriptPrefix = appConfig.getDatabaseScriptsDataPrefix();
-		for (;oldVersion<newVersion;oldVersion++) {
-			result = performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + modelScriptPrefix, oldVersion+1);
-			if (result == -1) {
-				return; // unexpected problem, lets stop this
-			}
-			// standard data upgrade
-			result = performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + defaultScriptPrefix, oldVersion+1);
-			if (result == -1) {
-				return; // unexpected problem, lets stop this
-			}
-			// if possible, do a localized upgrade as well
-			if (!defaultScriptPrefix.equals(getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion))) {
-				result = performIterativeSQLUpgrade(context,
-												db,
-												scriptFolder + File.separator + getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion),
-												oldVersion+1);
-				if (result == -1) {
-					return; // unexpected problem, lets stop this
+		try {
+			for (; oldVersion < newVersion; oldVersion++) {
+				performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + modelScriptPrefix, oldVersion + 1);
+				performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + defaultScriptPrefix, oldVersion + 1);
+
+				// if possible, do a localized upgrade as well
+				if (!defaultScriptPrefix.equals(getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion))) {
+					performIterativeSQLUpgrade(context,
+							db,
+							scriptFolder + File.separator + getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion),
+							oldVersion + 1);
 				}
 			}
+		} catch (IOException ioe) {
+            // to prevent successful completion of the surrounding transaction, we need an unchecked exception
+			throw new RuntimeException("Failed db upgrade from " + oldVersion + " to " + newVersion + " due to " + ioe.toString() + ".");
 		}
 	}
 
@@ -124,7 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 *
 	 * @return number of executed calls
 	 */
-	private int performIterativeSQLUpgrade (Context context, SQLiteDatabase db, String pathBase, int versionToUpgradeTo) {
+	private int performIterativeSQLUpgrade (Context context, SQLiteDatabase db, String pathBase, int versionToUpgradeTo) throws IOException {
 	    try {
 			logger.debug(DatabaseHelper.class.getName(), "Calling database upgrade/creation script for version " + versionToUpgradeTo + ": " + pathBase + versionToUpgradeTo);
 		    int result = 0;
@@ -144,8 +139,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			logger.debug("Executed " + result + " statements, not counting empty lines and comments.");
 		    return result;
 	    } catch (IOException ioe) {
-			logger.error("Error while performing iterative database upgrade: " + ioe.getMessage());
-	    	return -1;
+			logger.error("Error while performing iterative database upgrade: " + ioe.toString());
+	    	throw ioe;
 	    }
 	}
 }
