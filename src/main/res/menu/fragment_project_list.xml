@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_add_project" android:icon="@drawable/ic_add_project" android:title="@string/menu_add_project" android:titleCondensed="@string/menu_add_project" android:showAsAction="always"/>
+    <item android:id="@+id/menu_create_project" android:icon="@drawable/ic_create_project" android:title="@string/menu_create_project" android:showAsAction="always"/>
 
 </menu>

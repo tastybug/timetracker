@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.gui.projects;
 
-import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
@@ -25,9 +23,9 @@ public class ProjectListFragment extends ListFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        setListAdapter(new ProjectListAdapter(activity));
+    public void onResume() {
+        super.onResume();
+        setListAdapter(new ProjectListAdapter(getActivity()));
     }
 
     @Override
@@ -45,8 +43,7 @@ public class ProjectListFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_add_project:
-                Toast.makeText(getActivity(), "Add project", Toast.LENGTH_SHORT).show();
+            case R.id.menu_create_project:
                 CreateProjectTask.aTask(getActivity()).withProjectTitle(new Date().toString()).execute();
                 return true;
             default:

@@ -63,7 +63,6 @@ public class CreateProjectTask extends AbstractAsyncTask {
         ottoProvider.getSharedBus().post(new ProjectCreatedEvent(project));
     }
 
-
 }
 
 

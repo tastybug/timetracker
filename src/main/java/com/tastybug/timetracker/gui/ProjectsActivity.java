@@ -4,13 +4,16 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.common.base.Optional;
+import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.projectdetail.ProjectDetailFragment;
 import com.tastybug.timetracker.gui.projects.ProjectListFragment;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 import com.tastybug.timetracker.util.VersionUtil;
 
 import org.slf4j.Logger;
@@ -41,15 +44,16 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                Toast.makeText(this, "Up", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                super.onOptionsItemSelected(item);
-                return false;
-        }
+    protected void onResume() {
+        super.onResume();
+
+        new OttoProvider().getSharedBus().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        new OttoProvider().getSharedBus().unregister(this);
     }
 
     public void onProjectSelected(Project project) {
@@ -57,15 +61,35 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
         showProjectDetails(project);
     }
 
-    private void showProjectDetails(Project project) {
+    private Optional<ProjectDetailFragment> getTwoPaneProjectDetailFragment() {
         ProjectDetailFragment detailsFragment = (ProjectDetailFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_project_detail);
-        if (detailsFragment == null) {
+        return Optional.fromNullable(detailsFragment);
+    }
+
+    private void showProjectDetails(Project project) {
+        Optional<ProjectDetailFragment> detailsFragmentOpt = getTwoPaneProjectDetailFragment();
+        if (detailsFragmentOpt.isPresent()) {
+            detailsFragmentOpt.get().showProjectDetailsFor(project);
+        } else {
             Intent intent = new Intent(this, ProjectDetailsActivity.class);
             intent.putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
             startActivity(intent);
-        } else {
-            detailsFragment.showProjectDetailsFor(project);
         }
     }
+
+    private void showNoProjectDetails() {
+        Optional<ProjectDetailFragment> detailsFragmentOpt = getTwoPaneProjectDetailFragment();
+        if (detailsFragmentOpt.isPresent()) {
+            detailsFragmentOpt.get().showNoProject();
+        }
+        // if its a different activity, simply do not open it
+    }
+
+    @Subscribe
+    public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
+        Toast.makeText(this, "Deleted project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
+        showNoProjectDetails();
+    }
+
 }

@@ -48,11 +48,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+        logger.info("Starting database creation..");
     	db.beginTransaction(); // unlike onUpgrade, onCreate doesnt execute within in transaction implicitly
 		db.execSQL("PRAGMA foreign_keys=ON;");
 		performDbUpgrade(db, 0, dbVersion); // treat creation as an upgrade from version 0
 		db.setTransactionSuccessful();
 		db.endTransaction();
+        logger.info(".. database creation finished successfully.");
 	}
 
 	@Override

@@ -71,11 +71,6 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
             throw new RuntimeException("Problem executing sql batch operation.", e);
         }
     }
-
-    protected void onPostExecute(Long result) {
-        // notify otto
-        // and update the test
-    }
 }
 
 

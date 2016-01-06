@@ -4,7 +4,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Build;
 
+import com.squareup.otto.Bus;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.task.OttoProvider;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,22 +27,27 @@ public class DeleteProjectTaskTest {
 
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
+    OttoProvider ottoProvider = mock(OttoProvider.class);
+    Bus ottoBus = mock(Bus.class);
 
     @Before
     public void setup() {
         when(context.getContentResolver()).thenReturn(resolver);
+        when(ottoProvider.getSharedBus()).thenReturn(ottoBus);
     }
 
     @Test
     public void happyPath() throws Exception {
         // given
         DeleteProjectTask task = DeleteProjectTask.aTask(context).withProjectUuid("123");
+        task.setOttoProvider(ottoProvider);
 
         // when
         task.execute();
 
         // then
         verify(resolver, times(1)).delete(eq(new ProjectDAO(context).getQueryUri()), isA(String.class), eq(new String[] {"123"}));
+        verify(ottoBus, times(1)).post(isA(ProjectDeletedEvent.class));
     }
 
     @Test(expected = NullPointerException.class)

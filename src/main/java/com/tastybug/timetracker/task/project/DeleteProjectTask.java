@@ -6,8 +6,13 @@ import android.os.Bundle;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class DeleteProjectTask extends AbstractAsyncTask {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DeleteProjectTask.class);
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
@@ -31,10 +36,14 @@ public class DeleteProjectTask extends AbstractAsyncTask {
 
     @Override
     protected void performBackgroundStuff(Bundle args) {
-        boolean success = new ProjectDAO(context).delete(args.getString(PROJECT_UUID));
-
-        // TODO: dem event die betroffene UUID mit auf den Weg geben
+        new ProjectDAO(context).delete(args.getString(PROJECT_UUID));
     }
+
+    protected void onPostExecute(Long result) {
+        LOG.info("Deleted project with UUID " + arguments.getString(PROJECT_UUID));
+        ottoProvider.getSharedBus().post(new ProjectDeletedEvent(arguments.getString(PROJECT_UUID)));
+    }
+
 }
 
 
