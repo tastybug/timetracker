@@ -85,13 +85,22 @@ public class ProjectTest {
         project.setUuid(null);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void canNotSetNullProjectTitle() {
         // given
         Project project = new Project("project title");
 
         // when
         project.setTitle(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void canNotSetEmptyProjectTitle() {
+        // given
+        Project project = new Project("project title");
+
+        // when
+        project.setTitle("");
     }
 
     @Test(expected = IllegalStateException.class)

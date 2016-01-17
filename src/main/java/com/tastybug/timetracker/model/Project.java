@@ -1,5 +1,7 @@
 package com.tastybug.timetracker.model;
 
+import android.text.TextUtils;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -47,7 +49,7 @@ public class Project extends Entity {
     }
 
     public void setTitle(String title) {
-        Preconditions.checkNotNull(title);
+        Preconditions.checkArgument(!TextUtils.isEmpty(title), "Project has empty or null title!");
 
         PropertyChangeEvent e = new PropertyChangeEvent(this, "title", this.title, title);
         this.title = title;
