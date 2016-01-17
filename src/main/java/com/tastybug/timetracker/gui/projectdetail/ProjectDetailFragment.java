@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.gui.projectdetail;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.gui.ProjectConfigurationActivity;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
 
@@ -46,10 +48,19 @@ public class ProjectDetailFragment extends Fragment {
             case R.id.menu_delete_project:
                 DeleteProjectTask.aTask(getActivity()).withProjectUuid(currentProject.getUuid()).execute();
                 return true;
+            case R.id.menu_configure_project:
+                showProjectConfigurationActivity();
+                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return false;
         }
+    }
+
+    private void showProjectConfigurationActivity() {
+        Intent intent = new Intent(getActivity(), ProjectConfigurationActivity.class);
+        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProject.getUuid());
+        startActivity(intent);
     }
 
     public void showProjectDetailsFor(Project project) {

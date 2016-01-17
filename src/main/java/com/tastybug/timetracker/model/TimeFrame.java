@@ -1,12 +1,8 @@
 package com.tastybug.timetracker.model;
 
-import android.content.Context;
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.database.dao.EntityDAO;
-import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 
 import org.joda.time.Duration;
 

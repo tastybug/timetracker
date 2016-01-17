@@ -57,7 +57,6 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
     }
 
     public void onProjectSelected(Project project) {
-        logger.info("Selected " + project.toString());
         showProjectDetails(project);
     }
 
@@ -91,5 +90,4 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
         Toast.makeText(this, "Deleted project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
         showNoProjectDetails();
     }
-
 }

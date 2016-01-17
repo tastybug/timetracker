@@ -26,6 +26,9 @@ public abstract class EntityDAO<T extends Entity> {
     public Uri getQueryUri() {
         return Uri.parse("content://" + AUTHORITY + "/" + getTableName());
     }
+    public Uri getUpdateUri(T entity) {
+        return Uri.parse("content://" + AUTHORITY + "/" + getTableName() + "/" + entity.getUuid());
+    }
 
     public Optional<T> get(String uuid) {
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), getPKColumn() + "=?", new String[]{uuid}, null);
@@ -54,7 +57,7 @@ public abstract class EntityDAO<T extends Entity> {
     }
 
     public int update(T entity) {
-        int rowsUpdated = context.getContentResolver().update(getQueryUri(), getContentValues(entity), getPKColumn() + "=?", new String[]{entity.getUuid()});
+        int rowsUpdated = context.getContentResolver().update(getUpdateUri(entity), getContentValues(entity), getPKColumn() + "=?", new String[]{entity.getUuid()});
         return rowsUpdated;
     }
 
@@ -70,6 +73,10 @@ public abstract class EntityDAO<T extends Entity> {
 
     public ContentProviderOperation getBatchCreate(T entity) {
         return ContentProviderOperation.newInsert(getQueryUri()).withValues(getContentValues(entity)).build();
+    }
+
+    public ContentProviderOperation getBatchUpdate(T entity) {
+        return ContentProviderOperation.newUpdate(getUpdateUri(entity)).withValues(getContentValues(entity)).withSelection(getPKColumn() + "=?", new String[]{entity.getUuid()}).build();
     }
 
     public abstract String getPKColumn();
