@@ -13,26 +13,42 @@ import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
 public class ProjectConfigurationFragment extends Fragment {
 
+    private static final String PROJECT_TITLE = "PROJECT_TITLE";
+    private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
+
     private EditText projectTitleEditText;
     private EditText projectDescriptionEditText;
 
-    private Project currentProject;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_project_configuration, container);
+        View view = inflater.inflate(R.layout.fragment_project_configuration, container);
 
-        projectTitleEditText = (EditText) rootview.findViewById(R.id.project_title);
-        projectDescriptionEditText = (EditText) rootview.findViewById(R.id.project_description);
+        projectTitleEditText = (EditText) view.findViewById(R.id.project_title);
+        projectDescriptionEditText = (EditText) view.findViewById(R.id.project_description);
 
-        return rootview;
+        if (savedInstanceState != null) {
+            showProjectData(savedInstanceState.getString(PROJECT_TITLE),
+                    savedInstanceState.getString(PROJECT_DESCRIPTION));
+        }
+
+        return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(PROJECT_TITLE, getTitleFromWidget());
+        outState.putString(PROJECT_DESCRIPTION, getDescriptionFromWidget());
     }
 
     public void showProject(Project project) {
-        this.currentProject = project;
+        showProjectData(project.getTitle(), project.getDescription().orNull());
+    }
 
-        projectTitleEditText.setText(project.getTitle());
-        projectDescriptionEditText.setText(project.getDescription().isPresent() ? project.getDescription().get() : "");
+    private void showProjectData(String title, String description) {
+        projectTitleEditText.setText(title);
+        projectDescriptionEditText.setText(description != null ? description : "");
     }
 
     public void collectModifications(ConfigureProjectTask task) {

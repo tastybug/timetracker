@@ -4,5 +4,6 @@
     <item name="fragment_project_list" type="id"/>
     <item name="fragment_project_detail" type="id"/>
     <item name="fragment_project_configuration" type="id"/>
+    <item name="fragment_project_time_constraints_configuration" type="id"/>
 
 </resources>

@@ -12,8 +12,11 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.gui.projectconfiguration.ProjectConfigurationFragment;
+import com.tastybug.timetracker.gui.projectconfiguration.ProjectTimeConstraintsConfigurationFragment;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
@@ -29,7 +32,10 @@ public class ProjectConfigurationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_configuration);
         setupActionBar();
+        setOrRestoreState(savedInstanceState);
+    }
 
+    private void setOrRestoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             projectUuid = savedInstanceState.getString(PROJECT_UUID);
         } else {
@@ -37,7 +43,19 @@ public class ProjectConfigurationActivity extends Activity {
             projectUuid = intent.getStringExtra(PROJECT_UUID);
         }
 
-        setTitle(getString(R.string.project_configuration_for_project_X, getProjectByUuid(projectUuid).getTitle()));
+        Project project = getProjectByUuid(projectUuid);
+        ProjectTimeConstraints constraints = getProjectTimeConstraintsByProjectUuid(projectUuid);
+
+        setTitle(getString(R.string.project_configuration_for_project_X, project.getTitle()));
+
+        ProjectConfigurationFragment configurationFragment = (ProjectConfigurationFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_project_configuration);
+        configurationFragment.showProject(project);
+
+
+        ProjectTimeConstraintsConfigurationFragment constraintFragment = (ProjectTimeConstraintsConfigurationFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_project_time_constraints_configuration);
+        constraintFragment.showProjectTimeConstraints(constraints);
     }
 
     @Override
@@ -51,13 +69,7 @@ public class ProjectConfigurationActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
         new OttoProvider().getSharedBus().register(this);
-
-        ProjectConfigurationFragment configurationFragment = (ProjectConfigurationFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_configuration);
-
-        configurationFragment.showProject(getProjectByUuid(projectUuid));
     }
 
     @Override
@@ -66,9 +78,19 @@ public class ProjectConfigurationActivity extends Activity {
         new OttoProvider().getSharedBus().unregister(this);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(PROJECT_UUID, projectUuid);
+    }
+
     // TODO mehrfach implementiert
     protected Project getProjectByUuid(String uuid) {
         return new ProjectDAO(this).get(uuid).get();
+    }
+
+    protected ProjectTimeConstraints getProjectTimeConstraintsByProjectUuid(String projectUuid) {
+        return new ProjectTimeConstraintsDAO(this).getByProjectUuid(projectUuid).get();
     }
 
     protected void setupActionBar() {
@@ -96,8 +118,12 @@ public class ProjectConfigurationActivity extends Activity {
         ConfigureProjectTask task = ConfigureProjectTask.aTask(this).withProjectUuid(projectUuid);
         ProjectConfigurationFragment configurationFragment = (ProjectConfigurationFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_project_configuration);
+        ProjectTimeConstraintsConfigurationFragment constraintFragment = (ProjectTimeConstraintsConfigurationFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_project_time_constraints_configuration);
 
         configurationFragment.collectModifications(task);
+        constraintFragment.collectModifications(task);
+
         return task;
     }
 

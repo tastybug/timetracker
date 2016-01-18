@@ -6,7 +6,9 @@ import android.os.Bundle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.ProjectTimeConstraints;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
+    private static final String HOUR_LIMIT = "HOUR_LIMIT";
 
     public static ConfigureProjectTask aTask(Context context) {
         return new ConfigureProjectTask(context);
@@ -44,6 +47,11 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         return this;
     }
 
+    public ConfigureProjectTask withHourLimit(Integer hourLimit) {
+        arguments.putInt(HOUR_LIMIT, hourLimit);
+        return this;
+    }
+
     @Override
     protected void validateArguments() throws NullPointerException {
         Preconditions.checkNotNull(arguments.getString(PROJECT_UUID));
@@ -51,8 +59,14 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
     @Override
     protected void performBackgroundStuff(Bundle args) {
-        ProjectDAO dao = new ProjectDAO(context);
-        Project project = dao.get(args.getString(PROJECT_UUID)).get();
+        ProjectDAO projectDAO = new ProjectDAO(context);
+        ProjectTimeConstraintsDAO constraintsDAO = new ProjectTimeConstraintsDAO(context);
+        Project project = projectDAO.get(args.getString(PROJECT_UUID)).get();
+        ProjectTimeConstraints timeConstraints = constraintsDAO.getByProjectUuid(project.getUuid()).get();
+
+        /*
+            Note: both entities dont have a context as we want to alter the entities in a transactional way!
+         */
 
         if(arguments.containsKey(PROJECT_TITLE)) {
             project.setTitle(arguments.getString(PROJECT_TITLE));
@@ -62,7 +76,12 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
             project.setDescription(Optional.of(arguments.getString(PROJECT_DESCRIPTION)));
         }
 
-        storeBatchOperation(dao.getBatchUpdate(project));
+        if(arguments.containsKey(HOUR_LIMIT)) {
+            timeConstraints.setHourLimit(Optional.of(arguments.getInt(HOUR_LIMIT)));
+        }
+
+        storeBatchOperation(projectDAO.getBatchUpdate(project));
+        storeBatchOperation(constraintsDAO.getBatchUpdate(timeConstraints));
     }
 
     protected void onPostExecute(Long result) {

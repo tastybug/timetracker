@@ -26,6 +26,7 @@ public abstract class EntityDAO<T extends Entity> {
     public Uri getQueryUri() {
         return Uri.parse("content://" + AUTHORITY + "/" + getTableName());
     }
+
     public Uri getUpdateUri(T entity) {
         return Uri.parse("content://" + AUTHORITY + "/" + getTableName() + "/" + entity.getUuid());
     }

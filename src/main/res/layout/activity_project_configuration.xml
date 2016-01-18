@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <fragment class="com.tastybug.timetracker.gui.projectconfiguration.ProjectConfigurationFragment"
-        android:id="@+id/fragment_project_configuration"
+        android:id="@id/fragment_project_configuration"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/activity_project_configuration" />
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_project_configuration" />
 
-</FrameLayout>
+    <fragment class="com.tastybug.timetracker.gui.projectconfiguration.ProjectTimeConstraintsConfigurationFragment"
+        android:id="@id/fragment_project_time_constraints_configuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_project_time_constraints_configuration" />
+
+</LinearLayout>
