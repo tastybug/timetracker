@@ -13,6 +13,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
         android:hint="Projekttitel"
         android:id="@+id/project_title" />
 
@@ -32,4 +33,5 @@
         android:minLines="3"
         android:maxLines="3"
         android:id="@+id/project_description" />
+
 </LinearLayout>

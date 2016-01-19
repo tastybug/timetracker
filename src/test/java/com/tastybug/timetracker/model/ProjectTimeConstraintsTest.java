@@ -19,7 +19,6 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -107,6 +106,34 @@ public class ProjectTimeConstraintsTest {
 
         // then
         assertFalse(constraints.getEnd().isPresent());
+
+        // and
+        assertFalse(constraints.getEndDateAsInclusive().isPresent());
+    }
+
+    @Test public void canGetEnddateAsAnInclusiveDate() {
+        // given
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+
+        // when: set an end date (which is EXCLUSIVE)
+        DateTime exclusiveDate = new DateTime(2016, 1, 1, 0, 0);
+        constraints.setEnd(Optional.of(exclusiveDate.toDate()));
+
+        // then
+        DateTime expectedInclusiveDate = new DateTime(2015, 12, 31, 0, 0);
+        assertEquals(expectedInclusiveDate.toDate(), constraints.getEndDateAsInclusive().get());
+    }
+
+    @Test public void canSetEnddateAsInclusiveDate() {
+        // given
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        DateTime lastInclusiveDate = new DateTime(2015, 12, 31, 0, 0);
+
+        // when: I set the last day of the year as my last project day
+        constraints.setEndAsInclusive(Optional.of(lastInclusiveDate.toDate()));
+
+        // then
+        assertEquals(lastInclusiveDate.toDate(), constraints.getEndDateAsInclusive().get());
     }
 
     @Test(expected = NullPointerException.class)

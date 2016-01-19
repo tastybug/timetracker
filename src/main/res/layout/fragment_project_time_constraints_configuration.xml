@@ -6,6 +6,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Gibt es ein Stundenlimit?" />
 
@@ -15,5 +16,20 @@
         android:hint="Limit in Stunden"
         android:id="@+id/project_hour_limit"
         android:inputType="number" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Gibt es ein Enddatum?" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/project_end_date"
+        android:hint="Kein Datum gesetzt"
+        android:singleLine="true"
+        android:editable="false"
+        android:focusable="false"/>
 
 </LinearLayout>

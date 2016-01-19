@@ -16,6 +16,8 @@ import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 import com.tastybug.timetracker.util.VersionUtil;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +25,12 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // todo hierfuer einen besseren platz finden!
+        JodaTimeAndroid.init(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
 

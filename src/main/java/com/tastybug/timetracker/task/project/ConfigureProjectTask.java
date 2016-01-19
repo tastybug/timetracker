@@ -13,6 +13,7 @@ import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 
 
 public class ConfigureProjectTask extends AbstractAsyncTask {
@@ -23,6 +24,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
     private static final String HOUR_LIMIT = "HOUR_LIMIT";
+    private static final String END_DATE_INCLUSIVE = "END_DATE_INCLUSIVE";
 
     public static ConfigureProjectTask aTask(Context context) {
         return new ConfigureProjectTask(context);
@@ -52,6 +54,11 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         return this;
     }
 
+    public ConfigureProjectTask withInclusiveEndDate(Date date) {
+        arguments.putSerializable(END_DATE_INCLUSIVE, date);
+        return this;
+    }
+
     @Override
     protected void validateArguments() throws NullPointerException {
         Preconditions.checkNotNull(arguments.getString(PROJECT_UUID));
@@ -78,6 +85,10 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
         if(arguments.containsKey(HOUR_LIMIT)) {
             timeConstraints.setHourLimit(Optional.of(arguments.getInt(HOUR_LIMIT)));
+        }
+
+        if(arguments.containsKey(END_DATE_INCLUSIVE)) {
+            timeConstraints.setEndAsInclusive(Optional.fromNullable((Date)arguments.getSerializable(END_DATE_INCLUSIVE)));
         }
 
         storeBatchOperation(projectDAO.getBatchUpdate(project));

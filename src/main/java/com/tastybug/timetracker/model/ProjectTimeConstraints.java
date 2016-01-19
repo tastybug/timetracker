@@ -1,12 +1,10 @@
 package com.tastybug.timetracker.model;
 
-import android.content.Context;
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.database.dao.EntityDAO;
-import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
+
+import org.joda.time.DateTime;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Date;
@@ -78,10 +76,28 @@ public class ProjectTimeConstraints extends Entity {
         return Optional.fromNullable(end);
     }
 
+    public Optional<Date> getEndDateAsInclusive() {
+        if (end != null) {
+            DateTime inclusiveDate = new DateTime(end).minusDays(1);
+            return Optional.of(inclusiveDate.toDate());
+        } else {
+            return Optional.absent();
+        }
+    }
+
     public void setEnd(Optional<Date> end) {
         PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, end);
         this.end = end.orNull();
         propertyChange(e);
+    }
+
+    public void setEndAsInclusive(Optional<Date> endAsInclusive) {
+        if(endAsInclusive.isPresent()) {
+            DateTime dateTime = new DateTime(endAsInclusive.get());
+            setEnd(Optional.of(dateTime.plusDays(1).toDate()));
+        } else {
+            setEnd(Optional.<Date>absent());
+        }
     }
 
     public String toString() {

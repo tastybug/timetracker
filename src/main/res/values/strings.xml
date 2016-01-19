@@ -10,5 +10,6 @@
     <!-- project configuration -->
     <string name="project_configuration_for_project_X">%1$s Settings</string>
     <string name="menu_confirm_project_configuration">Confirm</string>
+    <string name="set_no_date">None</string>
 
 </resources>

@@ -88,8 +88,8 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
     protected ContentValues getContentValues(ProjectTimeConstraints entity) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(UUID_COLUMN, entity.getUuid());
-        contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());
         contentValues.put(HOUR_LIMIT_COLUMN, entity.getHourLimit().orNull());
+        contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());
         contentValues.put(START_DATE_COLUMN, formatDate(entity.getStart()));
         contentValues.put(END_DATE_COLUMN, formatDate(entity.getEnd()));
 
@@ -98,7 +98,7 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
 
     private String formatDate(Optional<Date> date) {
         if (date.isPresent()) {
-            return getIso8601DateFormatter().format(date);
+            return getIso8601DateFormatter().format(date.get());
         }
         return null;
     }
