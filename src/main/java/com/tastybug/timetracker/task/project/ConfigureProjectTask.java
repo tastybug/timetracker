@@ -24,6 +24,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
     private static final String HOUR_LIMIT = "HOUR_LIMIT";
+    private static final String START_DATE = "START_DATE";
     private static final String END_DATE_INCLUSIVE = "END_DATE_INCLUSIVE";
 
     public static ConfigureProjectTask aTask(Context context) {
@@ -51,6 +52,11 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
     public ConfigureProjectTask withHourLimit(Integer hourLimit) {
         arguments.putInt(HOUR_LIMIT, hourLimit);
+        return this;
+    }
+
+    public ConfigureProjectTask withStartDate(Date date) {
+        arguments.putSerializable(START_DATE, date);
         return this;
     }
 
@@ -85,6 +91,10 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
         if(arguments.containsKey(HOUR_LIMIT)) {
             timeConstraints.setHourLimit(Optional.of(arguments.getInt(HOUR_LIMIT)));
+        }
+
+        if(arguments.containsKey(START_DATE)) {
+            timeConstraints.setStart(Optional.fromNullable((Date) arguments.getSerializable(START_DATE)));
         }
 
         if(arguments.containsKey(END_DATE_INCLUSIVE)) {

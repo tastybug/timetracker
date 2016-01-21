@@ -10,6 +10,13 @@
     <!-- project configuration -->
     <string name="project_configuration_for_project_X">%1$s Settings</string>
     <string name="menu_confirm_project_configuration">Confirm</string>
+    <string name="project_hours_limited_not_limited">No Hour Limit</string>
     <string name="set_no_date">None</string>
+    <string name="project_starts_at_X">Starts At %1$s</string>
+    <string name="project_has_no_start_date">Open Start</string>
+    <string name="project_ends_at_X">Ends At %1$s</string>
+    <string name="project_has_no_end_date">Open End</string>
+    <string name="error_project_title_empty">Please provide a title</string>
+    <string name="error_start_after_end_date">Error: Start date is after end date!</string>
 
 </resources>

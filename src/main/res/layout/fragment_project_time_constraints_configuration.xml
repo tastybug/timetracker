@@ -8,26 +8,41 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Gibt es ein Stundenlimit?" />
+        android:text="Gibt es ein Stundenlimit?"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Limit in Stunden"
+        android:hint="@string/project_hours_limited_not_limited"
         android:id="@+id/project_hour_limit"
-        android:inputType="number" />
+        android:inputType="number"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Gibt es ein Enddatum?" />
+        android:text="Gibt es ein Startdatum?"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/project_start_date"
+        android:hint="@string/project_has_no_start_date"
+        android:singleLine="true"
+        android:editable="false"
+        android:focusable="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Gibt es ein Enddatum?"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/project_end_date"
-        android:hint="Kein Datum gesetzt"
+        android:hint="@string/project_has_no_end_date"
         android:singleLine="true"
         android:editable="false"
         android:focusable="false"/>

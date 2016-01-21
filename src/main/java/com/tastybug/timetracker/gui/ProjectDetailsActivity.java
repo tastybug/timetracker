@@ -54,8 +54,16 @@ public class ProjectDetailsActivity extends Activity {
         new OttoProvider().getSharedBus().unregister(this);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(PROJECT_UUID, projectUuid);
+    }
+
     protected Project getProjectByUuid(String uuid) {
-        return new ProjectDAO(this).get(uuid).get();
+        Project project = new ProjectDAO(this).get(uuid).get();
+        project.setContext(this);
+        return project;
     }
 
     protected void setupActionBar() {

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
@@ -105,8 +104,10 @@ public class ProjectConfigurationActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_confirm_project_configuration:
-                ConfigureProjectTask task = buildProjectConfigurationTask();
-                task.execute();
+                if (isConfigurationValid()) {
+                    ConfigureProjectTask task = buildProjectConfigurationTask();
+                    task.execute();
+                }
                 return true;
             default:
                 super.onOptionsItemSelected(item);
@@ -114,12 +115,18 @@ public class ProjectConfigurationActivity extends Activity {
         }
     }
 
+    private boolean isConfigurationValid() {
+        ProjectConfigurationFragment configurationFragment = getConfigurationFragment();
+        ProjectTimeConstraintsConfigurationFragment constraintFragment = getConstraintsFragment();
+
+        return configurationFragment.validateSettings()
+                && constraintFragment.validateSettings();
+    }
+
     private ConfigureProjectTask buildProjectConfigurationTask() {
         ConfigureProjectTask task = ConfigureProjectTask.aTask(this).withProjectUuid(projectUuid);
-        ProjectConfigurationFragment configurationFragment = (ProjectConfigurationFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_configuration);
-        ProjectTimeConstraintsConfigurationFragment constraintFragment = (ProjectTimeConstraintsConfigurationFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_time_constraints_configuration);
+        ProjectConfigurationFragment configurationFragment = getConfigurationFragment();
+        ProjectTimeConstraintsConfigurationFragment constraintFragment = getConstraintsFragment();
 
         configurationFragment.collectModifications(task);
         constraintFragment.collectModifications(task);
@@ -127,10 +134,17 @@ public class ProjectConfigurationActivity extends Activity {
         return task;
     }
 
+    private ProjectConfigurationFragment getConfigurationFragment() {
+        return (ProjectConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_project_configuration);
+    }
+
+    private ProjectTimeConstraintsConfigurationFragment getConstraintsFragment() {
+        return (ProjectTimeConstraintsConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_project_time_constraints_configuration);
+    }
+
     @Subscribe
     public void handleProjectConfiguredEvent(ProjectConfiguredEvent event) {
-        Toast.makeText(this, "Configured project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
-//        onBackPressed();
+        onBackPressed();
     }
 
 }

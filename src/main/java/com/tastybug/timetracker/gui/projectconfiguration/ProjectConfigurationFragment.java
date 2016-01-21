@@ -2,6 +2,7 @@ package com.tastybug.timetracker.gui.projectconfiguration;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,16 @@ public class ProjectConfigurationFragment extends Fragment {
     private void showProjectData(String title, String description) {
         projectTitleEditText.setText(title);
         projectDescriptionEditText.setText(description != null ? description : "");
+    }
+
+    public boolean validateSettings() {
+        if (TextUtils.isEmpty(getTitleFromWidget())) {
+            projectTitleEditText.setError(getString(R.string.error_project_title_empty));
+            return false;
+        } else {
+            projectTitleEditText.setError(null);
+            return true;
+        }
     }
 
     public void collectModifications(ConfigureProjectTask task) {
