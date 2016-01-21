@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
+import com.tastybug.timetracker.model.TimeFrameRounding;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -19,6 +20,7 @@ import org.robolectric.annotation.Config;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -126,7 +128,7 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void canCreateEntity() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
 
         // when
         projectTimeConstraintsDAO.create(constraints);
@@ -138,7 +140,7 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void canUpdateEntity() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -150,7 +152,7 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void canDeleteEntity() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -162,7 +164,7 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when
@@ -179,12 +181,13 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void knowsAllColumns() {
         // expect
-        assertEquals(5, projectTimeConstraintsDAO.getColumns().length);
+        assertEquals(6, projectTimeConstraintsDAO.getColumns().length);
         assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.UUID_COLUMN));
         assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.PROJECT_UUID_COLUMN));
         assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.HOUR_LIMIT_COLUMN));
         assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.START_DATE_COLUMN));
         assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.END_DATE_COLUMN));
+        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.ROUNDING_STRATEGY_COLUMN));
     }
 
     @Test(expected = NullPointerException.class)
@@ -227,6 +230,7 @@ public class ProjectTimeConstraintsDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
+        when(cursor.getString(5)).thenReturn(TimeFrameRounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -239,6 +243,7 @@ public class ProjectTimeConstraintsDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(startDateString);
         when(cursor.getString(4)).thenReturn(endDateString);
+        when(cursor.getString(5)).thenReturn(TimeFrameRounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -250,6 +255,7 @@ public class ProjectTimeConstraintsDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
+        when(cursor.getString(5)).thenReturn(TimeFrameRounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;
@@ -264,6 +270,6 @@ public class ProjectTimeConstraintsDAOTest {
     }
 
     private static SimpleDateFormat getIso8601DateFormatter() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     }
 }

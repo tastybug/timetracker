@@ -243,7 +243,7 @@ public class ProjectTest {
         Project project = new Project("project title");
         project.setContext(context);
         project.setDAOFactory(daoFactory);
-        ProjectTimeConstraints expectedConstraints = new ProjectTimeConstraints("1", project.getUuid(), null, null, null);
+        ProjectTimeConstraints expectedConstraints = new ProjectTimeConstraints("1", project.getUuid(), null, null, null, TimeFrameRounding.Strategy.NO_ROUNDING);
         when(timeConstraintsDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConstraints));
 
         // when

@@ -16,16 +16,30 @@ public class ProjectTimeConstraints extends Entity {
     private String projectUuid;
     private Integer hourLimit;
     private Date start, end;
+    private TimeFrameRounding.Strategy roundingStrategy;
 
 
-    public ProjectTimeConstraints() {}
+    public ProjectTimeConstraints(String projectUuid) {
+        this(projectUuid, TimeFrameRounding.Strategy.NO_ROUNDING);
+    }
 
-    public ProjectTimeConstraints(String uuid, String projectUuid, Integer hourLimit, Date start, Date end) {
+    public ProjectTimeConstraints(String projectUuid, TimeFrameRounding.Strategy strategy) {
+        this.projectUuid = projectUuid;
+        this.roundingStrategy = strategy;
+    }
+
+    public ProjectTimeConstraints(String uuid,
+                                  String projectUuid,
+                                  Integer hourLimit,
+                                  Date start,
+                                  Date end,
+                                  TimeFrameRounding.Strategy roundingStrategy) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.hourLimit = hourLimit;
         this.start = start;
         this.end = end;
+        this.roundingStrategy = roundingStrategy;
     }
 
     @Override
@@ -52,6 +66,18 @@ public class ProjectTimeConstraints extends Entity {
         propertyChange(e);
     }
 
+    public TimeFrameRounding.Strategy getRoundingStrategy() {
+        return roundingStrategy;
+    }
+
+    public void setRoundingStrategy(TimeFrameRounding.Strategy roundingStrategy) {
+        Preconditions.checkNotNull(roundingStrategy);
+
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "roundingStrategy", this.roundingStrategy, roundingStrategy);
+        this.roundingStrategy = roundingStrategy;
+        propertyChange(e);
+    }
+
     public Optional<Integer> getHourLimit() {
         return Optional.fromNullable(hourLimit);
     }
@@ -67,6 +93,9 @@ public class ProjectTimeConstraints extends Entity {
     }
 
     public void setStart(Optional<Date> start) {
+        if (getEnd().isPresent() && start.isPresent()) {
+            Preconditions.checkArgument(start.get().before(getEnd().get()), "Start date cannot be after end date!");
+        }
         PropertyChangeEvent e = new PropertyChangeEvent(this, "start", this.start, start);
         this.start = start.orNull();
         propertyChange(e);
@@ -86,6 +115,9 @@ public class ProjectTimeConstraints extends Entity {
     }
 
     public void setEnd(Optional<Date> end) {
+        if (getStart().isPresent() && end.isPresent()) {
+            Preconditions.checkArgument(end.get().after(getStart().get()), "End date cannot be before start date!");
+        }
         PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, end);
         this.end = end.orNull();
         propertyChange(e);

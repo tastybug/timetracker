@@ -48,8 +48,7 @@ public class CreateProjectTask extends AbstractAsyncTask {
         project = new Project(args.getString(PROJECT_TITLE));
         project.setDescription(Optional.fromNullable(args.getString(PROJECT_DESCRIPTION)));
 
-        ProjectTimeConstraints timeConstraints = new ProjectTimeConstraints();
-        timeConstraints.setProjectUuid(project.getUuid());
+        ProjectTimeConstraints timeConstraints = new ProjectTimeConstraints(project.getUuid());
 
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));
         storeBatchOperation(timeConstraints.getDAO(context).getBatchCreate(timeConstraints));

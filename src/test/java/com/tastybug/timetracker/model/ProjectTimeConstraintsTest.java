@@ -44,7 +44,7 @@ public class ProjectTimeConstraintsTest {
         // when
         DateTime start = new DateTime();
         DateTime end = start.plusDays(5);
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints("1", "2", 3, start.toDate(), end.toDate());
+        ProjectTimeConstraints constraints = new ProjectTimeConstraints("1", "2", 3, start.toDate(), end.toDate(), TimeFrameRounding.Strategy.NO_ROUNDING);
 
         // then
         assertNotNull(constraints);
@@ -53,14 +53,15 @@ public class ProjectTimeConstraintsTest {
         assertEquals(3, constraints.getHourLimit().get().intValue());
         assertEquals(start.toDate(), constraints.getStart().get());
         assertEquals(end.toDate(), constraints.getEnd().get());
+        assertEquals(TimeFrameRounding.Strategy.NO_ROUNDING, constraints.getRoundingStrategy());
     }
 
     @Test public void noHourLimitIsHandledWell() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
 
         // when
-        constraints.setHourLimit(Optional.of(new Integer(5)));
+        constraints.setHourLimit(Optional.of(5));
 
         // then
         assertEquals(5, constraints.getHourLimit().get().intValue());
@@ -74,7 +75,7 @@ public class ProjectTimeConstraintsTest {
 
     @Test public void noStartDateIsHandledWell() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
 
         // when
         Date d = new Date();
@@ -92,7 +93,7 @@ public class ProjectTimeConstraintsTest {
 
     @Test public void noEndDateIsHandledWell() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
 
         // when
         Date d = new Date();
@@ -113,7 +114,7 @@ public class ProjectTimeConstraintsTest {
 
     @Test public void canGetEnddateAsAnInclusiveDate() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
 
         // when: set an end date (which is EXCLUSIVE)
         DateTime exclusiveDate = new DateTime(2016, 1, 1, 0, 0);
@@ -126,7 +127,7 @@ public class ProjectTimeConstraintsTest {
 
     @Test public void canSetEnddateAsInclusiveDate() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
         DateTime lastInclusiveDate = new DateTime(2015, 12, 31, 0, 0);
 
         // when: I set the last day of the year as my last project day
@@ -136,10 +137,43 @@ public class ProjectTimeConstraintsTest {
         assertEquals(lastInclusiveDate.toDate(), constraints.getEndDateAsInclusive().get());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void canNotSetEndDateBeforeStartDate() {
+        // given
+        ProjectTimeConstraints constraints = aConstraintsInstance();
+        DateTime startDate = new DateTime(2016, 1, 1, 0, 0);
+        DateTime invalidEndDate = new DateTime(2015, 1, 1, 0, 0);
+        constraints.setStart(Optional.of(startDate.toDate()));
+
+        // when
+        constraints.setEnd(Optional.of(invalidEndDate.toDate()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void canNotSetStartDateAfterEndDate() {
+        // given
+        ProjectTimeConstraints constraints = aConstraintsInstance();
+        DateTime endDate = new DateTime(2016, 1, 1, 0, 0);
+        DateTime invalidStartDate = new DateTime(2016, 10, 10, 0, 0);
+        constraints.setEnd(Optional.of(endDate.toDate()));
+
+        // when
+        constraints.setStart(Optional.of(invalidStartDate.toDate()));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullRoundingStrategy() {
+        // given
+        ProjectTimeConstraints constraints = aConstraintsInstance();
+
+        // when
+        constraints.setRoundingStrategy(null);
+    }
+
     @Test(expected = NullPointerException.class)
     public void canNotSetNullUuid() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
 
         // when
         constraints.setUuid(null);
@@ -148,7 +182,7 @@ public class ProjectTimeConstraintsTest {
     @Test(expected = NullPointerException.class)
     public void canNotSetNullProjectFk() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
 
         // when
         constraints.setProjectUuid(null);
@@ -156,7 +190,7 @@ public class ProjectTimeConstraintsTest {
 
     @Test public void fieldChangesLeadToDatabaseUpdates() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints();
+        ProjectTimeConstraints constraints = aConstraintsInstance();
         constraints.setContext(contextMock);
         constraints.setDAOFactory(daoFactory);
 
@@ -166,8 +200,13 @@ public class ProjectTimeConstraintsTest {
         constraints.setHourLimit(Optional.of(10));
         constraints.setStart(Optional.of(new Date()));
         constraints.setEnd(Optional.of(new Date()));
+        constraints.setRoundingStrategy(TimeFrameRounding.Strategy.FULL_MINUTE_DOWN);
 
         // then
-        verify(projectTimeConstraintsDAO, times(4)).update(constraints);
+        verify(projectTimeConstraintsDAO, times(5)).update(constraints);
+    }
+
+    private ProjectTimeConstraints aConstraintsInstance() {
+        return new ProjectTimeConstraints("some project-uuid");
     }
 }

@@ -7,12 +7,14 @@ import android.database.Cursor;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
+import com.tastybug.timetracker.model.TimeFrameRounding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints> {
 
@@ -21,13 +23,15 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
     static String HOUR_LIMIT_COLUMN = "hour_limit";
     static String START_DATE_COLUMN = "start_date";
     static String END_DATE_COLUMN = "end_date";
+    static String ROUNDING_STRATEGY_COLUMN = "rounding_strategy";
 
     static String[] COLUMNS = new String[] {
             UUID_COLUMN,
             PROJECT_UUID_COLUMN,
             HOUR_LIMIT_COLUMN,
             START_DATE_COLUMN,
-            END_DATE_COLUMN
+            END_DATE_COLUMN,
+            ROUNDING_STRATEGY_COLUMN
     };
 
     public ProjectTimeConstraintsDAO(Context context) {
@@ -77,7 +81,8 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
                     cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN)),
                     hourLimit,
                     startDateString != null ? getIso8601DateFormatter().parse(startDateString) : null,
-                    endDateString != null ? getIso8601DateFormatter().parse(endDateString) : null
+                    endDateString != null ? getIso8601DateFormatter().parse(endDateString) : null,
+                    TimeFrameRounding.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
             );
         } catch (ParseException pe) {
             throw new IllegalArgumentException("Problem parsing date.", pe);
@@ -92,6 +97,7 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
         contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());
         contentValues.put(START_DATE_COLUMN, formatDate(entity.getStart()));
         contentValues.put(END_DATE_COLUMN, formatDate(entity.getEnd()));
+        contentValues.put(ROUNDING_STRATEGY_COLUMN, entity.getRoundingStrategy().name());
 
         return contentValues;
     }
@@ -104,6 +110,6 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
     }
 
     private static SimpleDateFormat getIso8601DateFormatter() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     }
 }
