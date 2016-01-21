@@ -140,9 +140,7 @@ public class ProjectConfigurationActivity extends Activity {
         return (ProjectTimeConstraintsConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_project_time_constraints_configuration);
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void handleProjectConfiguredEvent(ProjectConfiguredEvent event) {
+    @Subscribe public void handleProjectConfiguredEvent(ProjectConfiguredEvent event) {
         onBackPressed();
     }
 }

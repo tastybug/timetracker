@@ -85,9 +85,7 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
         // if its a different activity, simply do not open it
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
+    @Subscribe public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
         Toast.makeText(this, "Deleted project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
         showNoProjectDetails();
     }

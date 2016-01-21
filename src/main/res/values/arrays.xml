@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="rouding_strategy_labels">
+        <item>@string/rounding_no_rounding_label</item>
+        <item>@string/rounding_minutes_down</item>
+        <item>@string/rounding_minutes_up</item>
+        <item>@string/rounding_ten_minutes_up</item>
+        <item>@string/rounding_thirty_minutes_up</item>
+        <item>@string/rounding_sixty_minutes_up</item>
+    </string-array>
+    <string-array name="rouding_strategy_values">
+        <item>NO_ROUNDING</item>
+        <item>FULL_MINUTE_DOWN</item>
+        <item>FULL_MINUTE_UP</item>
+        <item>TEN_MINUTES_UP</item>
+        <item>THIRTY_MINUTES_UP</item>
+        <item>SIXTY_MINUTES_UP</item>
+    </string-array>
+</resources>

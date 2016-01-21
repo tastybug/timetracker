@@ -10,6 +10,7 @@ import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
+import com.tastybug.timetracker.model.TimeFrameRounding;
 
 import java.util.Date;
 
@@ -23,6 +24,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private static final String HOUR_LIMIT = "HOUR_LIMIT";
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE_INCLUSIVE = "END_DATE_INCLUSIVE";
+    private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
     public static ConfigureProjectTask aTask(Context context) {
         return new ConfigureProjectTask(context);
@@ -48,7 +50,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     }
 
     public ConfigureProjectTask withHourLimit(Integer hourLimit) {
-        arguments.putInt(HOUR_LIMIT, hourLimit);
+        arguments.putSerializable(HOUR_LIMIT, hourLimit);
         return this;
     }
 
@@ -59,6 +61,11 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
     public ConfigureProjectTask withInclusiveEndDate(Date date) {
         arguments.putSerializable(END_DATE_INCLUSIVE, date);
+        return this;
+    }
+
+    public ConfigureProjectTask withRoundingStrategy(TimeFrameRounding.Strategy strategy) {
+        arguments.putSerializable(ROUNDING_STRATEGY, strategy);
         return this;
     }
 
@@ -83,11 +90,11 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         }
 
         if(arguments.containsKey(PROJECT_DESCRIPTION)) {
-            project.setDescription(Optional.of(arguments.getString(PROJECT_DESCRIPTION)));
+            project.setDescription(Optional.fromNullable(arguments.getString(PROJECT_DESCRIPTION)));
         }
 
         if(arguments.containsKey(HOUR_LIMIT)) {
-            timeConstraints.setHourLimit(Optional.of(arguments.getInt(HOUR_LIMIT)));
+            timeConstraints.setHourLimit(Optional.fromNullable((Integer) arguments.getSerializable(HOUR_LIMIT)));
         }
 
         if(arguments.containsKey(START_DATE)) {
@@ -96,6 +103,10 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
         if(arguments.containsKey(END_DATE_INCLUSIVE)) {
             timeConstraints.setEndAsInclusive(Optional.fromNullable((Date)arguments.getSerializable(END_DATE_INCLUSIVE)));
+        }
+
+        if(arguments.containsKey(ROUNDING_STRATEGY)) {
+            timeConstraints.setRoundingStrategy((TimeFrameRounding.Strategy)arguments.getSerializable(ROUNDING_STRATEGY));
         }
 
         storeBatchOperation(projectDAO.getBatchUpdate(project));

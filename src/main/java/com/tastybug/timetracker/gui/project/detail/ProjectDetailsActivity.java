@@ -87,9 +87,7 @@ public class ProjectDetailsActivity extends Activity {
         }
     }
 
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
+    @Subscribe public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
         /*
         Das Eventhandling muss in der Activity passieren, da das Fragment nicht weiss, ob es two-pane oder single-pane
         ausgefuehrt wird. Ergo muss die Activity entscheiden, wie eine Projektloeschung sich navigatorisch auswirkt.

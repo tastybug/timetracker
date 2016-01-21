@@ -7,25 +7,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
+import com.tastybug.timetracker.model.TimeFrameRounding;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
 
     private static final String HOUR_LIMIT = "HOUR_LIMIT";
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE = "END_DATE";
+    private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
     private EditText hourLimitEditText;
     private EditText startDateEditText;
     private EditText endDateEditText;
+    private Spinner roundingStrategySpinner;
 
     @Override
     public void onDetach() {
@@ -37,14 +43,16 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_project_time_constraints_configuration, container);
 
-        hourLimitEditText = (EditText) view.findViewById(R.id.project_hour_limit);
-        startDateEditText = (EditText) view.findViewById(R.id.project_start_date);
-        endDateEditText = (EditText) view.findViewById(R.id.project_end_date);
+        hourLimitEditText = (EditText) view.findViewById(R.id.hour_limit);
+        startDateEditText = (EditText) view.findViewById(R.id.start_date);
+        endDateEditText = (EditText) view.findViewById(R.id.end_date_inclusive);
+        roundingStrategySpinner = (Spinner) view.findViewById(R.id.rounding_strategy_spinner);
 
         if (savedInstanceState != null) {
-            renderHourLimit(savedInstanceState.getInt(HOUR_LIMIT));
+            renderHourLimit((Integer)savedInstanceState.getSerializable(HOUR_LIMIT));
             renderStartDate((Date) savedInstanceState.getSerializable(START_DATE));
             renderEndDate((Date) savedInstanceState.getSerializable(END_DATE));
+            renderRoundingStrategy((TimeFrameRounding.Strategy) savedInstanceState.getSerializable(ROUNDING_STRATEGY));
         }
 
         startDateEditText.setOnClickListener(new View.OnClickListener() {
@@ -73,13 +81,15 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
 
         outState.putSerializable(START_DATE, getStartDateFromWidget().orNull());
         outState.putSerializable(END_DATE, getLastEnddateInclusiveFromWidget().orNull());
-        outState.putInt(HOUR_LIMIT, getHourLimitFromWidget().orNull());
+        outState.putSerializable(HOUR_LIMIT, getHourLimitFromWidget().orNull());
+        outState.putSerializable(ROUNDING_STRATEGY, getRoundingStrategyFromWidget());
     }
 
     public void showProjectTimeConstraints(ProjectTimeConstraints projectTimeConstraints) {
         renderHourLimit(projectTimeConstraints.getHourLimit().orNull());
         renderStartDate(projectTimeConstraints.getStart().orNull());
         renderEndDate(projectTimeConstraints.getEndDateAsInclusive().orNull());
+        renderRoundingStrategy(projectTimeConstraints.getRoundingStrategy());
     }
 
     private void renderHourLimit(Integer hourLimit) {
@@ -110,6 +120,11 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
         }
     }
 
+    private void renderRoundingStrategy(TimeFrameRounding.Strategy strategy) {
+        List<String> strategyList = Arrays.asList(getResources().getStringArray(R.array.rouding_strategy_values));
+        roundingStrategySpinner.setSelection(strategyList.indexOf(strategy.name()));
+    }
+
     public boolean validateSettings() {
         Optional<Date> startDateOpt = getStartDateFromWidget();
         Optional<Date> newLastDateOpt = getLastEnddateInclusiveFromWidget();
@@ -129,10 +144,12 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
         Optional<Integer> newHourLimitOpt = getHourLimitFromWidget();
         Optional<Date> startDateOpt = getStartDateFromWidget();
         Optional<Date> newLastDateOpt = getLastEnddateInclusiveFromWidget();
+        TimeFrameRounding.Strategy strategy = getRoundingStrategyFromWidget();
 
         task.withHourLimit(newHourLimitOpt.orNull());
         task.withStartDate(startDateOpt.orNull());
         task.withInclusiveEndDate(newLastDateOpt.orNull());
+        task.withRoundingStrategy(strategy);
     }
 
     private Optional<Integer> getHourLimitFromWidget() {
@@ -150,6 +167,12 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
         return Optional.fromNullable(lastDay);
     }
 
+    private TimeFrameRounding.Strategy getRoundingStrategyFromWidget() {
+        List<String> strategyList = Arrays.asList(getResources().getStringArray(R.array.rouding_strategy_values));
+        String strategyName = strategyList.get(roundingStrategySpinner.getSelectedItemPosition());
+        return TimeFrameRounding.Strategy.valueOf(strategyName);
+    }
+
     private void setProjectTitleErrorState(boolean isValid) {
         if (!isValid) {
             endDateEditText.setError(getString(R.string.error_start_after_end_date));
@@ -158,8 +181,7 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
         }
     }
 
-    @Subscribe
-    public void handleDatePicked(DatePickerFragment.DatePickedEvent event) {
+    @Subscribe public void handleDatePicked(DatePickerFragment.DatePickedEvent event) {
         if (START_DATE.equals(event.getTopic())) {
             renderStartDate(event.getDate().isPresent() ? event.getDate().get().toDate() : null);
         } else if (END_DATE.equals(event.getTopic())) {

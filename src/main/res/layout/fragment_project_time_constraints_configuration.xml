@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/project_hours_limited_not_limited"
-        android:id="@+id/project_hour_limit"
+        android:id="@+id/hour_limit"
         android:inputType="number"/>
 
     <TextView
@@ -26,7 +26,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/project_start_date"
+        android:id="@+id/start_date"
         android:hint="@string/project_has_no_start_date"
         android:singleLine="true"
         android:editable="false"
@@ -41,10 +41,22 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/project_end_date"
+        android:id="@+id/end_date_inclusive"
         android:hint="@string/project_has_no_end_date"
         android:singleLine="true"
         android:editable="false"
         android:focusable="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="After tracking your time, .."/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rounding_strategy_spinner"
+        android:entries="@array/rouding_strategy_labels"/>
 
 </LinearLayout>
