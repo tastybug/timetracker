@@ -7,18 +7,17 @@ import android.content.OperationApplicationException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.tastybug.timetracker.database.dao.EntityDAO;
 import com.tastybug.timetracker.task.OttoProvider;
-
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 
 
 public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long> {
 
-    private Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+    private static final String TAG = ConfigureProjectTask.class.getSimpleName();
 
     protected OttoProvider ottoProvider = new OttoProvider();
     protected Bundle arguments = new Bundle();
@@ -42,9 +41,9 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
 
     protected Long doInBackground(Bundle... params) {
 
-        logger.debug("Performing background stuff..");
+        Log.d(TAG, "Performing background stuff..");
         performBackgroundStuff(params[0]);
-        logger.debug("Persisting to database..");
+        Log.d(TAG, "Persisting to database..");
         executeBatchOperations();
 
         return 0L;
@@ -64,10 +63,10 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
 
             return context.getContentResolver().applyBatch(EntityDAO.AUTHORITY, operations);
         } catch (RemoteException e) {
-            logger.error("Problem executing sql batch operation.", e);
+            Log.e(TAG, "Problem executing sql batch operation.", e);
             throw new RuntimeException("Problem executing sql batch operation.", e);
         } catch (OperationApplicationException e) {
-            logger.error("Problem executing sql batch operation.", e);
+            Log.e(TAG, "Problem executing sql batch operation.", e);
             throw new RuntimeException("Problem executing sql batch operation.", e);
         }
     }

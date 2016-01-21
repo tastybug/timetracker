@@ -3,9 +3,7 @@ package com.tastybug.timetracker.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,8 +16,7 @@ import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
-
+	private static final String TAG = DatabaseHelper.class.getSimpleName();
 
 	private static DatabaseHelper sharedInstance;
 
@@ -48,13 +45,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-        logger.info("Starting database creation..");
+        Log.d(TAG, "Starting database creation..");
     	db.beginTransaction(); // unlike onUpgrade, onCreate doesnt execute within in transaction implicitly
 		db.execSQL("PRAGMA foreign_keys=ON;");
 		performDbUpgrade(db, 0, dbVersion); // treat creation as an upgrade from version 0
 		db.setTransactionSuccessful();
 		db.endTransaction();
-        logger.info(".. database creation finished successfully.");
+        Log.d(TAG, ".. database creation finished successfully.");
 	}
 
 	@Override
@@ -69,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		logger.info("Upgrading database from version " + oldVersion + " to " + newVersion + ".");
+		Log.i(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ".");
 
 		performDbUpgrade(db, oldVersion, newVersion);
 	}
@@ -106,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			else
 				return defaultDataPrefix;
 		} catch (IOException ioe) {
-			logger.error("Error while looking up database script folder: " + ioe.getMessage());
+			Log.e(TAG, "Error while looking up database script folder: " + ioe.getMessage());
 	    	return defaultDataPrefix;
 	    }
 	}
@@ -123,7 +120,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	private int performIterativeSQLUpgrade (Context context, SQLiteDatabase db, String pathBase, int versionToUpgradeTo) throws IOException {
 	    try {
-			logger.debug(DatabaseHelper.class.getName(), "Calling database upgrade/creation script for version " + versionToUpgradeTo + ": " + pathBase + versionToUpgradeTo);
+			Log.d(TAG, "Calling database upgrade/creation script for version " + versionToUpgradeTo + ": " + pathBase + versionToUpgradeTo);
 		    int result = 0;
 
 		    InputStream myInput = context.getAssets().open(pathBase + versionToUpgradeTo);
@@ -138,10 +135,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		        }
 		    }
 		    insertReader.close();
-			logger.debug("Executed " + result + " statements, not counting empty lines and comments.");
+			Log.d(TAG, "Executed " + result + " statements, not counting empty lines and comments.");
 		    return result;
 	    } catch (IOException ioe) {
-			logger.error("Error while performing iterative database upgrade: " + ioe.toString());
+			Log.e(TAG, "Error while performing iterative database upgrade: " + ioe.toString());
 	    	throw ioe;
 	    }
 	}

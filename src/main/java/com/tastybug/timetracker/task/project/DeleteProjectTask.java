@@ -2,17 +2,15 @@ package com.tastybug.timetracker.task.project;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class DeleteProjectTask extends AbstractAsyncTask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DeleteProjectTask.class);
+    private static final String TAG = DeleteProjectTask.class.getSimpleName();
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
@@ -40,7 +38,7 @@ public class DeleteProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        LOG.info("Deleted project with UUID " + arguments.getString(PROJECT_UUID));
+        Log.i(TAG, "Deleted project with UUID " + arguments.getString(PROJECT_UUID));
         ottoProvider.getSharedBus().post(new ProjectDeletedEvent(arguments.getString(PROJECT_UUID)));
     }
 

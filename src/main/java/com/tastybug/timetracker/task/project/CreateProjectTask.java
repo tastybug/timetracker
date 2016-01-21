@@ -2,22 +2,21 @@ package com.tastybug.timetracker.task.project;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class CreateProjectTask extends AbstractAsyncTask {
+
+    private static final String TAG = CreateProjectTask.class.getSimpleName();
 
     private static final String PROJECT_TITLE       = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateProjectTask.class);
 
     private Project project;
 
@@ -59,7 +58,7 @@ public class CreateProjectTask extends AbstractAsyncTask {
     protected void onPostExecute(Long result) {
         // notify otto
         // and update the test
-        LOG.info("Created a project with title " + this.arguments.getString(PROJECT_TITLE));
+        Log.i(TAG, "Created project " + project);
         ottoProvider.getSharedBus().post(new ProjectCreatedEvent(project));
     }
 

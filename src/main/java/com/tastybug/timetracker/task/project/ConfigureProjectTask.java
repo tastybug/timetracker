@@ -2,6 +2,7 @@ package com.tastybug.timetracker.task.project;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -10,15 +11,11 @@ import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Date;
-
 
 public class ConfigureProjectTask extends AbstractAsyncTask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigureProjectTask.class);
+    private static final String TAG = ConfigureProjectTask.class.getSimpleName();
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
@@ -106,7 +103,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        LOG.info("Configured project with UUID " + arguments.getString(PROJECT_UUID));
+        Log.i(TAG, "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
         ottoProvider.getSharedBus().post(new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID)));
     }
 

@@ -18,13 +18,7 @@ import com.tastybug.timetracker.util.VersionUtil;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class ProjectsActivity extends Activity implements ProjectListFragment.ProjectListSelectionListener {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

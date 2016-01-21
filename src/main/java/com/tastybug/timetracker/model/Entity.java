@@ -1,11 +1,10 @@
 package com.tastybug.timetracker.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.EntityDAO;
-
-import org.slf4j.Logger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -13,7 +12,7 @@ import java.io.Serializable;
 
 public abstract class Entity implements Serializable, PropertyChangeListener {
 
-    private Logger logger = org.slf4j.LoggerFactory.getLogger(getClass());
+	private static final String TAG = Entity.class.getSimpleName();
 
 	protected Context   context;
 	protected DAOFactory daoFactory = new DAOFactory();
@@ -47,7 +46,7 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent event) {
 		if (hasContext()) { // access available to the DB? if not, simply ignore it
             Object oldValue = event.getOldValue(), newValue = event.getNewValue();
-            logger.debug("Propertychange: property= " + event.getPropertyName()
+            Log.d(TAG, "Propertychange: property= " + event.getPropertyName()
                     + ",sourceId=" + ((Entity) event.getSource()).getUuid()
                     + ", oldValue=" + event.getOldValue()
                     + ", newValue=" + event.getNewValue());
@@ -63,7 +62,7 @@ public abstract class Entity implements Serializable, PropertyChangeListener {
 			} else {
                 dao = getDAO(context);
 				if (oldValue != null && newValue != null && oldValue.equals(newValue)) {
-                    logger.debug(getClass().getSimpleName(), "Property unchanged, skipping update.");
+                    Log.d(TAG, "Property unchanged, skipping update.");
 				} else {
                     dao.update((Entity)event.getSource());
 				}
