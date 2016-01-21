@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui;
+package com.tastybug.timetracker.gui.project.detail;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.gui.projectdetail.ProjectDetailFragment;
+import com.tastybug.timetracker.gui.dashboard.ProjectsActivity;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
@@ -88,6 +88,7 @@ public class ProjectDetailsActivity extends Activity {
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
         /*
         Das Eventhandling muss in der Activity passieren, da das Fragment nicht weiss, ob es two-pane oder single-pane

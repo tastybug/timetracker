@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.projectdetail;
+package com.tastybug.timetracker.gui.project.detail;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.ProjectConfigurationActivity;
+import com.tastybug.timetracker.gui.project.configuration.ProjectConfigurationActivity;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
 

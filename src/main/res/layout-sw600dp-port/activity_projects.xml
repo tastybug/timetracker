@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment class="com.tastybug.timetracker.gui.projects.ProjectListFragment"
+    <fragment class="com.tastybug.timetracker.gui.dashboard.ProjectListFragment"
         android:id="@id/fragment_project_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"/>
     
-    <fragment class="com.tastybug.timetracker.gui.projectdetail.ProjectDetailFragment"
+    <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectDetailFragment"
         android:id="@id/fragment_project_detail"
         android:layout_width="match_parent"
         android:layout_height="0dp"

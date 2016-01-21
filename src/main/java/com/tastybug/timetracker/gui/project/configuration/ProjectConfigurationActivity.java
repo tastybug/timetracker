@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui;
+package com.tastybug.timetracker.gui.project.configuration;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -12,8 +12,6 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
-import com.tastybug.timetracker.gui.projectconfiguration.ProjectConfigurationFragment;
-import com.tastybug.timetracker.gui.projectconfiguration.ProjectTimeConstraintsConfigurationFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import com.tastybug.timetracker.task.OttoProvider;
@@ -143,8 +141,8 @@ public class ProjectConfigurationActivity extends Activity {
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void handleProjectConfiguredEvent(ProjectConfiguredEvent event) {
         onBackPressed();
     }
-
 }

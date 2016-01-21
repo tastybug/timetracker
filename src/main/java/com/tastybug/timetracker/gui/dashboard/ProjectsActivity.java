@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui;
+package com.tastybug.timetracker.gui.dashboard;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -9,8 +9,8 @@ import android.widget.Toast;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.projectdetail.ProjectDetailFragment;
-import com.tastybug.timetracker.gui.projects.ProjectListFragment;
+import com.tastybug.timetracker.gui.project.detail.ProjectDetailFragment;
+import com.tastybug.timetracker.gui.project.detail.ProjectDetailsActivity;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
@@ -92,6 +92,7 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
         Toast.makeText(this, "Deleted project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
         showNoProjectDetails();

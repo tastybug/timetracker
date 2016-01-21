@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.projects;
+package com.tastybug.timetracker.gui.dashboard;
 
 import android.app.Activity;
 import android.view.View;

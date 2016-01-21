@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.projectconfiguration;
+package com.tastybug.timetracker.gui.project.configuration;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -43,7 +43,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.set_no_date), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_NEGATIVE) {
-                    // Do Stuff
                     dismiss();
                     ottoProvider.getSharedBus().post(new DatePickedEvent(topic, null));
                 }

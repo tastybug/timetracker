@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment class="com.tastybug.timetracker.gui.projectdetail.ProjectDetailFragment"
+    <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectDetailFragment"
         android:id="@id/fragment_project_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
