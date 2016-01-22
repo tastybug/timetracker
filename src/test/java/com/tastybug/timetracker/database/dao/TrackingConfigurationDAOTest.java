@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
-import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import com.tastybug.timetracker.model.TimeFrameRounding;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -33,13 +33,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
-public class ProjectTimeConstraintsDAOTest {
+public class TrackingConfigurationDAOTest {
 
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
 
     // test subject
-    ProjectTimeConstraintsDAO projectTimeConstraintsDAO = new ProjectTimeConstraintsDAO(context);
+    TrackingConfigurationDAO trackingConfigurationDAO = new TrackingConfigurationDAO(context);
 
     @Before
     public void setup() {
@@ -54,15 +54,15 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1").get();
+        TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.get("1").get();
 
         // then
-        assertNotNull(constraints);
-        assertEquals("1", constraints.getUuid());
-        assertEquals("2", constraints.getProjectUuid());
-        assertEquals(5, constraints.getHourLimit().get().intValue());
-        assertNotNull(constraints.getStart());
-        assertNotNull(constraints.getEnd());
+        assertNotNull(trackingConfiguration);
+        assertEquals("1", trackingConfiguration.getUuid());
+        assertEquals("2", trackingConfiguration.getProjectUuid());
+        assertEquals(5, trackingConfiguration.getHourLimit().get().intValue());
+        assertNotNull(trackingConfiguration.getStart());
+        assertNotNull(trackingConfiguration.getEnd());
     }
 
     @Test public void gettingNonexistingEntityByIdYieldsNull() {
@@ -72,10 +72,10 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.get("1").orNull();
+        TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.get("1").orNull();
 
         // then
-        assertNull(constraints);
+        assertNull(trackingConfiguration);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -86,7 +86,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        projectTimeConstraintsDAO.get("1");
+        trackingConfigurationDAO.get("1");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -97,7 +97,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(cursor);
 
         // when
-        projectTimeConstraintsDAO.get("1");
+        trackingConfigurationDAO.get("1");
     }
 
     @Test public void getAllWorksForExistingTimeFrames() {
@@ -107,7 +107,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(aCursorWith2TimeFrames);
 
         // when
-        ArrayList<ProjectTimeConstraints> entities = projectTimeConstraintsDAO.getAll();
+        ArrayList<TrackingConfiguration> entities = trackingConfigurationDAO.getAll();
 
         // then
         assertEquals(2, entities.size());
@@ -120,7 +120,7 @@ public class ProjectTimeConstraintsDAOTest {
                 .thenReturn(noProjects);
 
         // when
-        ArrayList<ProjectTimeConstraints> entities = projectTimeConstraintsDAO.getAll();
+        ArrayList<TrackingConfiguration> entities = trackingConfigurationDAO.getAll();
 
         // then
         assertEquals(0, entities.size());
@@ -128,23 +128,23 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void canCreateEntity() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("some project-uuid");
 
         // when
-        projectTimeConstraintsDAO.create(constraints);
+        trackingConfigurationDAO.create(trackingConfiguration);
 
         // then
-        assertNotNull(constraints.getUuid());
-        assertNotNull(constraints.getContext());
+        assertNotNull(trackingConfiguration.getUuid());
+        assertNotNull(trackingConfiguration.getContext());
     }
 
     @Test public void canUpdateEntity() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("some project-uuid");
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
-        int updateCount = projectTimeConstraintsDAO.update(constraints);
+        int updateCount = trackingConfigurationDAO.update(trackingConfiguration);
 
         // then
         assertEquals(1, updateCount);
@@ -152,11 +152,11 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void canDeleteEntity() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("some project-uuid");
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
-        boolean success = projectTimeConstraintsDAO.delete(constraints);
+        boolean success = trackingConfigurationDAO.delete(trackingConfiguration);
 
         // then
         assertTrue(success);
@@ -164,11 +164,11 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        ProjectTimeConstraints constraints = new ProjectTimeConstraints("some project-uuid");
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("some project-uuid");
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when
-        boolean success = projectTimeConstraintsDAO.delete(constraints);
+        boolean success = trackingConfigurationDAO.delete(trackingConfiguration);
 
         // then
         assertFalse(success);
@@ -176,51 +176,51 @@ public class ProjectTimeConstraintsDAOTest {
 
     @Test public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(TimeFrameDAO.ID_COLUMN, projectTimeConstraintsDAO.getPKColumn());
+        assertEquals(TimeFrameDAO.ID_COLUMN, trackingConfigurationDAO.getPKColumn());
     }
 
     @Test public void knowsAllColumns() {
         // expect
-        assertEquals(6, projectTimeConstraintsDAO.getColumns().length);
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.UUID_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.PROJECT_UUID_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.HOUR_LIMIT_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.START_DATE_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.END_DATE_COLUMN));
-        assertTrue(Arrays.asList(projectTimeConstraintsDAO.getColumns()).contains(ProjectTimeConstraintsDAO.ROUNDING_STRATEGY_COLUMN));
+        assertEquals(6, trackingConfigurationDAO.getColumns().length);
+        assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.UUID_COLUMN));
+        assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.PROJECT_UUID_COLUMN));
+        assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.HOUR_LIMIT_COLUMN));
+        assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.START_DATE_COLUMN));
+        assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.END_DATE_COLUMN));
+        assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.ROUNDING_STRATEGY_COLUMN));
     }
 
     @Test(expected = NullPointerException.class)
-    public void gettingTimeConstraintsByNullProjectUuidYieldsException() {
+    public void gettingTrackingConfigurationByNullProjectUuidYieldsException() {
         // expect
-        projectTimeConstraintsDAO.getByProjectUuid(null);
+        trackingConfigurationDAO.getByProjectUuid(null);
     }
 
-    @Test public void gettingTimeConstraintsByUnknownProjectUuidYieldsNull() {
+    @Test public void gettingTrackingConfigurationByUnknownProjectUuidYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
         when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1").orNull();
+        TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid("1").orNull();
 
         // then
-        assertNull(constraints);
+        assertNull(trackingConfiguration);
     }
 
-    @Test public void canGetTimeConstraintsByProjectUuid() {
+    @Test public void canGetTrackingConfigurationByProjectUuid() {
         // given
         Cursor cursor = aProjectTimeContraintsCursor("111");
         when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        ProjectTimeConstraints constraints = projectTimeConstraintsDAO.getByProjectUuid("1").get();
+        TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid("1").get();
 
         // then
-        assertNotNull(constraints);
-        assertEquals(constraints.getUuid(), "111");
+        assertNotNull(trackingConfiguration);
+        assertEquals(trackingConfiguration.getUuid(), "111");
     }
 
     private Cursor aProjectTimeContraintsCursor(String uuid) {

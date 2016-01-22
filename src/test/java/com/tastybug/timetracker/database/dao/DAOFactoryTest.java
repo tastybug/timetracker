@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Build;
 
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ public class DAOFactoryTest {
     @Test public void returnsAllExpectedDaos() {
         // expect
         assertTrue(new DAOFactory().getDao(Project.class, mock(Context.class)) instanceof ProjectDAO);
-        assertTrue(new DAOFactory().getDao(ProjectTimeConstraints.class, mock(Context.class)) instanceof ProjectTimeConstraintsDAO);
+        assertTrue(new DAOFactory().getDao(TrackingConfiguration.class, mock(Context.class)) instanceof TrackingConfigurationDAO);
         assertTrue(new DAOFactory().getDao(TimeFrame.class, mock(Context.class)) instanceof TimeFrameDAO);
     }
 

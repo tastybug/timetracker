@@ -15,11 +15,11 @@
             android:layout_height="wrap_content"
             tools:layout="@layout/fragment_project_configuration" />
 
-        <fragment class="com.tastybug.timetracker.gui.project.configuration.ProjectTimeConstraintsConfigurationFragment"
-            android:id="@id/fragment_project_time_constraints_configuration"
+        <fragment class="com.tastybug.timetracker.gui.project.configuration.TrackingConfigurationFragment"
+            android:id="@id/fragment_tracking_configuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_project_time_constraints_configuration" />
+            tools:layout="@layout/fragment_tracking_configuration" />
 
     </LinearLayout>
 

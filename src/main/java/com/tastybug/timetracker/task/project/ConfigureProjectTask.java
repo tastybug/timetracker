@@ -7,10 +7,10 @@ import android.util.Log;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
+import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import com.tastybug.timetracker.model.TimeFrameRounding;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 
 import java.util.Date;
 
@@ -77,9 +77,9 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     @Override
     protected void performBackgroundStuff(Bundle args) {
         ProjectDAO projectDAO = new ProjectDAO(context);
-        ProjectTimeConstraintsDAO constraintsDAO = new ProjectTimeConstraintsDAO(context);
+        TrackingConfigurationDAO trackingConfigurationDAO = new TrackingConfigurationDAO(context);
         Project project = projectDAO.get(args.getString(PROJECT_UUID)).get();
-        ProjectTimeConstraints timeConstraints = constraintsDAO.getByProjectUuid(project.getUuid()).get();
+        TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
 
         /*
             Note: both entities dont have a context as we want to alter the entities in a transactional way!
@@ -94,23 +94,23 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         }
 
         if(arguments.containsKey(HOUR_LIMIT)) {
-            timeConstraints.setHourLimit(Optional.fromNullable((Integer) arguments.getSerializable(HOUR_LIMIT)));
+            trackingConfiguration.setHourLimit(Optional.fromNullable((Integer) arguments.getSerializable(HOUR_LIMIT)));
         }
 
         if(arguments.containsKey(START_DATE)) {
-            timeConstraints.setStart(Optional.fromNullable((Date) arguments.getSerializable(START_DATE)));
+            trackingConfiguration.setStart(Optional.fromNullable((Date) arguments.getSerializable(START_DATE)));
         }
 
         if(arguments.containsKey(END_DATE_INCLUSIVE)) {
-            timeConstraints.setEndAsInclusive(Optional.fromNullable((Date)arguments.getSerializable(END_DATE_INCLUSIVE)));
+            trackingConfiguration.setEndAsInclusive(Optional.fromNullable((Date) arguments.getSerializable(END_DATE_INCLUSIVE)));
         }
 
         if(arguments.containsKey(ROUNDING_STRATEGY)) {
-            timeConstraints.setRoundingStrategy((TimeFrameRounding.Strategy)arguments.getSerializable(ROUNDING_STRATEGY));
+            trackingConfiguration.setRoundingStrategy((TimeFrameRounding.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
         }
 
         storeBatchOperation(projectDAO.getBatchUpdate(project));
-        storeBatchOperation(constraintsDAO.getBatchUpdate(timeConstraints));
+        storeBatchOperation(trackingConfigurationDAO.getBatchUpdate(trackingConfiguration));
     }
 
     protected void onPostExecute(Long result) {

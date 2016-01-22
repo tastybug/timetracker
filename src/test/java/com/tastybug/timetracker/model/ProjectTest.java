@@ -7,8 +7,8 @@ import android.os.Build;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
+import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class ProjectTest {
     DAOFactory daoFactory = mock(DAOFactory.class);
     ProjectDAO projectDAO = mock(ProjectDAO.class);
     TimeFrameDAO timeFrameDAO = mock(TimeFrameDAO.class);
-    ProjectTimeConstraintsDAO timeConstraintsDAO = mock(ProjectTimeConstraintsDAO.class);
+    TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
     ContentResolver contentResolver = mock(ContentResolver.class);
 
     @Before
@@ -47,7 +47,7 @@ public class ProjectTest {
         when(context.getContentResolver()).thenReturn(contentResolver);
         when(daoFactory.getDao(eq(Project.class), isA(Context.class))).thenReturn(projectDAO);
         when(daoFactory.getDao(eq(TimeFrame.class), isA(Context.class))).thenReturn(timeFrameDAO);
-        when(daoFactory.getDao(eq(ProjectTimeConstraints.class), isA(Context.class))).thenReturn(timeConstraintsDAO);
+        when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
     }
 
     @Test public void canCreateProjectWithTitle() {
@@ -230,30 +230,30 @@ public class ProjectTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void gettingTimeConstraintsWithoutContextYieldsException() {
+    public void gettingTrackingConfigurationWithoutContextYieldsException() {
         // given
         Project project = new Project("project title");
 
         // when
-        project.getTimeConstraints();
+        project.getTrackingConfiguration();
     }
 
-    @Test public void canGetTimeConstraints() {
+    @Test public void canGetTrackingConfiguration() {
         // given
         Project project = new Project("project title");
         project.setContext(context);
         project.setDAOFactory(daoFactory);
-        ProjectTimeConstraints expectedConstraints = new ProjectTimeConstraints("1", project.getUuid(), null, null, null, TimeFrameRounding.Strategy.NO_ROUNDING);
-        when(timeConstraintsDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConstraints));
+        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), null, null, null, TimeFrameRounding.Strategy.NO_ROUNDING);
+        when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
 
         // when
-        ProjectTimeConstraints projectTimeConstraints = project.getTimeConstraints();
+        TrackingConfiguration trackingConfiguration = project.getTrackingConfiguration();
 
         // then
-        assertEquals(expectedConstraints, projectTimeConstraints);
+        assertEquals(expectedConfiguration, trackingConfiguration);
 
         // and
-        verify(timeConstraintsDAO, times(1)).getByProjectUuid(project.getUuid());
+        verify(trackingConfigurationDAO, times(1)).getByProjectUuid(project.getUuid());
     }
 
     @Test public void fieldChangesLeadToDatabaseUpdates() {

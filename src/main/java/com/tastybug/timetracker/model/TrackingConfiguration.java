@@ -10,7 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Date;
 import java.util.UUID;
 
-public class ProjectTimeConstraints extends Entity {
+public class TrackingConfiguration extends Entity {
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
@@ -19,21 +19,21 @@ public class ProjectTimeConstraints extends Entity {
     private TimeFrameRounding.Strategy roundingStrategy;
 
 
-    public ProjectTimeConstraints(String projectUuid) {
+    public TrackingConfiguration(String projectUuid) {
         this(projectUuid, TimeFrameRounding.Strategy.NO_ROUNDING);
     }
 
-    public ProjectTimeConstraints(String projectUuid, TimeFrameRounding.Strategy strategy) {
+    public TrackingConfiguration(String projectUuid, TimeFrameRounding.Strategy strategy) {
         this.projectUuid = projectUuid;
         this.roundingStrategy = strategy;
     }
 
-    public ProjectTimeConstraints(String uuid,
-                                  String projectUuid,
-                                  Integer hourLimit,
-                                  Date start,
-                                  Date end,
-                                  TimeFrameRounding.Strategy roundingStrategy) {
+    public TrackingConfiguration(String uuid,
+                                 String projectUuid,
+                                 Integer hourLimit,
+                                 Date start,
+                                 Date end,
+                                 TimeFrameRounding.Strategy roundingStrategy) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.hourLimit = hourLimit;
@@ -139,6 +139,7 @@ public class ProjectTimeConstraints extends Entity {
                 .add("hourLimit", getHourLimit().orNull())
                 .add("start", getStart().orNull())
                 .add("end", getEnd().orNull())
+                .add("roundingStrategy", getRoundingStrategy().name())
                 .toString();
     }
 }

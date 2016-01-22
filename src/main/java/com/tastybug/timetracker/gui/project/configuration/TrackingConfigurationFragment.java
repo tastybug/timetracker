@@ -12,8 +12,8 @@ import android.widget.Spinner;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import com.tastybug.timetracker.model.TimeFrameRounding;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
+public class TrackingConfigurationFragment extends Fragment {
 
     private static final String HOUR_LIMIT = "HOUR_LIMIT";
     private static final String START_DATE = "START_DATE";
@@ -41,7 +41,7 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_project_time_constraints_configuration, container);
+        View view = inflater.inflate(R.layout.fragment_tracking_configuration, container);
 
         hourLimitEditText = (EditText) view.findViewById(R.id.hour_limit);
         startDateEditText = (EditText) view.findViewById(R.id.start_date);
@@ -85,11 +85,11 @@ public class ProjectTimeConstraintsConfigurationFragment extends Fragment {
         outState.putSerializable(ROUNDING_STRATEGY, getRoundingStrategyFromWidget());
     }
 
-    public void showProjectTimeConstraints(ProjectTimeConstraints projectTimeConstraints) {
-        renderHourLimit(projectTimeConstraints.getHourLimit().orNull());
-        renderStartDate(projectTimeConstraints.getStart().orNull());
-        renderEndDate(projectTimeConstraints.getEndDateAsInclusive().orNull());
-        renderRoundingStrategy(projectTimeConstraints.getRoundingStrategy());
+    public void showTrackingConfiguration(TrackingConfiguration trackingConfiguration) {
+        renderHourLimit(trackingConfiguration.getHourLimit().orNull());
+        renderStartDate(trackingConfiguration.getStart().orNull());
+        renderEndDate(trackingConfiguration.getEndDateAsInclusive().orNull());
+        renderRoundingStrategy(trackingConfiguration.getRoundingStrategy());
     }
 
     private void renderHourLimit(Integer hourLimit) {

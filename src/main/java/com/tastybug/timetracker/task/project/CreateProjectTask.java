@@ -7,7 +7,7 @@ import android.util.Log;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.model.ProjectTimeConstraints;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 
 
 public class CreateProjectTask extends AbstractAsyncTask {
@@ -48,10 +48,10 @@ public class CreateProjectTask extends AbstractAsyncTask {
         project = new Project(args.getString(PROJECT_TITLE));
         project.setDescription(Optional.fromNullable(args.getString(PROJECT_DESCRIPTION)));
 
-        ProjectTimeConstraints timeConstraints = new ProjectTimeConstraints(project.getUuid());
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid());
 
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(timeConstraints.getDAO(context).getBatchCreate(timeConstraints));
+        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
     }
 
     protected void onPostExecute(Long result) {

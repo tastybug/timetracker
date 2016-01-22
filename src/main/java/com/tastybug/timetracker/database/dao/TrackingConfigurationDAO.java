@@ -6,8 +6,8 @@ import android.database.Cursor;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.model.ProjectTimeConstraints;
 import com.tastybug.timetracker.model.TimeFrameRounding;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints> {
+public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
 
     static String UUID_COLUMN = "uuid";
     static String PROJECT_UUID_COLUMN = "project_uuid";
@@ -34,26 +34,26 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
             ROUNDING_STRATEGY_COLUMN
     };
 
-    public ProjectTimeConstraintsDAO(Context context) {
+    public TrackingConfigurationDAO(Context context) {
         super(context);
     }
 
-    public Optional<ProjectTimeConstraints> getByProjectUuid(String uuid) {
+    public Optional<TrackingConfiguration> getByProjectUuid(String uuid) {
         Preconditions.checkNotNull(uuid, "Cannot get time frames by project uuid, null given!");
 
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), PROJECT_UUID_COLUMN + "=?", new String[]{uuid}, null);
-        ProjectTimeConstraints constraints = null;
+        TrackingConfiguration trackingConfiguration = null;
         if (cursor.moveToFirst()) {
-            constraints = createEntityFromCursor(context, cursor);
+            trackingConfiguration = createEntityFromCursor(context, cursor);
             cursor.close();
         }
 
-        return Optional.fromNullable(constraints);
+        return Optional.fromNullable(trackingConfiguration);
     }
 
     @Override
     protected String getTableName() {
-        return "project_time_constraints";
+        return "tracking_configuration";
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
     }
 
     @Override
-    protected ProjectTimeConstraints createEntityFromCursor(Context context, Cursor cursor) {
+    protected TrackingConfiguration createEntityFromCursor(Context context, Cursor cursor) {
         List<String> colsList = Arrays.asList(COLUMNS);
         try {
             Integer hourLimit = cursor.isNull(colsList.indexOf(HOUR_LIMIT_COLUMN))
@@ -76,7 +76,7 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
                     ? null : cursor.getString(colsList.indexOf(START_DATE_COLUMN));
             String endDateString = cursor.isNull(colsList.indexOf(END_DATE_COLUMN))
                     ? null : cursor.getString(colsList.indexOf(END_DATE_COLUMN));
-            return new ProjectTimeConstraints(
+            return new TrackingConfiguration(
                     cursor.getString(colsList.indexOf(UUID_COLUMN)),
                     cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN)),
                     hourLimit,
@@ -90,7 +90,7 @@ public class ProjectTimeConstraintsDAO extends EntityDAO<ProjectTimeConstraints>
     }
 
     @Override
-    protected ContentValues getContentValues(ProjectTimeConstraints entity) {
+    protected ContentValues getContentValues(TrackingConfiguration entity) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(UUID_COLUMN, entity.getUuid());
         contentValues.put(HOUR_LIMIT_COLUMN, entity.getHourLimit().orNull());

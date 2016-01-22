@@ -11,9 +11,9 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
+import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.model.ProjectTimeConstraints;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
@@ -41,7 +41,7 @@ public class ProjectConfigurationActivity extends Activity {
         }
 
         Project project = getProjectByUuid(projectUuid);
-        ProjectTimeConstraints constraints = getProjectTimeConstraintsByProjectUuid(projectUuid);
+        TrackingConfiguration trackingConfiguration = getTrackingConfigurationByProjectUuid(projectUuid);
 
         setTitle(getString(R.string.project_configuration_for_project_X, project.getTitle()));
 
@@ -50,9 +50,9 @@ public class ProjectConfigurationActivity extends Activity {
         configurationFragment.showProject(project);
 
 
-        ProjectTimeConstraintsConfigurationFragment constraintFragment = (ProjectTimeConstraintsConfigurationFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_time_constraints_configuration);
-        constraintFragment.showProjectTimeConstraints(constraints);
+        TrackingConfigurationFragment constraintFragment = (TrackingConfigurationFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_tracking_configuration);
+        constraintFragment.showTrackingConfiguration(trackingConfiguration);
     }
 
     @Override
@@ -86,8 +86,8 @@ public class ProjectConfigurationActivity extends Activity {
         return new ProjectDAO(this).get(uuid).get();
     }
 
-    protected ProjectTimeConstraints getProjectTimeConstraintsByProjectUuid(String projectUuid) {
-        return new ProjectTimeConstraintsDAO(this).getByProjectUuid(projectUuid).get();
+    protected TrackingConfiguration getTrackingConfigurationByProjectUuid(String projectUuid) {
+        return new TrackingConfigurationDAO(this).getByProjectUuid(projectUuid).get();
     }
 
     protected void setupActionBar() {
@@ -114,8 +114,8 @@ public class ProjectConfigurationActivity extends Activity {
     }
 
     private boolean isConfigurationValid() {
-        ProjectConfigurationFragment configurationFragment = getConfigurationFragment();
-        ProjectTimeConstraintsConfigurationFragment constraintFragment = getConstraintsFragment();
+        ProjectConfigurationFragment configurationFragment = getProjectConfigurationFragment();
+        TrackingConfigurationFragment constraintFragment = getTrackingConfigurationFragment();
 
         return configurationFragment.validateSettings()
                 && constraintFragment.validateSettings();
@@ -123,8 +123,8 @@ public class ProjectConfigurationActivity extends Activity {
 
     private ConfigureProjectTask buildProjectConfigurationTask() {
         ConfigureProjectTask task = ConfigureProjectTask.aTask(this).withProjectUuid(projectUuid);
-        ProjectConfigurationFragment configurationFragment = getConfigurationFragment();
-        ProjectTimeConstraintsConfigurationFragment constraintFragment = getConstraintsFragment();
+        ProjectConfigurationFragment configurationFragment = getProjectConfigurationFragment();
+        TrackingConfigurationFragment constraintFragment = getTrackingConfigurationFragment();
 
         configurationFragment.collectModifications(task);
         constraintFragment.collectModifications(task);
@@ -132,12 +132,12 @@ public class ProjectConfigurationActivity extends Activity {
         return task;
     }
 
-    private ProjectConfigurationFragment getConfigurationFragment() {
+    private ProjectConfigurationFragment getProjectConfigurationFragment() {
         return (ProjectConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_project_configuration);
     }
 
-    private ProjectTimeConstraintsConfigurationFragment getConstraintsFragment() {
-        return (ProjectTimeConstraintsConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_project_time_constraints_configuration);
+    private TrackingConfigurationFragment getTrackingConfigurationFragment() {
+        return (TrackingConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_tracking_configuration);
     }
 
     @Subscribe public void handleProjectConfiguredEvent(ProjectConfiguredEvent event) {

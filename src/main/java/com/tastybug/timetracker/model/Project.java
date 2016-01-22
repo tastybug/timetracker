@@ -5,8 +5,8 @@ import android.text.TextUtils;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.database.dao.ProjectTimeConstraintsDAO;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
+import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class Project extends Entity {
     private String title;
     private String description;
 
-    private ProjectTimeConstraints timeConstraints;
+    private TrackingConfiguration trackingConfiguration;
     private ArrayList<TimeFrame> timeFrames;
 
 
@@ -99,16 +99,16 @@ public class Project extends Entity {
         return success;
     }
 
-    public ProjectTimeConstraints getTimeConstraints() {
-        if (timeConstraints == null) {
+    public TrackingConfiguration getTrackingConfiguration() {
+        if (trackingConfiguration == null) {
             if(!hasContext()) {
-                throw new IllegalStateException("Failed to fetch time constraints lazily, " +
+                throw new IllegalStateException("Failed to fetch tracking configuration lazily, " +
                         "no context available!");
             }
-            timeConstraints = ((ProjectTimeConstraintsDAO)daoFactory.getDao(ProjectTimeConstraints.class, getContext()))
+            trackingConfiguration = ((TrackingConfigurationDAO)daoFactory.getDao(TrackingConfiguration.class, getContext()))
                     .getByProjectUuid(getUuid()).orNull();
         }
-        return timeConstraints;
+        return trackingConfiguration;
     }
 
     public String toString() {
@@ -117,7 +117,7 @@ public class Project extends Entity {
                     .add("uuid", getUuid())
                     .add("title", getTitle())
                     .add("description", getDescription().orNull())
-                    .add("timeConstraints", getTimeConstraints())
+                    .add("trackingConfiguration", getTrackingConfiguration())
                     .add("timeFrames", getTimeFrames())
                     .toString();
         } else {
@@ -125,7 +125,7 @@ public class Project extends Entity {
                     .add("uuid", getUuid())
                     .add("title", getTitle())
                     .add("description", getDescription().orNull())
-                    .add("timeConstraints", "skipped, no context")
+                    .add("trackingConfiguration", "skipped, no context")
                     .add("timeFrames", "skipped, no context")
                     .toString();
         }
