@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectDetailFragment"
-        android:id="@id/fragment_project_detail"
+    <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingControlPanelFragment"
+        android:id="@id/fragment_tracking_control_panel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_tracking_control_panel" />
 
-</FrameLayout>
+    <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectStatisticsFragment"
+        android:id="@id/fragment_project_statistics"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_project_statistics" />
+
+</LinearLayout>

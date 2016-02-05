@@ -9,8 +9,8 @@ import android.widget.Toast;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.project.detail.ProjectDetailFragment;
 import com.tastybug.timetracker.gui.project.detail.ProjectDetailsActivity;
+import com.tastybug.timetracker.gui.project.detail.ProjectStatisticsFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
@@ -60,14 +60,14 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
         showProjectDetails(project);
     }
 
-    private Optional<ProjectDetailFragment> getTwoPaneProjectDetailFragment() {
-        ProjectDetailFragment detailsFragment = (ProjectDetailFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_detail);
+    private Optional<ProjectStatisticsFragment> getTwoPaneProjectDetailFragment() {
+        ProjectStatisticsFragment detailsFragment = (ProjectStatisticsFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_project_statistics);
         return Optional.fromNullable(detailsFragment);
     }
 
     private void showProjectDetails(Project project) {
-        Optional<ProjectDetailFragment> detailsFragmentOpt = getTwoPaneProjectDetailFragment();
+        Optional<ProjectStatisticsFragment> detailsFragmentOpt = getTwoPaneProjectDetailFragment();
         if (detailsFragmentOpt.isPresent()) {
             detailsFragmentOpt.get().showProjectDetailsFor(project);
         } else {
@@ -78,7 +78,7 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
     }
 
     private void showNoProjectDetails() {
-        Optional<ProjectDetailFragment> detailsFragmentOpt = getTwoPaneProjectDetailFragment();
+        Optional<ProjectStatisticsFragment> detailsFragmentOpt = getTwoPaneProjectDetailFragment();
         if (detailsFragmentOpt.isPresent()) {
             detailsFragmentOpt.get().showNoProject();
         }

@@ -11,15 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.project.configuration.ProjectConfigurationActivity;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
+import com.tastybug.timetracker.task.tracking.TimeFrameCreatedEvent;
+import com.tastybug.timetracker.task.tracking.TimeFrameModifiedEvent;
 
-public class ProjectDetailFragment extends Fragment {
+public class ProjectStatisticsFragment extends Fragment {
 
     private TextView someTextView;
-    private Project currentProject;
+    private String currentProjectUuid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,14 +35,22 @@ public class ProjectDetailFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_project_details, menu);
+        inflater.inflate(R.menu.fragment_project_statistics, menu);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        new OttoProvider().getSharedBus().unregister(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_project_detail, container);
+        View rootview = inflater.inflate(R.layout.fragment_project_statistics, container);
 
         someTextView = (TextView) rootview.findViewById(R.id.someTextview);
+
+        new OttoProvider().getSharedBus().register(this);
 
         return rootview;
     }
@@ -46,7 +59,7 @@ public class ProjectDetailFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete_project:
-                DeleteProjectTask.aTask(getActivity()).withProjectUuid(currentProject.getUuid()).execute();
+                DeleteProjectTask.aTask(getActivity()).withProjectUuid(currentProjectUuid).execute();
                 return true;
             case R.id.menu_configure_project:
                 showProjectConfigurationActivity();
@@ -59,18 +72,29 @@ public class ProjectDetailFragment extends Fragment {
 
     private void showProjectConfigurationActivity() {
         Intent intent = new Intent(getActivity(), ProjectConfigurationActivity.class);
-        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProject.getUuid());
+        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProjectUuid);
         startActivity(intent);
     }
 
     public void showProjectDetailsFor(Project project) {
-        this.currentProject = project;
-        someTextView.setText(currentProject.toString());
+        this.currentProjectUuid = project.getUuid();
+        someTextView.setText(project.toString());
     }
 
     public void showNoProject() {
-        this.currentProject = null;
-        someTextView.setText("//Nothing selected");
+        this.currentProjectUuid = null;
+        someTextView.setText("//Nothing selected for project statistics");
     }
 
+    @Subscribe public void handleTrackingStarted(TimeFrameCreatedEvent event) {
+        Project project = new ProjectDAO(getActivity()).get(event.getTimeFrame().getProjectUuid()).get();
+        project.setContext(getActivity());
+        showProjectDetailsFor(project);
+    }
+
+    @Subscribe public void handleTrackingModified(TimeFrameModifiedEvent event) {
+        Project project = new ProjectDAO(getActivity()).get(event.getTimeFrame().getProjectUuid()).get();
+        project.setContext(getActivity());
+        showProjectDetailsFor(project);
+    }
 }

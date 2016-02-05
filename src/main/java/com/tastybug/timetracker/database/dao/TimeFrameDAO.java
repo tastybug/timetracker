@@ -46,6 +46,22 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
         return list;
     }
 
+    public Optional<TimeFrame> getRunning(String projectUuid) {
+        Preconditions.checkNotNull(projectUuid, "Cannot get time frames by project uuid, null given!");
+
+        Cursor cursor = context.getContentResolver().query(getQueryUri(),
+                getColumns(),
+                PROJECT_UUID_COLUMN + "=? AND " + END_DATE_COLUMN + " IS NULL",
+                new String[]{projectUuid},
+                null);
+        TimeFrame timeFrame = null;
+        if (cursor.moveToNext()) {
+            timeFrame = createEntityFromCursor(context, cursor);
+        }
+        cursor.close();
+        return Optional.fromNullable(timeFrame);
+    }
+
     @Override
     protected String getTableName() {
         return "time_frame";
@@ -93,7 +109,7 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
 
     private String formatDate(Optional<Date> date) {
         if (date.isPresent()) {
-            return getIso8601DateFormatter().format(date);
+            return getIso8601DateFormatter().format(date.get());
         }
         return null;
     }

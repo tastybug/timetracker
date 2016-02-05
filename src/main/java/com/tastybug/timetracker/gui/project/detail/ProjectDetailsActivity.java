@@ -42,10 +42,23 @@ public class ProjectDetailsActivity extends Activity {
 
         new OttoProvider().getSharedBus().register(this);
 
-        ProjectDetailFragment detailsFragment = (ProjectDetailFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_detail);
+        ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
+        TrackingControlPanelFragment trackingPanelFragment = getTrackingControlPanelFragment();
 
-        detailsFragment.showProjectDetailsFor(getProjectByUuid(projectUuid));
+        Project project = getProjectByUuid(projectUuid);
+
+        detailsFragment.showProjectDetailsFor(project);
+        trackingPanelFragment.showProject(project);
+    }
+
+    private ProjectStatisticsFragment getProjectStatisticsFragment() {
+        return (ProjectStatisticsFragment) getFragmentManager()
+                    .findFragmentById(R.id.fragment_project_statistics);
+    }
+
+    private TrackingControlPanelFragment getTrackingControlPanelFragment() {
+        return (TrackingControlPanelFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_tracking_control_panel);
     }
 
     @Override

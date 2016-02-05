@@ -20,6 +20,10 @@ public class TimeFrame extends Entity {
 
     public TimeFrame() {}
 
+    public TimeFrame(String projectUuid) {
+        this.projectUuid = projectUuid;
+    }
+
     public TimeFrame(String uuid, String projectUuid, Date start, Date end) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;

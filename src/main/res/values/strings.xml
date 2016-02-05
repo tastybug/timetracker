@@ -25,5 +25,9 @@
     <string name="rounding_thirty_minutes_up">round up to a full half hour block</string>
     <string name="rounding_sixty_minutes_up">round up to full hours</string>
 
+    <!-- project details -->
+    <string name="message_no_project_selected">No project selected!</string>
+
+
 
 </resources>
