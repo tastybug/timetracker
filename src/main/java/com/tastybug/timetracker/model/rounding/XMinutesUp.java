@@ -6,19 +6,19 @@ public class XMinutesUp extends RoundingStrategy {
 
     private int xMinutes;
 
-    public static XMinutesUp fullMinutesUp() {
+    protected static XMinutesUp fullMinutesUp() {
         return new XMinutesUp(1);
     }
 
-    public static XMinutesUp tenMinutesUp() {
+    protected static XMinutesUp tenMinutesUp() {
         return new XMinutesUp(10);
     }
 
-    public static XMinutesUp thirtyMinutesUp() {
+    protected static XMinutesUp thirtyMinutesUp() {
         return new XMinutesUp(30);
     }
 
-    public static XMinutesUp fullHoursUp() {
+    protected static XMinutesUp fullHoursUp() {
         return new XMinutesUp(60);
     }
 
@@ -27,7 +27,7 @@ public class XMinutesUp extends RoundingStrategy {
     }
 
     @Override
-    protected long getDurationInSeconds(Duration duration) {
+    long getDurationInSeconds(Duration duration) {
         long fullMinutesRoundedUp = getFullMinutesUpInSeconds(duration)/60;
         return (((fullMinutesRoundedUp/xMinutes)*xMinutes)
                 + ((fullMinutesRoundedUp % xMinutes > 0) ? xMinutes : 0)) * 60;

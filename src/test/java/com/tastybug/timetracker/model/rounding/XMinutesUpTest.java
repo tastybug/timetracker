@@ -6,9 +6,43 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TenMinutesUpTest {
+public class XMinutesUpTest extends AbstractRoundingTestcase {
 
-    private XMinutesUp SUBJECT = XMinutesUp.tenMinutesUp();
+    @Test
+    public void willRoundUpToFullMinute() {
+        // given: a duration of 1:10min
+        Duration duration = getOneMinute10SecondsDuration();
+
+        // when
+        long seconds = XMinutesUp.fullMinutesUp().getDurationInSeconds(duration);
+
+        // then: its rounded to 2 minutes, equals 120 seconds
+        assertEquals(120, seconds);
+    }
+
+    @Test
+    public void underOneMinuteEqualsOneMinute() {
+        // given: a duration of 10 seconds
+        Duration duration = get10SecondsDuration();
+
+        // when
+        long seconds = XMinutesUp.fullMinutesUp().getDurationInSeconds(duration);
+
+        // then: its rounded to 1 full minute, equals 60 seconds
+        assertEquals(60, seconds);
+    }
+
+    @Test
+    public void exactlyOneMinuteLeadsToUnalteredResult() {
+        // given: a duration of 60 seconds
+        Duration duration = get1MinuteDuration();
+
+        // when
+        long seconds = XMinutesUp.fullMinutesUp().getDurationInSeconds(duration);
+
+        // then: we get 60 seconds
+        assertEquals(60, seconds);
+    }
 
     @Test
     public void willRound12MinutesUpTo20Minutes() {
@@ -16,7 +50,7 @@ public class TenMinutesUpTest {
         Duration duration = get12Minutes10SecondsDuration();
 
         // when
-        long seconds = SUBJECT.getDurationInSeconds(duration);
+        long seconds = XMinutesUp.tenMinutesUp().getDurationInSeconds(duration);
 
         // then: its rounded to 20 minutes
         assertEquals(20*60, seconds);
@@ -28,7 +62,7 @@ public class TenMinutesUpTest {
         Duration duration = get9MinutesDuration();
 
         // when
-        long seconds = SUBJECT.getDurationInSeconds(duration);
+        long seconds = XMinutesUp.tenMinutesUp().getDurationInSeconds(duration);
 
         // then: its rounded to 10 minutes
         assertEquals(10*60, seconds);
@@ -40,7 +74,7 @@ public class TenMinutesUpTest {
         Duration duration = get10MinutesDuration();
 
         // when
-        long seconds = SUBJECT.getDurationInSeconds(duration);
+        long seconds = XMinutesUp.tenMinutesUp().getDurationInSeconds(duration);
 
         // then: its not altered
         assertEquals(10*60, seconds);
