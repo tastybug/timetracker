@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 public class FullMinuteUpTest extends AbstractRoundingTestcase {
 
-    private FullMinuteUp SUBJECT = new FullMinuteUp();
+    private XMinutesUp SUBJECT = XMinutesUp.fullMinutesUp();
 
     @Test
     public void willRoundUpToFullMinute() {

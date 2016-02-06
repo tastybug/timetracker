@@ -18,6 +18,7 @@ public class AbstractRoundingTestcase {
 
         return new Duration(start, stop);
     }
+
     protected Duration get10SecondsDuration() {
         DateTime start = new DateTime(2015, 1, 1, 13, 30, 0);
         DateTime stop = new DateTime(2015, 1, 1, 13, 30, 10);
