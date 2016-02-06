@@ -16,6 +16,7 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.project.configuration.ProjectConfigurationActivity;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
 import com.tastybug.timetracker.task.tracking.TimeFrameCreatedEvent;
@@ -78,7 +79,10 @@ public class ProjectStatisticsFragment extends Fragment {
 
     public void showProjectDetailsFor(Project project) {
         this.currentProjectUuid = project.getUuid();
-        someTextView.setText(project.toString());
+        if(!project.hasContext()) {
+            project.setContext(getActivity());
+        }
+        someTextView.setText(new StatisticProjectDuration(project.getTrackingConfiguration(), project.getTimeFrames()).get().getStandardSeconds() + " Seconds");
     }
 
     public void showNoProject() {
