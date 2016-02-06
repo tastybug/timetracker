@@ -178,11 +178,12 @@ public class TimeFrameDAOTest {
 
     @Test public void knowsAllColumns() {
         // expect
-        assertEquals(4, timeFrameDAO.getColumns().length);
+        assertEquals(5, timeFrameDAO.getColumns().length);
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.ID_COLUMN));
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.PROJECT_UUID_COLUMN));
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.START_DATE_COLUMN));
         assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.END_DATE_COLUMN));
+        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.DESCRIPTION_COLUMN));
     }
 
     @Test(expected = NullPointerException.class)

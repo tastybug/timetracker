@@ -12,8 +12,8 @@ import android.widget.Spinner;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.model.TimeFrameRounding;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
@@ -52,7 +52,7 @@ public class TrackingConfigurationFragment extends Fragment {
             renderHourLimit((Integer)savedInstanceState.getSerializable(HOUR_LIMIT));
             renderStartDate((Date) savedInstanceState.getSerializable(START_DATE));
             renderEndDate((Date) savedInstanceState.getSerializable(END_DATE));
-            renderRoundingStrategy((TimeFrameRounding.Strategy) savedInstanceState.getSerializable(ROUNDING_STRATEGY));
+            renderRoundingStrategy((RoundingFactory.Strategy) savedInstanceState.getSerializable(ROUNDING_STRATEGY));
         }
 
         startDateEditText.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +120,7 @@ public class TrackingConfigurationFragment extends Fragment {
         }
     }
 
-    private void renderRoundingStrategy(TimeFrameRounding.Strategy strategy) {
+    private void renderRoundingStrategy(RoundingFactory.Strategy strategy) {
         List<String> strategyList = Arrays.asList(getResources().getStringArray(R.array.rouding_strategy_values));
         roundingStrategySpinner.setSelection(strategyList.indexOf(strategy.name()));
     }
@@ -144,7 +144,7 @@ public class TrackingConfigurationFragment extends Fragment {
         Optional<Integer> newHourLimitOpt = getHourLimitFromWidget();
         Optional<Date> startDateOpt = getStartDateFromWidget();
         Optional<Date> newLastDateOpt = getLastEnddateInclusiveFromWidget();
-        TimeFrameRounding.Strategy strategy = getRoundingStrategyFromWidget();
+        RoundingFactory.Strategy strategy = getRoundingStrategyFromWidget();
 
         task.withHourLimit(newHourLimitOpt.orNull());
         task.withStartDate(startDateOpt.orNull());
@@ -167,10 +167,10 @@ public class TrackingConfigurationFragment extends Fragment {
         return Optional.fromNullable(lastDay);
     }
 
-    private TimeFrameRounding.Strategy getRoundingStrategyFromWidget() {
+    private RoundingFactory.Strategy getRoundingStrategyFromWidget() {
         List<String> strategyList = Arrays.asList(getResources().getStringArray(R.array.rouding_strategy_values));
         String strategyName = strategyList.get(roundingStrategySpinner.getSelectedItemPosition());
-        return TimeFrameRounding.Strategy.valueOf(strategyName);
+        return RoundingFactory.Strategy.valueOf(strategyName);
     }
 
     private void setProjectTitleErrorState(boolean isValid) {

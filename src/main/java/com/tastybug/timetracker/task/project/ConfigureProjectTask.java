@@ -9,8 +9,8 @@ import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.model.TimeFrameRounding;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import java.util.Date;
 
@@ -64,7 +64,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         return this;
     }
 
-    public ConfigureProjectTask withRoundingStrategy(TimeFrameRounding.Strategy strategy) {
+    public ConfigureProjectTask withRoundingStrategy(RoundingFactory.Strategy strategy) {
         arguments.putSerializable(ROUNDING_STRATEGY, strategy);
         return this;
     }
@@ -106,7 +106,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         }
 
         if(arguments.containsKey(ROUNDING_STRATEGY)) {
-            trackingConfiguration.setRoundingStrategy((TimeFrameRounding.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
+            trackingConfiguration.setRoundingStrategy((RoundingFactory.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
         }
 
         storeBatchOperation(projectDAO.getBatchUpdate(project));

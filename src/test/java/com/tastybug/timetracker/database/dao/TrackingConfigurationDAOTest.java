@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
-import com.tastybug.timetracker.model.TimeFrameRounding;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -230,7 +230,7 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
-        when(cursor.getString(5)).thenReturn(TimeFrameRounding.Strategy.NO_ROUNDING.name());
+        when(cursor.getString(5)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -243,7 +243,7 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(startDateString);
         when(cursor.getString(4)).thenReturn(endDateString);
-        when(cursor.getString(5)).thenReturn(TimeFrameRounding.Strategy.NO_ROUNDING.name());
+        when(cursor.getString(5)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -255,7 +255,7 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
-        when(cursor.getString(5)).thenReturn(TimeFrameRounding.Strategy.NO_ROUNDING.name());
+        when(cursor.getString(5)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
         when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;

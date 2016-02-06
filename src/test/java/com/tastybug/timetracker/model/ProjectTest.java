@@ -9,6 +9,7 @@ import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -243,7 +244,7 @@ public class ProjectTest {
         Project project = new Project("project title");
         project.setContext(context);
         project.setDAOFactory(daoFactory);
-        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), null, null, null, TimeFrameRounding.Strategy.NO_ROUNDING);
+        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), null, null, null, RoundingFactory.Strategy.NO_ROUNDING);
         when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
 
         // when
@@ -274,8 +275,8 @@ public class ProjectTest {
     private ArrayList<TimeFrame> twoTimeFrames(Project project) {
         ArrayList<TimeFrame> list = new ArrayList<TimeFrame>();
 
-        list.add(new TimeFrame("1", project.getUuid(), null, null));
-        list.add(new TimeFrame("2", project.getUuid(), null, null));
+        list.add(new TimeFrame("1", project.getUuid(), null, null, null));
+        list.add(new TimeFrame("2", project.getUuid(), null, null, null));
 
         return list;
     }

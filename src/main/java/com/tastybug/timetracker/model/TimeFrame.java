@@ -24,11 +24,12 @@ public class TimeFrame extends Entity {
         this.projectUuid = projectUuid;
     }
 
-    public TimeFrame(String uuid, String projectUuid, Date start, Date end) {
+    public TimeFrame(String uuid, String projectUuid, Date start, Date end, String description) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.start = start;
         this.end = end;
+        this.description = description;
     }
 
     @Override

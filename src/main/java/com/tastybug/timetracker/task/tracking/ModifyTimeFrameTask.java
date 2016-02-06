@@ -52,6 +52,7 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
 
             timeFrame = new TimeFrameDAO(context).getRunning(stoppableProjectUuid).get();
             timeFrame.stop();
+
         } else {
             // eine andere modification operation hier rein
         }

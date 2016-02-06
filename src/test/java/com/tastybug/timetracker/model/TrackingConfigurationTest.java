@@ -6,6 +6,7 @@ import android.os.Build;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -45,7 +46,7 @@ public class TrackingConfigurationTest {
         // when
         DateTime start = new DateTime();
         DateTime end = start.plusDays(5);
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", 3, start.toDate(), end.toDate(), TimeFrameRounding.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", 3, start.toDate(), end.toDate(), RoundingFactory.Strategy.NO_ROUNDING);
 
         // then
         assertNotNull(trackingConfiguration);
@@ -54,7 +55,7 @@ public class TrackingConfigurationTest {
         assertEquals(3, trackingConfiguration.getHourLimit().get().intValue());
         assertEquals(start.toDate(), trackingConfiguration.getStart().get());
         assertEquals(end.toDate(), trackingConfiguration.getEnd().get());
-        assertEquals(TimeFrameRounding.Strategy.NO_ROUNDING, trackingConfiguration.getRoundingStrategy());
+        assertEquals(RoundingFactory.Strategy.NO_ROUNDING, trackingConfiguration.getRoundingStrategy());
     }
 
     @Test public void noHourLimitIsHandledWell() {
@@ -201,7 +202,7 @@ public class TrackingConfigurationTest {
         trackingConfiguration.setHourLimit(Optional.of(10));
         trackingConfiguration.setStart(Optional.of(new LocalDate(2015, 1, 1).toDate()));
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 1, 1).toDate()));
-        trackingConfiguration.setRoundingStrategy(TimeFrameRounding.Strategy.FULL_MINUTE_DOWN);
+        trackingConfiguration.setRoundingStrategy(RoundingFactory.Strategy.FULL_MINUTE_DOWN);
 
         // then
         verify(trackingConfigurationDAO, times(5)).update(trackingConfiguration);

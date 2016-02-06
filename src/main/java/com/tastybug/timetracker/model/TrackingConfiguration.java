@@ -3,6 +3,7 @@ package com.tastybug.timetracker.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
 
@@ -16,14 +17,14 @@ public class TrackingConfiguration extends Entity {
     private String projectUuid;
     private Integer hourLimit;
     private Date start, end;
-    private TimeFrameRounding.Strategy roundingStrategy;
+    private RoundingFactory.Strategy roundingStrategy;
 
 
     public TrackingConfiguration(String projectUuid) {
-        this(projectUuid, TimeFrameRounding.Strategy.NO_ROUNDING);
+        this(projectUuid, RoundingFactory.Strategy.NO_ROUNDING);
     }
 
-    public TrackingConfiguration(String projectUuid, TimeFrameRounding.Strategy strategy) {
+    public TrackingConfiguration(String projectUuid, RoundingFactory.Strategy strategy) {
         this.projectUuid = projectUuid;
         this.roundingStrategy = strategy;
     }
@@ -33,7 +34,7 @@ public class TrackingConfiguration extends Entity {
                                  Integer hourLimit,
                                  Date start,
                                  Date end,
-                                 TimeFrameRounding.Strategy roundingStrategy) {
+                                 RoundingFactory.Strategy roundingStrategy) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.hourLimit = hourLimit;
@@ -66,11 +67,11 @@ public class TrackingConfiguration extends Entity {
         propertyChange(e);
     }
 
-    public TimeFrameRounding.Strategy getRoundingStrategy() {
+    public RoundingFactory.Strategy getRoundingStrategy() {
         return roundingStrategy;
     }
 
-    public void setRoundingStrategy(TimeFrameRounding.Strategy roundingStrategy) {
+    public void setRoundingStrategy(RoundingFactory.Strategy roundingStrategy) {
         Preconditions.checkNotNull(roundingStrategy);
 
         PropertyChangeEvent e = new PropertyChangeEvent(this, "roundingStrategy", this.roundingStrategy, roundingStrategy);

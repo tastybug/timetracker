@@ -22,12 +22,14 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
     static String PROJECT_UUID_COLUMN = "project_uuid";
     static String START_DATE_COLUMN = "start_date";
     static String END_DATE_COLUMN = "end_date";
+    static String DESCRIPTION_COLUMN = "description";
 
     static String[] COLUMNS = new String[] {
             ID_COLUMN,
             PROJECT_UUID_COLUMN,
             START_DATE_COLUMN,
-            END_DATE_COLUMN
+            END_DATE_COLUMN,
+            DESCRIPTION_COLUMN
     };
 
     public TimeFrameDAO(Context context) {
@@ -85,11 +87,13 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
             String projectUuid = cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN));
             String startAsString = cursor.getString(colsList.indexOf(START_DATE_COLUMN));
             String endAsString = cursor.getString(colsList.indexOf(END_DATE_COLUMN));
+            String description = cursor.getString(colsList.indexOf(DESCRIPTION_COLUMN));
             return new TimeFrame(
                     uuid,
                     projectUuid,
                     startAsString != null ? getIso8601DateFormatter().parse(startAsString) : null,
-                    endAsString != null ? getIso8601DateFormatter().parse(endAsString) : null
+                    endAsString != null ? getIso8601DateFormatter().parse(endAsString) : null,
+                    description
             );
         } catch (ParseException pe) {
             throw new IllegalArgumentException("Problem parsing date.", pe);
@@ -103,6 +107,7 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
         contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());
         contentValues.put(START_DATE_COLUMN, formatDate(entity.getStart()));
         contentValues.put(END_DATE_COLUMN, formatDate(entity.getEnd()));
+        contentValues.put(DESCRIPTION_COLUMN, entity.getDescription().orNull());
 
         return contentValues;
     }
