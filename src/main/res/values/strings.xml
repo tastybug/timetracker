@@ -27,6 +27,7 @@
 
     <!-- project details -->
     <string name="message_no_project_selected">No project selected!</string>
+    <string name="menu_create_custom_timeframe">Add manual time record</string>
 
 
 
