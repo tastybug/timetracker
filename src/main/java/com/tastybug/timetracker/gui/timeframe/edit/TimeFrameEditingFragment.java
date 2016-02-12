@@ -218,7 +218,7 @@ public class TimeFrameEditingFragment extends Fragment {
     private boolean ensureEndDateIsAfterStartDate(LocalDateTime startDate, LocalDateTime endDate) {
         endDateEditText.setError(endDate.isAfter(startDate) ? null : getString(R.string.error_end_before_start));
         endTimeEditText.setError(endDate.isAfter(startDate) ? null : getString(R.string.error_end_before_start));
-        return  endDateEditText.getError() == null;
+        return endDateEditText.getError() == null;
     }
 
     public void collectModifications(ModifyTimeFrameTask task) {

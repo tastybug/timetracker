@@ -29,7 +29,7 @@
         android:id="@+id/start_date"
         android:hint="@string/project_has_no_start_date"
         android:singleLine="true"
-        android:editable="false"
+        android:inputType="none"
         android:focusable="false"/>
 
     <TextView
@@ -44,7 +44,7 @@
         android:id="@+id/end_date_inclusive"
         android:hint="@string/project_has_no_end_date"
         android:singleLine="true"
-        android:editable="false"
+        android:inputType="none"
         android:focusable="false"/>
 
     <TextView
