@@ -7,5 +7,6 @@
     <item name="fragment_project_configuration" type="id"/>
     <item name="fragment_tracking_configuration" type="id"/>
     <item name="fragment_time_frame_list" type="id"/>
+    <item name="fragment_time_frame_editing" type="id"/>
 
 </resources>

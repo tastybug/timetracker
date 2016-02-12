@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -117,6 +116,18 @@ public class TimeFrameTest {
 
         // when
         timeFrame.setProjectUuid(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullStartDate() {
+        // expect
+        new TimeFrame().setStart(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullEndDate() {
+        // expect
+        new TimeFrame().setEnd(null);
     }
 
     @Test

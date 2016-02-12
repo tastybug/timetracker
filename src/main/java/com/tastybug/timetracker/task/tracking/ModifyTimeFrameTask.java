@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 import com.tastybug.timetracker.model.TimeFrame;
 import com.tastybug.timetracker.task.project.AbstractAsyncTask;
+
+import java.util.Date;
 
 public class ModifyTimeFrameTask extends AbstractAsyncTask {
 
@@ -16,6 +19,9 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
 
     private static final String STOP_TRACKING_PROJECT_UUID = "STOP_TRACKING_PROJECT_UUID";
     private static final String TIME_FRAME_UUID = "TIME_FRAME_UUID";
+    private static final String START_DATE = "START_DATE";
+    private static final String END_DATE = "END_DATE";
+    private static final String DESCRIPTION = "DESCRIPTION";
 
     private TimeFrame timeFrame;
 
@@ -37,6 +43,21 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
         return this;
     }
 
+    public ModifyTimeFrameTask withStartDate(Date startDate) {
+        arguments.putSerializable(START_DATE, startDate);
+        return this;
+    }
+
+    public ModifyTimeFrameTask withEndDate(Date endDate) {
+        arguments.putSerializable(END_DATE, endDate);
+        return this;
+    }
+
+    public ModifyTimeFrameTask withDescription(String description) {
+        arguments.putString(DESCRIPTION, description);
+        return this;
+    }
+
     @Override
     protected void validateArguments() throws NullPointerException {
         Preconditions.checkArgument(
@@ -54,7 +75,18 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
             timeFrame.stop();
 
         } else {
-            // eine andere modification operation hier rein
+            String timeFrameUuid = arguments.getString(TIME_FRAME_UUID);
+            timeFrame = new TimeFrameDAO(context).get(timeFrameUuid).get();
+
+            if(arguments.containsKey(START_DATE)) {
+                timeFrame.setStart((Date)arguments.getSerializable(START_DATE));
+            }
+            if(arguments.containsKey(END_DATE)) {
+                timeFrame.setEnd((Date)arguments.getSerializable(END_DATE));
+            }
+            if(arguments.containsKey(DESCRIPTION)) {
+                timeFrame.setDescription(Optional.fromNullable(arguments.getString(DESCRIPTION)));
+            }
         }
 
         storeBatchOperation(timeFrame.getDAO(context).getBatchUpdate(timeFrame));

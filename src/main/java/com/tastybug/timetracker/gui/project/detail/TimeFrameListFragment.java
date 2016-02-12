@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.gui.project.detail;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.gui.timeframe.edit.TimeFrameEditingActivity;
 import com.tastybug.timetracker.model.TimeFrame;
 
 public class TimeFrameListFragment extends ListFragment {
@@ -58,7 +60,13 @@ public class TimeFrameListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View v, int position, long id) {
         TimeFrame selectedTimeFrame = (TimeFrame) listView.getAdapter().getItem(position);
-        Toast.makeText(getActivity(), "Selected " + selectedTimeFrame.getUuid(), Toast.LENGTH_SHORT).show();
+        showTimeFrameEditingActivity(selectedTimeFrame);
+    }
+
+    private void showTimeFrameEditingActivity(TimeFrame timeFrame) {
+        Intent intent = new Intent(getActivity(), TimeFrameEditingActivity.class);
+        intent.putExtra(TimeFrameEditingActivity.TIME_FRAME_UUID, timeFrame.getUuid());
+        startActivity(intent);
     }
 
     @Override
@@ -77,10 +85,5 @@ public class TimeFrameListFragment extends ListFragment {
                 super.onOptionsItemSelected(item);
                 return false;
         }
-    }
-
-    public interface TimeFrameListSelectionListener {
-
-        void onTimeFrameSelected(TimeFrame timeFrame);
     }
 }

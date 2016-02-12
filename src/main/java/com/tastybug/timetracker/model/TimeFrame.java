@@ -70,6 +70,13 @@ public class TimeFrame extends Entity {
         return Optional.fromNullable(start);
     }
 
+    public void setStart(Date start) {
+        Preconditions.checkNotNull(start);
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "start", this.start, start);
+        this.start = start;
+        propertyChange(e);
+    }
+
     public void stop() {
         if (!getStart().isPresent()) {
             throw new IllegalStateException(toString() + " is not started yet!");
@@ -85,6 +92,13 @@ public class TimeFrame extends Entity {
 
     public Optional<Date> getEnd() {
         return Optional.fromNullable(end);
+    }
+
+    public void setEnd(Date end) {
+        Preconditions.checkNotNull(end);
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, end);
+        this.end = end;
+        propertyChange(e);
     }
 
     public boolean isRunning() {

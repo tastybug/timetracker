@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.project.configuration;
+package com.tastybug.timetracker.gui.shared;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -20,11 +20,16 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
     private OttoProvider ottoProvider = new OttoProvider();
     private String topic;
+    private boolean canReturnNone = true;
 
     public DatePickerFragment() {}
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public void setCanNotReturnNone() {
+        this.canReturnNone = false;
     }
 
     @Override
@@ -39,15 +44,16 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
                 localDate.getYear(),
                 localDate.getMonthOfYear(),
                 localDate.getDayOfMonth());
-
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.set_no_date), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_NEGATIVE) {
-                    dismiss();
-                    ottoProvider.getSharedBus().post(new DatePickedEvent(topic, null));
+        if (canReturnNone) {
+            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.set_no_date), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_NEGATIVE) {
+                        dismiss();
+                        ottoProvider.getSharedBus().post(new DatePickedEvent(topic, null));
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return dialog;
     }
@@ -56,7 +62,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         ottoProvider.getSharedBus().post(new DatePickedEvent(topic, new DateTime(year, month, day, 0, 0)));
     }
 
-    static class DatePickedEvent implements OttoEvent {
+    public static class DatePickedEvent implements OttoEvent {
 
         private String topic;
         private DateTime date;

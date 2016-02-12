@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.gui.shared.DatePickerFragment;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.OttoProvider;
