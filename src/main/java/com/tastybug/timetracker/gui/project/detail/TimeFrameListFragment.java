@@ -9,10 +9,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.timeframe.edit.TimeFrameEditingActivity;
+import com.tastybug.timetracker.gui.timeframe.edit.TimeFrameModificationActivity;
 import com.tastybug.timetracker.model.TimeFrame;
 
 public class TimeFrameListFragment extends ListFragment {
@@ -64,8 +63,14 @@ public class TimeFrameListFragment extends ListFragment {
     }
 
     private void showTimeFrameEditingActivity(TimeFrame timeFrame) {
-        Intent intent = new Intent(getActivity(), TimeFrameEditingActivity.class);
-        intent.putExtra(TimeFrameEditingActivity.TIME_FRAME_UUID, timeFrame.getUuid());
+        Intent intent = new Intent(getActivity(), TimeFrameModificationActivity.class);
+        intent.putExtra(TimeFrameModificationActivity.TIME_FRAME_UUID, timeFrame.getUuid());
+        startActivity(intent);
+    }
+
+    private void showTimeFrameCreationActivity() {
+        Intent intent = new Intent(getActivity(), TimeFrameModificationActivity.class);
+        intent.putExtra(TimeFrameModificationActivity.PROJECT_UUID, projectUuid);
         startActivity(intent);
     }
 
@@ -79,7 +84,7 @@ public class TimeFrameListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_create_custom_time_frame:
-                Toast.makeText(getActivity(), "IMPL ME: Custom time frame erstellen...", Toast.LENGTH_SHORT).show();
+                showTimeFrameCreationActivity();
                 return true;
             default:
                 super.onOptionsItemSelected(item);

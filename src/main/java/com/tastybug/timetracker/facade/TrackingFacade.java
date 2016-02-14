@@ -32,7 +32,7 @@ public class TrackingFacade {
     public void startTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        CreateTimeFrameTask.aTask(context).withProjectUuid(projectUuid).execute();
+        CreateTimeFrameTask.aTask(context).byProjectUuid(projectUuid).execute();
     }
 
     public void stopTracking(String projectUuid) {

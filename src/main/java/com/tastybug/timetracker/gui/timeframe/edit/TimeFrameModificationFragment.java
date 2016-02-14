@@ -14,6 +14,7 @@ import com.tastybug.timetracker.gui.shared.DatePickerFragment;
 import com.tastybug.timetracker.gui.shared.TimePickerFragment;
 import com.tastybug.timetracker.model.TimeFrame;
 import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.task.tracking.CreateTimeFrameTask;
 import com.tastybug.timetracker.task.tracking.ModifyTimeFrameTask;
 
 import org.joda.time.LocalDate;
@@ -24,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class TimeFrameEditingFragment extends Fragment {
+public class TimeFrameModificationFragment extends Fragment {
 
     private static final String START_DATE = "START_DATE";
     private static final String START_TIME = "START_TIME";
@@ -38,7 +39,8 @@ public class TimeFrameEditingFragment extends Fragment {
     private EditText endTimeEditText;
     private EditText descriptionEditText;
 
-    private String timeFrameUuid;
+    private Optional<String> existingTimeFrameUuidOpt = Optional.absent();
+    private Optional<String> creationForProjectUuid = Optional.absent();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,13 +119,17 @@ public class TimeFrameEditingFragment extends Fragment {
     }
 
     public void showTimeFrameData(TimeFrame timeFrame) {
-        this.timeFrameUuid = timeFrame.getUuid();
+        this.existingTimeFrameUuidOpt = Optional.of(timeFrame.getUuid());
 
         renderStartDate(timeFrame.getStart());
         renderStartTime(timeFrame.getStart());
         renderEndDate(timeFrame.getEnd());
         renderEndTime(timeFrame.getEnd());
         renderDescription(timeFrame.getDescription());
+    }
+
+    public void showCreationForProject(String projectUuid) {
+        this.creationForProjectUuid = Optional.of(projectUuid);
     }
 
     private void renderStartDate(Optional<Date> dateOptional) {
@@ -221,16 +227,28 @@ public class TimeFrameEditingFragment extends Fragment {
         return endDateEditText.getError() == null;
     }
 
-    public void collectModifications(ModifyTimeFrameTask task) {
+    public ModifyTimeFrameTask collectModificationsForEdit(ModifyTimeFrameTask task) {
         Optional<Date> startDateOpt = getStartDateFromWidget();
         Optional<Date> startTimeOpt = getStartTimeFromWidget();
         Optional<Date> endDateOpt = getEndDateFromWidget();
         Optional<Date> endTimeOpt = getEndTimeFromWidget();
 
-        task.withTimeFrameUuid(timeFrameUuid)
+        return task.withTimeFrameUuid(existingTimeFrameUuidOpt.get())
+            .withStartDate(getAggregatedDate(startDateOpt, startTimeOpt).toDate())
+            .withEndDate(getAggregatedDate(endDateOpt, endTimeOpt).toDate())
+            .withDescription(Optional.of(getDescriptionFromWidget()));
+    }
+
+    public CreateTimeFrameTask collectModificationsForCreate(CreateTimeFrameTask task) {
+        Optional<Date> startDateOpt = getStartDateFromWidget();
+        Optional<Date> startTimeOpt = getStartTimeFromWidget();
+        Optional<Date> endDateOpt = getEndDateFromWidget();
+        Optional<Date> endTimeOpt = getEndTimeFromWidget();
+
+        return task.withProjectUuid(creationForProjectUuid.get())
                 .withStartDate(getAggregatedDate(startDateOpt, startTimeOpt).toDate())
                 .withEndDate(getAggregatedDate(endDateOpt, endTimeOpt).toDate())
-                .withDescription(getDescriptionFromWidget());
+                .withDescription(Optional.of(getDescriptionFromWidget()));
     }
 
     @Subscribe

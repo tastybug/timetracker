@@ -21,7 +21,7 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
     private static final String TIME_FRAME_UUID = "TIME_FRAME_UUID";
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE = "END_DATE";
-    private static final String DESCRIPTION = "DESCRIPTION";
+    private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
 
     private TimeFrame timeFrame;
 
@@ -53,8 +53,8 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
         return this;
     }
 
-    public ModifyTimeFrameTask withDescription(String description) {
-        arguments.putString(DESCRIPTION, description);
+    public ModifyTimeFrameTask withDescription(Optional<String> description) {
+        arguments.putSerializable(DESCRIPTION_OPT, description);
         return this;
     }
 
@@ -84,8 +84,8 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
             if(arguments.containsKey(END_DATE)) {
                 timeFrame.setEnd((Date)arguments.getSerializable(END_DATE));
             }
-            if(arguments.containsKey(DESCRIPTION)) {
-                timeFrame.setDescription(Optional.fromNullable(arguments.getString(DESCRIPTION)));
+            if(arguments.containsKey(DESCRIPTION_OPT)) {
+                timeFrame.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
             }
         }
 
