@@ -7,7 +7,7 @@ import android.util.Log;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 import com.tastybug.timetracker.model.TimeFrame;
-import com.tastybug.timetracker.task.project.AbstractAsyncTask;
+import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 public class KickstartTimeFrameTask extends AbstractAsyncTask {
 

@@ -9,7 +9,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 import com.tastybug.timetracker.model.TimeFrame;
-import com.tastybug.timetracker.task.project.AbstractAsyncTask;
+import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import java.util.Date;
 
@@ -29,7 +29,7 @@ public class ModifyTimeFrameTask extends AbstractAsyncTask {
         return new ModifyTimeFrameTask(context);
     }
 
-    private ModifyTimeFrameTask(Context context) {
+    protected ModifyTimeFrameTask(Context context) {
         super(context);
     }
 

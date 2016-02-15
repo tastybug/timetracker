@@ -8,6 +8,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 
 public class CreateProjectTask extends AbstractAsyncTask {
@@ -24,7 +25,7 @@ public class CreateProjectTask extends AbstractAsyncTask {
         return new CreateProjectTask(context);
     }
 
-    private CreateProjectTask(Context context) {
+    protected CreateProjectTask(Context context) {
         super(context);
     }
 

@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.task.project;
+package com.tastybug.timetracker.task;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -10,7 +10,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.tastybug.timetracker.database.dao.EntityDAO;
-import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
 import java.util.ArrayList;
 

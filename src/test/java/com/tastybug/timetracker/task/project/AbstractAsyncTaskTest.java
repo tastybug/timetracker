@@ -6,6 +6,8 @@ import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.os.RemoteException;
 
+import com.tastybug.timetracker.task.AbstractAsyncTask;
+
 import org.junit.Before;
 import org.junit.Test;
 

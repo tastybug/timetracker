@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 
 public class DeleteProjectTask extends AbstractAsyncTask {
@@ -18,7 +19,7 @@ public class DeleteProjectTask extends AbstractAsyncTask {
         return new DeleteProjectTask(context);
     }
 
-    private DeleteProjectTask(Context context) {
+    protected DeleteProjectTask(Context context) {
         super(context);
     }
 

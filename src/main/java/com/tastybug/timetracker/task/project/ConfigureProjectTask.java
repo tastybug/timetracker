@@ -11,6 +11,7 @@ import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import java.util.Date;
 
@@ -30,7 +31,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         return new ConfigureProjectTask(context);
     }
 
-    private ConfigureProjectTask(Context context) {
+    protected ConfigureProjectTask(Context context) {
         super(context);
     }
 

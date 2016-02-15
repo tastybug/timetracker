@@ -21,7 +21,7 @@ public class CreateTimeFrameTask extends KickstartTimeFrameTask {
         return new CreateTimeFrameTask(context);
     }
 
-    private CreateTimeFrameTask(Context context) {
+    protected CreateTimeFrameTask(Context context) {
         super(context);
     }
 
