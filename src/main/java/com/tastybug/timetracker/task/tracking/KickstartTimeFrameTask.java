@@ -11,8 +11,6 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 public class KickstartTimeFrameTask extends AbstractAsyncTask {
 
-    private static final String TAG = KickstartTimeFrameTask.class.getSimpleName();
-
     static final String PROJECT_UUID    = "PROJECT_UUID";
 
     protected TimeFrame timeFrame;
@@ -50,7 +48,7 @@ public class KickstartTimeFrameTask extends AbstractAsyncTask {
     protected void onPostExecute(Long result) {
         // notify otto
         // and update the test
-        Log.i(TAG, "Created timeframe " + timeFrame);
+        Log.i(getClass().getSimpleName(), "Created timeframe " + timeFrame);
         ottoProvider.getSharedBus().post(new TimeFrameCreatedEvent(timeFrame));
     }
 }

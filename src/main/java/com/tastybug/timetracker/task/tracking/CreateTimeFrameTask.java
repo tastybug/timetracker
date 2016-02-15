@@ -11,8 +11,6 @@ import java.util.Date;
 
 public class CreateTimeFrameTask extends KickstartTimeFrameTask {
 
-    private static final String TAG = CreateTimeFrameTask.class.getSimpleName();
-
     private static final String START_DATE      = "START_DATE";
     private static final String END_DATE        = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
