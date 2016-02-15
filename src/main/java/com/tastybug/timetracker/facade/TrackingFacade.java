@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 import com.tastybug.timetracker.model.TimeFrame;
-import com.tastybug.timetracker.task.tracking.CreateTimeFrameTask;
+import com.tastybug.timetracker.task.tracking.KickstartTimeFrameTask;
 import com.tastybug.timetracker.task.tracking.ModifyTimeFrameTask;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class TrackingFacade {
     public void startTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        CreateTimeFrameTask.aTask(context).byProjectUuid(projectUuid).execute();
+        KickstartTimeFrameTask.aTask(context).withProjectUuid(projectUuid).execute();
     }
 
     public void stopTracking(String projectUuid) {
