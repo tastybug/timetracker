@@ -100,11 +100,11 @@ public class TrackingConfigurationDAOTest {
         trackingConfigurationDAO.get("1");
     }
 
-    @Test public void getAllWorksForExistingTimeFrames() {
+    @Test public void getAllWorksForExistingTrackingRecords() {
         // given
-        Cursor aCursorWith2TimeFrames = aCursorWith2Entities();
+        Cursor aCursorWith2TrackingRecords = aCursorWith2Entities();
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
-                .thenReturn(aCursorWith2TimeFrames);
+                .thenReturn(aCursorWith2TrackingRecords);
 
         // when
         ArrayList<TrackingConfiguration> entities = trackingConfigurationDAO.getAll();
@@ -176,7 +176,7 @@ public class TrackingConfigurationDAOTest {
 
     @Test public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(TimeFrameDAO.ID_COLUMN, trackingConfigurationDAO.getPKColumn());
+        assertEquals(TrackingRecordDAO.ID_COLUMN, trackingConfigurationDAO.getPKColumn());
     }
 
     @Test public void knowsAllColumns() {

@@ -19,8 +19,8 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
-import com.tastybug.timetracker.task.tracking.TimeFrameCreatedEvent;
-import com.tastybug.timetracker.task.tracking.TimeFrameModifiedEvent;
+import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
+import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 
 public class ProjectStatisticsFragment extends Fragment {
 
@@ -82,7 +82,7 @@ public class ProjectStatisticsFragment extends Fragment {
         if(!project.hasContext()) {
             project.setContext(getActivity());
         }
-        someTextView.setText(new StatisticProjectDuration(project.getTrackingConfiguration(), project.getTimeFrames()).get().getStandardSeconds() + " Seconds");
+        someTextView.setText(new StatisticProjectDuration(project.getTrackingConfiguration(), project.getTrackingRecords()).get().getStandardSeconds() + " Seconds");
     }
 
     public void showNoProject() {
@@ -90,14 +90,14 @@ public class ProjectStatisticsFragment extends Fragment {
         someTextView.setText("//Nothing selected for project statistics");
     }
 
-    @Subscribe public void handleTrackingStarted(TimeFrameCreatedEvent event) {
-        Project project = new ProjectDAO(getActivity()).get(event.getTimeFrame().getProjectUuid()).get();
+    @Subscribe public void handleTrackingStarted(TrackingRecordCreatedEvent event) {
+        Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         project.setContext(getActivity());
         showProjectDetailsFor(project);
     }
 
-    @Subscribe public void handleTrackingModified(TimeFrameModifiedEvent event) {
-        Project project = new ProjectDAO(getActivity()).get(event.getTimeFrame().getProjectUuid()).get();
+    @Subscribe public void handleTrackingModified(TrackingRecordModifiedEvent event) {
+        Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         project.setContext(getActivity());
         showProjectDetailsFor(project);
     }

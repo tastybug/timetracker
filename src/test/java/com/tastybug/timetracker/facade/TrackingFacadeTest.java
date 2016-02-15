@@ -3,7 +3,7 @@ package com.tastybug.timetracker.facade;
 import android.content.Context;
 import android.os.Build;
 
-import com.tastybug.timetracker.database.dao.TimeFrameDAO;
+import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 
 import junit.framework.TestCase;
 
@@ -19,8 +19,8 @@ import static org.mockito.Mockito.mock;
 public class TrackingFacadeTest extends TestCase {
 
     Context context = mock(Context.class);
-    TimeFrameDAO timeFrameDAO = mock(TimeFrameDAO.class);
-    TrackingFacade testSubject = new TrackingFacade(context, timeFrameDAO);
+    TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
+    TrackingFacade testSubject = new TrackingFacade(context, trackingRecordDAO);
 
     @Test(expected = IllegalArgumentException.class)
     public void startingTrackingWithNullProjectUuidYieldsException() {
@@ -59,15 +59,15 @@ public class TrackingFacadeTest extends TestCase {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void gettingTimeFramesWithNullProjectUuidYieldsException() {
+    public void gettingTrackingRecordsWithNullProjectUuidYieldsException() {
         // expect
-        testSubject.getTimeFrames(null);
+        testSubject.getTrackingRecords(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void gettingTimeFramesWithEmptyProjectUuidYieldsException() {
+    public void gettingTrackingRecordsWithEmptyProjectUuidYieldsException() {
         // expect
-        testSubject.getTimeFrames("");
+        testSubject.getTrackingRecords("");
     }
 
 }

@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.timeframe.edit;
+package com.tastybug.timetracker.gui.trackingrecord.edit;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.shared.DatePickerFragment;
 import com.tastybug.timetracker.gui.shared.TimePickerFragment;
-import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
-import com.tastybug.timetracker.task.tracking.CreateTimeFrameTask;
-import com.tastybug.timetracker.task.tracking.ModifyTimeFrameTask;
+import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class TimeFrameModificationFragment extends Fragment {
+public class TrackingRecordModificationFragment extends Fragment {
 
     private static final String START_DATE = "START_DATE";
     private static final String START_TIME = "START_TIME";
@@ -39,7 +39,7 @@ public class TimeFrameModificationFragment extends Fragment {
     private EditText endTimeEditText;
     private EditText descriptionEditText;
 
-    private Optional<String> existingTimeFrameUuidOpt = Optional.absent();
+    private Optional<String> existingTrackingRecordUuidOpt = Optional.absent();
     private Optional<String> creationForProjectUuid = Optional.absent();
 
     @Override
@@ -118,14 +118,14 @@ public class TimeFrameModificationFragment extends Fragment {
         new OttoProvider().getSharedBus().unregister(this);
     }
 
-    public void showTimeFrameData(TimeFrame timeFrame) {
-        this.existingTimeFrameUuidOpt = Optional.of(timeFrame.getUuid());
+    public void showTrackingRecordData(TrackingRecord trackingRecord) {
+        this.existingTrackingRecordUuidOpt = Optional.of(trackingRecord.getUuid());
 
-        renderStartDate(timeFrame.getStart());
-        renderStartTime(timeFrame.getStart());
-        renderEndDate(timeFrame.getEnd());
-        renderEndTime(timeFrame.getEnd());
-        renderDescription(timeFrame.getDescription());
+        renderStartDate(trackingRecord.getStart());
+        renderStartTime(trackingRecord.getStart());
+        renderEndDate(trackingRecord.getEnd());
+        renderEndTime(trackingRecord.getEnd());
+        renderDescription(trackingRecord.getDescription());
     }
 
     public void showCreationForProject(String projectUuid) {
@@ -227,19 +227,19 @@ public class TimeFrameModificationFragment extends Fragment {
         return endDateEditText.getError() == null;
     }
 
-    public ModifyTimeFrameTask collectModificationsForEdit(ModifyTimeFrameTask task) {
+    public ModifyTrackingRecordTask collectModificationsForEdit(ModifyTrackingRecordTask task) {
         Optional<Date> startDateOpt = getStartDateFromWidget();
         Optional<Date> startTimeOpt = getStartTimeFromWidget();
         Optional<Date> endDateOpt = getEndDateFromWidget();
         Optional<Date> endTimeOpt = getEndTimeFromWidget();
 
-        return task.withTimeFrameUuid(existingTimeFrameUuidOpt.get())
+        return task.withTrackingRecordUuid(existingTrackingRecordUuidOpt.get())
             .withStartDate(getAggregatedDate(startDateOpt, startTimeOpt).toDate())
             .withEndDate(getAggregatedDate(endDateOpt, endTimeOpt).toDate())
             .withDescription(Optional.of(getDescriptionFromWidget()));
     }
 
-    public CreateTimeFrameTask collectModificationsForCreate(CreateTimeFrameTask task) {
+    public CreateTrackingRecordTask collectModificationsForCreate(CreateTrackingRecordTask task) {
         Optional<Date> startDateOpt = getStartDateFromWidget();
         Optional<Date> startTimeOpt = getStartTimeFromWidget();
         Optional<Date> endDateOpt = getEndDateFromWidget();

@@ -10,7 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.Date;
 import java.util.UUID;
 
-public class TimeFrame extends Entity {
+public class TrackingRecord extends Entity {
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
@@ -18,13 +18,13 @@ public class TimeFrame extends Entity {
 
     private String description;
 
-    public TimeFrame() {}
+    public TrackingRecord() {}
 
-    public TimeFrame(String projectUuid) {
+    public TrackingRecord(String projectUuid) {
         this.projectUuid = projectUuid;
     }
 
-    public TimeFrame(String uuid, String projectUuid, Date start, Date end, String description) {
+    public TrackingRecord(String uuid, String projectUuid, Date start, Date end, String description) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.start = start;

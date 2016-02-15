@@ -5,8 +5,8 @@ import android.text.TextUtils;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.database.dao.TimeFrameDAO;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class Project extends Entity {
     private String description;
 
     private TrackingConfiguration trackingConfiguration;
-    private ArrayList<TimeFrame> timeFrames;
+    private ArrayList<TrackingRecord> trackingRecords;
 
 
     public Project(String uuid, String title, String description) {
@@ -67,36 +67,15 @@ public class Project extends Entity {
     }
 
 
-    public ArrayList<TimeFrame> getTimeFrames() {
-        if (timeFrames == null) {
+    public ArrayList<TrackingRecord> getTrackingRecords() {
+        if (trackingRecords == null) {
             if (!hasContext()) {
-                throw new IllegalStateException("Failed to fetch timeframes lazily, no context available.");
+                throw new IllegalStateException("Failed to fetch tracking records lazily, no context available.");
             }
-            timeFrames = ((TimeFrameDAO)daoFactory.getDao(TimeFrame.class, getContext()))
+            trackingRecords = ((TrackingRecordDAO)daoFactory.getDao(TrackingRecord.class, getContext()))
                     .getByProjectUuid(getUuid());
         }
-        return timeFrames;
-    }
-
-    public TimeFrame createTimeFrame() {
-        TimeFrame timeFrame = new TimeFrame();
-        timeFrame.setProjectUuid(getUuid());
-        timeFrame.setContext(getContext());
-        propertyChange(new PropertyChangeEvent(this, "createTimeFrame", null, timeFrame));
-        getTimeFrames().add(timeFrame);
-
-        return timeFrame;
-    }
-
-    public boolean removeTimeFrame(TimeFrame timeFrame) {
-        Preconditions.checkNotNull(timeFrame, "Cannot remove null time frame.");
-
-        boolean success = getTimeFrames().remove(timeFrame);
-        if(success) {
-            PropertyChangeEvent e = new PropertyChangeEvent(this, "removeTimeFrame", timeFrame, null);
-            propertyChange(e);
-        }
-        return success;
+        return trackingRecords;
     }
 
     public TrackingConfiguration getTrackingConfiguration() {
@@ -118,7 +97,7 @@ public class Project extends Entity {
                     .add("title", getTitle())
                     .add("description", getDescription().orNull())
                     .add("trackingConfiguration", getTrackingConfiguration())
-                    .add("timeFrames", getTimeFrames())
+                    .add("trackingRecords", getTrackingRecords())
                     .toString();
         } else {
             return MoreObjects.toStringHelper(this)
@@ -126,7 +105,7 @@ public class Project extends Entity {
                     .add("title", getTitle())
                     .add("description", getDescription().orNull())
                     .add("trackingConfiguration", "skipped, no context")
-                    .add("timeFrames", "skipped, no context")
+                    .add("trackingRecords", "skipped, no context")
                     .toString();
         }
     }

@@ -5,53 +5,53 @@ import android.os.Bundle;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.model.TrackingRecord;
 
 import java.util.Date;
 
-public class CreateTimeFrameTask extends KickstartTimeFrameTask {
+public class CreateTrackingRecordTask extends KickstartTrackingRecordTask {
 
     private static final String START_DATE      = "START_DATE";
     private static final String END_DATE        = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
 
-    public static CreateTimeFrameTask aTask(Context context) {
-        return new CreateTimeFrameTask(context);
+    public static CreateTrackingRecordTask aTask(Context context) {
+        return new CreateTrackingRecordTask(context);
     }
 
-    protected CreateTimeFrameTask(Context context) {
+    protected CreateTrackingRecordTask(Context context) {
         super(context);
     }
 
-    public CreateTimeFrameTask withProjectUuid(String projectUuid) {
+    public CreateTrackingRecordTask withProjectUuid(String projectUuid) {
         super.withProjectUuid(projectUuid);
         return this;
     }
 
-    public CreateTimeFrameTask withStartDate(Date startDate) {
+    public CreateTrackingRecordTask withStartDate(Date startDate) {
         arguments.putSerializable(START_DATE, startDate);
         return this;
     }
 
-    public CreateTimeFrameTask withEndDate(Date endDate) {
+    public CreateTrackingRecordTask withEndDate(Date endDate) {
         arguments.putSerializable(END_DATE, endDate);
         return this;
     }
 
-    public CreateTimeFrameTask withDescription(Optional<String> description) {
+    public CreateTrackingRecordTask withDescription(Optional<String> description) {
         arguments.putSerializable(DESCRIPTION_OPT, description);
         return this;
     }
 
     @Override
     protected void performBackgroundStuff(Bundle args) {
-        timeFrame = new TimeFrame(arguments.getString(PROJECT_UUID));
-        timeFrame.setStart((Date)arguments.getSerializable(START_DATE));
-        timeFrame.setEnd((Date)arguments.getSerializable(END_DATE));
+        trackingRecord = new TrackingRecord(arguments.getString(PROJECT_UUID));
+        trackingRecord.setStart((Date)arguments.getSerializable(START_DATE));
+        trackingRecord.setEnd((Date)arguments.getSerializable(END_DATE));
         if(arguments.containsKey(DESCRIPTION_OPT)) {
-            timeFrame.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
+            trackingRecord.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
         }
-        storeBatchOperation(timeFrame.getDAO(context).getBatchCreate(timeFrame));
+        storeBatchOperation(trackingRecord.getDAO(context).getBatchCreate(trackingRecord));
     }
 
     @Override

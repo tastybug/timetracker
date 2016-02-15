@@ -7,23 +7,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.model.TrackingRecord;
 
-public class TimeFrameView extends LinearLayout {
+public class TrackingRecordView extends LinearLayout {
 
     private TextView someTextview;
 
 
-    public TimeFrameView(Context context, AttributeSet attrs) {
+    public TrackingRecordView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_timeframe, this, true);
+        inflater.inflate(R.layout.view_tracking_record, this, true);
 
         someTextview = (TextView) findViewById(R.id.someTextview);
     }
 
-    public void showTimeFrame(TimeFrame timeFrame) {
-        someTextview.setText(timeFrame.toString());
+    public void showTrackingRecord(TrackingRecord trackingRecord) {
+        someTextview.setText(trackingRecord.toString());
     }
 }

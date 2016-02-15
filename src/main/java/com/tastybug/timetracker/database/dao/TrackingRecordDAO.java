@@ -6,7 +6,7 @@ import android.database.Cursor;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.model.TrackingRecord;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class TimeFrameDAO extends EntityDAO<TimeFrame> {
+public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
 
     static String ID_COLUMN = "uuid";
     static String PROJECT_UUID_COLUMN = "project_uuid";
@@ -32,15 +32,15 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
             DESCRIPTION_COLUMN
     };
 
-    public TimeFrameDAO(Context context) {
+    public TrackingRecordDAO(Context context) {
         super(context);
     }
 
-    public ArrayList<TimeFrame> getByProjectUuid(String uuid) {
-        Preconditions.checkNotNull(uuid, "Cannot get time frames by project uuid, null given!");
+    public ArrayList<TrackingRecord> getByProjectUuid(String uuid) {
+        Preconditions.checkNotNull(uuid, "Cannot get tracking records by project uuid, null given!");
 
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), PROJECT_UUID_COLUMN + "=?", new String[]{uuid}, null);
-        ArrayList<TimeFrame> list = new ArrayList<TimeFrame>();
+        ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
         while (cursor.moveToNext()) {
             list.add(createEntityFromCursor(context, cursor));
         }
@@ -48,25 +48,25 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
         return list;
     }
 
-    public Optional<TimeFrame> getRunning(String projectUuid) {
-        Preconditions.checkNotNull(projectUuid, "Cannot get time frames by project uuid, null given!");
+    public Optional<TrackingRecord> getRunning(String projectUuid) {
+        Preconditions.checkNotNull(projectUuid, "Cannot get tracking records by project uuid, null given!");
 
         Cursor cursor = context.getContentResolver().query(getQueryUri(),
                 getColumns(),
                 PROJECT_UUID_COLUMN + "=? AND " + END_DATE_COLUMN + " IS NULL",
                 new String[]{projectUuid},
                 null);
-        TimeFrame timeFrame = null;
+        TrackingRecord trackingRecord = null;
         if (cursor.moveToNext()) {
-            timeFrame = createEntityFromCursor(context, cursor);
+            trackingRecord = createEntityFromCursor(context, cursor);
         }
         cursor.close();
-        return Optional.fromNullable(timeFrame);
+        return Optional.fromNullable(trackingRecord);
     }
 
     @Override
     protected String getTableName() {
-        return "time_frame";
+        return "tracking_record";
     }
 
     @Override
@@ -80,7 +80,7 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
     }
 
     @Override
-    protected TimeFrame createEntityFromCursor(Context context, Cursor cursor) {
+    protected TrackingRecord createEntityFromCursor(Context context, Cursor cursor) {
         List<String> colsList = Arrays.asList(COLUMNS);
         try {
             String uuid = cursor.getString(colsList.indexOf(ID_COLUMN));
@@ -88,7 +88,7 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
             String startAsString = cursor.getString(colsList.indexOf(START_DATE_COLUMN));
             String endAsString = cursor.getString(colsList.indexOf(END_DATE_COLUMN));
             String description = cursor.getString(colsList.indexOf(DESCRIPTION_COLUMN));
-            return new TimeFrame(
+            return new TrackingRecord(
                     uuid,
                     projectUuid,
                     startAsString != null ? getIso8601DateFormatter().parse(startAsString) : null,
@@ -101,7 +101,7 @@ public class TimeFrameDAO extends EntityDAO<TimeFrame> {
     }
 
     @Override
-    protected ContentValues getContentValues(TimeFrame entity) {
+    protected ContentValues getContentValues(TrackingRecord entity) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID_COLUMN, entity.getUuid());
         contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());

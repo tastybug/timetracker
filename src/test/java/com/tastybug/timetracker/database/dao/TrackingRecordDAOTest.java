@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
-import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.model.TrackingRecord;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -32,27 +32,27 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
-public class TimeFrameDAOTest {
+public class TrackingRecordDAOTest {
 
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
 
     // test subject
-    TimeFrameDAO timeFrameDAO = new TimeFrameDAO(context);
+    TrackingRecordDAO trackingRecordDAO = new TrackingRecordDAO(context);
 
     @Before
     public void setup() {
         when(context.getContentResolver()).thenReturn(resolver);
     }
 
-    @Test public void canGetExistingTimeFrameById() {
+    @Test public void canGetExistingTrackingRecordById() {
         // given
-        Cursor cursor = aTimeframeCursor("1", "2");
+        Cursor cursor = aTrackingRecordCursor("1", "2");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        TimeFrame tf = timeFrameDAO.get("1").get();
+        TrackingRecord tf = trackingRecordDAO.get("1").get();
 
         // then
         assertNotNull(tf);
@@ -69,7 +69,7 @@ public class TimeFrameDAOTest {
                 .thenReturn(cursor);
 
         // when
-        TimeFrame tf = timeFrameDAO.get("1").orNull();
+        TrackingRecord tf = trackingRecordDAO.get("1").orNull();
 
         // then
         assertNull(tf);
@@ -78,36 +78,36 @@ public class TimeFrameDAOTest {
     @Test(expected = IllegalArgumentException.class)
     public void malformedStartDateStringLeadsToException() {
         // given
-        Cursor cursor = aTimeframeCursor("1", "2", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
+        Cursor cursor = aTrackingRecordCursor("1", "2", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        timeFrameDAO.get("1");
+        trackingRecordDAO.get("1");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void malformedEndDateStringLeadsToException() {
         // given
-        Cursor cursor = aTimeframeCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
+        Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        timeFrameDAO.get("1");
+        trackingRecordDAO.get("1");
     }
 
-    @Test public void getAllWorksForExistingTimeFrames() {
+    @Test public void getAllWorksForExistingTrackingRecords() {
         // given
-        Cursor aCursorWith2TimeFrames = aCursorWith2TimeFrames();
+        Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
-                .thenReturn(aCursorWith2TimeFrames);
+                .thenReturn(aCursorWith2TrackingRecords);
 
         // when
-        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getAll();
+        ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
 
         // then
-        assertEquals(2, timeFrames.size());
+        assertEquals(2, trackingRecords.size());
     }
 
     @Test public void getAllReturnsEmptyListForLackOfEntities() {
@@ -117,43 +117,43 @@ public class TimeFrameDAOTest {
                 .thenReturn(noProjects);
 
         // when
-        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getAll();
+        ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
 
         // then
-        assertEquals(0, timeFrames.size());
+        assertEquals(0, trackingRecords.size());
     }
 
-    @Test public void canCreateTimeFrame() {
+    @Test public void canCreateTrackingRecord() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        TrackingRecord trackingRecord = new TrackingRecord();
 
         // when
-        timeFrameDAO.create(timeFrame);
+        trackingRecordDAO.create(trackingRecord);
 
         // then
-        assertNotNull(timeFrame.getUuid());
-        assertNotNull(timeFrame.getContext());
+        assertNotNull(trackingRecord.getUuid());
+        assertNotNull(trackingRecord.getContext());
     }
 
-    @Test public void canUpdateTimeFrame() {
+    @Test public void canUpdateTrackingRecord() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        TrackingRecord trackingRecord = new TrackingRecord();
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
-        int updateCount = timeFrameDAO.update(timeFrame);
+        int updateCount = trackingRecordDAO.update(trackingRecord);
 
         // then
         assertEquals(1, updateCount);
     }
 
-    @Test public void canDeleteTimeFrame() {
+    @Test public void canDeleteTrackingRecord() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        TrackingRecord trackingRecord = new TrackingRecord();
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
-        boolean success = timeFrameDAO.delete(timeFrame);
+        boolean success = trackingRecordDAO.delete(trackingRecord);
 
         // then
         assertTrue(success);
@@ -161,11 +161,11 @@ public class TimeFrameDAOTest {
 
     @Test public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        TimeFrame timeFrame = new TimeFrame();
+        TrackingRecord trackingRecord = new TrackingRecord();
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when
-        boolean success = timeFrameDAO.delete(timeFrame);
+        boolean success = trackingRecordDAO.delete(trackingRecord);
 
         // then
         assertFalse(success);
@@ -173,63 +173,63 @@ public class TimeFrameDAOTest {
 
     @Test public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(TimeFrameDAO.ID_COLUMN, timeFrameDAO.getPKColumn());
+        assertEquals(TrackingRecordDAO.ID_COLUMN, trackingRecordDAO.getPKColumn());
     }
 
     @Test public void knowsAllColumns() {
         // expect
-        assertEquals(5, timeFrameDAO.getColumns().length);
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.ID_COLUMN));
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.PROJECT_UUID_COLUMN));
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.START_DATE_COLUMN));
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.END_DATE_COLUMN));
-        assertTrue(Arrays.asList(timeFrameDAO.getColumns()).contains(TimeFrameDAO.DESCRIPTION_COLUMN));
+        assertEquals(5, trackingRecordDAO.getColumns().length);
+        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.ID_COLUMN));
+        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.PROJECT_UUID_COLUMN));
+        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.START_DATE_COLUMN));
+        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.END_DATE_COLUMN));
+        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.DESCRIPTION_COLUMN));
     }
 
     @Test(expected = NullPointerException.class)
-    public void gettingAllTimeFramesByNullProjectUuidYieldsException() {
+    public void gettingAllTrackinRecordsByNullProjectUuidYieldsException() {
         // given
-        Cursor cursor = aTimeframeCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
+        Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
         when(cursor.moveToNext()).thenReturn(true);
 
         // when
-        timeFrameDAO.getByProjectUuid(null);
+        trackingRecordDAO.getByProjectUuid(null);
     }
 
-    @Test public void canGetTimeFramesByProjectUuid() {
+    @Test public void canGetTrackingRecordsByProjectUuid() {
         // given
-        Cursor cursor = aTimeframeCursor("1", "2");
+        Cursor cursor = aTrackingRecordCursor("1", "2");
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
         when(cursor.moveToNext()).thenReturn(true, false);
 
         // when
-        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getByProjectUuid("1");
+        ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getByProjectUuid("1");
 
         // then
-        assertEquals(1, timeFrames.size());
-        assertEquals("1", timeFrames.get(0).getUuid());
-        assertEquals("2", timeFrames.get(0).getProjectUuid());
-        assertNotNull(timeFrames.get(0).getStart());
-        assertNotNull(timeFrames.get(0).getEnd());
+        assertEquals(1, trackingRecords.size());
+        assertEquals("1", trackingRecords.get(0).getUuid());
+        assertEquals("2", trackingRecords.get(0).getProjectUuid());
+        assertNotNull(trackingRecords.get(0).getStart());
+        assertNotNull(trackingRecords.get(0).getEnd());
     }
 
-    @Test public void gettingTimeFramesByUnknownProjectUuidYieldsEmptyList() {
+    @Test public void gettingTrackingRecordsByUnknownProjectUuidYieldsEmptyList() {
         // given
         Cursor cursor = anEmptyCursor();
         when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
                 .thenReturn(cursor);
 
         // when
-        ArrayList<TimeFrame> timeFrames = timeFrameDAO.getByProjectUuid("1");
+        ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getByProjectUuid("1");
 
         // then
-        assertTrue(timeFrames.isEmpty());
+        assertTrue(trackingRecords.isEmpty());
     }
 
-    private Cursor aTimeframeCursor(String uuid, String projectUuid) {
+    private Cursor aTrackingRecordCursor(String uuid, String projectUuid) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getString(0)).thenReturn(uuid);
         when(cursor.getString(1)).thenReturn(projectUuid);
@@ -240,7 +240,7 @@ public class TimeFrameDAOTest {
         return cursor;
     }
 
-    private Cursor aTimeframeCursor(String uuid, String projectUuid, String startDateString, String endDateString) {
+    private Cursor aTrackingRecordCursor(String uuid, String projectUuid, String startDateString, String endDateString) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getString(0)).thenReturn(uuid);
         when(cursor.getString(1)).thenReturn(projectUuid);
@@ -258,7 +258,7 @@ public class TimeFrameDAOTest {
         return cursor;
     }
 
-    private Cursor aCursorWith2TimeFrames() {
+    private Cursor aCursorWith2TrackingRecords() {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getString(0)).thenReturn("1");
         when(cursor.getString(1)).thenReturn("2");

@@ -14,8 +14,8 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.facade.TrackingFacade;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
-import com.tastybug.timetracker.task.tracking.TimeFrameCreatedEvent;
-import com.tastybug.timetracker.task.tracking.TimeFrameModifiedEvent;
+import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
+import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 
 public class TrackingControlPanelFragment extends Fragment implements View.OnClickListener {
 
@@ -84,11 +84,11 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         }
     }
 
-    @Subscribe public void handleTrackingStarted(TimeFrameCreatedEvent event) {
+    @Subscribe public void handleTrackingStarted(TrackingRecordCreatedEvent event) {
         visualizeOngoingTracking();
     }
 
-    @Subscribe public void handleTrackingModified(TimeFrameModifiedEvent event) {
+    @Subscribe public void handleTrackingModified(TrackingRecordModifiedEvent event) {
         if (!new TrackingFacade(getActivity()).isTracking(currentProject.getUuid())) {
             visualizeNoOngoingTracking();
         }

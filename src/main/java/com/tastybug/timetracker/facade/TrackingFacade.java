@@ -4,10 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.database.dao.TimeFrameDAO;
-import com.tastybug.timetracker.model.TimeFrame;
-import com.tastybug.timetracker.task.tracking.KickstartTimeFrameTask;
-import com.tastybug.timetracker.task.tracking.ModifyTimeFrameTask;
+import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.task.tracking.KickstartTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
 
 import java.util.ArrayList;
 
@@ -17,40 +17,40 @@ import java.util.ArrayList;
 public class TrackingFacade {
 
     private Context context;
-    private TimeFrameDAO timeFrameDAO;
+    private TrackingRecordDAO trackingRecordDAO;
 
     public TrackingFacade(Context context) {
         this.context = context;
-        this.timeFrameDAO = new TimeFrameDAO(context);
+        this.trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    public TrackingFacade(Context context, TimeFrameDAO timeFrameDAO) {
+    public TrackingFacade(Context context, TrackingRecordDAO trackingRecordDAO) {
         this.context = context;
-        this.timeFrameDAO = timeFrameDAO;
+        this.trackingRecordDAO = trackingRecordDAO;
     }
 
     public void startTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        KickstartTimeFrameTask.aTask(context).withProjectUuid(projectUuid).execute();
+        KickstartTrackingRecordTask.aTask(context).withProjectUuid(projectUuid).execute();
     }
 
     public void stopTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        ModifyTimeFrameTask.aTask(context).withStoppableProjectUuid(projectUuid).execute();
+        ModifyTrackingRecordTask.aTask(context).withStoppableProjectUuid(projectUuid).execute();
     }
 
     public boolean isTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        return timeFrameDAO.getRunning(projectUuid).isPresent();
+        return trackingRecordDAO.getRunning(projectUuid).isPresent();
     }
 
-    public ArrayList<TimeFrame> getTimeFrames(String projectUuid) {
+    public ArrayList<TrackingRecord> getTrackingRecords(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        return timeFrameDAO.getByProjectUuid(projectUuid);
+        return trackingRecordDAO.getByProjectUuid(projectUuid);
     }
 
 }

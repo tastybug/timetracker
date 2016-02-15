@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item android:id="@+id/menu_create_custom_time_frame" android:icon="@drawable/ic_create_custom_timeframe" android:title="@string/menu_create_custom_timeframe" android:showAsAction="always"/>
-
-</menu>

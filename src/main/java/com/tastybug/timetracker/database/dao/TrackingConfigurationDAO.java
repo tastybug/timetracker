@@ -39,7 +39,7 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
     }
 
     public Optional<TrackingConfiguration> getByProjectUuid(String uuid) {
-        Preconditions.checkNotNull(uuid, "Cannot get time frames by project uuid, null given!");
+        Preconditions.checkNotNull(uuid, "Cannot get tracking records by project uuid, null given!");
 
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), PROJECT_UUID_COLUMN + "=?", new String[]{uuid}, null);
         TrackingConfiguration trackingConfiguration = null;

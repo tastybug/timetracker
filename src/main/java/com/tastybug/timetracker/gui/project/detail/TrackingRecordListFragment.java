@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.timeframe.edit.TimeFrameModificationActivity;
-import com.tastybug.timetracker.model.TimeFrame;
+import com.tastybug.timetracker.gui.trackingrecord.edit.TrackingRecordModificationActivity;
+import com.tastybug.timetracker.model.TrackingRecord;
 
-public class TimeFrameListFragment extends ListFragment {
+public class TrackingRecordListFragment extends ListFragment {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
@@ -48,7 +48,7 @@ public class TimeFrameListFragment extends ListFragment {
 
     public void showProject(String projectUuid) {
         this.projectUuid = projectUuid;
-        setListAdapter(new TimeFrameListAdapter(getActivity(), projectUuid));
+        setListAdapter(new TrackingRecordListAdapter(getActivity(), projectUuid));
     }
 
     public void showNoProject() {
@@ -58,33 +58,33 @@ public class TimeFrameListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View v, int position, long id) {
-        TimeFrame selectedTimeFrame = (TimeFrame) listView.getAdapter().getItem(position);
-        showTimeFrameEditingActivity(selectedTimeFrame);
+        TrackingRecord selectedTrackingRecord = (TrackingRecord) listView.getAdapter().getItem(position);
+        showTrackingRecordEditingActivity(selectedTrackingRecord);
     }
 
-    private void showTimeFrameEditingActivity(TimeFrame timeFrame) {
-        Intent intent = new Intent(getActivity(), TimeFrameModificationActivity.class);
-        intent.putExtra(TimeFrameModificationActivity.TIME_FRAME_UUID, timeFrame.getUuid());
+    private void showTrackingRecordEditingActivity(TrackingRecord trackingRecord) {
+        Intent intent = new Intent(getActivity(), TrackingRecordModificationActivity.class);
+        intent.putExtra(TrackingRecordModificationActivity.TRACKING_RECORD_UUID, trackingRecord.getUuid());
         startActivity(intent);
     }
 
-    private void showTimeFrameCreationActivity() {
-        Intent intent = new Intent(getActivity(), TimeFrameModificationActivity.class);
-        intent.putExtra(TimeFrameModificationActivity.PROJECT_UUID, projectUuid);
+    private void showTrackingRecordCreationActivity() {
+        Intent intent = new Intent(getActivity(), TrackingRecordModificationActivity.class);
+        intent.putExtra(TrackingRecordModificationActivity.PROJECT_UUID, projectUuid);
         startActivity(intent);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_timeframe_list, menu);
+        inflater.inflate(R.menu.fragment_tracking_record_list, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_create_custom_time_frame:
-                showTimeFrameCreationActivity();
+            case R.id.menu_create_custom_tracking_record:
+                showTrackingRecordCreationActivity();
                 return true;
             default:
                 super.onOptionsItemSelected(item);

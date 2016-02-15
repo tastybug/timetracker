@@ -44,13 +44,13 @@ public class ProjectDetailsActivity extends Activity {
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
         TrackingControlPanelFragment trackingPanelFragment = getTrackingControlPanelFragment();
-        TimeFrameListFragment timeFrameListFragment = getTimeFrameListFragment();
+        TrackingRecordListFragment trackingRecordListFragment = getTrackingRecordListFragment();
 
         Project project = getProjectByUuid(projectUuid);
 
         detailsFragment.showProjectDetailsFor(project);
         trackingPanelFragment.showProject(project);
-        timeFrameListFragment.showProject(projectUuid);
+        trackingRecordListFragment.showProject(projectUuid);
     }
 
     private ProjectStatisticsFragment getProjectStatisticsFragment() {
@@ -63,8 +63,8 @@ public class ProjectDetailsActivity extends Activity {
                 .findFragmentById(R.id.fragment_tracking_control_panel);
     }
 
-    private TimeFrameListFragment getTimeFrameListFragment() {
-        return (TimeFrameListFragment) getFragmentManager()
+    private TrackingRecordListFragment getTrackingRecordListFragment() {
+        return (TrackingRecordListFragment) getFragmentManager()
                 .findFragmentById(R.id.fragment_time_frame_list);
     }
 

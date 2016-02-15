@@ -1,7 +1,7 @@
 package com.tastybug.timetracker.model.statistics;
 
-import com.tastybug.timetracker.model.TimeFrame;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
@@ -17,17 +17,17 @@ public class StatisticProjectDurationTest {
 
     @Test(expected = NullPointerException.class)
     public void creatingStatisticsForNullTrackingConfigurationYieldsException() {
-        new StatisticProjectDuration(null, new ArrayList<TimeFrame>());
+        new StatisticProjectDuration(null, new ArrayList<TrackingRecord>());
     }
 
     @Test(expected = NullPointerException.class)
-    public void creatingStatisticsForNullTimeFrameArrayYieldsException() {
+    public void creatingStatisticsForNullTrackingRecordArrayYieldsException() {
         new StatisticProjectDuration(new TrackingConfiguration("some project uuid"), null);
     }
 
-    @Test public void canCreateStatisticForEmptyListOfTimeFrames() {
+    @Test public void canCreateStatisticForEmptyListOfTrackingRecords() {
         // given
-        ArrayList<TimeFrame> list = new ArrayList<TimeFrame>();
+        ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
@@ -39,7 +39,7 @@ public class StatisticProjectDurationTest {
 
     @Test public void canCalculateWhenNoRoundingIsConfigured() {
         // given
-        ArrayList<TimeFrame> list = new ArrayList<TimeFrame>();
+        ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
@@ -51,11 +51,11 @@ public class StatisticProjectDurationTest {
 
     @Test public void canCalculateEffectiveProjectDurationWithNoRounding() {
         // given
-        ArrayList<TimeFrame> timeFrames = timeFramesList(aTimeFrameWith10Min10SecsDuration(), aTimeFrameWith10Min10SecsDuration());
+        ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10Min10SecsDuration(), aTrackingRecordWith10Min10SecsDuration());
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, timeFrames).get();
+        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).get();
 
         // then: 2 * 10:10min
         assertEquals(2*(10*60+10), duration.getStandardSeconds());
@@ -63,26 +63,26 @@ public class StatisticProjectDurationTest {
 
     @Test public void canCalculateEffectiveProjectDurationWith10erRounding() {
         // given
-        ArrayList<TimeFrame> timeFrames = timeFramesList(aTimeFrameWith10Min10SecsDuration(), aTimeFrameWith10Min10SecsDuration());
+        ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10Min10SecsDuration(), aTrackingRecordWith10Min10SecsDuration());
         TrackingConfiguration configuration = aTrackingConfigurationWith10erRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, timeFrames).get();
+        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).get();
 
         // then: 2 * 20 minutes
         assertEquals(2*20*60, duration.getStandardSeconds());
     }
 
     /*
-        The calculation will ignore those time frames that are ongoing
+        The calculation will ignore ongoing tracking records
      */
-    @Test public void calculationIgnoresIncompleteTimeFrames() {
+    @Test public void calculationIgnoresIncompleteTrackingRecords() {
         // given
-        ArrayList<TimeFrame> timeFrames = timeFramesList(aTimeFrameWith10Min10SecsDuration(), anOngoingTimeFrame(), aTimeFrameWith10Min10SecsDuration());
+        ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10Min10SecsDuration(), anOngoingTrackingRecord(), aTrackingRecordWith10Min10SecsDuration());
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, timeFrames).get();
+        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).get();
 
         // then
         assertEquals(2*(10*60+10), duration.getStandardSeconds());
@@ -96,21 +96,21 @@ public class StatisticProjectDurationTest {
         return new TrackingConfiguration("some project uuid", RoundingFactory.Strategy.TEN_MINUTES_UP);
     }
 
-    private ArrayList<TimeFrame> timeFramesList(TimeFrame... timeFrames) {
+    private ArrayList<TrackingRecord> aTrackingRecordsList(TrackingRecord... trackingRecords) {
 
-        return new ArrayList<TimeFrame>(Arrays.asList(timeFrames));
+        return new ArrayList<TrackingRecord>(Arrays.asList(trackingRecords));
     }
 
-    private TimeFrame aTimeFrameWith10Min10SecsDuration() {
+    private TrackingRecord aTrackingRecordWith10Min10SecsDuration() {
         DateTime start = new DateTime(2015, 1, 1, 13, 30, 0);
         DateTime stop = new DateTime(2015, 1, 1, 13, 40, 10);
 
-        return new TimeFrame("uuid", "some project uuid", start.toDate(), stop.toDate(), "some description");
+        return new TrackingRecord("uuid", "some project uuid", start.toDate(), stop.toDate(), "some description");
     }
 
-    private TimeFrame anOngoingTimeFrame() {
+    private TrackingRecord anOngoingTrackingRecord() {
         DateTime start = new DateTime(2015, 1, 1, 13, 30, 0);
 
-        return new TimeFrame("uuid", "some project uuid", start.toDate(), null, "some description");
+        return new TrackingRecord("uuid", "some project uuid", start.toDate(), null, "some description");
     }
 }

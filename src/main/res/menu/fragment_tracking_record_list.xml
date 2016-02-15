@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/menu_create_custom_tracking_record" android:icon="@drawable/ic_create_custom_tracking_record" android:title="@string/menu_create_custom_tracking_record" android:showAsAction="always"/>
+
+</menu>
