@@ -40,7 +40,6 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
     }
 
     protected Long doInBackground(Bundle... params) {
-
         Log.d(TAG, "Performing background stuff..");
         performBackgroundStuff(params[0]);
         Log.d(TAG, "Persisting to database..");
@@ -71,5 +70,3 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
         }
     }
 }
-
-
