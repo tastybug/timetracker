@@ -55,8 +55,7 @@ public class TrackingRecord extends Entity {
         if (getStart().isPresent()) {
             throw new IllegalStateException(toString() + " is already started!");
         }
-        Date newDate = new Date();
-        this.start = newDate;
+        this.start = new Date();
     }
 
     public Optional<Date> getStart() {

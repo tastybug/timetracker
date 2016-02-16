@@ -18,26 +18,6 @@ public abstract class AbstractAppConfig {
         this.context = context;
     }
 
-    protected boolean getBooleanValue(String key, boolean defaultValue) {
-        try {
-            return getMetaDataBundle(context).getBoolean(key, defaultValue);
-        } catch (PackageManager.NameNotFoundException nnfe) {
-            throw new RuntimeException("Metadata not found: " + key);
-        } catch (NumberFormatException nfe) {
-            throw new RuntimeException("Metadata " + key + " is not a valid int", nfe);
-        }
-    }
-
-    protected int getIntValue(String key, int defaultValue) {
-        try {
-            return getMetaDataBundle(context).getInt(key, defaultValue);
-        } catch (PackageManager.NameNotFoundException nnfe) {
-            throw new RuntimeException("Metadata not found: " + key);
-        } catch (NumberFormatException nfe) {
-            throw new RuntimeException("Metadata " + key + " is not a valid int", nfe);
-        }
-    }
-
     protected int getIntValue(String key) {
         try {
             return getMetaDataBundle(context).getInt(key);

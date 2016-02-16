@@ -16,7 +16,6 @@ public class Project extends Entity {
     private String uuid = UUID.randomUUID().toString();
     private String title;
     private String description;
-
     private TrackingConfiguration trackingConfiguration;
     private ArrayList<TrackingRecord> trackingRecords;
 
