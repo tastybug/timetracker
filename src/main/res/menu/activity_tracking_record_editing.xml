@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_confirm_time_frame_edit" android:icon="@drawable/ic_confirm" android:title="@string/menu_confirm_time_frame_edit" android:showAsAction="always"/>
+    <item android:id="@+id/menu_delete_tracking_record" android:icon="@drawable/ic_delete_tracking_record" android:title="@string/menu_delete_tracking_record" android:showAsAction="always"/>
+    <item android:id="@+id/menu_confirm_tracking_record_edit" android:icon="@drawable/ic_confirm" android:title="@string/menu_confirm_tracking_record_edit" android:showAsAction="always"/>
 
 </menu>

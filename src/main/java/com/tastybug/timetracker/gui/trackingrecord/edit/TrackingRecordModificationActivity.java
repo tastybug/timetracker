@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -16,8 +17,10 @@ import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.DeleteTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
+import com.tastybug.timetracker.task.tracking.TrackingRecordDeletedEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 
 public class TrackingRecordModificationActivity extends Activity {
@@ -31,7 +34,7 @@ public class TrackingRecordModificationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_time_frame_editing);
+        setContentView(R.layout.activity_tracking_record_editing);
         setupActionBar();
         setOrRestoreState(savedInstanceState);
     }
@@ -48,10 +51,10 @@ public class TrackingRecordModificationActivity extends Activity {
         Preconditions.checkArgument(projectUuidOpt.isPresent() || trackingRecordUuidOpt.isPresent(), "Neither project uuid nor tracking record uuid available.");
 
         if(trackingRecordUuidOpt.isPresent()) {
-            setTitle(R.string.title_time_frame_editing);
+            setTitle(R.string.title_tracking_record_editing);
             renderExistingTrackingRecord(getTrackingRecordByUuid(trackingRecordUuidOpt.get()));
         } else {
-            setTitle(R.string.title_time_frame_creation);
+            setTitle(R.string.title_tracking_record_creation);
             renderTrackingRecordCreation(projectUuidOpt.get());
         }
     }
@@ -70,6 +73,7 @@ public class TrackingRecordModificationActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.activity_tracking_record_editing, menu);
+        menu.findItem(R.id.menu_delete_tracking_record).setVisible(trackingRecordUuidOpt.isPresent());
 
         return true;
     }
@@ -111,21 +115,27 @@ public class TrackingRecordModificationActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_confirm_time_frame_edit:
-                    if (isConfigurationValid()) {
-                        if (trackingRecordUuidOpt.isPresent()) {
-                            ModifyTrackingRecordTask task = buildTrackingRecordModificationTask();
-                            task.execute();
-                        } else {
-                            CreateTrackingRecordTask task = buildTrackingRecordCreationTask();
-                            task.execute();
-                        }
+            case R.id.menu_confirm_tracking_record_edit:
+                if (isConfigurationValid()) {
+                    if (trackingRecordUuidOpt.isPresent()) {
+                        ModifyTrackingRecordTask task = buildTrackingRecordModificationTask();
+                        task.execute();
+                    } else {
+                        CreateTrackingRecordTask task = buildTrackingRecordCreationTask();
+                        task.execute();
                     }
+                }
                 return true;
+            case R.id.menu_delete_tracking_record:
+                deleteTrackingRecord(trackingRecordUuidOpt.get());
             default:
                 super.onOptionsItemSelected(item);
                 return false;
         }
+    }
+
+    private void deleteTrackingRecord(String trackingRecordUuid) {
+        DeleteTrackingRecordTask.aTask(this).withTrackingRecordUuid(trackingRecordUuid).execute();
     }
 
     private boolean isConfigurationValid() {
@@ -152,16 +162,24 @@ public class TrackingRecordModificationActivity extends Activity {
 
     private TrackingRecordModificationFragment getTrackingRecordModificationFragment() {
         return (TrackingRecordModificationFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_time_frame_editing);
+                .findFragmentById(R.id.fragment_tracking_record_editing);
     }
 
     @Subscribe
     public void handleTrackingRecordCreatedEvent(TrackingRecordCreatedEvent event) {
+        Toast.makeText(this, "Created tracking record " + event.getTrackingRecord().getUuid(), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
 
     @Subscribe
     public void handleTrackingRecordModifiedEvent(TrackingRecordModifiedEvent event) {
+        Toast.makeText(this, "Modified tracking record " + event.getTrackingRecord().getUuid(), Toast.LENGTH_SHORT).show();
+        onBackPressed();
+    }
+
+    @Subscribe
+    public void handleTrackingRecordDeletedEvent(TrackingRecordDeletedEvent event) {
+        Toast.makeText(this, "Deleted tracking record " + event.getTrackingRecordUuid(), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
 }

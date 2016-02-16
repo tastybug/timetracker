@@ -47,10 +47,17 @@ public class TrackingFacade {
         return trackingRecordDAO.getRunning(projectUuid).isPresent();
     }
 
+    // TODO klaeren:
+    // entweder macht man das ueber die Entity (Project) oder hier ueber die Facade
+    // beide Wege anzubieten ist kacke
+    // Unter Umstaenden hat man zwar nicht immer eine Projektinstanz am start, es waere aber
+    // konsistenter, dann eben eine zu erstellen
     public ArrayList<TrackingRecord> getTrackingRecords(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
         return trackingRecordDAO.getByProjectUuid(projectUuid);
     }
+
+
 
 }

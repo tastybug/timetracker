@@ -30,11 +30,12 @@
     <string name="menu_create_custom_tracking_record">Add manual time record</string>
 
     <!-- time frame editing -->
-    <string name="menu_confirm_time_frame_edit">Confirm</string>
+    <string name="menu_confirm_tracking_record_edit">Confirm</string>
+    <string name="menu_delete_tracking_record">Delete Record</string>
     <string name="from_X">From %1$s</string>
     <string name="until_X">Until %1$s</string>
-    <string name="title_time_frame_creation">Create New Record</string>
-    <string name="title_time_frame_editing">Edit A Record</string>
+    <string name="title_tracking_record_creation">Create New Record</string>
+    <string name="title_tracking_record_editing">Edit A Record</string>
     <string name="error_date_missing">Please set a date</string>
     <string name="error_time_missing">Please set a time</string>
     <string name="error_end_before_start">This ends before it starts</string>

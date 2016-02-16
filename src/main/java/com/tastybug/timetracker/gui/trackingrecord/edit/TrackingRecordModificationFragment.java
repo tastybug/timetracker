@@ -44,13 +44,13 @@ public class TrackingRecordModificationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_time_frame_editing, container);
+        View rootview = inflater.inflate(R.layout.fragment_tracking_record_editing, container);
 
         startDateEditText = (EditText) rootview.findViewById(R.id.start_date);
         startTimeEditText = (EditText) rootview.findViewById(R.id.start_time);
         endDateEditText = (EditText) rootview.findViewById(R.id.end_date);
         endTimeEditText = (EditText) rootview.findViewById(R.id.end_time);
-        descriptionEditText = (EditText) rootview.findViewById(R.id.time_frame_description);
+        descriptionEditText = (EditText) rootview.findViewById(R.id.tracking_record_description);
 
 
         if (savedInstanceState != null) {

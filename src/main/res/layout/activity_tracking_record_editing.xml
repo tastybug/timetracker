@@ -5,9 +5,9 @@
     android:layout_height="match_parent">
 
         <fragment class="com.tastybug.timetracker.gui.trackingrecord.edit.TrackingRecordModificationFragment"
-            android:id="@id/fragment_time_frame_editing"
+            android:id="@id/fragment_tracking_record_editing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_time_frame_editing" />
+            tools:layout="@layout/fragment_tracking_record_editing" />
 
 </ScrollView>

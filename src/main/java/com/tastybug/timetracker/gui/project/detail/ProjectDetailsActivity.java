@@ -65,7 +65,7 @@ public class ProjectDetailsActivity extends Activity {
 
     private TrackingRecordListFragment getTrackingRecordListFragment() {
         return (TrackingRecordListFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_time_frame_list);
+                .findFragmentById(R.id.fragment_tracking_record_list);
     }
 
     @Override
