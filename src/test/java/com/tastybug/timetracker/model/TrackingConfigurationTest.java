@@ -9,7 +9,6 @@ import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,8 +23,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -173,6 +170,42 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
+    public void canNotSetNullHourLimit() {
+        // given
+        TrackingConfiguration trackingConfiguration = anInstance();
+
+        // when
+        trackingConfiguration.setHourLimit(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullStartDateOptional() {
+        // given
+        TrackingConfiguration trackingConfiguration = anInstance();
+
+        // when
+        trackingConfiguration.setStart(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullEndDateOptional() {
+        // given
+        TrackingConfiguration trackingConfiguration = anInstance();
+
+        // when
+        trackingConfiguration.setEnd(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullEndDateInclusiveOptional() {
+        // given
+        TrackingConfiguration trackingConfiguration = anInstance();
+
+        // when
+        trackingConfiguration.setEndAsInclusive(null);
+    }
+
+    @Test(expected = NullPointerException.class)
     public void canNotSetNullUuid() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
@@ -188,24 +221,6 @@ public class TrackingConfigurationTest {
 
         // when
         trackingConfiguration.setProjectUuid(null);
-    }
-
-    @Test public void fieldChangesLeadToDatabaseUpdates() {
-        // given
-        TrackingConfiguration trackingConfiguration = anInstance();
-        trackingConfiguration.setContext(contextMock);
-        trackingConfiguration.setDAOFactory(daoFactory);
-
-        // when
-        trackingConfiguration.setUuid("10000"); // this does not trigger
-        trackingConfiguration.setProjectUuid("1234");
-        trackingConfiguration.setHourLimit(Optional.of(10));
-        trackingConfiguration.setStart(Optional.of(new LocalDate(2015, 1, 1).toDate()));
-        trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 1, 1).toDate()));
-        trackingConfiguration.setRoundingStrategy(RoundingFactory.Strategy.FULL_MINUTE_DOWN);
-
-        // then
-        verify(trackingConfigurationDAO, times(5)).update(trackingConfiguration);
     }
 
     private TrackingConfiguration anInstance() {

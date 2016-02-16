@@ -99,6 +99,15 @@ public class ProjectTest {
         project.setTitle("");
     }
 
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullDescription() {
+        // given
+        Project project = new Project("project title");
+
+        // when
+        project.setDescription(null);
+    }
+
     @Test(expected = IllegalStateException.class)
     public void lazilyGettingTrackingRecordsWithoutContextYieldsException() {
         // given
@@ -146,20 +155,5 @@ public class ProjectTest {
 
         // and
         verify(trackingConfigurationDAO, times(1)).getByProjectUuid(project.getUuid());
-    }
-
-    @Test public void fieldChangesLeadToDatabaseUpdates() {
-        // given
-        Project project = new Project("project title");
-        project.setContext(context);
-        project.setDAOFactory(daoFactory);
-
-        // when
-        project.setUuid("123"); // this does not trigger
-        project.setTitle("new title");
-        project.setDescription(Optional.of("bla"));
-
-        // then
-        verify(projectDAO, times(2)).update(project);
     }
 }

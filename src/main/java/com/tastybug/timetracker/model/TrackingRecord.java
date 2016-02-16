@@ -6,7 +6,6 @@ import com.google.common.base.Preconditions;
 
 import org.joda.time.Duration;
 
-import java.beans.PropertyChangeEvent;
 import java.util.Date;
 import java.util.UUID;
 
@@ -15,8 +14,8 @@ public class TrackingRecord extends Entity {
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
     private Date start, end;
-
     private String description;
+
 
     public TrackingRecord() {}
 
@@ -40,7 +39,6 @@ public class TrackingRecord extends Entity {
     @Override
     public void setUuid(String uuid) {
         Preconditions.checkNotNull(uuid);
-
         this.uuid = uuid;
     }
 
@@ -50,10 +48,7 @@ public class TrackingRecord extends Entity {
 
     public void setProjectUuid(String projectUuid) {
         Preconditions.checkNotNull(projectUuid);
-
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "projectUuid", this.projectUuid, projectUuid);
         this.projectUuid = projectUuid;
-        propertyChange(e);
     }
 
     public void start() {
@@ -61,9 +56,7 @@ public class TrackingRecord extends Entity {
             throw new IllegalStateException(toString() + " is already started!");
         }
         Date newDate = new Date();
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "start", this.start, newDate);
         this.start = newDate;
-        propertyChange(e);
     }
 
     public Optional<Date> getStart() {
@@ -72,9 +65,7 @@ public class TrackingRecord extends Entity {
 
     public void setStart(Date start) {
         Preconditions.checkNotNull(start);
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "start", this.start, start);
         this.start = start;
-        propertyChange(e);
     }
 
     public void stop() {
@@ -84,10 +75,7 @@ public class TrackingRecord extends Entity {
         if (getEnd().isPresent()) {
             throw new IllegalStateException(toString() + " is already stopped!");
         }
-        Date newDate = new Date();
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, newDate);
-        this.end = newDate;
-        propertyChange(e);
+        this.end = new Date();
     }
 
     public Optional<Date> getEnd() {
@@ -96,9 +84,7 @@ public class TrackingRecord extends Entity {
 
     public void setEnd(Date end) {
         Preconditions.checkNotNull(end);
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, end);
         this.end = end;
-        propertyChange(e);
     }
 
     public boolean isRunning() {
@@ -106,9 +92,7 @@ public class TrackingRecord extends Entity {
     }
 
     public void setDescription(Optional<String> description) {
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
         this.description = description.orNull();
-        propertyChange(e);
     }
 
     public Optional<String> getDescription() {

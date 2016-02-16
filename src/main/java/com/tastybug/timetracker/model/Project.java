@@ -8,7 +8,6 @@ import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -40,7 +39,6 @@ public class Project extends Entity {
     @Override
     public void setUuid(String uuid) {
         Preconditions.checkNotNull(uuid);
-
         this.uuid = uuid;
     }
 
@@ -50,10 +48,7 @@ public class Project extends Entity {
 
     public void setTitle(String title) {
         Preconditions.checkArgument(!TextUtils.isEmpty(title), "Project has empty or null title!");
-
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "title", this.title, title);
         this.title = title;
-        propertyChange(e);
     }
 
     public Optional<String> getDescription() {
@@ -61,11 +56,9 @@ public class Project extends Entity {
     }
 
     public void setDescription(Optional<String> description) {
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "description", this.description, description);
+        Preconditions.checkNotNull(description);
         this.description = description.orNull();
-        propertyChange(e);
     }
-
 
     public ArrayList<TrackingRecord> getTrackingRecords() {
         if (trackingRecords == null) {

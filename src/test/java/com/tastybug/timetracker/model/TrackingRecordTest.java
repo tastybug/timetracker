@@ -21,8 +21,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -147,21 +145,5 @@ public class TrackingRecordTest {
 
         // then
         assertTrue(trackingRecord.toDuration().isPresent());
-    }
-
-    @Test public void fieldChangesLeadToDatabaseUpdates() {
-        // given
-        TrackingRecord TrackingRecord = new TrackingRecord();
-        TrackingRecord.setContext(contextMock);
-        TrackingRecord.setDAOFactory(daoFactory);
-
-        // when
-        TrackingRecord.setUuid("10000"); // this does not trigger
-        TrackingRecord.start();
-        TrackingRecord.stop();
-        TrackingRecord.setDescription(Optional.of("blablabla"));
-
-        // then
-        verify(trackingRecordDAO, times(3)).update(TrackingRecord);
     }
 }

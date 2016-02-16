@@ -7,7 +7,6 @@ import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
 
-import java.beans.PropertyChangeEvent;
 import java.util.Date;
 import java.util.UUID;
 
@@ -61,10 +60,7 @@ public class TrackingConfiguration extends Entity {
 
     public void setProjectUuid(String projectUuid) {
         Preconditions.checkNotNull(projectUuid);
-
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "projectUuid", this.projectUuid, projectUuid);
         this.projectUuid = projectUuid;
-        propertyChange(e);
     }
 
     public RoundingFactory.Strategy getRoundingStrategy() {
@@ -73,10 +69,7 @@ public class TrackingConfiguration extends Entity {
 
     public void setRoundingStrategy(RoundingFactory.Strategy roundingStrategy) {
         Preconditions.checkNotNull(roundingStrategy);
-
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "roundingStrategy", this.roundingStrategy, roundingStrategy);
         this.roundingStrategy = roundingStrategy;
-        propertyChange(e);
     }
 
     public Optional<Integer> getHourLimit() {
@@ -84,9 +77,8 @@ public class TrackingConfiguration extends Entity {
     }
 
     public void setHourLimit(Optional<Integer> hourLimit) {
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "hourLimit", this.hourLimit, hourLimit);
+        Preconditions.checkNotNull(hourLimit);
         this.hourLimit = hourLimit.orNull();
-        propertyChange(e);
     }
 
     public Optional<Date> getStart() {
@@ -94,12 +86,11 @@ public class TrackingConfiguration extends Entity {
     }
 
     public void setStart(Optional<Date> start) {
+        Preconditions.checkNotNull(start);
         if (getEnd().isPresent() && start.isPresent()) {
             Preconditions.checkArgument(start.get().before(getEnd().get()), "Start date cannot be after end date!");
         }
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "start", this.start, start);
         this.start = start.orNull();
-        propertyChange(e);
     }
 
     public Optional<Date> getEnd() {
@@ -116,15 +107,15 @@ public class TrackingConfiguration extends Entity {
     }
 
     public void setEnd(Optional<Date> end) {
+        Preconditions.checkNotNull(end);
         if (getStart().isPresent() && end.isPresent()) {
             Preconditions.checkArgument(end.get().after(getStart().get()), "End date cannot be before start date!");
         }
-        PropertyChangeEvent e = new PropertyChangeEvent(this, "end", this.end, end);
         this.end = end.orNull();
-        propertyChange(e);
     }
 
     public void setEndAsInclusive(Optional<Date> endAsInclusive) {
+        Preconditions.checkNotNull(endAsInclusive);
         if(endAsInclusive.isPresent()) {
             DateTime dateTime = new DateTime(endAsInclusive.get());
             setEnd(Optional.of(dateTime.plusDays(1).toDate()));
