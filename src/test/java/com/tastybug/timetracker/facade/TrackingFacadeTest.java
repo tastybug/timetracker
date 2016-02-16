@@ -57,17 +57,4 @@ public class TrackingFacadeTest extends TestCase {
         // expect
         testSubject.isTracking("");
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void gettingTrackingRecordsWithNullProjectUuidYieldsException() {
-        // expect
-        testSubject.getTrackingRecords(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void gettingTrackingRecordsWithEmptyProjectUuidYieldsException() {
-        // expect
-        testSubject.getTrackingRecords("");
-    }
-
 }
