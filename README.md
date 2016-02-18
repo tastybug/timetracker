@@ -27,3 +27,11 @@ Glossar: Fachliche Terminologie
 * Projektzeitraum: Start- und Enddatum eines Projekts (optional) 
 * effektiver Projektumfang: die Dauer eines Projektes auf Basis der bisher erfassten TrackingRecords
 * maximaler Projektumfang: eine Hoechstdauer fuer ein Projekt ('es werden nicht mehr als 80h bezahlt')
+
+UI Bestandteile
+---------------
+
+* Projektliste
+* Tracking Control Panel: Starten und Stoppen der Zeiterfassung fuer ein Projekt
+* Timelog: Liste der erfassten TrackingRecords
+* Project Statistics: Statistiken rund um ein Projekt 
