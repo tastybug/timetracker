@@ -18,3 +18,12 @@ _Release abbrechen_
 
 * ein angelegter Tag kann mittels `git tag -d v1.06 && git push origin :refs/tags/v1.00` rueckgegaengig gemacht werden. Im POM die version zuruecksetzen, neu starten.
 
+Glossar: Fachliche Terminologie
+-------------------------------
+
+* Projekt
+* Konkrete Zeiterfassung / TrackingRecord: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
+* Zeiterfassungskonfiguration / TrackingConfiguration
+* Projektdauer: Start- und Enddatum eines Projekts (optional) 
+* effektiver Projektumfang: die Dauer eines Projektes auf Basis der bisher erfassten TrackingRecords
+* maximaler Projektumfang: eine Hoechstdauer fuer ein Projekt ('es werden nicht mehr als 80h bezahlt')
