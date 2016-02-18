@@ -24,6 +24,6 @@ Glossar: Fachliche Terminologie
 * Projekt
 * Konkrete Zeiterfassung / TrackingRecord: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
 * Zeiterfassungskonfiguration / TrackingConfiguration
-* Projektdauer: Start- und Enddatum eines Projekts (optional) 
+* Projektzeitraum: Start- und Enddatum eines Projekts (optional) 
 * effektiver Projektumfang: die Dauer eines Projektes auf Basis der bisher erfassten TrackingRecords
 * maximaler Projektumfang: eine Hoechstdauer fuer ein Projekt ('es werden nicht mehr als 80h bezahlt')
