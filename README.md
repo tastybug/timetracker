@@ -22,16 +22,26 @@ Glossar: Fachliche Terminologie
 -------------------------------
 
 * Projekt
-* Konkrete Zeiterfassung / TrackingRecord: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
+    * Projekttitel
+    * Projektbeschreibung
+    
 * Zeiterfassungskonfiguration / TrackingConfiguration
-* Projektzeitraum: Start- und Enddatum eines Projekts (optional) 
-* effektiver Projektumfang: die Dauer eines Projektes auf Basis der bisher erfassten TrackingRecords
-* maximaler Projektumfang: eine Hoechstdauer fuer ein Projekt ('es werden nicht mehr als 80h bezahlt')
+    * Projektzeitraum: Start- und Enddatum eines Projekts (optional) 
+    * effektiver Projektumfang: die Dauer eines Projektes auf Basis der bisher erfassten TrackingRecords ('es wurden bisher 10h erfasst')
+    * maximaler Projektumfang: eine Hoechstdauer fuer ein Projekt ('es werden nicht mehr als 80h bezahlt')
+    * Rundungsstrategie: werden Zeiterfassungen nach Beendigung auf/ab gerundet?
+    
+* Zeiterfassung / TrackingRecord: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
+    * Start-,Endedatum der -
+    * Dauer der -
+    * Beschreibung einer -
 
 UI Bestandteile
 ---------------
 
-* Projektliste
+* Projektliste: die Liste der eingerichteten Projekte
+* Globale Statistiken: Statistiken ueber Projekte hinweg
+* Globales Timelog: Liste der erfassten TrackingRecords ueber alle Projekte hinweg
 * Tracking Control Panel: Starten und Stoppen der Zeiterfassung fuer ein Projekt
-* Timelog: Liste der erfassten TrackingRecords
+* Project Timelog: Liste der erfassten TrackingRecords eines Projekts
 * Project Statistics: Statistiken rund um ein Projekt
