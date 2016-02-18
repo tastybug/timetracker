@@ -23,8 +23,6 @@ Glossar: Fachliche Terminologie
 
 * Projekt
 * Konkrete Zeiterfassung / TrackingRecord: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
-    * offene Dauer: bei laufenden Records die Dauer vom Start bis zum Abfragezeitpunkt ('Es wird seit 4h getracked')
-    * geschlossene Dauer: bei abgeschlossenen Records die Dauer von Start bis Ende ('Es wurden ingesamt 4h erfasst')
 * Zeiterfassungskonfiguration / TrackingConfiguration
 * Projektzeitraum: Start- und Enddatum eines Projekts (optional) 
 * effektiver Projektumfang: die Dauer eines Projektes auf Basis der bisher erfassten TrackingRecords
