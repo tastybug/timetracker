@@ -3,8 +3,10 @@ package com.tastybug.timetracker.facade;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.tracking.KickstartTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
 
@@ -38,9 +40,9 @@ public class TrackingFacade {
         ModifyTrackingRecordTask.aTask(context).withStoppableProjectUuid(projectUuid).execute();
     }
 
-    public boolean isTracking(String projectUuid) {
+    public Optional<TrackingRecord> getOngoingTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        return trackingRecordDAO.getRunning(projectUuid).isPresent();
+        return trackingRecordDAO.getRunning(projectUuid);
     }
 }

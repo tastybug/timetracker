@@ -9,10 +9,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.facade.TrackingFacade;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
@@ -44,17 +46,17 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
 
     public void showProject(Project project) {
         this.currentProject = project;
-        boolean isCurrentlyTracking = new TrackingFacade(getActivity()).isTracking(project.getUuid());
-        if(isCurrentlyTracking) {
-            visualizeOngoingTracking();
+        Optional<TrackingRecord> ongoingTracking = new TrackingFacade(getActivity()).getOngoingTracking(project.getUuid());
+        if(ongoingTracking.isPresent()) {
+            visualizeOngoingTracking(ongoingTracking.get());
         } else {
             visualizeNoOngoingTracking();
         }
     }
 
-    private void visualizeOngoingTracking() {
+    private void visualizeOngoingTracking(TrackingRecord ongoingTrackingRecord) {
         trackingStartStopButton.setImageResource(R.drawable.ic_stop_tracking);
-        someTextView.setText("Already tracking!");
+        someTextView.setText("Already tracking since " + ongoingTrackingRecord.getStart().get());
     }
 
     private void visualizeNoOngoingTracking() {
@@ -77,7 +79,8 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
             return;
         }
         TrackingFacade facade = new TrackingFacade(getActivity());
-        if (facade.isTracking(currentProject.getUuid())) {
+        Optional<TrackingRecord> ongoing = facade.getOngoingTracking(currentProject.getUuid());
+        if (ongoing.isPresent()) {
             facade.stopTracking(currentProject.getUuid());
         } else {
             facade.startTracking(currentProject.getUuid());
@@ -85,11 +88,11 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     }
 
     @Subscribe public void handleTrackingStarted(TrackingRecordCreatedEvent event) {
-        visualizeOngoingTracking();
+        visualizeOngoingTracking(event.getTrackingRecord());
     }
 
     @Subscribe public void handleTrackingModified(TrackingRecordModifiedEvent event) {
-        if (!new TrackingFacade(getActivity()).isTracking(currentProject.getUuid())) {
+        if (!new TrackingFacade(getActivity()).getOngoingTracking(currentProject.getUuid()).isPresent()) {
             visualizeNoOngoingTracking();
         }
     }

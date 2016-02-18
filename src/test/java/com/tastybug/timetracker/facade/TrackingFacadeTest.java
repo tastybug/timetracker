@@ -49,12 +49,12 @@ public class TrackingFacadeTest extends TestCase {
     @Test(expected = IllegalArgumentException.class)
     public void checkForRunningTrackingWithNullProjectUuidYieldsException() {
         // expect
-        testSubject.isTracking(null);
+        testSubject.getOngoingTracking(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void checkForRunningTrackingWithEmptyProjectUuidYieldsException() {
         // expect
-        testSubject.isTracking("");
+        testSubject.getOngoingTracking("");
     }
 }

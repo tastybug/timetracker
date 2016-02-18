@@ -16,7 +16,6 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -41,7 +40,6 @@ public class TrackingRecordTest {
         // given:
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.getStart().isPresent());
-        assertFalse(trackingRecord.isRunning());
         assertFalse(trackingRecord.getEnd().isPresent());
 
         // when
@@ -49,7 +47,6 @@ public class TrackingRecordTest {
 
         // then
         assertTrue(trackingRecord.getStart().isPresent());
-        assertTrue(trackingRecord.isRunning());
         assertFalse(trackingRecord.getEnd().isPresent());
 
         // when
@@ -58,10 +55,6 @@ public class TrackingRecordTest {
         // then
         assertTrue(trackingRecord.getStart().isPresent());
         assertTrue(trackingRecord.getEnd().isPresent());
-        assertFalse(trackingRecord.isRunning());
-
-        // and
-        assertNotNull(trackingRecord.toDuration().get());
     }
 
     @Test
@@ -128,8 +121,34 @@ public class TrackingRecordTest {
         new TrackingRecord().setEnd(null);
     }
 
+    @Test public void canTellIfIsRunningOrFinished() {
+        // given:
+        TrackingRecord trackingRecord;
+
+        // when
+        trackingRecord = new TrackingRecord();
+
+        // then
+        assertFalse(trackingRecord.isRunning());
+        assertFalse(trackingRecord.isFinished());
+
+        // when
+        trackingRecord.start();
+
+        // then
+        assertTrue(trackingRecord.isRunning());
+        assertFalse(trackingRecord.isFinished());
+
+        // when
+        trackingRecord.stop();
+
+        // then
+        assertFalse(trackingRecord.isRunning());
+        assertTrue(trackingRecord.isFinished());
+    }
+
     @Test
-    public void canOnlyGetAsJodaDurationWhenFinished() {
+    public void canJodaDurationWhenRunningOrFinished() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.toDuration().isPresent());
@@ -138,7 +157,7 @@ public class TrackingRecordTest {
         trackingRecord.start();
 
         // then
-        assertFalse(trackingRecord.toDuration().isPresent());
+        assertTrue(trackingRecord.toDuration().isPresent());
 
         // when
         trackingRecord.stop();

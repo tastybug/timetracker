@@ -90,6 +90,10 @@ public class TrackingRecord extends Entity {
         return getStart().isPresent() && !getEnd().isPresent();
     }
 
+    public boolean isFinished() {
+        return getStart().isPresent() && getEnd().isPresent();
+    }
+
     public void setDescription(Optional<String> description) {
         this.description = description.orNull();
     }
@@ -99,10 +103,13 @@ public class TrackingRecord extends Entity {
     }
 
     public Optional<Duration> toDuration() {
-        if (getStart().isPresent() && getEnd().isPresent()) {
+        if (isRunning()) {
+            return Optional.of(new Duration(start.getTime(), new Date().getTime()));
+        } else if (isFinished()){
             return Optional.of(new Duration(start.getTime(), end.getTime()));
+        } else {
+            return Optional.absent();
         }
-        return Optional.absent();
     }
 
     public String toString() {
