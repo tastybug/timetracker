@@ -7,8 +7,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.task.tracking.KickstartTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.TrackingTaskFactory;
 
 /**
  * Serviceklasse rund um die Zeiterfassung.
@@ -16,28 +15,29 @@ import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
 public class TrackingFacade {
 
     private Context context;
+    private TrackingTaskFactory trackingTaskFactory;
     private TrackingRecordDAO trackingRecordDAO;
 
     public TrackingFacade(Context context) {
-        this.context = context;
-        this.trackingRecordDAO = new TrackingRecordDAO(context);
+        this(context, new TrackingRecordDAO(context), new TrackingTaskFactory());
     }
 
-    public TrackingFacade(Context context, TrackingRecordDAO trackingRecordDAO) {
+    public TrackingFacade(Context context, TrackingRecordDAO trackingRecordDAO, TrackingTaskFactory factory) {
         this.context = context;
         this.trackingRecordDAO = trackingRecordDAO;
+        this.trackingTaskFactory = factory;
     }
 
     public void startTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        KickstartTrackingRecordTask.aTask(context).withProjectUuid(projectUuid).execute();
+        trackingTaskFactory.aKickstartTask(context).withProjectUuid(projectUuid).execute();
     }
 
     public void stopTracking(String projectUuid) {
         Preconditions.checkArgument(!TextUtils.isEmpty(projectUuid), "Project UUID is empty!");
 
-        ModifyTrackingRecordTask.aTask(context).withStoppableProjectUuid(projectUuid).execute();
+        trackingTaskFactory.aModificationTask(context).withStoppableProjectUuid(projectUuid).execute();
     }
 
     public Optional<TrackingRecord> getOngoingTracking(String projectUuid) {
