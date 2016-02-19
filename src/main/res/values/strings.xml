@@ -28,6 +28,9 @@
     <!-- project details -->
     <string name="message_no_project_selected">No project selected!</string>
     <string name="menu_create_custom_tracking_record">Add manual time record</string>
+    <string name="msg_no_ongoing_tracking">Not tracking at the moment.</string>
+    <string name="msg_tracking_since_X">Since %1$s</string>
+    <string name="msg_tracking_duration_X">Duration %1$s</string>
 
     <!-- time frame editing -->
     <string name="menu_confirm_tracking_record_edit">Confirm</string>

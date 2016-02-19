@@ -49,7 +49,7 @@ public class ProjectStatisticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_project_statistics, container);
 
-        someTextView = (TextView) rootview.findViewById(R.id.someTextview);
+        someTextView = (TextView) rootview.findViewById(R.id.lineOne);
 
         new OttoProvider().getSharedBus().register(this);
 

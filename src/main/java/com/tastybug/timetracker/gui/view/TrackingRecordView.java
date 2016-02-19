@@ -20,7 +20,7 @@ public class TrackingRecordView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_tracking_record, this, true);
 
-        someTextview = (TextView) findViewById(R.id.someTextview);
+        someTextview = (TextView) findViewById(R.id.lineOne);
     }
 
     public void showTrackingRecord(TrackingRecord trackingRecord) {

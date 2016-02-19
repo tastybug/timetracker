@@ -8,15 +8,13 @@
     <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingControlPanelFragment"
         android:id="@id/fragment_tracking_control_panel"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         tools:layout="@layout/fragment_tracking_control_panel" />
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectStatisticsFragment"
         android:id="@id/fragment_project_statistics"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         tools:layout="@layout/fragment_project_statistics" />
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingRecordListFragment"
