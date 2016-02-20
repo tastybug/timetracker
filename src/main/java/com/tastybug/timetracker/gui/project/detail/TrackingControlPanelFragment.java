@@ -19,11 +19,10 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
+import com.tastybug.timetracker.util.DurationFormatterFactory;
 
 import org.joda.time.Duration;
 import org.joda.time.LocalDate;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -89,38 +88,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     }
 
     private String getDurationAsString(Duration duration) {
-        PeriodFormatter printer;
-        if (duration.getStandardHours() > 0) {
-            printer = new PeriodFormatterBuilder()
-                    .printZeroIfSupported()
-                    .appendHours()
-                    .appendSeparator(":")
-                    .printZeroIfSupported()
-                    .minimumPrintedDigits(2)
-                    .appendMinutes()
-                    .appendSeparator(":")
-                    .printZeroIfSupported()
-                    .appendSeconds()
-                    .appendSuffix(" hours", " hours")
-                    .toFormatter();
-        } else if (duration.getStandardMinutes() > 0) {
-            printer = new PeriodFormatterBuilder()
-                    .printZeroIfSupported()
-                    .appendMinutes()
-                    .appendSeparator(":")
-                    .minimumPrintedDigits(2)
-                    .printZeroIfSupported()
-                    .appendSeconds()
-                    .appendSuffix(" mins", " mins")
-                    .toFormatter();
-        } else {
-            printer = new PeriodFormatterBuilder()
-                    .printZeroIfSupported()
-                    .appendSeconds()
-                    .appendSuffix(" secs", " secs")
-                    .toFormatter();
-        }
-        return printer.print(duration.toPeriod());
+        return DurationFormatterFactory.getFormatter(duration).print(duration.toPeriod());
     }
 
     private void visualizeNoOngoingTracking() {

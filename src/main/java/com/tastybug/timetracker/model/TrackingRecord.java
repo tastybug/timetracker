@@ -9,7 +9,7 @@ import org.joda.time.Duration;
 import java.util.Date;
 import java.util.UUID;
 
-public class TrackingRecord extends Entity {
+public class TrackingRecord extends Entity implements Comparable<TrackingRecord> {
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
@@ -120,5 +120,11 @@ public class TrackingRecord extends Entity {
                 .add("end", getEnd().orNull())
                 .add("description", getDescription().orNull())
                 .toString();
+    }
+
+    public int compareTo(TrackingRecord another) {
+        Preconditions.checkState(another.getStart().isPresent());
+        Preconditions.checkState(this.getStart().isPresent());
+        return another.getStart().get().compareTo(getStart().get());
     }
 }

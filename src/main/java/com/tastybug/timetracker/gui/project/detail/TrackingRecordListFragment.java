@@ -3,6 +3,7 @@ package com.tastybug.timetracker.gui.project.detail;
 import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ public class TrackingRecordListFragment extends ListFragment {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
+    private Handler uiUpdateHandler = new Handler();
     private String projectUuid;
 
     @Override
@@ -27,16 +29,6 @@ public class TrackingRecordListFragment extends ListFragment {
 
         if(savedInstanceState != null) {
             projectUuid = savedInstanceState.getString(PROJECT_UUID);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(TextUtils.isEmpty(projectUuid)) {
-            showNoProject();
-        } else {
-            showProject(projectUuid);
         }
     }
 
@@ -91,4 +83,31 @@ public class TrackingRecordListFragment extends ListFragment {
                 return false;
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(TextUtils.isEmpty(projectUuid)) {
+            showNoProject();
+        } else {
+            showProject(projectUuid);
+        }
+        uiUpdateHandler.removeCallbacks(updateUITask);
+        uiUpdateHandler.postDelayed(updateUITask, 100);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiUpdateHandler.removeCallbacks(updateUITask);
+    }
+
+    private Runnable updateUITask = new Runnable() {
+        public void run() {
+            if (getListAdapter() != null) {
+                ((TrackingRecordListAdapter)getListAdapter()).notifyDataSetChanged();
+            }
+            uiUpdateHandler.postDelayed(updateUITask, 1000);
+        }
+    };
 }

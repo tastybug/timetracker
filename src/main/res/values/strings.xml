@@ -32,7 +32,7 @@
     <string name="msg_tracking_since_X">Tracking since %1$s</string>
     <string name="msg_tracking_duration_X">Duration %1$s</string>
 
-    <!-- time frame editing -->
+    <!-- tracking record editing -->
     <string name="menu_confirm_tracking_record_edit">Confirm</string>
     <string name="menu_delete_tracking_record">Delete Record</string>
     <string name="from_X">From %1$s</string>
@@ -42,5 +42,9 @@
     <string name="error_date_missing">Please set a date</string>
     <string name="error_time_missing">Please set a time</string>
     <string name="error_end_before_start">This ends before it starts</string>
+
+    <!-- tracking record view -->
+    <string name="running_since_X">Tracking since %1$s</string>
+    <string name="running_from_X_until_Y">%1$s - %2$s</string>
 
 </resources>

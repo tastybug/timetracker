@@ -14,39 +14,35 @@ import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TrackingRecordListAdapter extends BaseAdapter {
 
     private ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<TrackingRecord>();
     private Activity activity;
+    private String projectUuid;
 
     public TrackingRecordListAdapter(Activity activity, String projectUuid) {
-        trackingRecordArrayList = new TrackingRecordDAO(activity).getByProjectUuid(projectUuid);
         this.activity = activity;
+        this.projectUuid = projectUuid;
+        readModelFromDatabase();
 
         new OttoProvider().getSharedBus().register(this);
     }
 
-    @Subscribe
-    public void handleTrackingRecordCreatedEvent(TrackingRecordCreatedEvent event) {
-        this.trackingRecordArrayList.add(event.getTrackingRecord());
-        this.notifyDataSetChanged();
+    private void readModelFromDatabase() {
+        trackingRecordArrayList = new TrackingRecordDAO(activity).getByProjectUuid(projectUuid);
+        Collections.sort(trackingRecordArrayList);
     }
 
-    @Subscribe
-    public void handleTrackingRecordModifiedEvent(TrackingRecordModifiedEvent event) {
-        updateTrackingRecordEntity(event.getTrackingRecord());
+    @Subscribe public void handleTrackingRecordCreatedEvent(TrackingRecordCreatedEvent event) {
+        readModelFromDatabase();
         notifyDataSetChanged();
     }
 
-    private void updateTrackingRecordEntity(TrackingRecord newerEntity) {
-        for (int i = 0; i < getCount(); i++) {
-            if (getTrackingRecordAt(i).getUuid().equals(newerEntity.getUuid())) {
-                trackingRecordArrayList.remove(i);
-                trackingRecordArrayList.add(i, newerEntity);
-                break;
-            }
-        }
+    @Subscribe public void handleTrackingRecordModifiedEvent(TrackingRecordModifiedEvent event) {
+        readModelFromDatabase();
+        notifyDataSetChanged();
     }
 
     @Override
