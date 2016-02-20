@@ -21,10 +21,12 @@ import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 
 import org.joda.time.Duration;
+import org.joda.time.LocalDate;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 public class TrackingControlPanelFragment extends Fragment implements View.OnClickListener {
 
@@ -32,7 +34,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     private Project currentProject;
     private ImageButton trackingStartStopButton;
     private Handler uiUpdateHandler = new Handler();
-    private TrackingRecord ongoingTrackingRecord;
+    private Optional<TrackingRecord> ongoingTrackingRecordOpt = Optional.absent();
 
     @Override
     public void onDetach() {
@@ -58,21 +60,32 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         this.currentProject = project;
         Optional<TrackingRecord> ongoingTracking = new TrackingFacade(getActivity()).getOngoingTracking(project.getUuid());
         if(ongoingTracking.isPresent()) {
-            this.ongoingTrackingRecord = ongoingTracking.get();
-            visualizeOngoingTracking(this.ongoingTrackingRecord);
+            visualizeOngoingTracking(ongoingTracking);
         } else {
-            this.ongoingTrackingRecord = null;
             visualizeNoOngoingTracking();
         }
     }
 
-    private void visualizeOngoingTracking(TrackingRecord ongoingTrackingRecord) {
+    private void visualizeOngoingTracking(Optional<TrackingRecord> ongoingTrackingRecord) {
+        this.ongoingTrackingRecordOpt = ongoingTrackingRecord;
         trackingStartStopButton.setImageResource(R.drawable.ic_stop_tracking);
-        DateFormat startDateFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+
         lineOne.setText(getString(R.string.msg_tracking_since_X,
-                startDateFormatter.format(ongoingTrackingRecord.getStart().get())));
+                getStartDateAsString(ongoingTrackingRecord.get().getStart().get())));
         lineTwo.setText(getString(R.string.msg_tracking_duration_X,
-                getDurationAsString(ongoingTrackingRecord.toDuration().get())));
+                getDurationAsString(ongoingTrackingRecord.get().toDuration().get())));
+    }
+
+    private String getStartDateAsString(Date startDate) {
+        DateFormat startDateFormatter;
+        if (new LocalDate().isEqual(new LocalDate(startDate))) {
+            // today
+            startDateFormatter = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+        } else {
+            // yesterday or even farther away
+            startDateFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+        }
+        return startDateFormatter.format(startDate);
     }
 
     private String getDurationAsString(Duration duration) {
@@ -111,19 +124,10 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     }
 
     private void visualizeNoOngoingTracking() {
+        this.ongoingTrackingRecordOpt = Optional.absent();
         trackingStartStopButton.setImageResource(R.drawable.ic_start_tracking);
         lineOne.setText(R.string.msg_no_ongoing_tracking);
         lineTwo.setText("");
-    }
-
-    private void visualizeNoProjectSelected() {
-        lineOne.setText("//Nothing selected for tracking control panel");
-    }
-
-    public void showNoProject() {
-        this.currentProject = null;
-        this.ongoingTrackingRecord = null;
-        visualizeNoProjectSelected();
     }
 
     public void onClick(View v) {
@@ -141,13 +145,11 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     }
 
     @Subscribe public void handleTrackingStarted(TrackingRecordCreatedEvent event) {
-        visualizeOngoingTracking(event.getTrackingRecord());
-        this.ongoingTrackingRecord = event.getTrackingRecord();
+        visualizeOngoingTracking(Optional.of(event.getTrackingRecord()));
     }
 
     @Subscribe public void handleTrackingModified(TrackingRecordModifiedEvent event) {
         if (!new TrackingFacade(getActivity()).getOngoingTracking(currentProject.getUuid()).isPresent()) {
-            this.ongoingTrackingRecord = null;
             visualizeNoOngoingTracking();
         }
     }
@@ -167,8 +169,8 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
 
     private Runnable updateUITask = new Runnable() {
         public void run() {
-            if(TrackingControlPanelFragment.this.ongoingTrackingRecord != null) {
-                visualizeOngoingTracking(TrackingControlPanelFragment.this.ongoingTrackingRecord);
+            if(TrackingControlPanelFragment.this.ongoingTrackingRecordOpt.isPresent()) {
+                visualizeOngoingTracking(TrackingControlPanelFragment.this.ongoingTrackingRecordOpt);
             }
             uiUpdateHandler.postDelayed(updateUITask, 1000);
         }
