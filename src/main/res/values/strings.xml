@@ -46,5 +46,12 @@
     <!-- tracking record view -->
     <string name="running_since_X">Tracking since %1$s</string>
     <string name="running_from_X_until_Y">%1$s - %2$s</string>
+    <string name="duration_X_effectively_Y">%1$s (rounded to %2$s)</string>
+
+    <!-- duration printing -->
+    <string name="seconds_short">secs</string>
+    <string name="minutes_short">mins</string>
+    <string name="hours_short">hours</string>
+
 
 </resources>

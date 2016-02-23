@@ -1,13 +1,26 @@
 package com.tastybug.timetracker.util;
 
+import android.content.Context;
+
+import com.tastybug.timetracker.R;
+
 import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 public class DurationFormatterFactory {
 
-    public static PeriodFormatter getFormatter(Duration duration) {
+    public static PeriodFormatter getFormatter(Context context, Duration duration) {
         if (duration.getStandardHours() > 0) {
+            return getFormatterForHoursMinutesSeconds(context);
+        } else if (duration.getStandardMinutes() > 0) {
+            return getFormatterForMinutesSeconds(context);
+        } else {
+            return getFormatterForSeconds(context);
+        }
+    }
+
+    private static PeriodFormatter getFormatterForHoursMinutesSeconds(Context context) {
             return new PeriodFormatterBuilder()
                     .printZeroIfSupported()
                     .appendHours()
@@ -18,9 +31,11 @@ public class DurationFormatterFactory {
                     .appendSeparator(":")
                     .printZeroIfSupported()
                     .appendSeconds()
-                    .appendSuffix(" hours", " hours")
+                    .appendSuffix(" " + context.getString(R.string.hours_short))
                     .toFormatter();
-        } else if (duration.getStandardMinutes() > 0) {
+    }
+
+    private static PeriodFormatter getFormatterForMinutesSeconds(Context context) {
             return new PeriodFormatterBuilder()
                     .printZeroIfSupported()
                     .appendMinutes()
@@ -28,14 +43,16 @@ public class DurationFormatterFactory {
                     .minimumPrintedDigits(2)
                     .printZeroIfSupported()
                     .appendSeconds()
-                    .appendSuffix(" mins", " mins")
+                    .appendSuffix(" " + context.getString(R.string.minutes_short))
                     .toFormatter();
-        } else {
+
+    }
+
+    private static PeriodFormatter getFormatterForSeconds(Context context) {
             return new PeriodFormatterBuilder()
                     .printZeroIfSupported()
                     .appendSeconds()
-                    .appendSuffix(" secs", " secs")
+                    .appendSuffix(" " + context.getString(R.string.seconds_short))
                     .toFormatter();
-        }
     }
 }

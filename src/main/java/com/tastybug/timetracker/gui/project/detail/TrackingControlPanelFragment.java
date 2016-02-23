@@ -88,7 +88,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     }
 
     private String getDurationAsString(Duration duration) {
-        return DurationFormatterFactory.getFormatter(duration).print(duration.toPeriod());
+        return DurationFormatterFactory.getFormatter(getActivity(), duration).print(duration.toPeriod());
     }
 
     private void visualizeNoOngoingTracking() {

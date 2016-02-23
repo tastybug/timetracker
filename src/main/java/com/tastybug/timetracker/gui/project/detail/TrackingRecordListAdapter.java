@@ -6,10 +6,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.squareup.otto.Subscribe;
+import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.gui.view.TrackingRecordView;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 
@@ -21,6 +24,7 @@ public class TrackingRecordListAdapter extends BaseAdapter {
     private ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<TrackingRecord>();
     private Activity activity;
     private String projectUuid;
+    private TrackingConfiguration trackingConfiguration;
 
     public TrackingRecordListAdapter(Activity activity, String projectUuid) {
         this.activity = activity;
@@ -32,6 +36,7 @@ public class TrackingRecordListAdapter extends BaseAdapter {
 
     private void readModelFromDatabase() {
         trackingRecordArrayList = new TrackingRecordDAO(activity).getByProjectUuid(projectUuid);
+        trackingConfiguration = new TrackingConfigurationDAO(activity).getByProjectUuid(projectUuid).get();
         Collections.sort(trackingRecordArrayList);
     }
 
@@ -41,6 +46,11 @@ public class TrackingRecordListAdapter extends BaseAdapter {
     }
 
     @Subscribe public void handleTrackingRecordModifiedEvent(TrackingRecordModifiedEvent event) {
+        readModelFromDatabase();
+        notifyDataSetChanged();
+    }
+
+    @Subscribe public void handleProjectConfigurationModifiedEvent(ProjectConfiguredEvent event) {
         readModelFromDatabase();
         notifyDataSetChanged();
     }
@@ -72,7 +82,7 @@ public class TrackingRecordListAdapter extends BaseAdapter {
         }
 
         TrackingRecordView trackingRecordView = (TrackingRecordView) convertView;
-        trackingRecordView.showTrackingRecord(getTrackingRecordAt(position));
+        trackingRecordView.showTrackingRecord(trackingConfiguration, getTrackingRecordAt(position));
 
         return trackingRecordView;
     }
