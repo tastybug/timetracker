@@ -68,6 +68,7 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
 
     @Override
     protected void performBackgroundStuff(Bundle args) {
+        // TODO fuer das stoppen einfach eine separate Task einfuehren, analog zu Create- und KickstartTask
         if (arguments.containsKey(STOP_TRACKING_PROJECT_UUID)) {
             String stoppableProjectUuid = arguments.getString(STOP_TRACKING_PROJECT_UUID);
 
