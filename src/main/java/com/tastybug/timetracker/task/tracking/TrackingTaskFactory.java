@@ -14,8 +14,8 @@ public class TrackingTaskFactory {
         return new DeleteTrackingRecordTask(context);
     }
 
-    public KickstartTrackingRecordTask aKickstartTask(Context context) {
-        return new KickstartTrackingRecordTask(context);
+    public KickStartTrackingRecordTask aKickstartTask(Context context) {
+        return new KickStartTrackingRecordTask(context);
     }
 
     public ModifyTrackingRecordTask aModificationTask(Context context) {

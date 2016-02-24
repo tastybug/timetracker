@@ -3,11 +3,11 @@ package com.tastybug.timetracker.task.tracking;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoEvent;
 
-public class TrackingRecordModifiedEvent implements OttoEvent {
+public class CreatedTrackingRecordEvent implements OttoEvent {
 
     private TrackingRecord trackingRecord;
 
-    public TrackingRecordModifiedEvent(TrackingRecord trackingRecord) {
+    public CreatedTrackingRecordEvent(TrackingRecord trackingRecord) {
         this.trackingRecord = trackingRecord;
     }
 

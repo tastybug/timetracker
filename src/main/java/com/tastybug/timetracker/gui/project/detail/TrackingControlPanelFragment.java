@@ -17,10 +17,10 @@ import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
-import com.tastybug.timetracker.task.tracking.KickstartTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.KickstopTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
-import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
+import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.util.DurationFormatterFactory;
 
 import org.joda.time.Duration;
@@ -110,15 +110,15 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         if (ongoing.isPresent()) {
             KickstopTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
         } else {
-            KickstartTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
+            KickStartTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
         }
     }
 
-    @Subscribe public void handleTrackingStarted(TrackingRecordCreatedEvent event) {
+    @Subscribe public void handleTrackingStarted(CreatedTrackingRecordEvent event) {
         visualizeOngoingTracking(Optional.of(event.getTrackingRecord()));
     }
 
-    @Subscribe public void handleTrackingModified(TrackingRecordModifiedEvent event) {
+    @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
         if (!new TrackingRecordDAO(getActivity()).getRunning(currentProject.getUuid()).isPresent()) {
             visualizeNoOngoingTracking();
         }

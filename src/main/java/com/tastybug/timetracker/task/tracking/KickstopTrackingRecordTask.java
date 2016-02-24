@@ -17,8 +17,8 @@ public class KickstopTrackingRecordTask extends AbstractAsyncTask {
 
     protected TrackingRecord trackingRecord;
 
-    public static KickstartTrackingRecordTask aTask(Context context) {
-        return new KickstartTrackingRecordTask(context);
+    public static KickStartTrackingRecordTask aTask(Context context) {
+        return new KickStartTrackingRecordTask(context);
     }
 
     protected KickstopTrackingRecordTask(Context context) {
@@ -47,6 +47,6 @@ public class KickstopTrackingRecordTask extends AbstractAsyncTask {
 
     protected void onPostExecute(Long result) {
         Log.i(TAG, "Kick stopped tracking record " + trackingRecord);
-        ottoProvider.getSharedBus().post(new KickstoppedTrackingRecordEvent(trackingRecord));
+        ottoProvider.getSharedBus().post(new KickStoppedTrackingRecordEvent(trackingRecord));
     }
 }

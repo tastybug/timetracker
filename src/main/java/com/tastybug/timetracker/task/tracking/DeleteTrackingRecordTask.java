@@ -41,6 +41,6 @@ public class DeleteTrackingRecordTask extends AbstractAsyncTask {
     protected void onPostExecute(Long result) {
         String uuid = arguments.getString(TRACKING_RECORD_UUID);
         Log.i(TAG, "Deleted tracking record " + uuid);
-        ottoProvider.getSharedBus().post(new TrackingRecordDeletedEvent(uuid));
+        ottoProvider.getSharedBus().post(new DeletedTrackingRecordEvent(uuid));
     }
 }

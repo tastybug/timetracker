@@ -9,21 +9,21 @@ import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
-public class KickstartTrackingRecordTask extends AbstractAsyncTask {
+public class KickStartTrackingRecordTask extends AbstractAsyncTask {
 
     static final String PROJECT_UUID    = "PROJECT_UUID";
 
     private TrackingRecord trackingRecord;
 
-    public static KickstartTrackingRecordTask aTask(Context context) {
-        return new KickstartTrackingRecordTask(context);
+    public static KickStartTrackingRecordTask aTask(Context context) {
+        return new KickStartTrackingRecordTask(context);
     }
 
-    protected KickstartTrackingRecordTask(Context context) {
+    protected KickStartTrackingRecordTask(Context context) {
         super(context);
     }
 
-    public KickstartTrackingRecordTask withProjectUuid(String projectUuid) {
+    public KickStartTrackingRecordTask withProjectUuid(String projectUuid) {
         arguments.putString(PROJECT_UUID, projectUuid);
         return this;
     }
@@ -47,6 +47,6 @@ public class KickstartTrackingRecordTask extends AbstractAsyncTask {
 
     protected void onPostExecute(Long result) {
         Log.i(getClass().getSimpleName(), "Kick started tracking record " + trackingRecord);
-        ottoProvider.getSharedBus().post(new TrackingRecordKickstartedEvent(trackingRecord));
+        ottoProvider.getSharedBus().post(new KickStartedTrackingRecordEvent(trackingRecord));
     }
 }

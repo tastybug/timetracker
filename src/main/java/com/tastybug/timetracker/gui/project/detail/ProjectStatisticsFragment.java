@@ -19,8 +19,8 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
-import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
-import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
+import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
 public class ProjectStatisticsFragment extends Fragment {
 
@@ -90,13 +90,13 @@ public class ProjectStatisticsFragment extends Fragment {
         someTextView.setText("//Nothing selected for project statistics");
     }
 
-    @Subscribe public void handleTrackingStarted(TrackingRecordCreatedEvent event) {
+    @Subscribe public void handleTrackingStarted(CreatedTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         project.setContext(getActivity());
         showProjectDetailsFor(project);
     }
 
-    @Subscribe public void handleTrackingModified(TrackingRecordModifiedEvent event) {
+    @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         project.setContext(getActivity());
         showProjectDetailsFor(project);

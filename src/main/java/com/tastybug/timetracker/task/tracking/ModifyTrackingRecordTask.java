@@ -80,7 +80,7 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
         // notify otto
         // and update the test
         Log.i(TAG, "Modified tracking record " + trackingRecord);
-        ottoProvider.getSharedBus().post(new TrackingRecordModifiedEvent(trackingRecord));
+        ottoProvider.getSharedBus().post(new ModifiedTrackingRecordEvent(trackingRecord));
     }
 
 }

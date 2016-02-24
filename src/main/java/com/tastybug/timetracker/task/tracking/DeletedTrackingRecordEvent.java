@@ -2,11 +2,11 @@ package com.tastybug.timetracker.task.tracking;
 
 import com.tastybug.timetracker.task.OttoEvent;
 
-public class TrackingRecordDeletedEvent implements OttoEvent {
+public class DeletedTrackingRecordEvent implements OttoEvent {
 
     private String trackingRecordUuid;
 
-    public TrackingRecordDeletedEvent(String uuid) {
+    public DeletedTrackingRecordEvent(String uuid) {
         this.trackingRecordUuid = uuid;
     }
 

@@ -13,8 +13,8 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
-import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
-import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
+import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,12 +40,12 @@ public class TrackingRecordListAdapter extends BaseAdapter {
         Collections.sort(trackingRecordArrayList);
     }
 
-    @Subscribe public void handleTrackingRecordCreatedEvent(TrackingRecordCreatedEvent event) {
+    @Subscribe public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
         readModelFromDatabase();
         notifyDataSetChanged();
     }
 
-    @Subscribe public void handleTrackingRecordModifiedEvent(TrackingRecordModifiedEvent event) {
+    @Subscribe public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
         readModelFromDatabase();
         notifyDataSetChanged();
     }

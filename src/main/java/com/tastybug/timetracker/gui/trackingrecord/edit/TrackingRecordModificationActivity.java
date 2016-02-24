@@ -17,11 +17,11 @@ import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.DeleteTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.DeletedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
-import com.tastybug.timetracker.task.tracking.TrackingRecordDeletedEvent;
-import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 
 public class TrackingRecordModificationActivity extends Activity {
 
@@ -166,19 +166,19 @@ public class TrackingRecordModificationActivity extends Activity {
     }
 
     @Subscribe
-    public void handleTrackingRecordCreatedEvent(TrackingRecordCreatedEvent event) {
+    public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
         Toast.makeText(this, "Created tracking record " + event.getTrackingRecord().getUuid(), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
 
     @Subscribe
-    public void handleTrackingRecordModifiedEvent(TrackingRecordModifiedEvent event) {
+    public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
         Toast.makeText(this, "Modified tracking record " + event.getTrackingRecord().getUuid(), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
 
     @Subscribe
-    public void handleTrackingRecordDeletedEvent(TrackingRecordDeletedEvent event) {
+    public void handleTrackingRecordDeletedEvent(DeletedTrackingRecordEvent event) {
         Toast.makeText(this, "Deleted tracking record " + event.getTrackingRecordUuid(), Toast.LENGTH_SHORT).show();
         onBackPressed();
     }
