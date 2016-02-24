@@ -6,14 +6,18 @@ import android.os.Bundle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import java.util.Date;
 
-public class CreateTrackingRecordTask extends KickstartTrackingRecordTask {
+public class CreateTrackingRecordTask extends AbstractAsyncTask {
 
+    private static final String PROJECT_UUID    = "PROJECT_UUID";
     private static final String START_DATE      = "START_DATE";
     private static final String END_DATE        = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
+
+    private TrackingRecord trackingRecord;
 
     public static CreateTrackingRecordTask aTask(Context context) {
         return new CreateTrackingRecordTask(context);
@@ -24,7 +28,7 @@ public class CreateTrackingRecordTask extends KickstartTrackingRecordTask {
     }
 
     public CreateTrackingRecordTask withProjectUuid(String projectUuid) {
-        super.withProjectUuid(projectUuid);
+        arguments.putSerializable(PROJECT_UUID, projectUuid);
         return this;
     }
 

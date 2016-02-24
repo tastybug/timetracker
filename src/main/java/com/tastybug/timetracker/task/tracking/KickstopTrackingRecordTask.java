@@ -46,7 +46,7 @@ public class KickstopTrackingRecordTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(TAG, "Stopped tracking record " + trackingRecord);
+        Log.i(TAG, "Kick stopped tracking record " + trackingRecord);
         ottoProvider.getSharedBus().post(new KickstoppedTrackingRecordEvent(trackingRecord));
     }
 }

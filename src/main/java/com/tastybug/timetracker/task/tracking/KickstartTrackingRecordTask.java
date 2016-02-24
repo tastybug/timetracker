@@ -13,7 +13,7 @@ public class KickstartTrackingRecordTask extends AbstractAsyncTask {
 
     static final String PROJECT_UUID    = "PROJECT_UUID";
 
-    protected TrackingRecord trackingRecord;
+    private TrackingRecord trackingRecord;
 
     public static KickstartTrackingRecordTask aTask(Context context) {
         return new KickstartTrackingRecordTask(context);
@@ -46,9 +46,7 @@ public class KickstartTrackingRecordTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        // notify otto
-        // and update the test
-        Log.i(getClass().getSimpleName(), "Created tracking record " + trackingRecord);
-        ottoProvider.getSharedBus().post(new TrackingRecordCreatedEvent(trackingRecord));
+        Log.i(getClass().getSimpleName(), "Kick started tracking record " + trackingRecord);
+        ottoProvider.getSharedBus().post(new TrackingRecordKickstartedEvent(trackingRecord));
     }
 }
