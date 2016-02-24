@@ -18,7 +18,7 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.KickstartTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.KickstopTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.TrackingRecordCreatedEvent;
 import com.tastybug.timetracker.task.tracking.TrackingRecordModifiedEvent;
 import com.tastybug.timetracker.util.DurationFormatterFactory;
@@ -108,7 +108,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         String projectUuid = currentProject.getUuid();
         Optional<TrackingRecord> ongoing = new TrackingRecordDAO(getActivity()).getRunning(projectUuid);
         if (ongoing.isPresent()) {
-            ModifyTrackingRecordTask.aTask(getActivity()).withStoppableProjectUuid(projectUuid).execute();
+            KickstopTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
         } else {
             KickstartTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
         }

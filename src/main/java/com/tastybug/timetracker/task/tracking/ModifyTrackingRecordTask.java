@@ -17,7 +17,6 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
 
     private static final String TAG = ModifyTrackingRecordTask.class.getSimpleName();
 
-    private static final String STOP_TRACKING_PROJECT_UUID = "STOP_TRACKING_PROJECT_UUID";
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE = "END_DATE";
@@ -33,10 +32,6 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
         super(context);
     }
 
-    public ModifyTrackingRecordTask withStoppableProjectUuid(String projectUuid) {
-        arguments.putString(STOP_TRACKING_PROJECT_UUID, projectUuid);
-        return this;
-    }
 
     public ModifyTrackingRecordTask withTrackingRecordUuid(String trackingRecordUuid) {
         arguments.putString(TRACKING_RECORD_UUID, trackingRecordUuid);
@@ -60,34 +55,22 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
 
     @Override
     protected void validateArguments() throws NullPointerException {
-        Preconditions.checkArgument(
-                !TextUtils.isEmpty(arguments.getString(STOP_TRACKING_PROJECT_UUID))
-                        || !TextUtils.isEmpty(arguments.getString(TRACKING_RECORD_UUID))
-        );
+        Preconditions.checkArgument(!TextUtils.isEmpty(arguments.getString(TRACKING_RECORD_UUID)));
     }
 
     @Override
     protected void performBackgroundStuff(Bundle args) {
-        // TODO fuer das stoppen einfach eine separate Task einfuehren, analog zu Create- und KickstartTask
-        if (arguments.containsKey(STOP_TRACKING_PROJECT_UUID)) {
-            String stoppableProjectUuid = arguments.getString(STOP_TRACKING_PROJECT_UUID);
+        String trackingRecordUuid = arguments.getString(TRACKING_RECORD_UUID);
+        trackingRecord = new TrackingRecordDAO(context).get(trackingRecordUuid).get();
 
-            trackingRecord = new TrackingRecordDAO(context).getRunning(stoppableProjectUuid).get();
-            trackingRecord.stop();
-
-        } else {
-            String trackingRecordUuid = arguments.getString(TRACKING_RECORD_UUID);
-            trackingRecord = new TrackingRecordDAO(context).get(trackingRecordUuid).get();
-
-            if(arguments.containsKey(START_DATE)) {
-                trackingRecord.setStart((Date)arguments.getSerializable(START_DATE));
-            }
-            if(arguments.containsKey(END_DATE)) {
-                trackingRecord.setEnd((Date)arguments.getSerializable(END_DATE));
-            }
-            if(arguments.containsKey(DESCRIPTION_OPT)) {
-                trackingRecord.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
-            }
+        if(arguments.containsKey(START_DATE)) {
+            trackingRecord.setStart((Date)arguments.getSerializable(START_DATE));
+        }
+        if(arguments.containsKey(END_DATE)) {
+            trackingRecord.setEnd((Date)arguments.getSerializable(END_DATE));
+        }
+        if(arguments.containsKey(DESCRIPTION_OPT)) {
+            trackingRecord.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
         }
 
         storeBatchOperation(trackingRecord.getDAO(context).getBatchUpdate(trackingRecord));
