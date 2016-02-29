@@ -11,8 +11,6 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 public class DeleteProjectTask extends AbstractAsyncTask {
 
-    private static final String TAG = DeleteProjectTask.class.getSimpleName();
-
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
     public static DeleteProjectTask aTask(Context context) {
@@ -39,7 +37,7 @@ public class DeleteProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(TAG, "Deleted project with UUID " + arguments.getString(PROJECT_UUID));
+        Log.i(getClass().getSimpleName(), "Deleted project with UUID " + arguments.getString(PROJECT_UUID));
         ottoProvider.getSharedBus().post(new ProjectDeletedEvent(arguments.getString(PROJECT_UUID)));
     }
 

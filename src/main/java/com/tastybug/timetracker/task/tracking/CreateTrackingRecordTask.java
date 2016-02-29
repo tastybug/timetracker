@@ -2,6 +2,7 @@ package com.tastybug.timetracker.task.tracking;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -65,4 +66,8 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
                                     && arguments.containsKey(END_DATE));
     }
 
+    protected void onPostExecute(Long result) {
+        Log.i(getClass().getSimpleName(), "Created tracking record " + trackingRecord);
+        ottoProvider.getSharedBus().post(new CreatedTrackingRecordEvent(trackingRecord));
+    }
 }

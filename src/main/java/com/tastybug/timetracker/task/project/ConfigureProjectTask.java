@@ -17,8 +17,6 @@ import java.util.Date;
 
 public class ConfigureProjectTask extends AbstractAsyncTask {
 
-    private static final String TAG = ConfigureProjectTask.class.getSimpleName();
-
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
@@ -115,7 +113,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(TAG, "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
+        Log.i(getClass().getSimpleName(), "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
         ottoProvider.getSharedBus().post(new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID)));
     }
 

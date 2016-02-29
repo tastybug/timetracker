@@ -15,8 +15,6 @@ import java.util.Date;
 
 public class ModifyTrackingRecordTask extends AbstractAsyncTask {
 
-    private static final String TAG = ModifyTrackingRecordTask.class.getSimpleName();
-
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE = "END_DATE";
@@ -77,9 +75,7 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        // notify otto
-        // and update the test
-        Log.i(TAG, "Modified tracking record " + trackingRecord);
+        Log.i(getClass().getSimpleName(), "Modified tracking record " + trackingRecord);
         ottoProvider.getSharedBus().post(new ModifiedTrackingRecordEvent(trackingRecord));
     }
 

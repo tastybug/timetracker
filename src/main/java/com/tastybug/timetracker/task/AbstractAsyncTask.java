@@ -10,14 +10,11 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.tastybug.timetracker.database.dao.EntityDAO;
-import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
 import java.util.ArrayList;
 
 
 public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long> {
-
-    private static final String TAG = ConfigureProjectTask.class.getSimpleName();
 
     protected OttoProvider ottoProvider = new OttoProvider();
     protected Bundle arguments = new Bundle();
@@ -40,9 +37,9 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
     }
 
     protected Long doInBackground(Bundle... params) {
-        Log.d(TAG, "Performing background stuff..");
+        Log.d(getClass().getSimpleName(), "Performing background stuff..");
         performBackgroundStuff(params[0]);
-        Log.d(TAG, "Persisting to database..");
+        Log.d(getClass().getSimpleName(), "Persisting to database..");
         executeBatchOperations();
 
         return 0L;
@@ -62,10 +59,10 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
 
             return context.getContentResolver().applyBatch(EntityDAO.AUTHORITY, operations);
         } catch (RemoteException e) {
-            Log.e(TAG, "Problem executing sql batch operation.", e);
+            Log.e(getClass().getSimpleName(), "Problem executing sql batch operation.", e);
             throw new RuntimeException("Problem executing sql batch operation.", e);
         } catch (OperationApplicationException e) {
-            Log.e(TAG, "Problem executing sql batch operation.", e);
+            Log.e(getClass().getSimpleName(), "Problem executing sql batch operation.", e);
             throw new RuntimeException("Problem executing sql batch operation.", e);
         }
     }

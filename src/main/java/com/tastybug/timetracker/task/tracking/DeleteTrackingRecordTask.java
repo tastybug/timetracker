@@ -10,8 +10,6 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 public class DeleteTrackingRecordTask extends AbstractAsyncTask {
 
-    private static final String TAG = DeleteTrackingRecordTask.class.getSimpleName();
-
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
 
     public static DeleteTrackingRecordTask aTask(Context context) {
@@ -40,7 +38,7 @@ public class DeleteTrackingRecordTask extends AbstractAsyncTask {
 
     protected void onPostExecute(Long result) {
         String uuid = arguments.getString(TRACKING_RECORD_UUID);
-        Log.i(TAG, "Deleted tracking record " + uuid);
+        Log.i(getClass().getSimpleName(), "Deleted tracking record " + uuid);
         ottoProvider.getSharedBus().post(new DeletedTrackingRecordEvent(uuid));
     }
 }

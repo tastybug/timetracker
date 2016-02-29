@@ -13,8 +13,6 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 public class CreateProjectTask extends AbstractAsyncTask {
 
-    private static final String TAG = CreateProjectTask.class.getSimpleName();
-
     private static final String PROJECT_TITLE       = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
 
@@ -56,9 +54,7 @@ public class CreateProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        // notify otto
-        // and update the test
-        Log.i(TAG, "Created project " + project);
+        Log.i(getClass().getSimpleName(), "Created project " + project);
         ottoProvider.getSharedBus().post(new ProjectCreatedEvent(project));
     }
 

@@ -11,8 +11,6 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 public class KickStopTrackingRecordTask extends AbstractAsyncTask {
 
-    private static final String TAG = ModifyTrackingRecordTask.class.getSimpleName();
-
     static final String PROJECT_UUID    = "PROJECT_UUID";
 
     protected TrackingRecord trackingRecord;
@@ -46,7 +44,7 @@ public class KickStopTrackingRecordTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(TAG, "Kick stopped tracking record " + trackingRecord);
+        Log.i(getClass().getSimpleName(), "Kick stopped tracking record " + trackingRecord);
         ottoProvider.getSharedBus().post(new KickStoppedTrackingRecordEvent(trackingRecord));
     }
 }
