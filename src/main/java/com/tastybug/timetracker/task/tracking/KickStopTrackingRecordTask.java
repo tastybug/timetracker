@@ -9,7 +9,7 @@ import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
-public class KickstopTrackingRecordTask extends AbstractAsyncTask {
+public class KickStopTrackingRecordTask extends AbstractAsyncTask {
 
     private static final String TAG = ModifyTrackingRecordTask.class.getSimpleName();
 
@@ -17,15 +17,15 @@ public class KickstopTrackingRecordTask extends AbstractAsyncTask {
 
     protected TrackingRecord trackingRecord;
 
-    public static KickStartTrackingRecordTask aTask(Context context) {
-        return new KickStartTrackingRecordTask(context);
+    public static KickStopTrackingRecordTask aTask(Context context) {
+        return new KickStopTrackingRecordTask(context);
     }
 
-    protected KickstopTrackingRecordTask(Context context) {
+    protected KickStopTrackingRecordTask(Context context) {
         super(context);
     }
 
-    public KickstopTrackingRecordTask withProjectUuid(String projectUuid) {
+    public KickStopTrackingRecordTask withProjectUuid(String projectUuid) {
         arguments.putString(PROJECT_UUID, projectUuid);
         return this;
     }
