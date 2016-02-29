@@ -13,12 +13,15 @@ import android.widget.Toast;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickstopTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.util.DurationFormatterFactory;
@@ -32,9 +35,10 @@ import java.util.Date;
 public class TrackingControlPanelFragment extends Fragment implements View.OnClickListener {
 
     private TextView lineOne, lineTwo;
-    private Project currentProject;
     private ImageButton trackingStartStopButton;
     private Handler uiUpdateHandler = new Handler();
+
+    private Optional<Project> currentProjectOpt;
     private Optional<TrackingRecord> ongoingTrackingRecordOpt = Optional.absent();
 
     @Override
@@ -58,7 +62,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     }
 
     public void showProject(Project project) {
-        this.currentProject = project;
+        this.currentProjectOpt = Optional.of(project);
         Optional<TrackingRecord> ongoingTracking = new TrackingRecordDAO(getActivity()).getRunning(project.getUuid());
         if(ongoingTracking.isPresent()) {
             visualizeOngoingTracking(ongoingTracking);
@@ -101,11 +105,11 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     }
 
     public void onClick(View v) {
-        if (currentProject == null) {
+        if (!currentProjectOpt.isPresent()) {
             Toast.makeText(getActivity(), R.string.message_no_project_selected, Toast.LENGTH_SHORT).show();
             return;
         }
-        String projectUuid = currentProject.getUuid();
+        String projectUuid = currentProjectOpt.get().getUuid();
         Optional<TrackingRecord> ongoing = new TrackingRecordDAO(getActivity()).getRunning(projectUuid);
         if (ongoing.isPresent()) {
             KickstopTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
@@ -114,13 +118,27 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         }
     }
 
-    @Subscribe public void handleTrackingStarted(CreatedTrackingRecordEvent event) {
+    @Subscribe public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
+        showProject(new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get());
+    }
+
+    @Subscribe public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
         visualizeOngoingTracking(Optional.of(event.getTrackingRecord()));
     }
 
     @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
-        if (!new TrackingRecordDAO(getActivity()).getRunning(currentProject.getUuid()).isPresent()) {
-            visualizeNoOngoingTracking();
+        if(currentProjectOpt.isPresent()) {
+            if (!new TrackingRecordDAO(getActivity()).getRunning(currentProjectOpt.get().getUuid()).isPresent()) {
+                visualizeNoOngoingTracking();
+            }
+        }
+    }
+
+    @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+        if(currentProjectOpt.isPresent()) {
+            if (!new TrackingRecordDAO(getActivity()).getRunning(currentProjectOpt.get().getUuid()).isPresent()) {
+                visualizeNoOngoingTracking();
+            }
         }
     }
 
