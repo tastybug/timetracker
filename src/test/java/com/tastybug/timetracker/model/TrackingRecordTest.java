@@ -26,17 +26,14 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = "target/filtered-manifest/AndroidManifest.xml")
 public class TrackingRecordTest {
 
-    Context contextMock = mock(Context.class);
     DAOFactory daoFactory = mock(DAOFactory.class);
     TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
 
-    @Before
-    public void setup() {
+    @Before public void setup() {
         when(daoFactory.getDao(eq(TrackingRecord.class), isA(Context.class))).thenReturn(trackingRecordDAO);
     }
 
-    @Test
-    public void canStartATrackingRecordAndStopItLater() {
+    @Test public void canStartATrackingRecordAndStopItLater() {
         // given:
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.getStart().isPresent());
@@ -57,8 +54,7 @@ public class TrackingRecordTest {
         assertTrue(trackingRecord.getEnd().isPresent());
     }
 
-    @Test
-    public void canSetDescriptionAtTrackingRecord() {
+    @Test public void canSetDescriptionAtTrackingRecord() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.getDescription().isPresent());
@@ -147,8 +143,7 @@ public class TrackingRecordTest {
         assertTrue(trackingRecord.isFinished());
     }
 
-    @Test
-    public void canJodaDurationWhenRunningOrFinished() {
+    @Test public void canJodaDurationWhenRunningOrFinished() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.toDuration().isPresent());
@@ -164,5 +159,14 @@ public class TrackingRecordTest {
 
         // then
         assertTrue(trackingRecord.toDuration().isPresent());
+    }
+
+    @Test public void anEmptyDescriptionIsLikeANullDescription() {
+        // given
+        TrackingRecord record = new TrackingRecord();
+        record.setDescription(Optional.of(""));
+
+        // expect
+        assertFalse(record.getDescription().isPresent());
     }
 }

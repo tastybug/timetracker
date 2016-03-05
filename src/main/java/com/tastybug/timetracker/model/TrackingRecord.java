@@ -1,5 +1,7 @@
 package com.tastybug.timetracker.model;
 
+import android.text.TextUtils;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -99,7 +101,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
     }
 
     public Optional<String> getDescription() {
-        return Optional.fromNullable(description);
+        return Optional.fromNullable(TextUtils.isEmpty(description) ? null : description);
     }
 
     public Optional<Duration> toDuration() {
