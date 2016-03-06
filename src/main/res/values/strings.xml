@@ -8,22 +8,32 @@
     <string name="menu_delete_project">Delete Project</string>
 
     <!-- project configuration -->
+    <string name="title_project_title">Project Title</string>
+    <string name="hint_project_title">Please provide a title</string>
+    <string name="title_project_description">Short Description</string>
+    <string name="hint_project_description">Use this field for a short (optional) project description. The description will be a part of reports.</string>
+
+    <!-- tracking configuration -->
     <string name="project_configuration_for_project_X">%1$s Settings</string>
     <string name="menu_confirm_project_configuration">Confirm</string>
+    <string name="title_project_hours_limited">Hour Limit</string>
     <string name="project_hours_limited_not_limited">No Hour Limit</string>
     <string name="set_no_date">None</string>
+    <string name="title_project_start_date">Start date</string>
     <string name="project_starts_at_X">Starts At %1$s</string>
     <string name="project_has_no_start_date">Open Start</string>
+    <string name="title_project_end_date">End date</string>
     <string name="project_ends_at_X">Ends At %1$s</string>
     <string name="project_has_no_end_date">Open End</string>
     <string name="error_project_title_empty">Please provide a title</string>
     <string name="error_start_after_end_date">Error: Start date is after end date!</string>
-    <string name="rounding_no_rounding_label">perform no rounding</string>
-    <string name="rounding_minutes_down">round down to full minutes</string>
-    <string name="rounding_minutes_up">round up to full minutes</string>
-    <string name="rounding_ten_minutes_up">round up to a full 10 minutes block</string>
-    <string name="rounding_thirty_minutes_up">round up to a full half hour block</string>
-    <string name="rounding_sixty_minutes_up">round up to full hours</string>
+    <string name="title_rounding_setting">Rounding After Tracking</string>
+    <string name="rounding_no_rounding_label">Perform no rounding</string>
+    <string name="rounding_minutes_down">Round down to full minutes</string>
+    <string name="rounding_minutes_up">Round up to full minutes</string>
+    <string name="rounding_ten_minutes_up">Round up to a full 10 minutes block</string>
+    <string name="rounding_thirty_minutes_up">Round up to a full half hour block</string>
+    <string name="rounding_sixty_minutes_up">Round up to full hours</string>
 
     <!-- project details -->
     <string name="message_no_project_selected">No project selected!</string>
