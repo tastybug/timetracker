@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item android:id="@+id/menu_configure_project" android:icon="@drawable/ic_modify" android:title="@string/menu_delete_project" android:showAsAction="always"/>
-    <item android:id="@+id/menu_delete_project" android:icon="@drawable/ic_delete" android:title="@string/menu_delete_project" android:showAsAction="never"/>
+    <item android:id="@+id/menu_configure_project" android:orderInCategory="1" android:icon="@drawable/ic_modify" android:title="@string/menu_edit_project" android:showAsAction="never"/>
+    <item android:id="@+id/menu_delete_project" android:orderInCategory="2" android:icon="@drawable/ic_delete" android:title="@string/menu_delete_project" android:showAsAction="never"/>
 
 </menu>

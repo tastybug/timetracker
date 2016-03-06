@@ -5,6 +5,7 @@
     <!-- project activity -->
     <string name="activity_project_title">Time Tracking Projects</string>
     <string name="menu_create_project">Create Project</string>
+    <string name="menu_edit_project">Edit Project</string>
     <string name="menu_delete_project">Delete Project</string>
 
     <!-- project configuration -->
