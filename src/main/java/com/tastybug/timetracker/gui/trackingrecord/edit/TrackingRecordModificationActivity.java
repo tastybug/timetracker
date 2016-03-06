@@ -14,11 +14,11 @@ import com.google.common.base.Preconditions;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.gui.shared.DialogConfirmDeleteTrackingRecord;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.DeleteTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.DeletedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
@@ -135,7 +135,10 @@ public class TrackingRecordModificationActivity extends Activity {
     }
 
     private void deleteTrackingRecord(String trackingRecordUuid) {
-        DeleteTrackingRecordTask.aTask(this).withTrackingRecordUuid(trackingRecordUuid).execute();
+        DialogConfirmDeleteTrackingRecord
+                .aDialog()
+                .forTrackingRecordUuid(trackingRecordUuid)
+                .show(getFragmentManager(), getClass().getSimpleName());
     }
 
     private boolean isConfigurationValid() {

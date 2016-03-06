@@ -56,7 +56,7 @@ public class DialogConfirmDeleteProject extends DialogFragment {
                         DeleteProjectTask.aTask(getActivity()).withProjectUuid(project.getUuid()).execute();
                     }
                 })
-                .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dismiss();
                     }

@@ -2,6 +2,9 @@
 
     <string name="app_name">TimeTracker</string>
 
+    <!-- common -->
+    <string name="common_cancel">Cancel</string>
+
     <!-- project activity -->
     <string name="activity_project_title">Time Tracking Projects</string>
     <string name="menu_create_project">Create Project</string>
@@ -67,15 +70,18 @@
 
     <!-- duration printing -->
     <string name="seconds_short">secs</string>
-    <string name="minutes_short">mins</string>
-    <string name="hours_short">hours</string>
+    <string name="minutes_short">min</string>
+    <string name="hours_short">hrs</string>
 
     <!-- project deletion dialog -->
     <string name="title_delete_project_X">Delete \"%1$s\"?</string>
     <string name="msg_you_lose_X">You lose records amounting to %1$s. This cannot be undone!</string>
     <string name="msg_you_lose_no_tracking_records">Nothing has been recorded yet for this project.</string>
     <string name="button_delete_project">Delete Project</string>
-    <string name="button_cancel">Cancel</string>
 
+    <!-- tracking record deletion dialog-->
+    <string name="title_delete_tracking_record">Delete Record?</string>
+    <string name="msg_delete_tracking_record">The record will be deleted, the associated time is removed from the project.</string>
+    <string name="button_delete_tracking_record">Delete</string>
 
 </resources>
