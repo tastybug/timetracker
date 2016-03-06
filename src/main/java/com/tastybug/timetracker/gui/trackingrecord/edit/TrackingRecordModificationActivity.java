@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.gui.shared.DialogConfirmBackpressDataLoss;
 import com.tastybug.timetracker.gui.shared.DialogConfirmDeleteTrackingRecord;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
@@ -116,21 +116,25 @@ public class TrackingRecordModificationActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_confirm_tracking_record_edit:
-                if (isConfigurationValid()) {
-                    if (trackingRecordUuidOpt.isPresent()) {
-                        ModifyTrackingRecordTask task = buildTrackingRecordModificationTask();
-                        task.execute();
-                    } else {
-                        CreateTrackingRecordTask task = buildTrackingRecordCreationTask();
-                        task.execute();
-                    }
-                }
+                performSaveModifications();
                 return true;
             case R.id.menu_delete_tracking_record:
                 deleteTrackingRecord(trackingRecordUuidOpt.get());
             default:
                 super.onOptionsItemSelected(item);
                 return false;
+        }
+    }
+
+    private void performSaveModifications() {
+        if (isConfigurationValid()) {
+            if (trackingRecordUuidOpt.isPresent()) {
+                ModifyTrackingRecordTask task = buildTrackingRecordModificationTask();
+                task.execute();
+            } else {
+                CreateTrackingRecordTask task = buildTrackingRecordCreationTask();
+                task.execute();
+            }
         }
     }
 
@@ -168,21 +172,46 @@ public class TrackingRecordModificationActivity extends Activity {
                 .findFragmentById(R.id.fragment_tracking_record_editing);
     }
 
-    @Subscribe
-    public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
-        Toast.makeText(this, "Created tracking record " + event.getTrackingRecord().getUuid(), Toast.LENGTH_SHORT).show();
-        onBackPressed();
+    @Subscribe public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
+        super.onBackPressed();
     }
 
-    @Subscribe
-    public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
-        Toast.makeText(this, "Modified tracking record " + event.getTrackingRecord().getUuid(), Toast.LENGTH_SHORT).show();
-        onBackPressed();
+    @Subscribe public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
+        super.onBackPressed();
     }
 
-    @Subscribe
-    public void handleTrackingRecordDeletedEvent(DeletedTrackingRecordEvent event) {
-        Toast.makeText(this, "Deleted tracking record " + event.getTrackingRecordUuid(), Toast.LENGTH_SHORT).show();
-        onBackPressed();
+    @Subscribe public void handleTrackingRecordDeletedEvent(DeletedTrackingRecordEvent event) {
+        super.onBackPressed();
+    }
+
+    @Subscribe public void handleSaveThenBackpressRequestedEvent(DialogConfirmBackpressDataLoss.SaveThenBackpressRequestedEvent event) {
+        performSaveModifications();
+    }
+
+    @Subscribe public void handleDiscardThenBackpressRequestedEvent(DialogConfirmBackpressDataLoss.DiscardThenBackpressRequestedEvent event) {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (hasFragmentWithUnsavedModifications()) {
+            showConfirmBackpressLossDialog();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private boolean hasFragmentWithUnsavedModifications() {
+        Optional<TrackingRecord> trackingRecordOptional = projectUuidOpt.isPresent()
+                ? Optional.<TrackingRecord>absent()
+                : new TrackingRecordDAO(this).get(trackingRecordUuidOpt.get());
+        return getTrackingRecordModificationFragment().hasUnsavedModifications(trackingRecordOptional);
+    }
+
+    private void showConfirmBackpressLossDialog() {
+        DialogConfirmBackpressDataLoss
+                .aDialog()
+                .forEntityUuid(trackingRecordUuidOpt.isPresent() ? trackingRecordUuidOpt.get() : projectUuidOpt.get())
+                .show(getFragmentManager(), getClass().getSimpleName());
     }
 }

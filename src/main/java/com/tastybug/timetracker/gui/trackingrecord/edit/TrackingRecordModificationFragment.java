@@ -2,6 +2,7 @@ package com.tastybug.timetracker.gui.trackingrecord.edit;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,7 +110,7 @@ public class TrackingRecordModificationFragment extends Fragment {
         outState.putSerializable(START_TIME, getStartTimeFromWidget().orNull());
         outState.putSerializable(END_DATE, getEndDateFromWidget().orNull());
         outState.putSerializable(END_TIME, getEndTimeFromWidget().orNull());
-        outState.putString(DESCRIPTION, getDescriptionFromWidget());
+        outState.putString(DESCRIPTION, getDescriptionFromWidget().orNull());
     }
 
     @Override
@@ -184,8 +185,10 @@ public class TrackingRecordModificationFragment extends Fragment {
         return Optional.fromNullable((Date) endTimeEditText.getTag());
     }
 
-    private String getDescriptionFromWidget() {
-        return descriptionEditText.getText().toString();
+    private Optional<String> getDescriptionFromWidget() {
+        return TextUtils.isEmpty(descriptionEditText.getText())
+                ? Optional.<String>absent()
+                : Optional.of(descriptionEditText.getText().toString());
     }
 
     private LocalDateTime getAggregatedDate(Optional<Date> date, Optional<Date> time) {
@@ -228,27 +231,54 @@ public class TrackingRecordModificationFragment extends Fragment {
     }
 
     public ModifyTrackingRecordTask collectModificationsForEdit(ModifyTrackingRecordTask task) {
-        Optional<Date> startDateOpt = getStartDateFromWidget();
-        Optional<Date> startTimeOpt = getStartTimeFromWidget();
-        Optional<Date> endDateOpt = getEndDateFromWidget();
-        Optional<Date> endTimeOpt = getEndTimeFromWidget();
-
         return task.withTrackingRecordUuid(existingTrackingRecordUuidOpt.get())
-            .withStartDate(getAggregatedDate(startDateOpt, startTimeOpt).toDate())
-            .withEndDate(getAggregatedDate(endDateOpt, endTimeOpt).toDate())
-            .withDescription(Optional.of(getDescriptionFromWidget()));
+                .withStartDate(getAggregatedStartDate().get())
+                .withEndDate(getAggregatedEndDate().get())
+            .withDescription(getDescriptionFromWidget());
     }
 
     public CreateTrackingRecordTask collectModificationsForCreate(CreateTrackingRecordTask task) {
+        return task.withProjectUuid(creationForProjectUuid.get())
+                .withStartDate(getAggregatedStartDate().get())
+                .withEndDate(getAggregatedEndDate().get())
+                .withDescription(getDescriptionFromWidget());
+    }
+
+    private Optional<Date> getAggregatedStartDate() {
         Optional<Date> startDateOpt = getStartDateFromWidget();
         Optional<Date> startTimeOpt = getStartTimeFromWidget();
+
+        if (!startDateOpt.isPresent() || !startTimeOpt.isPresent()) {
+            return Optional.absent();
+        }
+
+        return Optional.of(getAggregatedDate(startDateOpt, startTimeOpt).toDate());
+    }
+
+    private Optional<Date> getAggregatedEndDate() {
         Optional<Date> endDateOpt = getEndDateFromWidget();
         Optional<Date> endTimeOpt = getEndTimeFromWidget();
 
-        return task.withProjectUuid(creationForProjectUuid.get())
-                .withStartDate(getAggregatedDate(startDateOpt, startTimeOpt).toDate())
-                .withEndDate(getAggregatedDate(endDateOpt, endTimeOpt).toDate())
-                .withDescription(Optional.of(getDescriptionFromWidget()));
+        if (!endDateOpt.isPresent() || !endTimeOpt.isPresent()) {
+            return Optional.absent();
+        }
+
+        return Optional.of(getAggregatedDate(endDateOpt, endTimeOpt).toDate());
+    }
+
+    public boolean hasUnsavedModifications(Optional<TrackingRecord> recordBeingEdited) {
+        if (recordBeingEdited.isPresent()) {
+            // there is an existing record that we are checking against
+            return !recordBeingEdited.get().getStart().equals(getAggregatedStartDate())
+                    || !recordBeingEdited.get().getEnd().equals(getAggregatedEndDate())
+                    || !recordBeingEdited.get().getDescription().equals(getDescriptionFromWidget());
+
+        } else {
+            // we are creating a record, so nothing to check against
+            return getStartTimeFromWidget().isPresent()
+                    || getEndDateFromWidget().isPresent()
+                    || getDescriptionFromWidget().isPresent();
+        }
     }
 
     @Subscribe
