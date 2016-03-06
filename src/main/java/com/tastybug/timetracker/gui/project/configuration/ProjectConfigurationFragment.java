@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
@@ -40,7 +41,7 @@ public class ProjectConfigurationFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
         outState.putString(PROJECT_TITLE, getTitleFromWidget());
-        outState.putString(PROJECT_DESCRIPTION, getDescriptionFromWidget());
+        outState.putString(PROJECT_DESCRIPTION, getDescriptionFromWidget().orNull());
     }
 
     public void showProject(Project project) {
@@ -64,18 +65,25 @@ public class ProjectConfigurationFragment extends Fragment {
 
     public void collectModifications(ConfigureProjectTask task) {
         String newTitle = getTitleFromWidget();
-        String newDescription = getDescriptionFromWidget();
+        String newDescription = getDescriptionFromWidget().orNull();
 
         task.withProjectTitle(newTitle);
         task.withProjectDescription(newDescription);
+    }
+
+    public boolean hasUnsavedModifications(Project project) {
+        return !project.getTitle().equals(getTitleFromWidget())
+                || !project.getDescription().equals(getDescriptionFromWidget());
     }
 
     private String getTitleFromWidget() {
         return projectTitleEditText.getText().toString();
     }
 
-    private String getDescriptionFromWidget() {
-        return projectDescriptionEditText.getText().toString();
+    private Optional<String> getDescriptionFromWidget() {
+        return TextUtils.isEmpty(projectDescriptionEditText.getText())
+                ? Optional.<String>absent()
+                : Optional.of(projectDescriptionEditText.getText().toString());
     }
 
 }

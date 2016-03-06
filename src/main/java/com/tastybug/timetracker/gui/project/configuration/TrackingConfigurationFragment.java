@@ -156,6 +156,13 @@ public class TrackingConfigurationFragment extends Fragment {
         task.withRoundingStrategy(strategy);
     }
 
+    public boolean hasUnsavedModifications(TrackingConfiguration trackingConfiguration) {
+        return !trackingConfiguration.getHourLimit().equals(getHourLimitFromWidget())
+                || !trackingConfiguration.getStart().equals(getStartDateFromWidget())
+                || !trackingConfiguration.getEndDateAsInclusive().equals(getLastEnddateInclusiveFromWidget())
+                || !trackingConfiguration.getRoundingStrategy().equals(getRoundingStrategyFromWidget());
+    }
+
     private Optional<Integer> getHourLimitFromWidget() {
         String text = hourLimitEditText.getText().toString();
         return Optional.fromNullable(!TextUtils.isEmpty(text) ? Integer.valueOf(text) : null);
@@ -187,9 +194,9 @@ public class TrackingConfigurationFragment extends Fragment {
 
     @Subscribe public void handleDatePicked(DatePickerFragment.DatePickedEvent event) {
         if (START_DATE.equals(event.getTopic())) {
-            renderStartDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : null);
+            renderStartDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : Optional.<Date>absent());
         } else if (END_DATE.equals(event.getTopic())) {
-            renderEndDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : null);
+            renderEndDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : Optional.<Date>absent());
         } else {
             throw new RuntimeException("Unexpected topic received: " + event.getTopic());
         }

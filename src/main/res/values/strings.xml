@@ -4,6 +4,8 @@
 
     <!-- common -->
     <string name="common_cancel">Cancel</string>
+    <string name="common_discard">Discard</string>
+    <string name="common_save">Save</string>
 
     <!-- project activity -->
     <string name="activity_project_title">Time Tracking Projects</string>
@@ -83,5 +85,8 @@
     <string name="title_delete_tracking_record">Delete Record?</string>
     <string name="msg_delete_tracking_record">The record will be deleted, the associated time is removed from the project.</string>
     <string name="button_delete_tracking_record">Delete</string>
+
+    <!-- warning dialog discard changes -->
+    <string name="msg_confirm_data_loss_from_backpress">You have unsaved modifications..</string>
 
 </resources>
