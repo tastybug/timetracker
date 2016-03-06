@@ -16,11 +16,11 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.project.configuration.ProjectConfigurationActivity;
+import com.tastybug.timetracker.gui.shared.DialogConfirmDeleteProject;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.task.OttoProvider;
-import com.tastybug.timetracker.task.project.DeleteProjectTask;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
@@ -32,7 +32,7 @@ import java.util.Date;
 public class ProjectStatisticsFragment extends Fragment {
 
     private TextView projectTimeFrameTextView, projectDurationTextView;
-    private String currentProjectUuid;
+    private Project currentProject;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,9 @@ public class ProjectStatisticsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete_project:
-                DeleteProjectTask.aTask(getActivity()).withProjectUuid(currentProjectUuid).execute();
+                DialogConfirmDeleteProject.aDialog()
+                        .forProject(currentProject)
+                        .show(getFragmentManager(),getClass().getSimpleName());
                 return true;
             case R.id.menu_configure_project:
                 showProjectConfigurationActivity();
@@ -81,12 +83,12 @@ public class ProjectStatisticsFragment extends Fragment {
 
     private void showProjectConfigurationActivity() {
         Intent intent = new Intent(getActivity(), ProjectConfigurationActivity.class);
-        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProjectUuid);
+        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProject.getUuid());
         startActivity(intent);
     }
 
     public void showProjectDetailsFor(Project project) {
-        this.currentProjectUuid = project.getUuid();
+        this.currentProject = project;
         if(!project.hasContext()) {
             project.setContext(getActivity());
         }
@@ -95,7 +97,7 @@ public class ProjectStatisticsFragment extends Fragment {
     }
 
     public void showNoProject() {
-        this.currentProjectUuid = null;
+        this.currentProject = null;
         renderProjektTimeframe(Optional.<Project>absent());
         renderProjectDuration(Optional.<Project>absent());
     }

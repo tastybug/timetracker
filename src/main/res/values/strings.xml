@@ -70,5 +70,12 @@
     <string name="minutes_short">mins</string>
     <string name="hours_short">hours</string>
 
+    <!-- project deletion dialog -->
+    <string name="title_delete_project_X">Delete \"%1$s\"?</string>
+    <string name="msg_you_lose_X">You lose records amounting to %1$s. This cannot be undone!</string>
+    <string name="msg_you_lose_no_tracking_records">Nothing has been recorded yet for this project.</string>
+    <string name="button_delete_project">Delete Project</string>
+    <string name="button_cancel">Cancel</string>
+
 
 </resources>
