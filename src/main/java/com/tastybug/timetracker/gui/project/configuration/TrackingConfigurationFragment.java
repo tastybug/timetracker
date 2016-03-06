@@ -18,6 +18,7 @@ import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -51,8 +52,8 @@ public class TrackingConfigurationFragment extends Fragment {
 
         if (savedInstanceState != null) {
             renderHourLimit((Integer)savedInstanceState.getSerializable(HOUR_LIMIT));
-            renderStartDate((Date) savedInstanceState.getSerializable(START_DATE));
-            renderEndDate((Date) savedInstanceState.getSerializable(END_DATE));
+            renderStartDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(START_DATE)));
+            renderEndDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(END_DATE)));
             renderRoundingStrategy((RoundingFactory.Strategy) savedInstanceState.getSerializable(ROUNDING_STRATEGY));
         }
 
@@ -88,8 +89,8 @@ public class TrackingConfigurationFragment extends Fragment {
 
     public void showTrackingConfiguration(TrackingConfiguration trackingConfiguration) {
         renderHourLimit(trackingConfiguration.getHourLimit().orNull());
-        renderStartDate(trackingConfiguration.getStart().orNull());
-        renderEndDate(trackingConfiguration.getEndDateAsInclusive().orNull());
+        renderStartDate(trackingConfiguration.getStart());
+        renderEndDate(trackingConfiguration.getEndDateAsInclusive());
         renderRoundingStrategy(trackingConfiguration.getRoundingStrategy());
     }
 
@@ -101,20 +102,22 @@ public class TrackingConfigurationFragment extends Fragment {
         }
     }
 
-    private void renderStartDate(Date date) {
-        if (date != null) {
-            startDateEditText.setText(getString(R.string.project_starts_at_X, date.toString()));
-            startDateEditText.setTag(date);
+    private void renderStartDate(Optional<Date> date) {
+        if (date.isPresent()) {
+            startDateEditText.setText(getString(R.string.project_starts_at_X,
+                    SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(date.get())));
+            startDateEditText.setTag(date.get());
         } else {
             startDateEditText.setText("");
             startDateEditText.setTag(null);
         }
     }
 
-    private void renderEndDate(Date date) {
-        if (date != null) {
-            endDateEditText.setText(getString(R.string.project_ends_at_X, date.toString()));
-            endDateEditText.setTag(date);
+    private void renderEndDate(Optional<Date> date) {
+        if (date.isPresent()) {
+            endDateEditText.setText(getString(R.string.project_ends_at_X,
+                    SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(date.get())));
+            endDateEditText.setTag(date.get());
         } else {
             endDateEditText.setText("");
             endDateEditText.setTag(null);
@@ -184,9 +187,9 @@ public class TrackingConfigurationFragment extends Fragment {
 
     @Subscribe public void handleDatePicked(DatePickerFragment.DatePickedEvent event) {
         if (START_DATE.equals(event.getTopic())) {
-            renderStartDate(event.getDate().isPresent() ? event.getDate().get().toDate() : null);
+            renderStartDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : null);
         } else if (END_DATE.equals(event.getTopic())) {
-            renderEndDate(event.getDate().isPresent() ? event.getDate().get().toDate() : null);
+            renderEndDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : null);
         } else {
             throw new RuntimeException("Unexpected topic received: " + event.getTopic());
         }
