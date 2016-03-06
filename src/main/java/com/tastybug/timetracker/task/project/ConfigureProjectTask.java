@@ -96,11 +96,16 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
             trackingConfiguration.setHourLimit(Optional.fromNullable((Integer) arguments.getSerializable(HOUR_LIMIT)));
         }
 
-        if(arguments.containsKey(START_DATE)) {
+        if (arguments.containsKey(START_DATE)) {
+            if (arguments.containsKey(END_DATE_INCLUSIVE)) {
+                // prevent date validation false alarms while setting
+                // a new start date that might be after the OLD end date
+                trackingConfiguration.setEnd(Optional.<Date>absent());
+            }
             trackingConfiguration.setStart(Optional.fromNullable((Date) arguments.getSerializable(START_DATE)));
         }
 
-        if(arguments.containsKey(END_DATE_INCLUSIVE)) {
+        if (arguments.containsKey(END_DATE_INCLUSIVE)) {
             trackingConfiguration.setEndAsInclusive(Optional.fromNullable((Date) arguments.getSerializable(END_DATE_INCLUSIVE)));
         }
 
