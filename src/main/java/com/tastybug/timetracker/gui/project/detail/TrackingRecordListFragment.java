@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.gui.dialog.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.gui.trackingrecord.edit.TrackingRecordModificationActivity;
 import com.tastybug.timetracker.model.TrackingRecord;
 
@@ -51,13 +52,14 @@ public class TrackingRecordListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View v, int position, long id) {
         TrackingRecord selectedTrackingRecord = (TrackingRecord) listView.getAdapter().getItem(position);
-        showTrackingRecordEditingActivity(selectedTrackingRecord);
+        showTrackingRecordDescriptionEditingDialog(selectedTrackingRecord);
     }
 
-    private void showTrackingRecordEditingActivity(TrackingRecord trackingRecord) {
-        Intent intent = new Intent(getActivity(), TrackingRecordModificationActivity.class);
-        intent.putExtra(TrackingRecordModificationActivity.TRACKING_RECORD_UUID, trackingRecord.getUuid());
-        startActivity(intent);
+    private void showTrackingRecordDescriptionEditingDialog(TrackingRecord trackingRecord) {
+        EditTrackingRecordDescriptionDialogFragment
+                .aDialog()
+                .forTrackingRecord(trackingRecord)
+                .show(getFragmentManager(), getClass().getSimpleName());
     }
 
     private void showTrackingRecordCreationActivity() {

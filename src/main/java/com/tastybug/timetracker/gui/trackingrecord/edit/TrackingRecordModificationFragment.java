@@ -199,7 +199,9 @@ public class TrackingRecordModificationFragment extends Fragment {
                 localDate.getMonthOfYear(),
                 localDate.getDayOfMonth(),
                 localTime.getHourOfDay(),
-                localTime.getMinuteOfHour());
+                localTime.getMinuteOfHour(),
+                localTime.getSecondOfMinute(),
+                localTime.getMillisOfSecond());
     }
 
     public boolean validateData() {
@@ -269,6 +271,9 @@ public class TrackingRecordModificationFragment extends Fragment {
     public boolean hasUnsavedModifications(Optional<TrackingRecord> recordBeingEdited) {
         if (recordBeingEdited.isPresent()) {
             // there is an existing record that we are checking against
+            Date givenStart = recordBeingEdited.get().getStart().get();
+            Date newStart = getAggregatedStartDate().get();
+
             return !recordBeingEdited.get().getStart().equals(getAggregatedStartDate())
                     || !recordBeingEdited.get().getEnd().equals(getAggregatedEndDate())
                     || !recordBeingEdited.get().getDescription().equals(getDescriptionFromWidget());

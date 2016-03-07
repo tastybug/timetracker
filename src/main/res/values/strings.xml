@@ -3,6 +3,7 @@
     <string name="app_name">TimeTracker</string>
 
     <!-- common -->
+    <string name="common_close">Close</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_discard">Discard</string>
     <string name="common_save">Save</string>
@@ -88,5 +89,9 @@
 
     <!-- warning dialog discard changes -->
     <string name="msg_confirm_data_loss_from_backpress">You have unsaved modifications..</string>
+
+    <!-- tracking record description editor dialog -->
+    <string name="hint_tracking_record_description">Optional: record what happened during the session.</string>
+    <string name="button_show_tracking_record_editing_activity">Advanced</string>
 
 </resources>

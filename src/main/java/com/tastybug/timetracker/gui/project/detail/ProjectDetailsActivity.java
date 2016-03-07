@@ -11,9 +11,11 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.dashboard.ProjectsActivity;
+import com.tastybug.timetracker.gui.dialog.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
+import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 
 public class ProjectDetailsActivity extends Activity {
 
@@ -114,6 +116,13 @@ public class ProjectDetailsActivity extends Activity {
          */
         Toast.makeText(this, "Deleted project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
         onBackPressed();
+    }
+
+    @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+        EditTrackingRecordDescriptionDialogFragment
+                .aDialog()
+                .forTrackingRecord(event.getTrackingRecord())
+                .show(getFragmentManager(), getClass().getSimpleName());
     }
 
 }
