@@ -13,8 +13,8 @@ import com.google.common.base.Preconditions;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.gui.shared.DialogConfirmBackpressDataLoss;
-import com.tastybug.timetracker.gui.shared.DialogConfirmDeleteTrackingRecord;
+import com.tastybug.timetracker.gui.dialog.ConfirmBackpressDialogFragment;
+import com.tastybug.timetracker.gui.dialog.ConfirmDeleteTrackingRecordDialogFragment;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
@@ -139,7 +139,7 @@ public class TrackingRecordModificationActivity extends Activity {
     }
 
     private void deleteTrackingRecord(String trackingRecordUuid) {
-        DialogConfirmDeleteTrackingRecord
+        ConfirmDeleteTrackingRecordDialogFragment
                 .aDialog()
                 .forTrackingRecordUuid(trackingRecordUuid)
                 .show(getFragmentManager(), getClass().getSimpleName());
@@ -184,11 +184,11 @@ public class TrackingRecordModificationActivity extends Activity {
         super.onBackPressed();
     }
 
-    @Subscribe public void handleSaveThenBackpressRequestedEvent(DialogConfirmBackpressDataLoss.SaveThenBackpressRequestedEvent event) {
+    @Subscribe public void handleSaveThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.SaveThenBackpressRequestedEvent event) {
         performSaveModifications();
     }
 
-    @Subscribe public void handleDiscardThenBackpressRequestedEvent(DialogConfirmBackpressDataLoss.DiscardThenBackpressRequestedEvent event) {
+    @Subscribe public void handleDiscardThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.DiscardThenBackpressRequestedEvent event) {
         super.onBackPressed();
     }
 
@@ -209,7 +209,7 @@ public class TrackingRecordModificationActivity extends Activity {
     }
 
     private void showConfirmBackpressLossDialog() {
-        DialogConfirmBackpressDataLoss
+        ConfirmBackpressDialogFragment
                 .aDialog()
                 .forEntityUuid(trackingRecordUuidOpt.isPresent() ? trackingRecordUuidOpt.get() : projectUuidOpt.get())
                 .show(getFragmentManager(), getClass().getSimpleName());

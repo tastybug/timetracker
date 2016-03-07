@@ -12,7 +12,7 @@ import android.widget.Spinner;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.shared.DatePickerFragment;
+import com.tastybug.timetracker.gui.dialog.DatePickerDialogFragment;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.OttoProvider;
@@ -59,17 +59,17 @@ public class TrackingConfigurationFragment extends Fragment {
 
         startDateEditText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DatePickerFragment newFragment = new DatePickerFragment();
+                DatePickerDialogFragment newFragment = new DatePickerDialogFragment();
                 newFragment.setTopic(START_DATE);
-                newFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
+                newFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
             }
         });
 
         endDateEditText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DatePickerFragment newFragment = new DatePickerFragment();
+                DatePickerDialogFragment newFragment = new DatePickerDialogFragment();
                 newFragment.setTopic(END_DATE);
-                newFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
+                newFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
             }
         });
         new OttoProvider().getSharedBus().register(this);
@@ -192,7 +192,7 @@ public class TrackingConfigurationFragment extends Fragment {
         }
     }
 
-    @Subscribe public void handleDatePicked(DatePickerFragment.DatePickedEvent event) {
+    @Subscribe public void handleDatePicked(DatePickerDialogFragment.DatePickedEvent event) {
         if (START_DATE.equals(event.getTopic())) {
             renderStartDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : Optional.<Date>absent());
         } else if (END_DATE.equals(event.getTopic())) {

@@ -11,8 +11,8 @@ import android.widget.EditText;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.shared.DatePickerFragment;
-import com.tastybug.timetracker.gui.shared.TimePickerFragment;
+import com.tastybug.timetracker.gui.dialog.DatePickerDialogFragment;
+import com.tastybug.timetracker.gui.dialog.TimePickerDialogFragment;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
@@ -64,37 +64,37 @@ public class TrackingRecordModificationFragment extends Fragment {
 
         startDateEditText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DatePickerFragment datePickerFragment = new DatePickerFragment();
-                datePickerFragment.setTopic(START_DATE);
-                datePickerFragment.setCanNotReturnNone();
-                datePickerFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
+                DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment();
+                datePickerDialogFragment.setTopic(START_DATE);
+                datePickerDialogFragment.setCanNotReturnNone();
+                datePickerDialogFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
             }
         });
 
         startTimeEditText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                TimePickerFragment timePickerFragment = new TimePickerFragment();
-                timePickerFragment.setTopic(START_TIME);
-                timePickerFragment.setCanNotReturnNone();
-                timePickerFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
+                TimePickerDialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
+                timePickerDialogFragment.setTopic(START_TIME);
+                timePickerDialogFragment.setCanNotReturnNone();
+                timePickerDialogFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
             }
         });
 
         endDateEditText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DatePickerFragment datePickerFragment = new DatePickerFragment();
-                datePickerFragment.setTopic(END_DATE);
-                datePickerFragment.setCanNotReturnNone();
-                datePickerFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
+                DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment();
+                datePickerDialogFragment.setTopic(END_DATE);
+                datePickerDialogFragment.setCanNotReturnNone();
+                datePickerDialogFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
             }
         });
 
         endTimeEditText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                TimePickerFragment timePickerFragment = new TimePickerFragment();
-                timePickerFragment.setTopic(END_TIME);
-                timePickerFragment.setCanNotReturnNone();
-                timePickerFragment.show(getFragmentManager(), DatePickerFragment.class.getSimpleName());
+                TimePickerDialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
+                timePickerDialogFragment.setTopic(END_TIME);
+                timePickerDialogFragment.setCanNotReturnNone();
+                timePickerDialogFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
             }
         });
 
@@ -282,7 +282,7 @@ public class TrackingRecordModificationFragment extends Fragment {
     }
 
     @Subscribe
-    public void handleDatePicked(DatePickerFragment.DatePickedEvent event) {
+    public void handleDatePicked(DatePickerDialogFragment.DatePickedEvent event) {
         if (START_DATE.equals(event.getTopic())) {
             renderStartDate(Optional.of(event.getDate().get().toDate()));
         } else if (START_TIME.equals(event.getTopic())) {

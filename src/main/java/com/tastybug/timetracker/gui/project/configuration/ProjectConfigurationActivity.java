@@ -12,7 +12,7 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.gui.shared.DialogConfirmBackpressDataLoss;
+import com.tastybug.timetracker.gui.dialog.ConfirmBackpressDialogFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.task.OttoProvider;
@@ -162,7 +162,7 @@ public class ProjectConfigurationActivity extends Activity {
     }
 
     private void showConfirmBackpressLossDialog() {
-        DialogConfirmBackpressDataLoss
+        ConfirmBackpressDialogFragment
                 .aDialog()
                 .forEntityUuid(projectUuid)
                 .show(getFragmentManager(), getClass().getSimpleName());
@@ -172,11 +172,11 @@ public class ProjectConfigurationActivity extends Activity {
         super.onBackPressed();
     }
 
-    @Subscribe public void handleSaveThenBackpressRequestedEvent(DialogConfirmBackpressDataLoss.SaveThenBackpressRequestedEvent event) {
+    @Subscribe public void handleSaveThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.SaveThenBackpressRequestedEvent event) {
         performSaveProjectConfiguration();
     }
 
-    @Subscribe public void handleDiscardThenBackpressRequestedEvent(DialogConfirmBackpressDataLoss.DiscardThenBackpressRequestedEvent event) {
+    @Subscribe public void handleDiscardThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.DiscardThenBackpressRequestedEvent event) {
         super.onBackPressed();
     }
 }

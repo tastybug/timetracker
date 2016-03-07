@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.shared;
+package com.tastybug.timetracker.gui.dialog;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -16,13 +16,13 @@ import com.tastybug.timetracker.task.OttoProvider;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
-public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class DatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     private OttoProvider ottoProvider = new OttoProvider();
     private String topic;
     private boolean canReturnNone = true;
 
-    public DatePickerFragment() {}
+    public DatePickerDialogFragment() {}
 
     public void setTopic(String topic) {
         this.topic = topic;

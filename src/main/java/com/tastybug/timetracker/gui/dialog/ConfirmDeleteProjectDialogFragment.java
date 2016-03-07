@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.shared;
+package com.tastybug.timetracker.gui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,15 +15,15 @@ import com.tastybug.timetracker.util.DurationFormatterFactory;
 import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
 
-public class DialogConfirmDeleteProject extends DialogFragment {
+public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
 
     private Project project;
 
-    public static DialogConfirmDeleteProject aDialog() {
-        return new DialogConfirmDeleteProject();
+    public static ConfirmDeleteProjectDialogFragment aDialog() {
+        return new ConfirmDeleteProjectDialogFragment();
     }
 
-    public DialogConfirmDeleteProject forProject(Project project) {
+    public ConfirmDeleteProjectDialogFragment forProject(Project project) {
         this.project = project;
         return this;
     }

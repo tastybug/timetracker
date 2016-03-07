@@ -15,8 +15,8 @@ import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.gui.dialog.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.gui.project.configuration.ProjectConfigurationActivity;
-import com.tastybug.timetracker.gui.shared.DialogConfirmDeleteProject;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
@@ -68,7 +68,7 @@ public class ProjectStatisticsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete_project:
-                DialogConfirmDeleteProject.aDialog()
+                ConfirmDeleteProjectDialogFragment.aDialog()
                         .forProject(currentProject)
                         .show(getFragmentManager(),getClass().getSimpleName());
                 return true;

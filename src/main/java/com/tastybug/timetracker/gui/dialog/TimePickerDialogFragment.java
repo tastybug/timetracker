@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.shared;
+package com.tastybug.timetracker.gui.dialog;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -15,15 +15,15 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
 /**
- * TODO vielleicht kann man diese Klasse von DatePickerFragment ableiten und etwas Code sparen
+ * TODO vielleicht kann man diese Klasse von DatePickerDialogFragment ableiten und etwas Code sparen
  */
-public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+public class TimePickerDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
     private OttoProvider ottoProvider = new OttoProvider();
     private String topic;
     private boolean canReturnNone = true;
 
-    public TimePickerFragment() {}
+    public TimePickerDialogFragment() {}
 
     public void setTopic(String topic) {
         this.topic = topic;
@@ -50,7 +50,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_NEGATIVE) {
                         dismiss();
-                        ottoProvider.getSharedBus().post(new DatePickerFragment.DatePickedEvent(topic, null));
+                        ottoProvider.getSharedBus().post(new DatePickerDialogFragment.DatePickedEvent(topic, null));
                     }
                 }
             });
@@ -63,6 +63,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         DateTime dateTime = new DateTime();
         dateTime = dateTime.withHourOfDay(hourOfDay);
         dateTime = dateTime.withMinuteOfHour(minute);
-        ottoProvider.getSharedBus().post(new DatePickerFragment.DatePickedEvent(topic, dateTime));
+        ottoProvider.getSharedBus().post(new DatePickerDialogFragment.DatePickedEvent(topic, dateTime));
     }
 }

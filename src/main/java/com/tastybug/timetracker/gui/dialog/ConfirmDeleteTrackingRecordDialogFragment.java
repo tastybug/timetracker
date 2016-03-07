@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.shared;
+package com.tastybug.timetracker.gui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,15 +9,15 @@ import android.os.Bundle;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.task.tracking.DeleteTrackingRecordTask;
 
-public class DialogConfirmDeleteTrackingRecord extends DialogFragment {
+public class ConfirmDeleteTrackingRecordDialogFragment extends DialogFragment {
 
     private String trackingRecordUuid;
 
-    public static DialogConfirmDeleteTrackingRecord aDialog() {
-        return new DialogConfirmDeleteTrackingRecord();
+    public static ConfirmDeleteTrackingRecordDialogFragment aDialog() {
+        return new ConfirmDeleteTrackingRecordDialogFragment();
     }
 
-    public DialogConfirmDeleteTrackingRecord forTrackingRecordUuid(String trackingRecordUuid) {
+    public ConfirmDeleteTrackingRecordDialogFragment forTrackingRecordUuid(String trackingRecordUuid) {
         this.trackingRecordUuid = trackingRecordUuid;
         return this;
     }

@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.shared;
+package com.tastybug.timetracker.gui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,17 +10,17 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.task.OttoEvent;
 import com.tastybug.timetracker.task.OttoProvider;
 
-public class DialogConfirmBackpressDataLoss extends DialogFragment {
+public class ConfirmBackpressDialogFragment extends DialogFragment {
 
     protected OttoProvider ottoProvider = new OttoProvider();
 
     private String affectedEntityUuid;
 
-    public static DialogConfirmBackpressDataLoss aDialog() {
-        return new DialogConfirmBackpressDataLoss();
+    public static ConfirmBackpressDialogFragment aDialog() {
+        return new ConfirmBackpressDialogFragment();
     }
 
-    public DialogConfirmBackpressDataLoss forEntityUuid(String affectedEntityUuid) {
+    public ConfirmBackpressDialogFragment forEntityUuid(String affectedEntityUuid) {
         this.affectedEntityUuid = affectedEntityUuid;
         return this;
     }
