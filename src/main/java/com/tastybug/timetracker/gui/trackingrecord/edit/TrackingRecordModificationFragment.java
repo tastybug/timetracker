@@ -7,10 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Subscribe;
-import com.tastybug.timetracker.gui.dialog.DatePickerDialogFragment;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
 
@@ -42,8 +39,6 @@ public class TrackingRecordModificationFragment extends Fragment {
             ui.renderEndTime(Optional.fromNullable((Date)savedInstanceState.getSerializable(END_TIME)));
             ui.renderDescription(Optional.fromNullable(savedInstanceState.getString(DESCRIPTION)));
         }
-
-        new OttoProvider().getSharedBus().register(this);
         return rootView;
     }
 
@@ -61,7 +56,7 @@ public class TrackingRecordModificationFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        new OttoProvider().getSharedBus().unregister(this);
+        ui.destroy();
     }
 
     public void showTrackingRecordData(TrackingRecord trackingRecord) {
@@ -121,20 +116,5 @@ public class TrackingRecordModificationFragment extends Fragment {
         boolean erroneous = endDate.before(startDate);
         ui.blameEndDateBeforeStartDate(erroneous);
         return !erroneous;
-    }
-
-    @Subscribe
-    public void handleDatePicked(DatePickerDialogFragment.DatePickedEvent event) {
-        if (TrackingRecordModificationUI.START_DATE_TOPIC.equals(event.getTopic())) {
-            ui.renderStartDate(Optional.of(event.getDate().get().toDate()));
-        } else if (TrackingRecordModificationUI.START_TIME_TOPIC.equals(event.getTopic())) {
-            ui.renderStartTime(Optional.of(event.getDate().get().toDate()));
-        } else if (TrackingRecordModificationUI.END_DATE_TOPIC.equals(event.getTopic())) {
-            ui.renderEndDate(Optional.of(event.getDate().get().toDate()));
-        } else if (TrackingRecordModificationUI.END_TIME_TOPIC.equals(event.getTopic())) {
-            ui.renderEndTime(Optional.of(event.getDate().get().toDate()));
-        } else {
-            throw new RuntimeException("Unexpected topic received: " + event.getTopic());
-        }
     }
 }

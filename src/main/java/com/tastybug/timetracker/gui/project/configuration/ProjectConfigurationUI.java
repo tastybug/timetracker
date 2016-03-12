@@ -39,7 +39,7 @@ public class ProjectConfigurationUI {
     public Optional<String> getTitleFromWidget(boolean blame) {
         Optional<String> title = TextUtils.isEmpty(projectTitleEditText.getText())
                 ? Optional.<String>absent()
-                : Optional.of(projectDescriptionEditText.getText().toString());
+                : Optional.of(projectTitleEditText.getText().toString());
         if (blame) {
             projectTitleEditText.setError(title.isPresent()
                     ? null

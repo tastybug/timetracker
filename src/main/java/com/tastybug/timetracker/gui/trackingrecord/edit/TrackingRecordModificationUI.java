@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.google.common.base.Optional;
+import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.dialog.DatePickerDialogFragment;
 import com.tastybug.timetracker.gui.dialog.TimePickerDialogFragment;
+import com.tastybug.timetracker.task.OttoProvider;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -38,6 +40,7 @@ public class TrackingRecordModificationUI {
 
     public TrackingRecordModificationUI(Context context) {
         this.context = context;
+        new OttoProvider().getSharedBus().register(this);
     }
 
     public View inflateWidgets(LayoutInflater inflater, ViewGroup container, final FragmentManager fragmentManager) {
@@ -89,6 +92,9 @@ public class TrackingRecordModificationUI {
         return rootView;
     }
 
+    public void destroy() {
+        new OttoProvider().getSharedBus().unregister(this);
+    }
 
     public void renderStartDate(Optional<Date> dateOptional) {
         if(dateOptional.isPresent()) {
@@ -217,4 +223,18 @@ public class TrackingRecordModificationUI {
                 localTime.getMillisOfSecond());
     }
 
+    @Subscribe
+    public void handleDatePicked(DatePickerDialogFragment.DatePickedEvent event) {
+        if (TrackingRecordModificationUI.START_DATE_TOPIC.equals(event.getTopic())) {
+            renderStartDate(Optional.of(event.getDate().get().toDate()));
+        } else if (TrackingRecordModificationUI.START_TIME_TOPIC.equals(event.getTopic())) {
+            renderStartTime(Optional.of(event.getDate().get().toDate()));
+        } else if (TrackingRecordModificationUI.END_DATE_TOPIC.equals(event.getTopic())) {
+            renderEndDate(Optional.of(event.getDate().get().toDate()));
+        } else if (TrackingRecordModificationUI.END_TIME_TOPIC.equals(event.getTopic())) {
+            renderEndTime(Optional.of(event.getDate().get().toDate()));
+        } else {
+            throw new RuntimeException("Unexpected topic received: " + event.getTopic());
+        }
+    }
 }

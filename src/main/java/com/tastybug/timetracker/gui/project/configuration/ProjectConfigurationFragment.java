@@ -55,7 +55,7 @@ public class ProjectConfigurationFragment extends Fragment {
     }
 
     public boolean hasUnsavedModifications(Project project) {
-        return !project.getTitle().equals(ui.getTitleFromWidget(false))
+        return !project.getTitle().equals(ui.getTitleFromWidget(false).orNull())
                 || !project.getDescription().equals(ui.getDescriptionFromWidget());
     }
 
