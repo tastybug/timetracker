@@ -45,7 +45,11 @@ public class ProjectStatisticsUI {
                     projectTimeFrameTextView.setText(R.string.project_ends_today);
                 } else {
                     String endDateString = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(configuration.getEndDateAsInclusive().get());
-                    projectTimeFrameTextView.setText(context.getString(R.string.project_remaining_days_X_until_Y, remainingDays, endDateString));
+                    if (remainingDays < 0) {
+                        projectTimeFrameTextView.setText(context.getString(R.string.project_ended_on_X, endDateString));
+                    } else {
+                        projectTimeFrameTextView.setText(context.getString(R.string.project_remaining_days_X_until_Y, remainingDays, endDateString));
+                    }
                 }
             } else {
                 projectTimeFrameTextView.setText("");
