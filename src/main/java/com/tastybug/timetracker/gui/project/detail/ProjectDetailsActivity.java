@@ -35,7 +35,6 @@ public class ProjectDetailsActivity extends Activity {
             Intent intent = getIntent();
             projectUuid = intent.getStringExtra(PROJECT_UUID);
         }
-        setTitle(getProjectByUuid(projectUuid).getTitle());
     }
 
     @Override
@@ -49,6 +48,7 @@ public class ProjectDetailsActivity extends Activity {
         TrackingRecordListFragment trackingRecordListFragment = getTrackingRecordListFragment();
 
         Project project = getProjectByUuid(projectUuid);
+        setTitle(getProjectByUuid(projectUuid).getTitle());
 
         detailsFragment.showProjectDetailsFor(project);
         trackingPanelFragment.showProject(project);
