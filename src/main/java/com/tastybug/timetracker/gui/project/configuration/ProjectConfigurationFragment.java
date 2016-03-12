@@ -2,14 +2,11 @@ package com.tastybug.timetracker.gui.project.configuration;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
@@ -18,19 +15,16 @@ public class ProjectConfigurationFragment extends Fragment {
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
 
-    private EditText projectTitleEditText;
-    private EditText projectDescriptionEditText;
+    private ProjectConfigurationUI ui;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_project_configuration, container);
-
-        projectTitleEditText = (EditText) view.findViewById(R.id.project_title);
-        projectDescriptionEditText = (EditText) view.findViewById(R.id.project_description);
+        ui = new ProjectConfigurationUI(getActivity());
+        View view = ui.inflateWidgets(inflater, container);
 
         if (savedInstanceState != null) {
-            showProjectData(savedInstanceState.getString(PROJECT_TITLE),
-                    savedInstanceState.getString(PROJECT_DESCRIPTION));
+            ui.showProjectData(savedInstanceState.getString(PROJECT_TITLE),
+                    Optional.fromNullable(savedInstanceState.getString(PROJECT_DESCRIPTION)));
         }
 
         return view;
@@ -40,50 +34,29 @@ public class ProjectConfigurationFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(PROJECT_TITLE, getTitleFromWidget());
-        outState.putString(PROJECT_DESCRIPTION, getDescriptionFromWidget().orNull());
+        outState.putString(PROJECT_TITLE, ui.getTitleFromWidget(false).orNull());
+        outState.putString(PROJECT_DESCRIPTION, ui.getDescriptionFromWidget().orNull());
     }
 
     public void showProject(Project project) {
-        showProjectData(project.getTitle(), project.getDescription().orNull());
-    }
-
-    private void showProjectData(String title, String description) {
-        projectTitleEditText.setText(title);
-        projectDescriptionEditText.setText(description != null ? description : "");
+        ui.showProjectData(project.getTitle(), project.getDescription());
     }
 
     public boolean validateSettings() {
-        if (TextUtils.isEmpty(getTitleFromWidget())) {
-            projectTitleEditText.setError(getString(R.string.error_project_title_empty));
-            return false;
-        } else {
-            projectTitleEditText.setError(null);
-            return true;
-        }
+        return ui.getTitleFromWidget(true).isPresent();
     }
 
     public void collectModifications(ConfigureProjectTask task) {
-        String newTitle = getTitleFromWidget();
-        String newDescription = getDescriptionFromWidget().orNull();
+        Optional<String> newTitle = ui.getTitleFromWidget(true);
+        Optional<String> newDescription = ui.getDescriptionFromWidget();
 
-        task.withProjectTitle(newTitle);
-        task.withProjectDescription(newDescription);
+        task.withProjectTitle(newTitle.get());
+        task.withProjectDescription(newDescription.orNull());
     }
 
     public boolean hasUnsavedModifications(Project project) {
-        return !project.getTitle().equals(getTitleFromWidget())
-                || !project.getDescription().equals(getDescriptionFromWidget());
-    }
-
-    private String getTitleFromWidget() {
-        return projectTitleEditText.getText().toString();
-    }
-
-    private Optional<String> getDescriptionFromWidget() {
-        return TextUtils.isEmpty(projectDescriptionEditText.getText())
-                ? Optional.<String>absent()
-                : Optional.of(projectDescriptionEditText.getText().toString());
+        return !project.getTitle().equals(ui.getTitleFromWidget(false))
+                || !project.getDescription().equals(ui.getDescriptionFromWidget());
     }
 
 }

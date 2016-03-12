@@ -13,6 +13,10 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.dialog.DatePickerDialogFragment;
 import com.tastybug.timetracker.gui.dialog.TimePickerDialogFragment;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -177,4 +181,40 @@ public class TrackingRecordModificationUI {
                 : context.getString(R.string.error_end_before_start));
 
     }
+
+    public Optional<Date> getAggregatedStartDate(boolean blame) {
+        Optional<Date> startDateOpt = getStartDateFromWidget(blame);
+        Optional<Date> startTimeOpt = getStartTimeFromWidget(blame);
+
+        if (!startDateOpt.isPresent() || !startTimeOpt.isPresent()) {
+            return Optional.absent();
+        }
+
+        return Optional.of(getAggregatedDate(startDateOpt, startTimeOpt).toDate());
+    }
+
+    public Optional<Date> getAggregatedEndDate(boolean blame) {
+        Optional<Date> endDateOpt = getEndDateFromWidget(blame);
+        Optional<Date> endTimeOpt = getEndTimeFromWidget(blame);
+
+        if (!endDateOpt.isPresent() || !endTimeOpt.isPresent()) {
+            return Optional.absent();
+        }
+
+        return Optional.of(getAggregatedDate(endDateOpt, endTimeOpt).toDate());
+    }
+
+    private LocalDateTime getAggregatedDate(Optional<Date> date, Optional<Date> time) {
+        LocalDate localDate = new LocalDate(date.get());
+        LocalTime localTime = new LocalTime(time.get());
+
+        return new LocalDateTime(localDate.getYear(),
+                localDate.getMonthOfYear(),
+                localDate.getDayOfMonth(),
+                localTime.getHourOfDay(),
+                localTime.getMinuteOfHour(),
+                localTime.getSecondOfMinute(),
+                localTime.getMillisOfSecond());
+    }
+
 }
