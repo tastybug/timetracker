@@ -2,26 +2,17 @@ package com.tastybug.timetracker.gui.project.configuration;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.dialog.DatePickerDialogFragment;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
-import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class TrackingConfigurationFragment extends Fragment {
 
@@ -30,49 +21,19 @@ public class TrackingConfigurationFragment extends Fragment {
     private static final String END_DATE = "END_DATE";
     private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
-    private EditText hourLimitEditText;
-    private EditText startDateEditText;
-    private EditText endDateEditText;
-    private Spinner roundingStrategySpinner;
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        new OttoProvider().getSharedBus().unregister(this);
-    }
+    private TrackingConfigurationUI ui;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tracking_configuration, container);
-
-        hourLimitEditText = (EditText) view.findViewById(R.id.hour_limit);
-        startDateEditText = (EditText) view.findViewById(R.id.start_date);
-        endDateEditText = (EditText) view.findViewById(R.id.end_date_inclusive);
-        roundingStrategySpinner = (Spinner) view.findViewById(R.id.rounding_strategy_spinner);
+        ui = new TrackingConfigurationUI(getActivity());
+        View view = ui.inflateWidgets(inflater, container, getFragmentManager());
 
         if (savedInstanceState != null) {
-            renderHourLimit((Integer)savedInstanceState.getSerializable(HOUR_LIMIT));
-            renderStartDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(START_DATE)));
-            renderEndDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(END_DATE)));
-            renderRoundingStrategy((RoundingFactory.Strategy) savedInstanceState.getSerializable(ROUNDING_STRATEGY));
+            ui.renderHourLimit((Integer)savedInstanceState.getSerializable(HOUR_LIMIT));
+            ui.renderStartDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(START_DATE)));
+            ui.renderEndDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(END_DATE)));
+            ui.renderRoundingStrategy((RoundingFactory.Strategy) savedInstanceState.getSerializable(ROUNDING_STRATEGY));
         }
-
-        startDateEditText.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                DatePickerDialogFragment newFragment = new DatePickerDialogFragment();
-                newFragment.setTopic(START_DATE);
-                newFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
-            }
-        });
-
-        endDateEditText.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                DatePickerDialogFragment newFragment = new DatePickerDialogFragment();
-                newFragment.setTopic(END_DATE);
-                newFragment.show(getFragmentManager(), DatePickerDialogFragment.class.getSimpleName());
-            }
-        });
-        new OttoProvider().getSharedBus().register(this);
 
         return view;
     }
@@ -81,74 +42,43 @@ public class TrackingConfigurationFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putSerializable(START_DATE, getStartDateFromWidget().orNull());
-        outState.putSerializable(END_DATE, getLastEnddateInclusiveFromWidget().orNull());
-        outState.putSerializable(HOUR_LIMIT, getHourLimitFromWidget().orNull());
-        outState.putSerializable(ROUNDING_STRATEGY, getRoundingStrategyFromWidget());
+        outState.putSerializable(START_DATE, ui.getStartDateFromWidget().orNull());
+        outState.putSerializable(END_DATE, ui.getLastEnddateInclusiveFromWidget().orNull());
+        outState.putSerializable(HOUR_LIMIT, ui.getHourLimitFromWidget().orNull());
+        outState.putSerializable(ROUNDING_STRATEGY, ui.getRoundingStrategyFromWidget());
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        ui.destroy();
     }
 
     public void showTrackingConfiguration(TrackingConfiguration trackingConfiguration) {
-        renderHourLimit(trackingConfiguration.getHourLimit().orNull());
-        renderStartDate(trackingConfiguration.getStart());
-        renderEndDate(trackingConfiguration.getEndDateAsInclusive());
-        renderRoundingStrategy(trackingConfiguration.getRoundingStrategy());
-    }
-
-    private void renderHourLimit(Integer hourLimit) {
-        if(hourLimit != null) {
-            hourLimitEditText.setText(hourLimit + "");
-        } else {
-            hourLimitEditText.setText("");
-        }
-    }
-
-    private void renderStartDate(Optional<Date> date) {
-        if (date.isPresent()) {
-            startDateEditText.setText(getString(R.string.project_starts_at_X,
-                    SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(date.get())));
-            startDateEditText.setTag(date.get());
-        } else {
-            startDateEditText.setText("");
-            startDateEditText.setTag(null);
-        }
-    }
-
-    private void renderEndDate(Optional<Date> date) {
-        if (date.isPresent()) {
-            endDateEditText.setText(getString(R.string.project_ends_at_X,
-                    SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(date.get())));
-            endDateEditText.setTag(date.get());
-        } else {
-            endDateEditText.setText("");
-            endDateEditText.setTag(null);
-        }
-    }
-
-    private void renderRoundingStrategy(RoundingFactory.Strategy strategy) {
-        List<String> strategyList = Arrays.asList(getResources().getStringArray(R.array.rouding_strategy_values));
-        roundingStrategySpinner.setSelection(strategyList.indexOf(strategy.name()));
+        ui.renderHourLimit(trackingConfiguration.getHourLimit().orNull());
+        ui.renderStartDate(trackingConfiguration.getStart());
+        ui.renderEndDate(trackingConfiguration.getEndDateAsInclusive());
+        ui.renderRoundingStrategy(trackingConfiguration.getRoundingStrategy());
     }
 
     public boolean validateSettings() {
-        Optional<Date> startDateOpt = getStartDateFromWidget();
-        Optional<Date> newLastDateOpt = getLastEnddateInclusiveFromWidget();
+        Optional<Date> startDateOpt = ui.getStartDateFromWidget();
+        Optional<Date> newLastDateOpt = ui.getLastEnddateInclusiveFromWidget();
 
-        if(startDateOpt.isPresent()
-            && newLastDateOpt.isPresent()
-            && startDateOpt.get().after(newLastDateOpt.get())) {
-            setProjectTitleErrorState(false);
-            return false;
-        } else {
-            setProjectTitleErrorState(true);
-        }
-        return true;
+        boolean startDateAfterEndDate = startDateOpt.isPresent()
+                                        && newLastDateOpt.isPresent()
+                                        && startDateOpt.get().after(newLastDateOpt.get());
+        ui.blameStartDateInvalid(startDateAfterEndDate
+                ? Optional.of(getString(R.string.error_start_after_end_date))
+                : Optional.<String>absent());
+        return !startDateAfterEndDate;
     }
 
     public void collectModifications(ConfigureProjectTask task) {
-        Optional<Integer> newHourLimitOpt = getHourLimitFromWidget();
-        Optional<Date> startDateOpt = getStartDateFromWidget();
-        Optional<Date> newLastDateOpt = getLastEnddateInclusiveFromWidget();
-        RoundingFactory.Strategy strategy = getRoundingStrategyFromWidget();
+        Optional<Integer> newHourLimitOpt = ui.getHourLimitFromWidget();
+        Optional<Date> startDateOpt = ui.getStartDateFromWidget();
+        Optional<Date> newLastDateOpt = ui.getLastEnddateInclusiveFromWidget();
+        RoundingFactory.Strategy strategy = ui.getRoundingStrategyFromWidget();
 
         task.withHourLimit(newHourLimitOpt.orNull());
         task.withStartDate(startDateOpt.orNull());
@@ -157,48 +87,9 @@ public class TrackingConfigurationFragment extends Fragment {
     }
 
     public boolean hasUnsavedModifications(TrackingConfiguration trackingConfiguration) {
-        return !trackingConfiguration.getHourLimit().equals(getHourLimitFromWidget())
-                || !trackingConfiguration.getStart().equals(getStartDateFromWidget())
-                || !trackingConfiguration.getEndDateAsInclusive().equals(getLastEnddateInclusiveFromWidget())
-                || !trackingConfiguration.getRoundingStrategy().equals(getRoundingStrategyFromWidget());
-    }
-
-    private Optional<Integer> getHourLimitFromWidget() {
-        String text = hourLimitEditText.getText().toString();
-        return Optional.fromNullable(!TextUtils.isEmpty(text) ? Integer.valueOf(text) : null);
-    }
-
-    private Optional<Date> getStartDateFromWidget() {
-        Date startDate = (Date) startDateEditText.getTag();
-        return Optional.fromNullable(startDate);
-    }
-
-    private Optional<Date> getLastEnddateInclusiveFromWidget() {
-        Date lastDay = (Date) endDateEditText.getTag();
-        return Optional.fromNullable(lastDay);
-    }
-
-    private RoundingFactory.Strategy getRoundingStrategyFromWidget() {
-        List<String> strategyList = Arrays.asList(getResources().getStringArray(R.array.rouding_strategy_values));
-        String strategyName = strategyList.get(roundingStrategySpinner.getSelectedItemPosition());
-        return RoundingFactory.Strategy.valueOf(strategyName);
-    }
-
-    private void setProjectTitleErrorState(boolean isValid) {
-        if (!isValid) {
-            endDateEditText.setError(getString(R.string.error_start_after_end_date));
-        } else {
-            endDateEditText.setError(null);
-        }
-    }
-
-    @Subscribe public void handleDatePicked(DatePickerDialogFragment.DatePickedEvent event) {
-        if (START_DATE.equals(event.getTopic())) {
-            renderStartDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : Optional.<Date>absent());
-        } else if (END_DATE.equals(event.getTopic())) {
-            renderEndDate(event.getDate().isPresent() ? Optional.of(event.getDate().get().toDate()) : Optional.<Date>absent());
-        } else {
-            throw new RuntimeException("Unexpected topic received: " + event.getTopic());
-        }
+        return !trackingConfiguration.getHourLimit().equals(ui.getHourLimitFromWidget())
+                || !trackingConfiguration.getStart().equals(ui.getStartDateFromWidget())
+                || !trackingConfiguration.getEndDateAsInclusive().equals(ui.getLastEnddateInclusiveFromWidget())
+                || !trackingConfiguration.getRoundingStrategy().equals(ui.getRoundingStrategyFromWidget());
     }
 }
