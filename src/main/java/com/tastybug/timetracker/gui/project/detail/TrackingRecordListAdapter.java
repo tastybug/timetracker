@@ -5,16 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.gui.view.TrackingRecordView;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.task.OttoProvider;
-import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
-import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,39 +18,18 @@ public class TrackingRecordListAdapter extends BaseAdapter {
 
     private ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<TrackingRecord>();
     private Activity activity;
-    private String projectUuid;
     private TrackingConfiguration trackingConfiguration;
 
     public TrackingRecordListAdapter(Activity activity, String projectUuid) {
         this.activity = activity;
-        this.projectUuid = projectUuid;
-        readModelFromDatabase();
-
-        // TODO wird nie abgeraeumt?!
-        new OttoProvider().getSharedBus().register(this);
+        rebuildModel(projectUuid);
     }
 
-    private void readModelFromDatabase() {
+    public void rebuildModel(String projectUuid) {
         trackingRecordArrayList = new TrackingRecordDAO(activity).getByProjectUuid(projectUuid);
         trackingConfiguration = new TrackingConfigurationDAO(activity).getByProjectUuid(projectUuid).get();
         Collections.sort(trackingRecordArrayList);
-    }
-
-    @Subscribe public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
-        readModelFromDatabase();
         notifyDataSetChanged();
-    }
-
-    @Subscribe public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
-        readModelFromDatabase();
-        notifyDataSetChanged();
-    }
-
-    @Subscribe public void handleProjectConfigurationModifiedEvent(ProjectConfiguredEvent event) {
-        if (event.getProjectUuid().equals(projectUuid)) {
-            readModelFromDatabase();
-            notifyDataSetChanged();
-        }
     }
 
     @Override

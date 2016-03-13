@@ -4,24 +4,29 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import com.google.common.base.Optional;
+import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.dialog.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.gui.trackingrecord.edit.TrackingRecordModificationActivity;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
+import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
 public class TrackingRecordListFragment extends ListFragment {
 
-    private static final String PROJECT_UUID = "PROJECT_UUID";
+    private static final String PROJECT_UUID_OPT = "PROJECT_UUID_OPT";
 
     private Handler uiUpdateHandler = new Handler();
-    private String projectUuid;
+    private Optional<String> projectUuidOpt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,23 +34,23 @@ public class TrackingRecordListFragment extends ListFragment {
         setHasOptionsMenu(true);
 
         if(savedInstanceState != null) {
-            projectUuid = savedInstanceState.getString(PROJECT_UUID);
+            projectUuidOpt = (Optional<String>)savedInstanceState.getSerializable(PROJECT_UUID_OPT);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(PROJECT_UUID, projectUuid);
+        outState.putSerializable(PROJECT_UUID_OPT, projectUuidOpt);
     }
 
     public void showProject(String projectUuid) {
-        this.projectUuid = projectUuid;
+        projectUuidOpt = Optional.of(projectUuid);
         setListAdapter(new TrackingRecordListAdapter(getActivity(), projectUuid));
     }
 
     public void showNoProject() {
-        this.projectUuid = null;
+        projectUuidOpt = Optional.absent();
         setListAdapter(null);
     }
 
@@ -64,8 +69,30 @@ public class TrackingRecordListFragment extends ListFragment {
 
     private void showTrackingRecordCreationActivity() {
         Intent intent = new Intent(getActivity(), TrackingRecordModificationActivity.class);
-        intent.putExtra(TrackingRecordModificationActivity.PROJECT_UUID, projectUuid);
+        intent.putExtra(TrackingRecordModificationActivity.PROJECT_UUID, projectUuidOpt.get());
         startActivity(intent);
+    }
+
+    @Subscribe
+    public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
+        if (projectUuidOpt.isPresent()
+                && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
+            ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());
+        }
+    }
+
+    @Subscribe public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
+        if (projectUuidOpt.isPresent()
+                && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
+            ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());
+        }
+    }
+
+    @Subscribe public void handleProjectConfigurationModifiedEvent(ProjectConfiguredEvent event) {
+        if (projectUuidOpt.isPresent()
+                && projectUuidOpt.get().equals(event.getProjectUuid())) {
+            ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getProjectUuid());
+        }
     }
 
     @Override
@@ -89,19 +116,27 @@ public class TrackingRecordListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(TextUtils.isEmpty(projectUuid)) {
-            showNoProject();
+        if(projectUuidOpt.isPresent()) {
+            showProject(projectUuidOpt.get());
         } else {
-            showProject(projectUuid);
+            showNoProject();
         }
+        //
         uiUpdateHandler.removeCallbacks(updateUITask);
         uiUpdateHandler.postDelayed(updateUITask, 100);
+
+        //
+        new OttoProvider().getSharedBus().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        //
         uiUpdateHandler.removeCallbacks(updateUITask);
+
+        //
+        new OttoProvider().getSharedBus().unregister(this);
     }
 
     private Runnable updateUITask = new Runnable() {
