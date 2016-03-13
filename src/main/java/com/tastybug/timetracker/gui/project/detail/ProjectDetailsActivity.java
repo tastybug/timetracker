@@ -50,7 +50,7 @@ public class ProjectDetailsActivity extends Activity {
         setTitle(getProjectByUuid(projectUuid).getTitle());
 
         detailsFragment.showProjectDetailsFor(project);
-        trackingPanelFragment.showProject(project);
+        trackingPanelFragment.renderProject(project);
         trackingRecordListFragment.showProject(projectUuid);
     }
 
