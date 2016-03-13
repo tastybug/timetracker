@@ -5,12 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.view.ProjectView;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.task.OttoProvider;
-import com.tastybug.timetracker.task.project.ProjectCreatedEvent;
 
 import java.util.ArrayList;
 
@@ -22,14 +19,6 @@ public class ProjectListAdapter extends BaseAdapter {
     public ProjectListAdapter(Activity activity) {
         projectArrayList = new ProjectDAO(activity).getAll();
         this.activity = activity;
-
-        // TODO der wird nie wieder abgemeldet??
-        new OttoProvider().getSharedBus().register(this);
-    }
-
-    @Subscribe public void handleProjectCreatedEvent(ProjectCreatedEvent event) {
-        this.projectArrayList.add(event.getProject());
-        this.notifyDataSetChanged();
     }
 
     @Override

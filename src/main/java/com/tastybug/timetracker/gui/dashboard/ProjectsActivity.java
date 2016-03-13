@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.base.Optional;
@@ -32,7 +33,7 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
         setupActionBar();
 
         //
-        Toast.makeText(this, "Welcome to " + (new VersionUtil(this).getVersionName()), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, new VersionUtil(this).getVersionName(), Toast.LENGTH_SHORT).show();
     }
 
     protected void setupActionBar() {
@@ -46,7 +47,6 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
     @Override
     protected void onResume() {
         super.onResume();
-
         new OttoProvider().getSharedBus().register(this);
     }
 
@@ -86,7 +86,7 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
     }
 
     @Subscribe public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
-        Toast.makeText(this, "Deleted project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
+        Log.d(getClass().getSimpleName(), "Deleted project " + event.getProjectUuid());
         showNoProjectDetails();
     }
 }
