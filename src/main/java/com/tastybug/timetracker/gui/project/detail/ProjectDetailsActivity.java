@@ -40,7 +40,6 @@ public class ProjectDetailsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
         new OttoProvider().getSharedBus().register(this);
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();

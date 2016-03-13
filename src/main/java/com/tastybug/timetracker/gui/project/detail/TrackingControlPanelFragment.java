@@ -31,9 +31,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new OttoProvider().getSharedBus().register(this);
         ui = new TrackingControlPanelUI(getActivity());
-
         return ui.inflateWidgets(inflater, container, this);
     }
 
@@ -46,6 +44,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
+        new OttoProvider().getSharedBus().register(this);
         ui.startUiUpdater();
     }
 

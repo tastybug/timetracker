@@ -68,7 +68,6 @@ public class TrackingConfigurationUI {
 
     public void destroy() {
         new OttoProvider().getSharedBus().unregister(this);
-
     }
 
     public void renderHourLimit(Integer hourLimit) {

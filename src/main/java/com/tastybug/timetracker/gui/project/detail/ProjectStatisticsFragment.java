@@ -41,10 +41,15 @@ public class ProjectStatisticsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new OttoProvider().getSharedBus().register(this);
 
         ui = new ProjectStatisticsUI(getActivity());
         return ui.inflateWidgets(inflater, container);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new OttoProvider().getSharedBus().register(this);
     }
 
     @Override
