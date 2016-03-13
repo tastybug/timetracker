@@ -37,7 +37,7 @@ public class DeleteProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(getClass().getSimpleName(), "Deleted project with UUID " + arguments.getString(PROJECT_UUID));
+        Log.i(getClass().getSimpleName(), "Deleted project " + arguments.getString(PROJECT_UUID));
         ottoProvider.getSharedBus().post(new ProjectDeletedEvent(arguments.getString(PROJECT_UUID)));
     }
 

@@ -4,8 +4,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
@@ -113,7 +113,7 @@ public class ProjectDetailsActivity extends Activity {
         Das Eventhandling muss in der Activity passieren, da das Fragment nicht weiss, ob es two-pane oder single-pane
         ausgefuehrt wird. Ergo muss die Activity entscheiden, wie eine Projektloeschung sich navigatorisch auswirkt.
          */
-        Toast.makeText(this, "Deleted project " + event.getProjectUuid(), Toast.LENGTH_SHORT).show();
+        Log.d(getClass().getSimpleName(), "Deleted project " + event.getProjectUuid());
         onBackPressed();
     }
 
