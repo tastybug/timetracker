@@ -17,7 +17,6 @@ import com.tastybug.timetracker.gui.dialog.EditTrackingRecordDescriptionDialogFr
 import com.tastybug.timetracker.gui.trackingrecord.edit.TrackingRecordModificationActivity;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
-import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
@@ -85,13 +84,6 @@ public class TrackingRecordListFragment extends ListFragment {
         if (projectUuidOpt.isPresent()
                 && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
             ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());
-        }
-    }
-
-    @Subscribe public void handleProjectConfigurationModifiedEvent(ProjectConfiguredEvent event) {
-        if (projectUuidOpt.isPresent()
-                && projectUuidOpt.get().equals(event.getProjectUuid())) {
-            ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getProjectUuid());
         }
     }
 
