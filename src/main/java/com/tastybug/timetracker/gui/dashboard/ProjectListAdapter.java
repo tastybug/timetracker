@@ -23,6 +23,7 @@ public class ProjectListAdapter extends BaseAdapter {
         projectArrayList = new ProjectDAO(activity).getAll();
         this.activity = activity;
 
+        // TODO der wird nie wieder abgemeldet??
         new OttoProvider().getSharedBus().register(this);
     }
 

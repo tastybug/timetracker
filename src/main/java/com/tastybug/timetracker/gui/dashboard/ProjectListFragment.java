@@ -9,10 +9,8 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.gui.dialog.ProjectCreationDialog;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.task.project.CreateProjectTask;
-
-import java.util.Date;
 
 public class ProjectListFragment extends ListFragment {
 
@@ -44,7 +42,9 @@ public class ProjectListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_create_project:
-                CreateProjectTask.aTask(getActivity()).withProjectTitle(new Date().toString()).execute();
+                ProjectCreationDialog
+                        .aDialog()
+                        .show(getFragmentManager(), getClass().getSimpleName());
                 return true;
             default:
                 super.onOptionsItemSelected(item);

@@ -31,6 +31,7 @@ public class TrackingRecordListAdapter extends BaseAdapter {
         this.projectUuid = projectUuid;
         readModelFromDatabase();
 
+        // TODO wird nie abgeraeumt?!
         new OttoProvider().getSharedBus().register(this);
     }
 
@@ -51,8 +52,10 @@ public class TrackingRecordListAdapter extends BaseAdapter {
     }
 
     @Subscribe public void handleProjectConfigurationModifiedEvent(ProjectConfiguredEvent event) {
-        readModelFromDatabase();
-        notifyDataSetChanged();
+        if (event.getProjectUuid().equals(projectUuid)) {
+            readModelFromDatabase();
+            notifyDataSetChanged();
+        }
     }
 
     @Override

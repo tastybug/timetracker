@@ -16,7 +16,7 @@
 
     <!-- project configuration -->
     <string name="title_project_title">Project Title</string>
-    <string name="hint_project_title">Please provide a title</string>
+    <string name="hint_project_title">Please provide a project title</string>
     <string name="title_project_description">Short Description</string>
     <string name="hint_project_description">Use this field for a short (optional) project description. The description will be a part of reports.</string>
 
@@ -94,5 +94,11 @@
     <!-- tracking record description editor dialog -->
     <string name="hint_tracking_record_description">Optional: record what happened during the session.</string>
     <string name="button_show_tracking_record_editing_activity">Advanced</string>
+
+    <!-- project creation dialog -->
+    <string name="error_project_title_missing">Title missing!</string>
+    <string name="button_just_create_project">Create</string>
+    <string name="button_open_configuration_after_project_creation">Advanced</string>
+
 
 </resources>
