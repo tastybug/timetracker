@@ -101,6 +101,9 @@ public class TrackingRecordModificationUI {
             SimpleDateFormat f = new SimpleDateFormat("dd.MM.yy", Locale.US);
             startDateEditText.setText(context.getString(R.string.from_X, f.format(dateOptional.get())));
             startDateEditText.setTag(dateOptional.get());
+        } else {
+            startDateEditText.setText("");
+            startDateEditText.setTag(null);
         }
     }
 
@@ -109,6 +112,9 @@ public class TrackingRecordModificationUI {
             SimpleDateFormat f = new SimpleDateFormat("HH:mm", Locale.US);
             startTimeEditText.setText(f.format(dateOptional.get()));
             startTimeEditText.setTag(dateOptional.get());
+        } else {
+            startTimeEditText.setText("");
+            startTimeEditText.setTag(null);
         }
     }
 
@@ -117,6 +123,9 @@ public class TrackingRecordModificationUI {
             SimpleDateFormat f = new SimpleDateFormat("dd.MM.yy", Locale.US);
             endDateEditText.setText(context.getString(R.string.until_X, f.format(dateOptional.get())));
             endDateEditText.setTag(dateOptional.get());
+        } else {
+            endDateEditText.setText("");
+            endDateEditText.setTag(null);
         }
     }
 
@@ -125,11 +134,16 @@ public class TrackingRecordModificationUI {
             SimpleDateFormat f = new SimpleDateFormat("HH:mm", Locale.US);
             endTimeEditText.setText(f.format(dateOptional.get()));
             endTimeEditText.setTag(dateOptional.get());
+        } else {
+            endTimeEditText.setText("");
+            endTimeEditText.setTag(null);
         }
     }
 
     public void renderDescription(Optional<String> description) {
-        descriptionEditText.setText(description.isPresent() ? description.get() : "");
+        descriptionEditText.setText(description.isPresent()
+                ? description.get()
+                : "");
     }
 
     public Optional<Date> getStartDateFromWidget(boolean blame) {
