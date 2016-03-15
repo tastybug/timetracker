@@ -12,11 +12,11 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.gui.delegate.TrackingDelegate;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
@@ -67,7 +67,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         if (ongoing.isPresent()) {
             KickStopTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
         } else {
-            KickStartTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
+            TrackingDelegate.aDelegate(getActivity()).startTracking(currentProjectOpt.get());
         }
     }
 
