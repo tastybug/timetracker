@@ -2,7 +2,9 @@ package com.tastybug.timetracker.gui.project.configuration;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,18 @@ public class TrackingConfigurationUI {
         startDateEditText = (EditText) view.findViewById(R.id.start_date);
         endDateEditText = (EditText) view.findViewById(R.id.end_date_inclusive);
         roundingStrategySpinner = (Spinner) view.findViewById(R.id.rounding_strategy_spinner);
+
+        // #37: do not allow a zero max hour limit
+        hourLimitEditText.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            public void afterTextChanged(Editable edt) {
+                if (edt.length() == 1 && edt.toString().equals("0"))
+                    hourLimitEditText.setText("");
+            }
+        });
 
         startDateEditText.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
