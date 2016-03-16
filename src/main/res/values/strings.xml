@@ -101,8 +101,11 @@
     <string name="button_just_create_project">Create</string>
     <string name="button_open_configuration_after_project_creation">Advanced</string>
 
-    <!-- warning dialog tracking is out of project time frame-->
+    <!-- warning dialog tracking is out of project time frame -->
     <string name="warning_tracking_before_project_time_frame_which_starts_at_X">This project starts at %1$s!\nDo you want to start tracking now?</string>
     <string name="warning_tracking_after_project_time_frame_which_ended_on_X">This project ended on %1$s!\nDo you still want to start tracking now?</string>
+
+    <!-- warning dialog tracking beyond project amount -->
+    <string name="warning_tracking_exceeds_project_amount_of_X_hours">Project hour limit (%1$s) reached.\nStill keep tracking?</string>
 
 </resources>
