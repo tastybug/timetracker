@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
@@ -15,25 +14,16 @@ import com.tastybug.timetracker.gui.project.detail.ProjectStatisticsFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
-import com.tastybug.timetracker.util.VersionUtil;
-
-import net.danlew.android.joda.JodaTimeAndroid;
 
 public class ProjectsActivity extends Activity implements ProjectListFragment.ProjectListSelectionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // todo hierfuer einen besseren platz finden!
-        JodaTimeAndroid.init(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects);
 
         setTitle(R.string.activity_project_title);
         setupActionBar();
-
-        //
-        Toast.makeText(this, new VersionUtil(this).getVersionName(), Toast.LENGTH_SHORT).show();
     }
 
     protected void setupActionBar() {
