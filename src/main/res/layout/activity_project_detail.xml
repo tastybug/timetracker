@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
+    android:background="#e6e6e6"
     android:orientation="vertical">
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingControlPanelFragment"
@@ -11,22 +11,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_tracking_control_panel"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp" />
+        android:layout_margin="5dp" />
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectStatisticsFragment"
         android:id="@id/fragment_project_statistics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_project_statistics"
-        android:layout_marginBottom="2dp" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp" />
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingRecordListFragment"
         android:id="@id/fragment_tracking_record_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
-        android:background="@android:color/white"
-        android:layout_marginBottom="2dp" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"  />
 
 </LinearLayout>

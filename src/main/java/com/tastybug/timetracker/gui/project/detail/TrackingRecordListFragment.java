@@ -39,7 +39,7 @@ public class TrackingRecordListFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListView().setBackgroundColor(0xFFFFFFFF);
+        getListView().setBackgroundDrawable( getResources().getDrawable(R.drawable.white_shadowbox) );
     }
 
     @Override
