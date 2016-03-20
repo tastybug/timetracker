@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.gui.project.detail;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class ProjectStatisticsUI {
         return rootView;
     }
 
-    public void renderProjektTimeframe(Optional<Project> project) {
+    public void renderProjectTimeFrame(Optional<Project> project) {
         if (project.isPresent()) {
             TrackingConfiguration configuration = project.get().getTrackingConfiguration();
             if (configuration.getEnd().isPresent()) { // <- theres an end date that limits the time frame
@@ -57,6 +58,7 @@ public class ProjectStatisticsUI {
         } else {
             projectTimeFrameTextView.setText("");
         }
+        projectTimeFrameTextView.setVisibility(TextUtils.isEmpty(projectTimeFrameTextView.getText()) ? View.GONE : View.VISIBLE);
     }
 
     public void renderProjectDuration(Optional<Project> projectOpt) {
@@ -69,8 +71,12 @@ public class ProjectStatisticsUI {
                         duration.getStandardHours(),
                         configuration.getHourLimit().get()));
             } else {
-                projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far,
-                        duration.getStandardHours()));
+                if (duration.getMillis() == 0) {
+                    projectDurationTextView.setText(R.string.nothing_recorded_yet);
+                } else {
+                    projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far,
+                            duration.getStandardHours()));
+                }
             }
         } else {
             projectDurationTextView.setText("");

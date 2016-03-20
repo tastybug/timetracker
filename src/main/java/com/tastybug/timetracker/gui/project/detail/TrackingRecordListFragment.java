@@ -36,6 +36,11 @@ public class TrackingRecordListFragment extends ListFragment {
             projectUuidOpt = (Optional<String>)savedInstanceState.getSerializable(PROJECT_UUID_OPT);
         }
     }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setBackgroundColor(0xFFFFFFFF);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

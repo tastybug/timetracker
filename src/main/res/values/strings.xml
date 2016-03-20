@@ -56,6 +56,7 @@
     <string name="project_remaining_days_X_until_Y">Remaining days %1$s (until %2$s)</string>
     <string name="X_recorded_hours_so_far">Recorded %1$sh</string>
     <string name="X_recorded_hours_so_far_from_a_total_of_Y">Recorded %1$sh/%2$sh</string>
+    <string name="nothing_recorded_yet">Nothing recorded yet ..</string>
 
     <!-- tracking record editing -->
     <string name="menu_confirm_tracking_record_edit">Confirm</string>
@@ -93,7 +94,7 @@
     <string name="msg_confirm_data_loss_from_backpress">You have unsaved modifications..</string>
 
     <!-- tracking record description editor dialog -->
-    <string name="hint_tracking_record_description">Optional: record what happened during the session.</string>
+    <string name="hint_tracking_record_description">What did you do?</string>
     <string name="button_show_tracking_record_editing_activity">Advanced</string>
 
     <!-- project creation dialog -->
@@ -107,5 +108,12 @@
 
     <!-- warning dialog tracking beyond project amount -->
     <string name="warning_tracking_exceeds_project_amount_of_X_hours">Project hour limit (%1$s) reached.\nStill keep tracking?</string>
+
+
+    <!-- placeholders -->
+    <string name="sample_duration">11:45 hours</string>
+    <string name="from_date_to_date">16. Maerz 2016 23:45:10 - 23.50:00</string>
+    <string name="sample_tracking_record_log">This is a first line\nand this one a second</string>
+
 
 </resources>

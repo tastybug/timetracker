@@ -86,13 +86,13 @@ public class ProjectStatisticsFragment extends Fragment {
         if(!project.hasContext()) {
             project.setContext(getActivity());
         }
-        ui.renderProjektTimeframe(Optional.of(project));
+        ui.renderProjectTimeFrame(Optional.of(project));
         ui.renderProjectDuration(Optional.of(project));
     }
 
     public void showNoProject() {
         this.currentProjectOpt = Optional.absent();
-        ui.renderProjektTimeframe(Optional.<Project>absent());
+        ui.renderProjectTimeFrame(Optional.<Project>absent());
         ui.renderProjectDuration(Optional.<Project>absent());
     }
 

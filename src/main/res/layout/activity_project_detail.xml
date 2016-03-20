@@ -3,24 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
     android:orientation="vertical">
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingControlPanelFragment"
         android:id="@id/fragment_tracking_control_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_tracking_control_panel" />
+        tools:layout="@layout/fragment_tracking_control_panel"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp" />
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectStatisticsFragment"
         android:id="@id/fragment_project_statistics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_project_statistics" />
+        tools:layout="@layout/fragment_project_statistics"
+        android:layout_marginBottom="2dp" />
 
     <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingRecordListFragment"
         android:id="@id/fragment_tracking_record_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4" />
+        android:layout_weight="4"
+        android:background="@android:color/white"
+        android:layout_marginBottom="2dp" />
 
 </LinearLayout>
