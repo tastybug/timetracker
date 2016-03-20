@@ -97,10 +97,8 @@ public class TrackingRecordView extends LinearLayout {
     }
 
     private boolean isCompletedOnSameDay(TrackingRecord trackingRecord) {
-        if (!trackingRecord.isFinished()) {
-            return false;
-        }
-        return new LocalDate(trackingRecord.getStart().get())
-                .isEqual(new LocalDate(trackingRecord.getEnd().get()));
+        return trackingRecord.isFinished()
+                && new LocalDate(trackingRecord.getStart().get())
+                    .isEqual(new LocalDate(trackingRecord.getEnd().get()));
     }
 }
