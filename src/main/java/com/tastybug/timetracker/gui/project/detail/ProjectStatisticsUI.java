@@ -62,24 +62,30 @@ public class ProjectStatisticsUI {
     }
 
     public void renderProjectDuration(Optional<Project> projectOpt) {
-        if (projectOpt.isPresent()) {
-            Project project = projectOpt.get();
-            TrackingConfiguration configuration = project.getTrackingConfiguration();
-            Duration duration = new StatisticProjectDuration(configuration, project.getTrackingRecords()).get();
-            if (configuration.getHourLimit().isPresent()) {
-                projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,
-                        duration.getStandardHours(),
-                        configuration.getHourLimit().get()));
+        if (!projectOpt.isPresent()) {
+            projectDurationTextView.setText("");
+            return;
+        }
+
+        Project project = projectOpt.get();
+        TrackingConfiguration configuration = project.getTrackingConfiguration();
+        Duration duration = new StatisticProjectDuration(configuration, project.getTrackingRecords()).get();
+        if (configuration.getHourLimit().isPresent()) {
+            projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,
+                    duration.getStandardHours(),
+                    configuration.getHourLimit().get()));
+        } else {
+            if (duration.getMillis() == 0) {
+                projectDurationTextView.setText(R.string.nothing_recorded_yet);
             } else {
-                if (duration.getMillis() == 0) {
-                    projectDurationTextView.setText(R.string.nothing_recorded_yet);
+                if (duration.getStandardHours() < 1) {
+                    projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far,
+                            "<1"));
                 } else {
                     projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far,
                             duration.getStandardHours()));
                 }
             }
-        } else {
-            projectDurationTextView.setText("");
         }
     }
 
