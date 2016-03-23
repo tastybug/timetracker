@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingRecord;
 
 import org.joda.time.LocalDate;
@@ -121,6 +122,32 @@ public class TrackingRecordDAOTest {
 
         // then
         assertEquals(0, trackingRecords.size());
+    }
+
+    @Test public void getLatestByStartDateReturnsFirstEntry() {
+        // given
+        Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+                .thenReturn(aCursorWith2TrackingRecords);
+
+        // when
+        Optional<TrackingRecord> recordOptional = trackingRecordDAO.getLatestByStartDateForProjectUuid("a project uuid");
+
+        // then
+        assertEquals("uuid1", recordOptional.get().getUuid());
+    }
+
+    @Test public void getLatestByStartDateReturnsEmptyOptionalOnNoTrackingRecords() {
+        // given
+        Cursor noProjects = anEmptyCursor();
+        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+                .thenReturn(noProjects);
+
+        // when
+        Optional<TrackingRecord> recordOptional = trackingRecordDAO.getLatestByStartDateForProjectUuid("a project uuid");
+
+        // then
+        assertFalse(recordOptional.isPresent());
     }
 
     @Test public void canCreateTrackingRecord() {
@@ -260,11 +287,12 @@ public class TrackingRecordDAOTest {
 
     private Cursor aCursorWith2TrackingRecords() {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getString(0)).thenReturn("1");
-        when(cursor.getString(1)).thenReturn("2");
+        when(cursor.getString(0)).thenReturn("uuid1", "uuid2");
+        when(cursor.getString(1)).thenReturn("project_uuid1", "project_uuid2");
         when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.moveToNext()).thenReturn(true, true, false);
+        when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
     }

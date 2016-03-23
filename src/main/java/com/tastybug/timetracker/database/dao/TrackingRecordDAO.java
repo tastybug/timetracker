@@ -36,6 +36,22 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
         super(context);
     }
 
+    public Optional<TrackingRecord> getLatestByStartDateForProjectUuid(String projectUuid) {
+        Preconditions.checkNotNull(projectUuid, "Cannot get tracking records by project uuid, null given!");
+
+        Cursor cursor = context.getContentResolver().query(getQueryUri(),
+                getColumns(),
+                PROJECT_UUID_COLUMN + "=?",
+                new String[]{projectUuid},
+                START_DATE_COLUMN + " DESC");
+        TrackingRecord record = null;
+        if (cursor.moveToFirst()) {
+            record = createEntityFromCursor(context, cursor);
+        }
+        cursor.close();
+        return Optional.fromNullable(record);
+    }
+
     public ArrayList<TrackingRecord> getByProjectUuid(String uuid) {
         Preconditions.checkNotNull(uuid, "Cannot get tracking records by project uuid, null given!");
 
