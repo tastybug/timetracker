@@ -71,9 +71,15 @@ public class ProjectStatisticsUI {
         TrackingConfiguration configuration = project.getTrackingConfiguration();
         Duration duration = new StatisticProjectDuration(configuration, project.getTrackingRecords()).get();
         if (configuration.getHourLimit().isPresent()) {
-            projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,
-                    duration.getStandardHours(),
-                    configuration.getHourLimit().get()));
+            if (duration.getStandardHours() < 1) {
+                projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,
+                        "<1",
+                        configuration.getHourLimit().get()));
+            } else {
+                projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,
+                        duration.getStandardHours(),
+                        configuration.getHourLimit().get()));
+            }
         } else {
             if (duration.getMillis() == 0) {
                 projectDurationTextView.setText(R.string.nothing_recorded_yet);

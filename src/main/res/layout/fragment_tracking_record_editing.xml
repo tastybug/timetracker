@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:gravity="center"
-            android:hint="from 12/12/15"
+            android:hint="@string/hint_from_date"
             android:singleLine="true"
             android:inputType="none"
             android:focusable="false" />
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="17:15"
+            android:hint="@string/hint_time"
             android:singleLine="true"
             android:inputType="none"
             android:focusable="false"/>
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:gravity="center"
-            android:hint="til 13/12/15"
+            android:hint="@string/hint_until_date"
             android:singleLine="true"
             android:inputType="none"
             android:focusable="false"/>
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="15:00"
+            android:hint="@string/hint_time"
             android:singleLine="true"
             android:inputType="none"
             android:focusable="false"/>
