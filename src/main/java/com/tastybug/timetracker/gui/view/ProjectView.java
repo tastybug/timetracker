@@ -12,6 +12,9 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.model.statistics.StatisticProjectCompletion;
+
+import java.util.ArrayList;
 
 public class ProjectView extends LinearLayout {
 
@@ -33,10 +36,11 @@ public class ProjectView extends LinearLayout {
 
     public void showProject(Project project,
                             Optional<TrackingRecord> lastTrackingRecordOpt,
+                            ArrayList<TrackingRecord> trackingRecords,
                             TrackingConfiguration configuration) {
         renderProjectTitle(project);
         renderLastTrackingRecord(lastTrackingRecordOpt);
-        renderProjectAmountMeter(configuration);
+        renderProjectAmountMeter(configuration, trackingRecords);
     }
 
     private void renderProjectTitle(Project project) {
@@ -52,14 +56,14 @@ public class ProjectView extends LinearLayout {
         }
     }
 
-    private void renderProjectAmountMeter(TrackingConfiguration configuration) {
+    private void renderProjectAmountMeter(TrackingConfiguration configuration, ArrayList<TrackingRecord> trackingRecords) {
         if (!configuration.getHourLimit().isPresent()) {
             projectAmountMeterContainer.setVisibility(View.GONE);
-            return;
         } else {
+            StatisticProjectCompletion statistic = new StatisticProjectCompletion(configuration, trackingRecords, true);
             projectAmountMeterContainer.setVisibility(View.VISIBLE);
-            projectAmountMeter1.setLayoutParams(new LinearLayout.LayoutParams(0, 20, 60));
-            projectAmountMeter2.setLayoutParams(new LinearLayout.LayoutParams(0, 20, 40));
+            projectAmountMeter1.setLayoutParams(new LinearLayout.LayoutParams(0, 20, statistic.getCompletionPercent().get().intValue()));
+            projectAmountMeter2.setLayoutParams(new LinearLayout.LayoutParams(0, 20, statistic.isOverbooked() ? 0 : 100-statistic.getCompletionPercent().get().intValue()));
         }
     }
 }

@@ -9,6 +9,7 @@ Glossar: Fachliche Terminologie
     * Projektzeitraum: Start- und Enddatum eines Projekts (optional) 
     * effektiver Projektumfang: die Dauer eines Projektes auf Basis der bisher erfassten TrackingRecords ('es wurden bisher 10h erfasst')
     * maximaler Projektumfang: eine Hoechstdauer fuer ein Projekt ('es werden nicht mehr als 80h bezahlt')
+        * ein Projekt, auf welches mehr gebucht wurde als konfiguriert ist 'OVERBOOKED'
     * Rundungsstrategie: werden Zeiterfassungen nach Beendigung auf/ab gerundet?
     
 * Zeiterfassung / TrackingRecord: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum

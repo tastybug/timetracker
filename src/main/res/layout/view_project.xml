@@ -47,15 +47,14 @@
             android:id="@+id/project_amount_meter_1"
             android:layout_width="0dp"
             android:layout_height="5dp"
-            android:layout_weight="95"
-            android:background="@android:color/holo_blue_bright"/>
+            android:layout_weight="80"
+            android:background="@android:color/holo_green_dark"/>
 
         <View
             android:id="@+id/project_amount_meter_2"
             android:layout_width="0dp"
             android:layout_height="5dp"
-            android:layout_weight="5"
-            android:background="@android:color/holo_red_dark"/>
+            android:layout_weight="20" />
 
     </LinearLayout>
 

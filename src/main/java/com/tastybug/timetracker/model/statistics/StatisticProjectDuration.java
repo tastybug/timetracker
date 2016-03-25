@@ -17,6 +17,13 @@ public class StatisticProjectDuration {
         Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(trackingRecords);
 
+        performCalculation(configuration, trackingRecords, countRunning);
+
+    }
+
+    private void performCalculation(TrackingConfiguration configuration,
+                                    ArrayList<TrackingRecord> trackingRecords,
+                                    boolean countRunning) {
         RoundingStrategy strategy = configuration.getRoundingStrategy().getStrategy();
         for (TrackingRecord trackingRecord : trackingRecords) {
             if (trackingRecord.isRunning() && !countRunning) {
