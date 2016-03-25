@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sample_project_title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/project_title" />
 
         <TextView
@@ -29,9 +29,9 @@
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/trackingStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/trackingStartStop"
         android:src="@drawable/ic_start_tracking"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true" />

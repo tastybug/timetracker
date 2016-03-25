@@ -112,6 +112,10 @@
     <!-- warning dialog tracking beyond project amount -->
     <string name="warning_tracking_exceeds_project_amount_of_X_hours">Project hour limit (%1$s) reached.\nStill keep tracking?</string>
 
+    <!-- project view -->
+    <string name="current_record_started_at_X">Tracking since %1$s</string>
+    <string name="last_record_ended_at_X">Last record ended %1$s</string>
+
     <!-- placeholders -->
     <string name="sample_duration">11:45 hours</string>
     <string name="from_date_to_date">16. Maerz 2016 23:45:10 - 23.50:00</string>
