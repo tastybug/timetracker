@@ -16,18 +16,22 @@ import com.tastybug.timetracker.gui.delegate.TrackingDelegate;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.statistics.StatisticProjectCompletion;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
+
+import org.joda.time.Duration;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ProjectView extends LinearLayout implements View.OnClickListener {
 
     private Project project;
     private ImageButton trackingStartStopButton;
     private TextView projectTitleView, lastRecordSummaryView;
-    private View projectAmountMeterContainer, projectAmountMeter1, projectAmountMeter2;
+    private TextView projectRemainingDaysLabel, projectRemainingDaysValue;
+    private View projectRemainingDaysContainer;
+    private TextView projectDurationStatisticLabel, projectDurationStatisticValue;
 
     public ProjectView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,9 +42,11 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         projectTitleView = (TextView) findViewById(R.id.project_title);
         lastRecordSummaryView = (TextView) findViewById(R.id.project_last_tracking_record_summary);
         trackingStartStopButton = (ImageButton) findViewById(R.id.trackingStartStop);
-        projectAmountMeterContainer = findViewById(R.id.project_amount_meter_container);
-        projectAmountMeter1 = findViewById(R.id.project_amount_meter_1);
-        projectAmountMeter2 = findViewById(R.id.project_amount_meter_2);
+        projectDurationStatisticLabel = (TextView) findViewById(R.id.project_duration_statistic_label);
+        projectDurationStatisticValue = (TextView) findViewById(R.id.project_duration_statistic_value);
+        projectRemainingDaysContainer = findViewById(R.id.project_remaining_days_container);
+        projectRemainingDaysLabel = (TextView) findViewById(R.id.project_remaining_days_label);
+        projectRemainingDaysValue = (TextView) findViewById(R.id.project_remaining_days_value);
 
         trackingStartStopButton.setOnClickListener(this);
     }
@@ -52,8 +58,61 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         this.project = project;
         renderProjectTitle(project);
         renderLastTrackingRecord(lastTrackingRecordOpt);
-        renderProjectAmountMeter(configuration, trackingRecords);
         renderTrackingControlButton();
+    }
+
+    public void renderRecentTrackingRecord() {
+
+    }
+
+    public void renderProjectDurationStatistic(TrackingConfiguration configuration,
+                                               Duration duration) {
+        projectDurationStatisticLabel.setText(configuration.getHourLimit().isPresent()
+                                              ? R.string.duration_label_X_of_Y
+                                              : R.string.duration_label_X_no_max);
+        if (configuration.getHourLimit().isPresent()) {
+            if (duration.getStandardHours() < 1) {
+                projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
+                        "<1",
+                        configuration.getHourLimit().get()));
+            } else {
+                projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
+                        duration.getStandardHours(),
+                        configuration.getHourLimit().get()));
+            }
+        } else {
+            if (duration.getMillis() == 0) {
+                projectDurationStatisticValue.setText(R.string.duration_zero);
+            } else {
+                if (duration.getStandardHours() < 1) {
+                    projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
+                            "<1"));
+                } else {
+                    projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
+                            duration.getStandardHours()));
+                }
+            }
+        }
+    }
+
+    public void renderProjectRemainingTimeFrameInfo(TrackingConfiguration trackingConfiguration) {
+        if (trackingConfiguration.getEnd().isPresent()) {
+            long remainingDays = getEffectiveRemainingProjectDays(trackingConfiguration.getStart(),
+                    trackingConfiguration.getEnd().get());
+            if (remainingDays > 0) {
+                projectRemainingDaysLabel.setText(R.string.label_remaining_days_until_date_Y);
+                projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_X_until_date_Y,
+                        remainingDays,
+                        SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(trackingConfiguration.getEnd().get())));
+            } else {
+                projectRemainingDaysLabel.setText(R.string.label_remaining_days_over);
+                projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_over_since_X,
+                        SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(trackingConfiguration.getEnd().get())));
+            }
+            projectRemainingDaysContainer.setVisibility(View.VISIBLE);
+        } else {
+            projectRemainingDaysContainer.setVisibility(View.GONE);
+        }
     }
 
     public void onClick(View v) {
@@ -94,14 +153,12 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    private void renderProjectAmountMeter(TrackingConfiguration configuration, ArrayList<TrackingRecord> trackingRecords) {
-        if (!configuration.getHourLimit().isPresent()) {
-            projectAmountMeterContainer.setVisibility(View.GONE);
-        } else {
-            StatisticProjectCompletion statistic = new StatisticProjectCompletion(configuration, trackingRecords, true);
-            projectAmountMeterContainer.setVisibility(View.VISIBLE);
-            projectAmountMeter1.setLayoutParams(new LinearLayout.LayoutParams(0, 20, statistic.getCompletionPercent().get().intValue()));
-            projectAmountMeter2.setLayoutParams(new LinearLayout.LayoutParams(0, 20, statistic.isOverbooked() ? 0 : 100-statistic.getCompletionPercent().get().intValue()));
-        }
+    private long getEffectiveRemainingProjectDays(Optional<Date> startDateOpt, Date endDateExclusive) {
+        // if the start date lies in the future, only count from that date onwards
+        // otherwise count from NOW
+        Date start = startDateOpt.isPresent() && startDateOpt.get().after(new Date()) ? startDateOpt.get() : new Date();
+        Duration duration = new Duration(start.getTime(), endDateExclusive.getTime());
+        return duration.getStandardDays() < 0 ? 0 : duration.getStandardDays();
     }
+
 }

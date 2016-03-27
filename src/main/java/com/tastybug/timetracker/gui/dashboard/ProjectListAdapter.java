@@ -10,6 +10,8 @@ import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.gui.view.ProjectView;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 
 import java.util.ArrayList;
 
@@ -61,6 +63,22 @@ public class ProjectListAdapter extends BaseAdapter {
                 trackingRecordDAO.getByProjectUuid(project.getUuid()),
                 trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get());
 
+        projectView.renderProjectRemainingTimeFrameInfo(getTrackingConfigurationAt(position));
+        projectView.renderProjectDurationStatistic(getTrackingConfigurationAt(position),
+                getDurationStatisticAt(position).get());
+
         return projectView;
+    }
+
+    private TrackingConfiguration getTrackingConfigurationAt(int position) {
+        Project project = getProjectAt(position);
+        return new TrackingConfigurationDAO(activity).getByProjectUuid(project.getUuid()).get();
+    }
+
+    private StatisticProjectDuration getDurationStatisticAt(int position) {
+        Project project = getProjectAt(position);
+        return new StatisticProjectDuration(getTrackingConfigurationAt(position),
+                new TrackingRecordDAO(activity).getByProjectUuid(project.getUuid()));
+
     }
 }

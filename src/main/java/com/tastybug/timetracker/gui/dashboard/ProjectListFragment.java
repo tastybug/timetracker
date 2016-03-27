@@ -31,6 +31,12 @@ public class ProjectListFragment extends ListFragment {
         super.onResume();
         setListAdapter(new ProjectListAdapter(getActivity()));
         new OttoProvider().getSharedBus().register(this);
+        hideListSeparators();
+    }
+
+    private void hideListSeparators() {
+        getListView().setDivider(null);
+        getListView().setDividerHeight(0);
     }
 
     @Override

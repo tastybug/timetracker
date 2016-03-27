@@ -115,6 +115,15 @@
     <!-- project view -->
     <string name="current_record_started_at_X">Tracking since %1$s</string>
     <string name="last_record_ended_at_X">Last record ended %1$s</string>
+    <string name="duration_label_X_no_max">Recorded hours:</string>
+    <string name="duration_X_no_max">%1$sh</string>
+    <string name="duration_label_X_of_Y">Recorded hours (/max):</string>
+    <string name="duration_X_of_Y">%1$sh/%2$sh</string>
+    <string name="duration_zero">..none yet</string>
+    <string name="label_remaining_days_until_date_Y">Remaining days (end date):</string>
+    <string name="label_remaining_days_over">Remaining days:</string>
+    <string name="remaining_days_X_until_date_Y">%1$s (%2$s)</string>
+    <string name="remaining_days_over_since_X">project closed since %1$s</string>
 
     <!-- placeholders -->
     <string name="sample_duration">11:45 hours</string>
@@ -122,5 +131,7 @@
     <string name="sample_tracking_record_log">This is a first line\nand this one a second</string>
     <string name="sample_project_title">A Project Title</string>
     <string name="sample_tracking_record_summary">last: 7:30 - 19:00 24.12.2016</string>
+    <string name="sample_duration_X">7h/140h</string>
+    <string name="sample_remaining_days_X_until_date_Y">7 (24.12.2016)</string>
 
 </resources>
