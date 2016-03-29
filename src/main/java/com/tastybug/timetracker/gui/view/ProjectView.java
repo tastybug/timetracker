@@ -21,7 +21,6 @@ import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 import org.joda.time.Duration;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class ProjectView extends LinearLayout implements View.OnClickListener {
@@ -52,17 +51,11 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
     }
 
     public void showProject(Project project,
-                            Optional<TrackingRecord> lastTrackingRecordOpt,
-                            ArrayList<TrackingRecord> trackingRecords,
-                            TrackingConfiguration configuration) {
+                            Optional<TrackingRecord> lastTrackingRecordOpt) {
         this.project = project;
         renderProjectTitle(project);
         renderLastTrackingRecord(lastTrackingRecordOpt);
         renderTrackingControlButton();
-    }
-
-    public void renderRecentTrackingRecord() {
-
     }
 
     public void renderProjectDurationStatistic(TrackingConfiguration configuration,

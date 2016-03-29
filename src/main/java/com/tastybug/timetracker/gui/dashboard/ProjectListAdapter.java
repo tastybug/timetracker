@@ -59,9 +59,7 @@ public class ProjectListAdapter extends BaseAdapter {
         Project project = getProjectAt(position);
         ProjectView projectView = (ProjectView) convertView;
         projectView.showProject(project,
-                trackingRecordDAO.getLatestByStartDateForProjectUuid(project.getUuid()),
-                trackingRecordDAO.getByProjectUuid(project.getUuid()),
-                trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get());
+                trackingRecordDAO.getLatestByStartDateForProjectUuid(project.getUuid()));
 
         projectView.renderProjectRemainingTimeFrameInfo(getTrackingConfigurationAt(position));
         projectView.renderProjectDurationStatistic(getTrackingConfigurationAt(position),
