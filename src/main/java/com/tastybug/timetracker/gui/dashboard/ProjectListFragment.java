@@ -7,12 +7,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.dialog.ProjectCreationDialog;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
@@ -91,5 +93,10 @@ public class ProjectListFragment extends ListFragment {
 
     @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
         ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    @Subscribe public void handleTestdataGenerated(TestdataGeneratedEvent event) {
+        Toast.makeText(getActivity(), "DEBUG: Testdaten generiert!", Toast.LENGTH_LONG).show();
+        setListAdapter(new ProjectListAdapter(getActivity()));
     }
 }

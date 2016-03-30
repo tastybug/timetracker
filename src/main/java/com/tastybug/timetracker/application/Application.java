@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 public class Application extends android.app.Application {
@@ -14,12 +16,23 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         initializeJoda();
+//        runGenerateTestdataTask();
 
         printWelcomeToast();
     }
 
     private void initializeJoda() {
         JodaTimeAndroid.init(this);
+    }
+
+    private void runGenerateTestdataTask() {
+        if (getVersionName(getPackageInfo()).contains("SNAPSHOT")) {
+            new TestDataGenerationTask(this).execute();
+        } else {
+            Log.i(getClass().getSimpleName(), "Skipping test data generation,"
+                    + getVersionName(getPackageInfo()).contains("SNAPSHOT")
+                    + " is not a SNAPSHOT release!");
+        }
     }
 
     private void printWelcomeToast() {
