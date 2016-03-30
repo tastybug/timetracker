@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
+import com.tastybug.timetracker.util.FirstRunHelper;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -16,13 +17,28 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         initializeJoda();
-//        runGenerateTestdataTask();
+        if (isFirstRun()) {
+            performFirstRunSetup();
+            declareFirstRunConsumed();
+        }
 
         printWelcomeToast();
     }
 
     private void initializeJoda() {
         JodaTimeAndroid.init(this);
+    }
+
+    private boolean isFirstRun() {
+        return new FirstRunHelper(this).isFirstRun();
+    }
+
+    private void declareFirstRunConsumed() {
+        new FirstRunHelper(this).declareFirstRunConsumed();
+    }
+
+    private void performFirstRunSetup() {
+        runGenerateTestdataTask();
     }
 
     private void runGenerateTestdataTask() {
