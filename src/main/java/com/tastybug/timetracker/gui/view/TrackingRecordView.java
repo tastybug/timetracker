@@ -74,7 +74,7 @@ public class TrackingRecordView extends LinearLayout {
                 "TrackingRecord not started yet, this is not supposed to happen!");
 
         Duration duration = trackingRecord.toDuration().get();
-
+        // TODO wieso kuemmert sich der View ums runden?
         if (trackingRecord.isFinished() &&
                 trackingConfiguration.getRoundingStrategy() != RoundingFactory.Strategy.NO_ROUNDING) {
             Duration roundedDuration = new Duration(trackingConfiguration.getRoundingStrategy().getStrategy().getEffectiveDurationInSeconds(duration)*1000);

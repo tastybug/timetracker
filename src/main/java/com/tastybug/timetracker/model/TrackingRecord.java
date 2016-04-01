@@ -6,6 +6,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import java.util.Date;
@@ -105,10 +106,12 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
     }
 
     public Optional<Duration> toDuration() {
+        // when creating the duration, shave off additional millis as it confuses the duration
+        // calculation, resulting in e.g. a 5 minutes duration coming out as 4:59
         if (isRunning()) {
-            return Optional.of(new Duration(start.getTime(), new Date().getTime()));
+            return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime().withMillisOfSecond(0)));
         } else if (isFinished()){
-            return Optional.of(new Duration(start.getTime(), end.getTime()));
+            return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime(end).withMillisOfSecond(0)));
         } else {
             return Optional.absent();
         }
