@@ -14,12 +14,19 @@ import com.tastybug.timetracker.task.OttoProvider;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
+import java.util.Date;
+
 /**
  * TODO vielleicht kann man diese Klasse von DatePickerDialogFragment ableiten und etwas Code sparen
  */
 public class TimePickerDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
+    private static final String INITIAL_DATE = "INITIAL_DATE";
+    private static final String TOPIC = "TOPIC";
+    private static final String CAN_RETURN_NONE = "CAN_RETURN_NONE";
+
     private OttoProvider ottoProvider = new OttoProvider();
+    private LocalTime presetTime = new LocalTime();
     private String topic;
     private boolean canReturnNone = true;
 
@@ -33,17 +40,24 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
         this.canReturnNone = false;
     }
 
+    public void setPresetDate(Date date) {
+        presetTime = new LocalTime(date);
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LocalTime localTime = new LocalTime();
-
+        if (savedInstanceState != null) {
+            this.topic = savedInstanceState.getString(TOPIC);
+            this.presetTime = (LocalTime) savedInstanceState.getSerializable(INITIAL_DATE);
+            this.canReturnNone = savedInstanceState.getBoolean(CAN_RETURN_NONE);
+        }
         if (TextUtils.isEmpty(topic)) {
             throw new RuntimeException("No topic specified!");
         }
         TimePickerDialog dialog = new TimePickerDialog(getActivity(),
                 this,
-                localTime.getHourOfDay(),
-                localTime.getMinuteOfHour(),
+                presetTime.getHourOfDay(),
+                presetTime.getMinuteOfHour(),
                 true);
         if (canReturnNone) {
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.set_no_date), new DialogInterface.OnClickListener() {
@@ -59,10 +73,19 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
         return dialog;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(TOPIC, topic);
+        outState.putSerializable(INITIAL_DATE, presetTime);
+        outState.putBoolean(CAN_RETURN_NONE, canReturnNone);
+    }
+
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        DateTime dateTime = new DateTime();
-        dateTime = dateTime.withHourOfDay(hourOfDay);
-        dateTime = dateTime.withMinuteOfHour(minute);
-        ottoProvider.getSharedBus().post(new DatePickerDialogFragment.DatePickedEvent(topic, dateTime));
+        DateTime selectedDateTime = new DateTime()
+                .withHourOfDay(hourOfDay)
+                .withMinuteOfHour(minute)
+                .withSecondOfMinute(0);
+        ottoProvider.getSharedBus().post(new DatePickerDialogFragment.DatePickedEvent(topic, selectedDateTime));
     }
 }

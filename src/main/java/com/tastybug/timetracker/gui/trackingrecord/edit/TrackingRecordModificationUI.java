@@ -58,6 +58,10 @@ public class TrackingRecordModificationUI {
                 DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment();
                 datePickerDialogFragment.setTopic(START_DATE_TOPIC);
                 datePickerDialogFragment.setCanNotReturnNone();
+                Optional<Date> date = getStartDateFromWidget(false);
+                if (date.isPresent()) {
+                    datePickerDialogFragment.setPresetDate(date.get());
+                }
                 datePickerDialogFragment.show(fragmentManager, DatePickerDialogFragment.class.getSimpleName());
             }
         });
@@ -67,6 +71,10 @@ public class TrackingRecordModificationUI {
                 TimePickerDialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
                 timePickerDialogFragment.setTopic(START_TIME_TOPIC);
                 timePickerDialogFragment.setCanNotReturnNone();
+                Optional<Date> date = getStartTimeFromWidget(false);
+                if (date.isPresent()) {
+                    timePickerDialogFragment.setPresetDate(date.get());
+                }
                 timePickerDialogFragment.show(fragmentManager, DatePickerDialogFragment.class.getSimpleName());
             }
         });
@@ -76,6 +84,10 @@ public class TrackingRecordModificationUI {
                 DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment();
                 datePickerDialogFragment.setTopic(END_DATE_TOPIC);
                 datePickerDialogFragment.setCanNotReturnNone();
+                Optional<Date> date = getEndDateFromWidget(false);
+                if (date.isPresent()) {
+                    datePickerDialogFragment.setPresetDate(date.get());
+                }
                 datePickerDialogFragment.show(fragmentManager, DatePickerDialogFragment.class.getSimpleName());
             }
         });
@@ -85,6 +97,10 @@ public class TrackingRecordModificationUI {
                 TimePickerDialogFragment timePickerDialogFragment = new TimePickerDialogFragment();
                 timePickerDialogFragment.setTopic(END_TIME_TOPIC);
                 timePickerDialogFragment.setCanNotReturnNone();
+                Optional<Date> date = getEndTimeFromWidget(false);
+                if (date.isPresent()) {
+                    timePickerDialogFragment.setPresetDate(date.get());
+                }
                 timePickerDialogFragment.show(fragmentManager, DatePickerDialogFragment.class.getSimpleName());
             }
         });
