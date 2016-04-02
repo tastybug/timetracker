@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -114,6 +115,15 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
             return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime(end).withMillisOfSecond(0)));
         } else {
             return Optional.absent();
+        }
+    }
+
+    public Optional<Duration> toEffectiveDuration(TrackingConfiguration configuration) {
+        Optional<Duration> durationOpt = toDuration();
+        if (!durationOpt.isPresent()) {
+            return Optional.absent();
+        } else {
+            return Optional.of(new Duration(configuration.getRoundingStrategy().getStrategy().getEffectiveDurationInSeconds(durationOpt.get()) * 1000));
         }
     }
 

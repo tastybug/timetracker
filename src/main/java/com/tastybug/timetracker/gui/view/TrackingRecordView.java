@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.util.DurationFormatterFactory;
 
 import org.joda.time.Duration;
@@ -74,13 +74,12 @@ public class TrackingRecordView extends LinearLayout {
                 "TrackingRecord not started yet, this is not supposed to happen!");
 
         Duration duration = trackingRecord.toDuration().get();
-        // TODO wieso kuemmert sich der View ums runden?
-        if (trackingRecord.isFinished() &&
-                trackingConfiguration.getRoundingStrategy() != RoundingFactory.Strategy.NO_ROUNDING) {
-            Duration roundedDuration = new Duration(trackingConfiguration.getRoundingStrategy().getStrategy().getEffectiveDurationInSeconds(duration)*1000);
+        if (trackingRecord.isFinished()
+                && trackingConfiguration.hasAlteringRoundingStrategy()) {
+            Optional<Duration> roundedDurationOpt = trackingRecord.toEffectiveDuration(trackingConfiguration);
             durationTextView.setText(getContext().getString(R.string.duration_X_effectively_Y,
                     DurationFormatterFactory.getFormatter(getContext(), duration).print(duration.toPeriod()),
-                    DurationFormatterFactory.getFormatter(getContext(), roundedDuration).print(roundedDuration.toPeriod())
+                    DurationFormatterFactory.getFormatter(getContext(), roundedDurationOpt.get()).print(roundedDurationOpt.get().toPeriod())
                     ));
         } else {
             durationTextView.setText(DurationFormatterFactory.getFormatter(getContext(), duration).print(duration.toPeriod()));

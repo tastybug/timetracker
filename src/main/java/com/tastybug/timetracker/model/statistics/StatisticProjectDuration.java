@@ -24,12 +24,11 @@ public class StatisticProjectDuration {
     private void performCalculation(TrackingConfiguration configuration,
                                     ArrayList<TrackingRecord> trackingRecords,
                                     boolean countRunning) {
-        RoundingStrategy strategy = configuration.getRoundingStrategy().getStrategy();
         for (TrackingRecord trackingRecord : trackingRecords) {
             if (trackingRecord.isRunning() && !countRunning) {
                 continue;
             }
-            duration = duration.plus(strategy.getEffectiveDurationInSeconds(trackingRecord.toDuration().get()) * 1000);
+            duration = duration.plus(trackingRecord.toEffectiveDuration(configuration).get());
         }
     }
 
