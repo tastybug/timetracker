@@ -14,8 +14,8 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.activity.ProjectDetailsActivity;
 import com.tastybug.timetracker.gui.dialog.project.ProjectCreationDialog;
+import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
@@ -23,6 +23,9 @@ import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
 public class ProjectListFragment extends ListFragment {
+
+    private UpdateProjectListOnTrackingEventsHandler updateProjectListOnTrackingEventsHandler;
+    private TestDataCreationHandler testDataCreationHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,10 @@ public class ProjectListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         setListAdapter(new ProjectListAdapter(getActivity()));
-        new OttoProvider().getSharedBus().register(this);
         hideListSeparators();
+
+        updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
+        testDataCreationHandler = new TestDataCreationHandler();
     }
 
     private void hideListSeparators() {
@@ -46,7 +51,8 @@ public class ProjectListFragment extends ListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        new OttoProvider().getSharedBus().unregister(this);
+        updateProjectListOnTrackingEventsHandler.stop();
+        testDataCreationHandler.stop();
     }
 
     @Override
@@ -80,25 +86,31 @@ public class ProjectListFragment extends ListFragment {
         }
     }
 
-    @Subscribe
-    public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
-        ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+    class UpdateProjectListOnTrackingEventsHandler extends AbstractOttoEventHandler {
+
+        @Subscribe
+        public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
+            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+        }
+
+        @Subscribe public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
+            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+        }
+
+        @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
+            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+        }
+
+        @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+        }
     }
 
-    @Subscribe public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
-        ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
-    }
+    class TestDataCreationHandler extends AbstractOttoEventHandler {
 
-    @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
-        ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
-    }
-
-    @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
-        ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
-    }
-
-    @Subscribe public void handleTestdataGenerated(TestdataGeneratedEvent event) {
-        Toast.makeText(getActivity(), "DEBUG: Testdaten generiert!", Toast.LENGTH_LONG).show();
-        setListAdapter(new ProjectListAdapter(getActivity()));
+        @Subscribe public void handleTestdataGenerated(TestdataGeneratedEvent event) {
+            Toast.makeText(getActivity(), "DEBUG: Testdaten generiert!", Toast.LENGTH_LONG).show();
+            setListAdapter(new ProjectListAdapter(getActivity()));
+        }
     }
 }
