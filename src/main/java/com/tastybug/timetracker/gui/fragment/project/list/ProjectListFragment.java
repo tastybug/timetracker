@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.gui.fragment.project.list;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.gui.activity.ProjectDetailsActivity;
 import com.tastybug.timetracker.gui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
@@ -49,8 +51,13 @@ public class ProjectListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View v, int position, long id) {
-        ((ProjectListSelectionListener)getActivity())
-                .onProjectSelected((Project) listView.getAdapter().getItem(position));
+        showProjectDetails((Project) listView.getAdapter().getItem(position));
+    }
+
+    private void showProjectDetails(Project project) {
+        Intent intent = new Intent(getActivity(), ProjectDetailsActivity.class);
+        intent.putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
+        startActivity(intent);
     }
 
     @Override
@@ -71,11 +78,6 @@ public class ProjectListFragment extends ListFragment {
                 super.onOptionsItemSelected(item);
                 return false;
         }
-    }
-
-    public interface ProjectListSelectionListener {
-
-        void onProjectSelected(Project project);
     }
 
     @Subscribe

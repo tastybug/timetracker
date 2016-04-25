@@ -2,15 +2,12 @@ package com.tastybug.timetracker.gui.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.eventhandler.DescribeOrDropTinyRecordHandler;
-import com.tastybug.timetracker.gui.fragment.project.list.ProjectListFragment;
-import com.tastybug.timetracker.model.Project;
 
-public class ProjectsActivity extends Activity implements ProjectListFragment.ProjectListSelectionListener {
+public class ProjectsActivity extends Activity {
 
     private DescribeOrDropTinyRecordHandler describeOrDropTinyRecordHandler;
 
@@ -41,15 +38,5 @@ public class ProjectsActivity extends Activity implements ProjectListFragment.Pr
     protected void onPause() {
         super.onPause();
         describeOrDropTinyRecordHandler.stop();
-    }
-
-    public void onProjectSelected(Project project) {
-        showProjectDetails(project);
-    }
-
-    private void showProjectDetails(Project project) {
-        Intent intent = new Intent(this, ProjectDetailsActivity.class);
-        intent.putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
-        startActivity(intent);
     }
 }
