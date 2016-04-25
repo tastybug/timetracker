@@ -15,6 +15,8 @@ import java.util.UUID;
 
 public class TrackingRecord extends Entity implements Comparable<TrackingRecord> {
 
+    private static final int SECONDS_LIMIT_FOR_TINY_RECORDS = 120;
+
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
     private Date start, end;
@@ -116,6 +118,10 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         } else {
             return Optional.absent();
         }
+    }
+
+    public boolean isVeryShort() {
+        return toDuration().isPresent() && toDuration().get().getStandardSeconds() <= SECONDS_LIMIT_FOR_TINY_RECORDS;
     }
 
     public Optional<Duration> toEffectiveDuration(TrackingConfiguration configuration) {

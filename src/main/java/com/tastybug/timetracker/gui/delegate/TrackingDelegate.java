@@ -5,7 +5,7 @@ import android.app.Activity;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.gui.dialog.ConfirmTrackingViolatesConfigurationDialog;
+import com.tastybug.timetracker.gui.dialog.trackingrecord.ConfirmTrackingViolatesConfigurationDialog;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;

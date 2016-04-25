@@ -6,14 +6,14 @@
     android:background="#e6e6e6"
     android:orientation="vertical">
 
-    <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingControlPanelFragment"
+    <fragment class="com.tastybug.timetracker.gui.fragment.trackingrecord.control.TrackingControlPanelFragment"
         android:id="@id/fragment_tracking_control_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_tracking_control_panel"
         android:layout_margin="5dp" />
 
-    <fragment class="com.tastybug.timetracker.gui.project.detail.ProjectStatisticsFragment"
+    <fragment class="com.tastybug.timetracker.gui.fragment.project.statistics.ProjectStatisticsFragment"
         android:id="@id/fragment_project_statistics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp" />
 
-    <fragment class="com.tastybug.timetracker.gui.project.detail.TrackingRecordListFragment"
+    <fragment class="com.tastybug.timetracker.gui.fragment.trackingrecord.list.TrackingRecordListFragment"
         android:id="@id/fragment_tracking_record_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
