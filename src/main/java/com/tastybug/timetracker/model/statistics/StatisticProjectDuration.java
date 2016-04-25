@@ -21,6 +21,10 @@ public class StatisticProjectDuration {
 
     }
 
+    public StatisticProjectDuration(TrackingConfiguration configuration, ArrayList<TrackingRecord> trackingRecords) {
+        this(configuration, trackingRecords, true);
+    }
+
     private void performCalculation(TrackingConfiguration configuration,
                                     ArrayList<TrackingRecord> trackingRecords,
                                     boolean countRunning) {
@@ -30,10 +34,6 @@ public class StatisticProjectDuration {
             }
             duration = duration.plus(trackingRecord.toEffectiveDuration(configuration).get());
         }
-    }
-
-    public StatisticProjectDuration(TrackingConfiguration configuration, ArrayList<TrackingRecord> trackingRecords) {
-        this(configuration, trackingRecords, false);
     }
 
     public Duration get() {
