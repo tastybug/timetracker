@@ -23,7 +23,7 @@ public class ProjectDetailsActivity extends Activity {
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
     private DescribeOrDropTinyRecordHandler describeOrDropTinyRecordHandler;
-    private BackpressOnProjectDeletion backpressOnProjectDeletion;
+    private BackPressOnProjectDeletion backPressOnProjectDeletion;
     private String projectUuid;
 
     @Override
@@ -44,7 +44,7 @@ public class ProjectDetailsActivity extends Activity {
     protected void onResume() {
         super.onResume();
         describeOrDropTinyRecordHandler = new DescribeOrDropTinyRecordHandler(this);
-        backpressOnProjectDeletion = new BackpressOnProjectDeletion();
+        backPressOnProjectDeletion = new BackPressOnProjectDeletion();
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
         TrackingControlPanelFragment trackingPanelFragment = getTrackingControlPanelFragment();
@@ -77,7 +77,7 @@ public class ProjectDetailsActivity extends Activity {
     protected void onPause() {
         super.onPause();
         describeOrDropTinyRecordHandler.stop();
-        backpressOnProjectDeletion.stop();
+        backPressOnProjectDeletion.stop();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ProjectDetailsActivity extends Activity {
         }
     }
 
-    class BackpressOnProjectDeletion extends AbstractOttoEventHandler {
+    class BackPressOnProjectDeletion extends AbstractOttoEventHandler {
 
         @Subscribe public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
             /*

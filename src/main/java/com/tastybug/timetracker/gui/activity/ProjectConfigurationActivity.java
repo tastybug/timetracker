@@ -35,6 +35,14 @@ public class ProjectConfigurationActivity extends Activity {
         setOrRestoreState(savedInstanceState);
     }
 
+    protected void setupActionBar() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+    }
+
     private void setOrRestoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             projectUuid = savedInstanceState.getString(PROJECT_UUID);
@@ -44,17 +52,27 @@ public class ProjectConfigurationActivity extends Activity {
         }
 
         Project project = getProjectByUuid(projectUuid);
-        TrackingConfiguration trackingConfiguration = getTrackingConfigurationByProjectUuid(projectUuid);
-
         setTitle(getString(R.string.project_configuration_for_project_X, project.getTitle()));
 
-        ProjectConfigurationFragment configurationFragment = (ProjectConfigurationFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_configuration);
+        initProjectConfigurationFragment(project);
+        initTrackingConfigurationFragment(getTrackingConfigurationByProjectUuid(projectUuid));
+    }
+
+    protected Project getProjectByUuid(String uuid) {
+        return new ProjectDAO(this).get(uuid).get();
+    }
+
+    protected TrackingConfiguration getTrackingConfigurationByProjectUuid(String projectUuid) {
+        return new TrackingConfigurationDAO(this).getByProjectUuid(projectUuid).get();
+    }
+
+    private void initProjectConfigurationFragment(Project project) {
+        ProjectConfigurationFragment configurationFragment = getProjectConfigurationFragment();
         configurationFragment.showProject(project);
+    }
 
-
-        TrackingConfigurationFragment constraintFragment = (TrackingConfigurationFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_tracking_configuration);
+    private void initTrackingConfigurationFragment(TrackingConfiguration trackingConfiguration) {
+        TrackingConfigurationFragment constraintFragment = getTrackingConfigurationFragment();
         constraintFragment.showTrackingConfiguration(trackingConfiguration);
     }
 
@@ -82,23 +100,6 @@ public class ProjectConfigurationActivity extends Activity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(PROJECT_UUID, projectUuid);
-    }
-
-    // TODO mehrfach implementiert
-    protected Project getProjectByUuid(String uuid) {
-        return new ProjectDAO(this).get(uuid).get();
-    }
-
-    protected TrackingConfiguration getTrackingConfigurationByProjectUuid(String projectUuid) {
-        return new TrackingConfigurationDAO(this).getByProjectUuid(projectUuid).get();
-    }
-
-    protected void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -150,7 +151,7 @@ public class ProjectConfigurationActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (hasFragmentWithUnsavedModifications()) {
-            showConfirmBackpressLossDialog();
+            showConfirmBackButtonPressLossDialog();
         } else {
             super.onBackPressed();
         }
@@ -163,7 +164,7 @@ public class ProjectConfigurationActivity extends Activity {
                 || getTrackingConfigurationFragment().hasUnsavedModifications(configuration);
     }
 
-    private void showConfirmBackpressLossDialog() {
+    private void showConfirmBackButtonPressLossDialog() {
         ConfirmBackpressDialogFragment
                 .aDialog()
                 .forEntityUuid(projectUuid)
