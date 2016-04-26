@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.gui.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.gui.dialog.navigation.ConfirmBackpressDialogFragment;
 import com.tastybug.timetracker.gui.fragment.project.configuration.ProjectConfigurationFragment;
@@ -21,7 +19,7 @@ import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
 
-public class ProjectConfigurationActivity extends Activity {
+public class ProjectConfigurationActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
@@ -56,14 +54,6 @@ public class ProjectConfigurationActivity extends Activity {
 
         initProjectConfigurationFragment(project);
         initTrackingConfigurationFragment(getTrackingConfigurationByProjectUuid(projectUuid));
-    }
-
-    protected Project getProjectByUuid(String uuid) {
-        return new ProjectDAO(this).get(uuid).get();
-    }
-
-    protected TrackingConfiguration getTrackingConfigurationByProjectUuid(String projectUuid) {
-        return new TrackingConfigurationDAO(this).getByProjectUuid(projectUuid).get();
     }
 
     private void initProjectConfigurationFragment(Project project) {
@@ -138,14 +128,6 @@ public class ProjectConfigurationActivity extends Activity {
         constraintFragment.collectModifications(task);
 
         return task;
-    }
-
-    private ProjectConfigurationFragment getProjectConfigurationFragment() {
-        return (ProjectConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_project_configuration);
-    }
-
-    private TrackingConfigurationFragment getTrackingConfigurationFragment() {
-        return (TrackingConfigurationFragment) getFragmentManager().findFragmentById(R.id.fragment_tracking_configuration);
     }
 
     @Override

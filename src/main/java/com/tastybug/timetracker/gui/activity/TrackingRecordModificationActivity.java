@@ -24,7 +24,7 @@ import com.tastybug.timetracker.task.tracking.DeletedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
 
-public class TrackingRecordModificationActivity extends Activity {
+public class TrackingRecordModificationActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
     public static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
@@ -99,10 +99,6 @@ public class TrackingRecordModificationActivity extends Activity {
         } else {
             outState.putString(PROJECT_UUID, projectUuidOpt.get());
         }
-    }
-
-    protected TrackingRecord getTrackingRecordByUuid(String uuid) {
-        return new TrackingRecordDAO(this).get(uuid).get();
     }
 
     protected void setupActionBar() {

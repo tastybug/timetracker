@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.gui.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
 import com.tastybug.timetracker.gui.eventhandler.DescribeOrDropTinyRecordHandler;
 import com.tastybug.timetracker.gui.fragment.project.statistics.ProjectStatisticsFragment;
@@ -18,7 +16,7 @@ import com.tastybug.timetracker.gui.fragment.trackingrecord.list.TrackingRecordL
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 
-public class ProjectDetailsActivity extends Activity {
+public class ProjectDetailsActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
@@ -58,21 +56,6 @@ public class ProjectDetailsActivity extends Activity {
         trackingRecordListFragment.showProject(projectUuid);
     }
 
-    private ProjectStatisticsFragment getProjectStatisticsFragment() {
-        return (ProjectStatisticsFragment) getFragmentManager()
-                    .findFragmentById(R.id.fragment_project_statistics);
-    }
-
-    private TrackingControlPanelFragment getTrackingControlPanelFragment() {
-        return (TrackingControlPanelFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_tracking_control_panel);
-    }
-
-    private TrackingRecordListFragment getTrackingRecordListFragment() {
-        return (TrackingRecordListFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_tracking_record_list);
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -84,12 +67,6 @@ public class ProjectDetailsActivity extends Activity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(PROJECT_UUID, projectUuid);
-    }
-
-    protected Project getProjectByUuid(String uuid) {
-        Project project = new ProjectDAO(this).get(uuid).get();
-        project.setContext(this);
-        return project;
     }
 
     protected void setupActionBar() {
