@@ -17,7 +17,7 @@ public class ProjectsActivity extends Activity {
         setContentView(R.layout.activity_projects);
 
         setTitle(R.string.activity_project_title);
-        setupActionBar();
+//        setupActionBar();
     }
 
     protected void setupActionBar() {
