@@ -8,6 +8,7 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.database.dao.DAOFactory;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 
+import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -168,5 +169,31 @@ public class TrackingRecordTest {
 
         // expect
         assertFalse(record.getDescription().isPresent());
+    }
+
+    @Test public void canTellWhetherItsVeryShort() {
+        // given
+        TrackingRecord record = new TrackingRecord();
+
+        // expect: not started yet, so no duration to check for
+        assertFalse(record.isVeryShort());
+
+        // when
+        record.setStart(new LocalDateTime(2016,12,24,12,0,0).toDate());
+
+        // expect
+        assertTrue(record.isVeryShort());
+
+        // when: its very short
+        record.setEnd(new LocalDateTime(2016,12,24,12,TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate());
+
+        // expect
+        assertTrue(record.isVeryShort());
+
+        // when: its not very short
+        record.setEnd(new LocalDateTime(2016,12,24,12,1+TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate());
+
+        // expect
+        assertFalse(record.isVeryShort());
     }
 }

@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 public class TrackingRecord extends Entity implements Comparable<TrackingRecord> {
 
-    private static final int SECONDS_LIMIT_FOR_TINY_RECORDS = 120;
+    protected static final int MINUTES_LIMIT_FOR_TINY_RECORDS = 2;
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
@@ -121,7 +120,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
     }
 
     public boolean isVeryShort() {
-        return toDuration().isPresent() && toDuration().get().getStandardSeconds() <= SECONDS_LIMIT_FOR_TINY_RECORDS;
+        return toDuration().isPresent() && toDuration().get().getStandardMinutes() <= MINUTES_LIMIT_FOR_TINY_RECORDS;
     }
 
     public Optional<Duration> toEffectiveDuration(TrackingConfiguration configuration) {
