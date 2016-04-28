@@ -105,7 +105,6 @@ public class ProjectDAOTest {
 
         // then
         assertNotNull(project.getUuid());
-        assertNotNull(project.getContext());
     }
 
     @Test public void canUpdateProject() {

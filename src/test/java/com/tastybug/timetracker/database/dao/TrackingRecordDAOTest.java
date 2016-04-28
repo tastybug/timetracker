@@ -159,7 +159,6 @@ public class TrackingRecordDAOTest {
 
         // then
         assertNotNull(trackingRecord.getUuid());
-        assertNotNull(trackingRecord.getContext());
     }
 
     @Test public void canUpdateTrackingRecord() {

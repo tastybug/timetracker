@@ -14,8 +14,8 @@ import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.gui.dialog.project.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.gui.activity.ProjectConfigurationActivity;
+import com.tastybug.timetracker.gui.dialog.project.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
@@ -83,9 +83,6 @@ public class ProjectStatisticsFragment extends Fragment {
 
     public void showProjectDetailsFor(Project project) {
         this.currentProjectOpt = Optional.of(project);
-        if(!project.hasContext()) {
-            project.setContext(getActivity());
-        }
         ui.renderProjectTimeFrame(Optional.of(project));
         ui.renderProjectDuration(Optional.of(project));
     }
@@ -98,13 +95,11 @@ public class ProjectStatisticsFragment extends Fragment {
 
     @Subscribe public void handleTrackingStarted(CreatedTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
-        project.setContext(getActivity());
         showProjectDetailsFor(project);
     }
 
     @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
-        project.setContext(getActivity());
         showProjectDetailsFor(project);
     }
 }

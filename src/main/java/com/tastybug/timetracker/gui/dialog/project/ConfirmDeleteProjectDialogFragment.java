@@ -29,13 +29,12 @@ public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
     }
 
     private String getDialogMessage(Project project) {
-        project.setContext(getActivity());
-        if (project.getTrackingRecords().isEmpty()) {
+        if (project.getTrackingRecords(getActivity()).isEmpty()) {
             return getString(R.string.msg_you_lose_no_tracking_records);
         } else {
             Duration currentDuration = new StatisticProjectDuration(
-                    project.getTrackingConfiguration(),
-                    project.getTrackingRecords(),
+                    project.getTrackingConfiguration(getActivity()),
+                    project.getTrackingRecords(getActivity()),
                     true
             ).get();
             PeriodFormatter formatter = DurationFormatterFactory.getFormatter(getActivity(), currentDuration);

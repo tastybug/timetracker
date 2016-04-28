@@ -53,7 +53,6 @@ public abstract class EntityDAO<T extends Entity> {
 
     public Uri create (T entity) {
         Uri uri = context.getContentResolver().insert(getQueryUri(), getContentValues(entity));
-        entity.setContext(context);
         return uri;
     }
 

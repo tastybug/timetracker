@@ -135,7 +135,6 @@ public class TrackingConfigurationDAOTest {
 
         // then
         assertNotNull(trackingConfiguration.getUuid());
-        assertNotNull(trackingConfiguration.getContext());
     }
 
     @Test public void canUpdateEntity() {

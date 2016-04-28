@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.model;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.common.base.MoreObjects;
@@ -59,46 +60,31 @@ public class Project extends Entity {
         this.description = description.orNull();
     }
 
-    public ArrayList<TrackingRecord> getTrackingRecords() {
+    public ArrayList<TrackingRecord> getTrackingRecords(Context context) {
+        Preconditions.checkNotNull(context);
+
         if (trackingRecords == null) {
-            if (!hasContext()) {
-                throw new IllegalStateException("Failed to fetch tracking records lazily, no context available.");
-            }
-            trackingRecords = ((TrackingRecordDAO)daoFactory.getDao(TrackingRecord.class, getContext()))
+            trackingRecords = ((TrackingRecordDAO)daoFactory.getDao(TrackingRecord.class, context))
                     .getByProjectUuid(getUuid());
         }
         return trackingRecords;
     }
 
-    public TrackingConfiguration getTrackingConfiguration() {
+    public TrackingConfiguration getTrackingConfiguration(Context context) {
+        Preconditions.checkNotNull(context);
+
         if (trackingConfiguration == null) {
-            if(!hasContext()) {
-                throw new IllegalStateException("Failed to fetch tracking configuration lazily, " +
-                        "no context available!");
-            }
-            trackingConfiguration = ((TrackingConfigurationDAO)daoFactory.getDao(TrackingConfiguration.class, getContext()))
+            trackingConfiguration = ((TrackingConfigurationDAO)daoFactory.getDao(TrackingConfiguration.class, context))
                     .getByProjectUuid(getUuid()).orNull();
         }
         return trackingConfiguration;
     }
 
     public String toString() {
-        if (hasContext()) {
-            return MoreObjects.toStringHelper(this)
-                    .add("uuid", getUuid())
-                    .add("title", getTitle())
-                    .add("description", getDescription().orNull())
-                    .add("trackingConfiguration", getTrackingConfiguration())
-                    .add("trackingRecords", getTrackingRecords())
-                    .toString();
-        } else {
-            return MoreObjects.toStringHelper(this)
-                    .add("uuid", getUuid())
-                    .add("title", getTitle())
-                    .add("description", getDescription().orNull())
-                    .add("trackingConfiguration", "skipped, no context")
-                    .add("trackingRecords", "skipped, no context")
-                    .toString();
-        }
+        return MoreObjects.toStringHelper(this)
+                .add("uuid", getUuid())
+                .add("title", getTitle())
+                .add("description", getDescription().orNull())
+                .toString();
     }
 }

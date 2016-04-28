@@ -73,16 +73,13 @@ public class StatisticProjectDurationTest {
         assertEquals(2*20*60, duration.getStandardSeconds());
     }
 
-    /*
-        The calculation will ignore ongoing tracking records
-     */
-    @Test public void calculationIgnoresIncompleteTrackingRecords() {
+    @Test public void calculationIgnoresIncompleteTrackingRecordsWhenTold() {
         // given
         ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10Min10SecsDuration(), anOngoingTrackingRecord(), aTrackingRecordWith10Min10SecsDuration());
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).get();
+        Duration duration = new StatisticProjectDuration(configuration, trackingRecords, false).get();
 
         // then
         assertEquals(2*(10*60+10), duration.getStandardSeconds());
@@ -98,7 +95,7 @@ public class StatisticProjectDurationTest {
 
     private ArrayList<TrackingRecord> aTrackingRecordsList(TrackingRecord... trackingRecords) {
 
-        return new ArrayList<TrackingRecord>(Arrays.asList(trackingRecords));
+        return new ArrayList<>(Arrays.asList(trackingRecords));
     }
 
     private TrackingRecord aTrackingRecordWith10Min10SecsDuration() {

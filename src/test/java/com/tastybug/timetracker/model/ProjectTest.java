@@ -108,47 +108,45 @@ public class ProjectTest {
         project.setDescription(null);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = NullPointerException.class)
     public void lazilyGettingTrackingRecordsWithoutContextYieldsException() {
         // given
         Project project = new Project("project title");
 
         // when
-        project.getTrackingRecords();
+        project.getTrackingRecords(null);
     }
 
     @Test public void canLazilyGetTrackingRecords() {
         // given
         Project project = new Project("project title");
-        project.setContext(context);
         project.setDAOFactory(daoFactory);
 
         // when
-        project.getTrackingRecords();
+        project.getTrackingRecords(context);
 
         // then
         verify(trackingRecordDAO, times(1)).getByProjectUuid(project.getUuid());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = NullPointerException.class)
     public void gettingTrackingConfigurationWithoutContextYieldsException() {
         // given
         Project project = new Project("project title");
 
         // when
-        project.getTrackingConfiguration();
+        project.getTrackingConfiguration(null);
     }
 
     @Test public void canGetTrackingConfiguration() {
         // given
         Project project = new Project("project title");
-        project.setContext(context);
         project.setDAOFactory(daoFactory);
         TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), null, null, null, RoundingFactory.Strategy.NO_ROUNDING);
         when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
 
         // when
-        TrackingConfiguration trackingConfiguration = project.getTrackingConfiguration();
+        TrackingConfiguration trackingConfiguration = project.getTrackingConfiguration(context);
 
         // then
         assertEquals(expectedConfiguration, trackingConfiguration);

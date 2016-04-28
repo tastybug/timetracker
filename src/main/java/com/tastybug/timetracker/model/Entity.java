@@ -9,22 +9,9 @@ import java.io.Serializable;
 
 public abstract class Entity implements Serializable {
 
-	protected Context context;
 	protected DAOFactory daoFactory = new DAOFactory();
 
     public Entity() {}
-
-	public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context c) {
-		this.context = c;
-	}
-
-	public boolean hasContext () {
-		return context != null;
-	}
 
     public void setDAOFactory(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;

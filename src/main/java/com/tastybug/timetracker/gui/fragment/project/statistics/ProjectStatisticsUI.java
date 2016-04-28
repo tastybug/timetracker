@@ -39,7 +39,7 @@ public class ProjectStatisticsUI {
 
     public void renderProjectTimeFrame(Optional<Project> project) {
         if (project.isPresent()) {
-            TrackingConfiguration configuration = project.get().getTrackingConfiguration();
+            TrackingConfiguration configuration = project.get().getTrackingConfiguration(context);
             if (configuration.getEnd().isPresent()) { // <- theres an end date that limits the time frame
                 long remainingDays = getEffectiveRemainingProjectDays(configuration.getStart(), configuration.getEnd().get());
                 if (remainingDays == 0) {
@@ -68,8 +68,8 @@ public class ProjectStatisticsUI {
         }
 
         Project project = projectOpt.get();
-        TrackingConfiguration configuration = project.getTrackingConfiguration();
-        Duration duration = new StatisticProjectDuration(configuration, project.getTrackingRecords()).get();
+        TrackingConfiguration configuration = project.getTrackingConfiguration(context);
+        Duration duration = new StatisticProjectDuration(configuration, project.getTrackingRecords(context)).get();
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {
                 projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,

@@ -18,10 +18,7 @@ import com.tastybug.timetracker.model.TrackingRecord;
 public abstract class BaseActivity extends Activity {
 
     protected Project getProjectByUuid(String uuid) {
-        Project project = new ProjectDAO(this).get(uuid).get();
-        // TODO brauchts das hier?
-        project.setContext(this);
-        return project;
+        return new ProjectDAO(this).get(uuid).get();
     }
 
     protected TrackingConfiguration getTrackingConfigurationByProjectUuid(String projectUuid) {
