@@ -8,9 +8,8 @@ import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.gui.fragment.project.configuration.ProjectConfigurationFragment;
 import com.tastybug.timetracker.gui.fragment.project.configuration.TrackingConfigurationFragment;
-import com.tastybug.timetracker.gui.fragment.project.statistics.ProjectStatisticsFragment;
-import com.tastybug.timetracker.gui.fragment.trackingrecord.control.TrackingControlPanelFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.list.TrackingRecordListFragment;
+import com.tastybug.timetracker.gui.fragment.trackingrecord.log.TrackingLogStatisticsFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
@@ -29,19 +28,14 @@ public abstract class BaseActivity extends Activity {
         return new TrackingRecordDAO(this).get(uuid).get();
     }
 
-    protected ProjectStatisticsFragment getProjectStatisticsFragment() {
-        return (ProjectStatisticsFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_project_statistics);
+    protected TrackingLogStatisticsFragment getTrackingLogStatisticsFragment() {
+        return (TrackingLogStatisticsFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_project_tracking_log_statistics);
     }
 
-    protected TrackingControlPanelFragment getTrackingControlPanelFragment() {
-        return (TrackingControlPanelFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_tracking_control_panel);
-    }
-
-    protected TrackingRecordListFragment getTrackingRecordListFragment() {
+    protected TrackingRecordListFragment getTrackingLogFragment() {
         return (TrackingRecordListFragment) getFragmentManager()
-                .findFragmentById(R.id.fragment_tracking_record_list);
+                .findFragmentById(R.id.fragment_project_tracking_log);
     }
 
     protected ProjectConfigurationFragment getProjectConfigurationFragment() {

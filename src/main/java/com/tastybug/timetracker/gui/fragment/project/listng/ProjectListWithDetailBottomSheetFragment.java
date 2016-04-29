@@ -1,21 +1,23 @@
-package com.tastybug.timetracker.gui.fragment.project.list;
+package com.tastybug.timetracker.gui.fragment.project.listng;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.activity.ProjectDetailsActivity;
+import com.tastybug.timetracker.gui.activity.ProjectTrackingLogActivity;
 import com.tastybug.timetracker.gui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
-import com.tastybug.timetracker.gui.fragment.project.listng.ProjectListAdapter;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
@@ -23,21 +25,31 @@ import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
-public class ProjectListFragment extends ListFragment {
+public class ProjectListWithDetailBottomSheetFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private UpdateProjectListOnTrackingEventsHandler updateProjectListOnTrackingEventsHandler;
     private TestDataCreationHandler testDataCreationHandler;
 
+    private ListView listView;
+    private ProjectDetailsBottomSheet projectDetailsBottomSheet;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_project_list_with_detail_bottom_sheet, container);
+
+        listView = (ListView) view.findViewById(R.id.project_list);
+        listView.setOnItemClickListener(this);
+        listView.setOnItemLongClickListener(this);
+
+        projectDetailsBottomSheet = new ProjectDetailsBottomSheet(view);
+
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setListAdapter(new ProjectListAdapter(getActivity()));
+        listView.setAdapter(new ProjectListAdapter(getActivity()));
         hideListSeparators();
 
         updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
@@ -45,8 +57,8 @@ public class ProjectListFragment extends ListFragment {
     }
 
     private void hideListSeparators() {
-        getListView().setDivider(null);
-        getListView().setDividerHeight(0);
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
     }
 
     @Override
@@ -57,20 +69,30 @@ public class ProjectListFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View v, int position, long id) {
-        showProjectDetails((Project) listView.getAdapter().getItem(position));
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        showProjectDetailsBottomSheet((Project) listView.getAdapter().getItem(position));
     }
 
-    private void showProjectDetails(Project project) {
-        Intent intent = new Intent(getActivity(), ProjectDetailsActivity.class);
-        intent.putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
+    private void showProjectDetailsBottomSheet(Project project) {
+        projectDetailsBottomSheet.showProject(getActivity(), project);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        goTrackingLogs((Project) listView.getAdapter().getItem(position));
+        return true;
+    }
+
+    private void goTrackingLogs(Project project) {
+        Intent intent = new Intent(getActivity(), ProjectTrackingLogActivity.class);
+        intent.putExtra(ProjectTrackingLogActivity.PROJECT_UUID, project.getUuid());
         startActivity(intent);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_project_list, menu);
+        inflater.inflate(R.menu.fragment_project_list_with_detail_bottom_sheet, menu);
     }
 
     @Override
@@ -91,19 +113,19 @@ public class ProjectListFragment extends ListFragment {
 
         @Subscribe
         public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter)listView.getAdapter()).notifyDataSetChanged();
         }
 
         @Subscribe public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter)listView.getAdapter()).notifyDataSetChanged();
         }
 
         @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter)listView.getAdapter()).notifyDataSetChanged();
         }
 
         @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter)listView.getAdapter()).notifyDataSetChanged();
         }
     }
 
@@ -111,7 +133,7 @@ public class ProjectListFragment extends ListFragment {
 
         @Subscribe public void handleTestdataGenerated(TestdataGeneratedEvent event) {
             Toast.makeText(getActivity(), "DEBUG: Testdaten generiert!", Toast.LENGTH_LONG).show();
-            setListAdapter(new ProjectListAdapter(getActivity()));
+            listView.setAdapter(new ProjectListAdapter(getActivity()));
         }
     }
 }

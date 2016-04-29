@@ -3,31 +3,25 @@ package com.tastybug.timetracker.gui.activity;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
 import com.tastybug.timetracker.gui.eventhandler.DescribeOrDropTinyRecordHandler;
-import com.tastybug.timetracker.gui.fragment.project.statistics.ProjectStatisticsFragment;
-import com.tastybug.timetracker.gui.fragment.trackingrecord.control.TrackingControlPanelFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.list.TrackingRecordListFragment;
+import com.tastybug.timetracker.gui.fragment.trackingrecord.log.TrackingLogStatisticsFragment;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 
-public class ProjectDetailsActivity extends BaseActivity {
+public class ProjectTrackingLogActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
     private DescribeOrDropTinyRecordHandler describeOrDropTinyRecordHandler;
-    private BackPressOnProjectDeletion backPressOnProjectDeletion;
     private String projectUuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project_detail);
+        setContentView(R.layout.activity_project_tracking_record_log);
 //        setupActionBar();
 
         if (savedInstanceState != null) {
@@ -42,17 +36,14 @@ public class ProjectDetailsActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         describeOrDropTinyRecordHandler = new DescribeOrDropTinyRecordHandler(this);
-        backPressOnProjectDeletion = new BackPressOnProjectDeletion();
 
-        ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
-        TrackingControlPanelFragment trackingPanelFragment = getTrackingControlPanelFragment();
-        TrackingRecordListFragment trackingRecordListFragment = getTrackingRecordListFragment();
+        TrackingLogStatisticsFragment trackingLogStatisticsFragment = getTrackingLogStatisticsFragment();
+        TrackingRecordListFragment trackingRecordListFragment = getTrackingLogFragment();
 
         Project project = getProjectByUuid(projectUuid);
         setTitle(getProjectByUuid(projectUuid).getTitle());
 
-        detailsFragment.showProjectDetailsFor(project);
-        trackingPanelFragment.renderProject(project);
+        trackingLogStatisticsFragment.showProjectDetailsFor(project);
         trackingRecordListFragment.showProject(projectUuid);
     }
 
@@ -60,7 +51,6 @@ public class ProjectDetailsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         describeOrDropTinyRecordHandler.stop();
-        backPressOnProjectDeletion.stop();
     }
 
     @Override
@@ -87,18 +77,6 @@ public class ProjectDetailsActivity extends BaseActivity {
             default:
                 super.onOptionsItemSelected(item);
                 return false;
-        }
-    }
-
-    class BackPressOnProjectDeletion extends AbstractOttoEventHandler {
-
-        @Subscribe public void handleProjectDeletedEvent(ProjectDeletedEvent event) {
-            /*
-            Das Eventhandling muss in der Activity passieren, da das Fragment nicht weiss, ob es two-pane oder single-pane
-            ausgefuehrt wird. Ergo muss die Activity entscheiden, wie eine Projektloeschung sich navigatorisch auswirkt.
-             */
-            Log.d(getClass().getSimpleName(), "Deleted project " + event.getProjectUuid());
-            onBackPressed();
         }
     }
 }

@@ -7,17 +7,9 @@
     android:background="@drawable/white_shadowbox" >
 
     <TextView
-        android:id="@+id/project_info_time_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/project_remaining_days_X_until_Y"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/project_info_current_project_duration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/X_recorded_hours_so_far_from_a_total_of_Y"
+        android:text="Hier grobe Statistiken zum Tracking log hinschreiben oder ne Tortengrafik"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
