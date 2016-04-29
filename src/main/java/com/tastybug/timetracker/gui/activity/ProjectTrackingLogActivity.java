@@ -1,8 +1,8 @@
 package com.tastybug.timetracker.gui.activity;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.tastybug.timetracker.R;
@@ -22,7 +22,7 @@ public class ProjectTrackingLogActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_tracking_record_log);
-//        setupActionBar();
+        setupActionBar();
 
         if (savedInstanceState != null) {
             projectUuid = savedInstanceState.getString(PROJECT_UUID);
@@ -60,7 +60,7 @@ public class ProjectTrackingLogActivity extends BaseActivity {
     }
 
     protected void setupActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
