@@ -36,11 +36,19 @@ public class ProjectDetailsBottomSheet {
     }
 
     public void showProject(Context context, Project project) {
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        showBottomSheetFully();
         projectTitleTextView.setText(project.getTitle());
 
         renderProjectTimeFrame(context, Optional.of(project));
         renderProjectDuration(context, Optional.of(project));
+    }
+
+    private void showBottomSheetFully() {
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    public void registerBehaviourCallback(BottomSheetBehavior.BottomSheetCallback callback) {
+        mBottomSheetBehavior.setBottomSheetCallback(callback);
     }
 
     public void renderProjectTimeFrame(Context context, Optional<Project> project) {
