@@ -1,6 +1,6 @@
 package com.tastybug.timetracker.gui.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
@@ -14,7 +14,7 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends Activity {
 
     protected Project getProjectByUuid(String uuid) {
         return new ProjectDAO(this).get(uuid).get();

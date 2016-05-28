@@ -1,12 +1,13 @@
 package com.tastybug.timetracker.gui.activity;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.eventhandler.DescribeOrDropTinyRecordHandler;
 
-public class ProjectsActivity extends BaseActivity {
+public class ProjectsActivity extends Activity {
 
     private DescribeOrDropTinyRecordHandler describeOrDropTinyRecordHandler;
 
@@ -16,11 +17,11 @@ public class ProjectsActivity extends BaseActivity {
         setContentView(R.layout.activity_projects);
 
         setTitle(R.string.activity_project_title);
-        setupActionBar();
+//        setupActionBar();
     }
 
     protected void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false); // disables UP arrow
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
