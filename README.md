@@ -18,5 +18,5 @@ Glossar: Fachliche Terminologie
     * Start-,Endedatum der -
     * Dauer der -
     * Beschreibung einer -
-    
+
 * Zeiterfassungshistorie / TrackingLog: eine Liste aller TrackingRecords zu einem Projekt in chronologischer Reihenfolge
