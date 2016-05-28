@@ -69,12 +69,13 @@ public class ProjectListAdapter extends BaseAdapter {
 
     private TrackingConfiguration getTrackingConfigurationAt(int position) {
         Project project = getProjectAt(position);
-        return trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
+        return new TrackingConfigurationDAO(activity).getByProjectUuid(project.getUuid()).get();
     }
 
     private StatisticProjectDuration getDurationStatisticAt(int position) {
         Project project = getProjectAt(position);
         return new StatisticProjectDuration(getTrackingConfigurationAt(position),
-                trackingRecordDAO.getByProjectUuid(project.getUuid()));
+                new TrackingRecordDAO(activity).getByProjectUuid(project.getUuid()));
+
     }
 }

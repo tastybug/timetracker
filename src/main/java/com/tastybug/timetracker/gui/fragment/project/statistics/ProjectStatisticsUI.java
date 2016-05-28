@@ -1,9 +1,10 @@
-package com.tastybug.timetracker.gui.fragment.project.listng;
+package com.tastybug.timetracker.gui.fragment.project.statistics;
 
 import android.content.Context;
-import android.support.design.widget.BottomSheetBehavior;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.common.base.Optional;
@@ -17,33 +18,26 @@ import org.joda.time.Duration;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ProjectDetailsBottomSheet {
+public class ProjectStatisticsUI {
 
-    private TextView projectTitleTextView;
-    private TextView projectTimeFrameTextView;
-    private TextView projectDurationTextView;
+    private TextView projectTimeFrameTextView, projectDurationTextView;
+    private Context context;
 
-    BottomSheetBehavior mBottomSheetBehavior;
+    public ProjectStatisticsUI(Context context) {
+        this.context = context;
+    }
 
-    public ProjectDetailsBottomSheet(View rootView) {
+    public View inflateWidgets(LayoutInflater inflater,
+                               ViewGroup container) {
+        View rootView = inflater.inflate(R.layout.fragment_project_statistics, container);
 
-        View bottomSheet = rootView.findViewById( R.id.project_details_bottom_sheet);
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        projectTitleTextView = (TextView) rootView.findViewById(R.id.project_title);
         projectTimeFrameTextView = (TextView) rootView.findViewById(R.id.project_info_time_frame);
         projectDurationTextView = (TextView) rootView.findViewById(R.id.project_info_current_project_duration);
+
+        return rootView;
     }
 
-    public void showProject(Context context, Project project) {
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        projectTitleTextView.setText(project.getTitle());
-
-        renderProjectTimeFrame(context, Optional.of(project));
-        renderProjectDuration(context, Optional.of(project));
-    }
-
-    public void renderProjectTimeFrame(Context context, Optional<Project> project) {
+    public void renderProjectTimeFrame(Optional<Project> project) {
         if (project.isPresent()) {
             TrackingConfiguration configuration = project.get().getTrackingConfiguration(context);
             if (configuration.getEnd().isPresent()) { // <- theres an end date that limits the time frame
@@ -67,7 +61,7 @@ public class ProjectDetailsBottomSheet {
         projectTimeFrameTextView.setVisibility(TextUtils.isEmpty(projectTimeFrameTextView.getText()) ? View.GONE : View.VISIBLE);
     }
 
-    public void renderProjectDuration(Context context, Optional<Project> projectOpt) {
+    public void renderProjectDuration(Optional<Project> projectOpt) {
         if (!projectOpt.isPresent()) {
             projectDurationTextView.setText("");
             return;
