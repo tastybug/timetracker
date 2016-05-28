@@ -28,7 +28,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_detail);
-//        setupActionBar();
+        setupActionBar();
 
         if (savedInstanceState != null) {
             projectUuid = savedInstanceState.getString(PROJECT_UUID);

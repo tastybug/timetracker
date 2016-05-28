@@ -15,7 +15,6 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.activity.ProjectDetailsActivity;
 import com.tastybug.timetracker.gui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
-import com.tastybug.timetracker.gui.fragment.project.listng.ProjectListAdapter;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;

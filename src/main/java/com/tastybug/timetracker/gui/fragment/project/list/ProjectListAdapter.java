@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.gui.fragment.project.listng;
+package com.tastybug.timetracker.gui.fragment.project.list;
 
 import android.app.Activity;
 import android.view.View;
