@@ -32,7 +32,6 @@ public class ProjectListWithDetailBottomSheetFragment extends Fragment implement
 
     private ListView listView;
     private ProjectDetailsBottomSheet projectDetailsBottomSheet;
-    private ProjectListFabs projectListFabs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,9 +42,6 @@ public class ProjectListWithDetailBottomSheetFragment extends Fragment implement
         listView.setOnItemLongClickListener(this);
 
         projectDetailsBottomSheet = new ProjectDetailsBottomSheet(view);
-
-        projectListFabs = new ProjectListFabs(getActivity(), view, projectDetailsBottomSheet);
-        projectListFabs.showGeneralFabs();
 
         return view;
     }
