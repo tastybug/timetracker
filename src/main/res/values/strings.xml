@@ -3,7 +3,7 @@
     <string name="app_name">TimeTracker</string>
 
     <!-- common -->
-    <string name="common_ok">Ok</string>
+    <string name="common_ok">OK</string>
     <string name="common_close">Close</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_discard">Discard</string>
@@ -17,7 +17,7 @@
 
     <!-- project configuration -->
     <string name="title_project_title">Project Title</string>
-    <string name="hint_project_title">Please provide a project title</string>
+    <string name="hint_project_title">What is it called?</string>
     <string name="title_project_description">Short Description</string>
     <string name="hint_project_description">Use this field for a short (optional) project description. The description will be a part of reports.</string>
 
@@ -128,10 +128,10 @@
 
     <!-- placeholders -->
     <string name="sample_duration">11:45 hours</string>
-    <string name="from_date_to_date">16. Maerz 2016 23:45:10 - 23.50:00</string>
+    <string name="from_date_to_date">16. Maerz 2016 23:45:10 &#8212; 23.50:00</string>
     <string name="sample_tracking_record_log">This is a first line\nand this one a second</string>
     <string name="sample_project_title">A Project Title</string>
-    <string name="sample_tracking_record_summary">last: 7:30 - 19:00 24.12.2016</string>
+    <string name="sample_tracking_record_summary">last: 7:30 &#8212; 19:00 24.12.2016</string>
     <string name="sample_duration_X">7h/140h</string>
     <string name="sample_remaining_days_X_until_date_Y">7 (24.12.2016)</string>
 
