@@ -101,6 +101,7 @@
     <string name="button_show_tracking_record_editing_activity">Advanced</string>
 
     <!-- project creation dialog -->
+    <string name="title_project_creation_dialog">New project</string>
     <string name="error_project_title_missing">Title missing!</string>
     <string name="button_just_create_project">Create</string>
     <string name="button_open_configuration_after_project_creation">Advanced</string>

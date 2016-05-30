@@ -45,6 +45,7 @@ public class ProjectCreationDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(prepareView(existingTitle))
+                .setTitle(R.string.title_project_creation_dialog)
                 .setPositiveButton(R.string.button_just_create_project, null)
                 .setNeutralButton(R.string.button_open_configuration_after_project_creation, null)
                 .setNegativeButton(R.string.common_close, null);
