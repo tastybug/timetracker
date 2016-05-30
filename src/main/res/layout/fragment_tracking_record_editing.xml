@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:hint="Notizen"
+        android:hint="@string/hint_tracking_record_description"
         android:ems="10"
         android:minLines="3"
         android:maxLines="3" />

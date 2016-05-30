@@ -63,8 +63,8 @@
     <string name="menu_delete_tracking_record">Delete Record</string>
     <string name="from_X">From %1$s</string>
     <string name="until_X">Until %1$s</string>
-    <string name="title_tracking_record_creation">Create New Record</string>
-    <string name="title_tracking_record_editing">Edit A Record</string>
+    <string name="title_tracking_record_creation">Create Time Record</string>
+    <string name="title_tracking_record_editing">Edit Time Record</string>
     <string name="error_date_missing">Please set a date</string>
     <string name="error_time_missing">Please set a time</string>
     <string name="error_end_before_start">This ends before it starts</string>
