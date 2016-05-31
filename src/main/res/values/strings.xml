@@ -100,6 +100,12 @@
     <string name="hint_tracking_record_description">What did you do?</string>
     <string name="button_show_tracking_record_editing_activity">Advanced</string>
 
+    <!-- keep very short tracking record confirmation dialog-->
+    <string name="title_keep_very_short_tracking_record">Keep this tiny record?</string>
+    <string name="msg_keep_very_short_tracking_record">This record was very short. Do you want to keep it nonetheless?</string>
+    <string name="button_keep_tracking_record">Keep</string>
+    <string name="button_drop_tracking_record">Drop</string>
+
     <!-- project creation dialog -->
     <string name="title_project_creation_dialog">New project</string>
     <string name="error_project_title_missing">Title missing!</string>

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
-import com.tastybug.timetracker.gui.eventhandler.DescribeOrDropTinyRecordHandler;
+import com.tastybug.timetracker.gui.eventhandler.PostTrackingKickStopHandler;
 import com.tastybug.timetracker.gui.fragment.project.statistics.ProjectStatisticsFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.control.TrackingControlPanelFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.list.TrackingRecordListFragment;
@@ -20,7 +20,7 @@ public class ProjectDetailsActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
-    private DescribeOrDropTinyRecordHandler describeOrDropTinyRecordHandler;
+    private PostTrackingKickStopHandler postTrackingKickStopHandler;
     private BackPressOnProjectDeletion backPressOnProjectDeletion;
     private String projectUuid;
 
@@ -41,7 +41,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        describeOrDropTinyRecordHandler = new DescribeOrDropTinyRecordHandler(this);
+        postTrackingKickStopHandler = new PostTrackingKickStopHandler(this);
         backPressOnProjectDeletion = new BackPressOnProjectDeletion();
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
@@ -59,7 +59,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        describeOrDropTinyRecordHandler.stop();
+        postTrackingKickStopHandler.stop();
         backPressOnProjectDeletion.stop();
     }
 

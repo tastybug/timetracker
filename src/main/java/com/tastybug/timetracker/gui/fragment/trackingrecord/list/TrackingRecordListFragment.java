@@ -18,6 +18,7 @@ import com.tastybug.timetracker.gui.activity.TrackingRecordModificationActivity;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.DeletedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
 public class TrackingRecordListFragment extends ListFragment {
@@ -77,8 +78,7 @@ public class TrackingRecordListFragment extends ListFragment {
         startActivity(intent);
     }
 
-    @Subscribe
-    public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
+    @Subscribe public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
         if (projectUuidOpt.isPresent()
                 && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
             ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());
@@ -89,6 +89,12 @@ public class TrackingRecordListFragment extends ListFragment {
         if (projectUuidOpt.isPresent()
                 && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
             ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());
+        }
+    }
+
+    @Subscribe public void handleTrackingRecordDeleted(DeletedTrackingRecordEvent event) {
+        if (projectUuidOpt.isPresent()) {
+            ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(projectUuidOpt.get());
         }
     }
 

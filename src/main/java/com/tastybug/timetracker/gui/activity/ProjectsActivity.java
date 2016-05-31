@@ -5,11 +5,11 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.eventhandler.DescribeOrDropTinyRecordHandler;
+import com.tastybug.timetracker.gui.eventhandler.PostTrackingKickStopHandler;
 
 public class ProjectsActivity extends Activity {
 
-    private DescribeOrDropTinyRecordHandler describeOrDropTinyRecordHandler;
+    private PostTrackingKickStopHandler postTrackingKickStopHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +31,12 @@ public class ProjectsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        describeOrDropTinyRecordHandler = new DescribeOrDropTinyRecordHandler(this);
+        postTrackingKickStopHandler = new PostTrackingKickStopHandler(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        describeOrDropTinyRecordHandler.stop();
+        postTrackingKickStopHandler.stop();
     }
 }

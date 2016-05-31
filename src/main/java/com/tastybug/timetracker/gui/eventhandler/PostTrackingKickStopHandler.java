@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
+import com.tastybug.timetracker.gui.dialog.trackingrecord.ConfirmKeepVeryShortTrackingRecordDialogFragment;
 import com.tastybug.timetracker.gui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 
@@ -13,18 +14,18 @@ import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
  *
  * https://bitbucket.org/tastybug/timetracker/issues/42
  */
-public class DescribeOrDropTinyRecordHandler extends AbstractOttoEventHandler {
+public class PostTrackingKickStopHandler extends AbstractOttoEventHandler {
 
     private Activity activity;
 
-    public DescribeOrDropTinyRecordHandler(Activity activity) {
+    public PostTrackingKickStopHandler(Activity activity) {
         this.activity = activity;
     }
 
     @Subscribe
     public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
         if (event.getTrackingRecord().isVeryShort()) {
-            Toast.makeText(activity, "Rather short, isnt it?", Toast.LENGTH_SHORT).show();
+            confirmKeepVeryShortRecord(event.getTrackingRecord().getUuid());
         } else {
             EditTrackingRecordDescriptionDialogFragment
                     .aDialog()
@@ -33,5 +34,10 @@ public class DescribeOrDropTinyRecordHandler extends AbstractOttoEventHandler {
         }
     }
 
-
+    private void confirmKeepVeryShortRecord(String trackingRecordUuid) {
+        ConfirmKeepVeryShortTrackingRecordDialogFragment
+                .aDialog()
+                .forTrackingRecordUuid(trackingRecordUuid)
+                .show(activity.getFragmentManager(), getClass().getSimpleName());
+    }
 }

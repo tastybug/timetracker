@@ -181,7 +181,7 @@ public class TrackingRecordTest {
         // when
         record.setStart(new LocalDateTime(2016,12,24,12,0,0).toDate());
 
-        // expect
+        // expect: even when not finished yet, it counts as very short
         assertTrue(record.isVeryShort());
 
         // when: its very short
