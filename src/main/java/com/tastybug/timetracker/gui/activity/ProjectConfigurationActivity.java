@@ -36,9 +36,9 @@ public class ProjectConfigurationActivity extends BaseActivity {
     protected void setupActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
     }
 
     private void setOrRestoreState(Bundle savedInstanceState) {

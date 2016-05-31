@@ -72,9 +72,9 @@ public class ProjectDetailsActivity extends BaseActivity {
     protected void setupActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
     }
 
     @Override

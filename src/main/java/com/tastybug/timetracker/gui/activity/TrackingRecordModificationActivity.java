@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.gui.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -104,9 +103,9 @@ public class TrackingRecordModificationActivity extends BaseActivity {
     protected void setupActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
     }
 
     @Override
