@@ -1,15 +1,15 @@
 package com.tastybug.timetracker.gui.activity;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.eventhandler.PostTrackingKickStopHandler;
+import com.tastybug.timetracker.gui.eventhandler.ShowPostTrackingSummarySnackbarHandler;
 
-public class ProjectsActivity extends Activity {
+public class ProjectsActivity extends AppCompatActivity {
 
-    private PostTrackingKickStopHandler postTrackingKickStopHandler;
+    private ShowPostTrackingSummarySnackbarHandler showPostTrackingSummarySnackbarHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class ProjectsActivity extends Activity {
     }
 
     protected void setupActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false); // disables UP arrow
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
@@ -31,12 +31,12 @@ public class ProjectsActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        postTrackingKickStopHandler = new PostTrackingKickStopHandler(this);
+        showPostTrackingSummarySnackbarHandler = new ShowPostTrackingSummarySnackbarHandler(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        postTrackingKickStopHandler.stop();
+        showPostTrackingSummarySnackbarHandler.stop();
     }
 }

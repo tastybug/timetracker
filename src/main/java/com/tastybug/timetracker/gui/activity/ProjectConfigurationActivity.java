@@ -34,7 +34,7 @@ public class ProjectConfigurationActivity extends BaseActivity {
     }
 
     protected void setupActionBar() {
-        ActionBar actionBar = getActionBar();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);

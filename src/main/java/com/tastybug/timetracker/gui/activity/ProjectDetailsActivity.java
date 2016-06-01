@@ -1,15 +1,15 @@
 package com.tastybug.timetracker.gui.activity;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
-import com.tastybug.timetracker.gui.eventhandler.PostTrackingKickStopHandler;
+import com.tastybug.timetracker.gui.eventhandler.ShowPostTrackingSummarySnackbarHandler;
 import com.tastybug.timetracker.gui.fragment.project.statistics.ProjectStatisticsFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.control.TrackingControlPanelFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.list.TrackingRecordListFragment;
@@ -20,7 +20,7 @@ public class ProjectDetailsActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
-    private PostTrackingKickStopHandler postTrackingKickStopHandler;
+    private ShowPostTrackingSummarySnackbarHandler showPostTrackingSummarySnackbarHandler;
     private BackPressOnProjectDeletion backPressOnProjectDeletion;
     private String projectUuid;
 
@@ -41,7 +41,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        postTrackingKickStopHandler = new PostTrackingKickStopHandler(this);
+        showPostTrackingSummarySnackbarHandler = new ShowPostTrackingSummarySnackbarHandler(this);
         backPressOnProjectDeletion = new BackPressOnProjectDeletion();
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
@@ -59,7 +59,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        postTrackingKickStopHandler.stop();
+        showPostTrackingSummarySnackbarHandler.stop();
         backPressOnProjectDeletion.stop();
     }
 
@@ -70,7 +70,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     }
 
     protected void setupActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayUseLogoEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
