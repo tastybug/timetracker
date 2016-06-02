@@ -37,15 +37,9 @@ public class ProjectListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
         setListAdapter(new ProjectListAdapter(getActivity()));
-        hideListSeparators();
 
         updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
         testDataCreationHandler = new TestDataCreationHandler();
-    }
-
-    private void hideListSeparators() {
-        getListView().setDivider(null);
-        getListView().setDividerHeight(0);
     }
 
     @Override

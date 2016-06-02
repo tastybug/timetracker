@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.application;
 
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +11,10 @@ import com.tastybug.timetracker.util.VersionHelper;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 public class Application extends android.app.Application {
+    static {
+        AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_YES);
+    }
 
     private FirstRunHelper firstRunHelper;
     private VersionHelper versionHelper;

@@ -13,8 +13,8 @@ import android.widget.ListView;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.gui.activity.TrackingRecordModificationActivity;
+import com.tastybug.timetracker.gui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
@@ -36,11 +36,6 @@ public class TrackingRecordListFragment extends ListFragment {
         if(savedInstanceState != null) {
             projectUuidOpt = (Optional<String>)savedInstanceState.getSerializable(PROJECT_UUID_OPT);
         }
-    }
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getListView().setBackgroundDrawable( getResources().getDrawable(R.drawable.white_shadowbox) );
     }
 
     @Override
