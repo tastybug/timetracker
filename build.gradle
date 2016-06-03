@@ -29,7 +29,12 @@ android {
         versionCode 100
         versionName "1.00-SNAPSHOT"
     }
+
+    lintOptions {
+          abortOnError true
+    }
 }
+
 
 dependencies {
     compile 'com.google.guava:guava:18.0'
