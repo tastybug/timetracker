@@ -15,14 +15,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum"
+            android:text="@string/sample_tracking_since_X"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/lineOne" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum"
+            android:text="@string/sample_tracking_duration_X"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/lineTwo" />
 
@@ -35,6 +35,5 @@
         android:src="@drawable/ic_start_tracking"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true" />
-
 
 </RelativeLayout>

@@ -138,5 +138,7 @@
     <string name="sample_tracking_record_summary">last: 7:30 &#8212; 19:00 24.12.2016</string>
     <string name="sample_duration_X">7h/140h</string>
     <string name="sample_remaining_days_X_until_date_Y">7 (24.12.2016)</string>
+    <string name="sample_tracking_since_X">tracking since 24.12.2016 13:00</string>
+    <string name="sample_tracking_duration_X">Duration 20:10:05hrs</string>
 
 </resources>
