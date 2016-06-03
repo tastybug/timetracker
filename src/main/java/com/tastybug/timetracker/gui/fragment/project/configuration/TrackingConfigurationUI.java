@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TrackingConfigurationUI {
 
@@ -86,7 +87,7 @@ public class TrackingConfigurationUI {
 
     public void renderHourLimit(Integer hourLimit) {
         if(hourLimit != null) {
-            hourLimitEditText.setText(hourLimit + "");
+            hourLimitEditText.setText(String.format(Locale.getDefault(), "%d", hourLimit));
         } else {
             hourLimitEditText.setText("");
         }
