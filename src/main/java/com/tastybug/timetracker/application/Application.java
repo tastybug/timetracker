@@ -11,9 +11,9 @@ import com.tastybug.timetracker.util.VersionHelper;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 public class Application extends android.app.Application {
+
     static {
-        AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_YES);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
     }
 
     private FirstRunHelper firstRunHelper;
