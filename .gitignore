@@ -6,3 +6,4 @@
 /.idea/libraries
 /build
 /target
+gen-external-apklibs/
