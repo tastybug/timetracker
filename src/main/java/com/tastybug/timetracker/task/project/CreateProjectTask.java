@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
@@ -54,7 +55,9 @@ public class CreateProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(getClass().getSimpleName(), "Created project " + project);
+        if (BuildConfig.DEBUG) {
+            Log.i(getClass().getSimpleName(), "Created project " + project);
+        }
         ottoProvider.getSharedBus().post(new ProjectCreatedEvent(project));
     }
 

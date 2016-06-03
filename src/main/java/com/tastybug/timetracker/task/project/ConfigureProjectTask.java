@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.Project;
@@ -118,7 +119,9 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(getClass().getSimpleName(), "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
+        if (BuildConfig.DEBUG) {
+            Log.i(getClass().getSimpleName(), "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
+        }
         ottoProvider.getSharedBus().post(new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID)));
     }
 

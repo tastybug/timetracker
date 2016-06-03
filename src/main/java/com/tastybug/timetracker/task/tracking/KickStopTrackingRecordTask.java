@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
@@ -44,7 +45,9 @@ public class KickStopTrackingRecordTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(getClass().getSimpleName(), "Kick stopped tracking record " + trackingRecord);
+        if (BuildConfig.DEBUG) {
+            Log.i(getClass().getSimpleName(), "Kick stopped tracking record " + trackingRecord);
+        }
         ottoProvider.getSharedBus().post(new KickStoppedTrackingRecordEvent(trackingRecord));
     }
 }

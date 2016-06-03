@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
@@ -37,7 +38,9 @@ public class DeleteProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(getClass().getSimpleName(), "Deleted project " + arguments.getString(PROJECT_UUID));
+        if (BuildConfig.DEBUG) {
+            Log.i(getClass().getSimpleName(), "Deleted project " + arguments.getString(PROJECT_UUID));
+        }
         ottoProvider.getSharedBus().post(new ProjectDeletedEvent(arguments.getString(PROJECT_UUID)));
     }
 

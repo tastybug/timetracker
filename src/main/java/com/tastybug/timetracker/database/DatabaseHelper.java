@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.tastybug.timetracker.BuildConfig;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -43,13 +45,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-        Log.d(getClass().getSimpleName(), "Starting database creation..");
+		if (BuildConfig.DEBUG) {
+			Log.d(getClass().getSimpleName(), "Starting database creation..");
+		}
     	db.beginTransaction(); // unlike onUpgrade, onCreate doesnt execute within in transaction implicitly
 		db.execSQL("PRAGMA foreign_keys=ON;");
 		performDbUpgrade(db, 0, dbVersion); // treat creation as an upgrade from version 0
 		db.setTransactionSuccessful();
 		db.endTransaction();
-        Log.d(getClass().getSimpleName(), ".. database creation finished successfully.");
+		if (BuildConfig.DEBUG) {
+			Log.d(getClass().getSimpleName(), ".. database creation finished successfully.");
+		}
 	}
 
 	@Override
@@ -64,8 +70,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.i(getClass().getSimpleName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ".");
-
+		if (BuildConfig.DEBUG) {
+			Log.i(getClass().getSimpleName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ".");
+		}
 		performDbUpgrade(db, oldVersion, newVersion);
 	}
 
@@ -101,7 +108,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			else
 				return defaultDataPrefix;
 		} catch (IOException ioe) {
-			Log.e(getClass().getSimpleName(), "Error while looking up database script folder: " + ioe.getMessage());
+			if (BuildConfig.DEBUG) {
+				Log.e(getClass().getSimpleName(), "Error while looking up database script folder: " + ioe.getMessage());
+			}
 	    	return defaultDataPrefix;
 	    }
 	}
@@ -118,7 +127,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	private int performIterativeSQLUpgrade (Context context, SQLiteDatabase db, String pathBase, int versionToUpgradeTo) throws IOException {
 	    try {
-			Log.d(getClass().getSimpleName(), "Calling database upgrade/creation script for version " + versionToUpgradeTo + ": " + pathBase + versionToUpgradeTo);
+			if (BuildConfig.DEBUG) {
+				Log.d(getClass().getSimpleName(), "Calling database upgrade/creation script for version " + versionToUpgradeTo + ": " + pathBase + versionToUpgradeTo);
+			}
 		    int result = 0;
 
 		    InputStream myInput = context.getAssets().open(pathBase + versionToUpgradeTo);
@@ -133,10 +144,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		        }
 		    }
 		    insertReader.close();
-			Log.d(getClass().getSimpleName(), "Executed " + result + " statements, not counting empty lines and comments.");
+			if (BuildConfig.DEBUG) {
+				Log.d(getClass().getSimpleName(), "Executed " + result + " statements, not counting empty lines and comments.");
+			}
 		    return result;
 	    } catch (IOException ioe) {
-			Log.e(getClass().getSimpleName(), "Error while performing iterative database upgrade: " + ioe.toString());
+			if (BuildConfig.DEBUG) {
+				Log.e(getClass().getSimpleName(), "Error while performing iterative database upgrade: " + ioe.toString());
+			}
 	    	throw ioe;
 	    }
 	}
