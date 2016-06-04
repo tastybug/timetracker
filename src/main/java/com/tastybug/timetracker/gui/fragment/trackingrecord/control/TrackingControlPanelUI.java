@@ -11,9 +11,8 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.util.DurationFormatterFactory;
+import com.tastybug.timetracker.util.DurationFormatter;
 
-import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 
 import java.text.DateFormat;
@@ -54,7 +53,7 @@ public class TrackingControlPanelUI {
         lineOne.setText(context.getString(R.string.msg_tracking_since_X,
                 getStartDateAsString(ongoingTrackingRecord.get().getStart().get())));
         lineTwo.setText(context.getString(R.string.msg_tracking_duration_X,
-                getDurationAsString(ongoingTrackingRecord.get().toDuration().get())));
+                DurationFormatter.a().formatMeasuredDuration(context, ongoingTrackingRecordOpt.get())));
     }
 
     public void visualizeNoOngoingTracking() {
@@ -83,10 +82,6 @@ public class TrackingControlPanelUI {
             startDateFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
         }
         return startDateFormatter.format(startDate);
-    }
-
-    private String getDurationAsString(Duration duration) {
-        return DurationFormatterFactory.getFormatter(context, duration).print(duration.toPeriod());
     }
 
     private Runnable updateUITask = new Runnable() {

@@ -7,14 +7,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.util.DurationFormatterFactory;
+import com.tastybug.timetracker.util.DurationFormatter;
 
-import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 
 import java.text.DateFormat;
@@ -73,16 +71,15 @@ public class TrackingRecordView extends LinearLayout {
         Preconditions.checkState(trackingRecord.isFinished() || trackingRecord.isRunning(),
                 "TrackingRecord not started yet, this is not supposed to happen!");
 
-        Duration duration = trackingRecord.toDuration().get();
         if (trackingRecord.isFinished()
                 && trackingConfiguration.hasAlteringRoundingStrategy()) {
-            Optional<Duration> roundedDurationOpt = trackingRecord.toEffectiveDuration(trackingConfiguration);
-            durationTextView.setText(getContext().getString(R.string.duration_X_effectively_Y,
-                    DurationFormatterFactory.getFormatter(getContext(), duration).print(duration.toPeriod()),
-                    DurationFormatterFactory.getFormatter(getContext(), roundedDurationOpt.get()).print(roundedDurationOpt.get().toPeriod())
-                    ));
+            durationTextView.setText(
+                    getContext().getString(R.string.duration_X_effectively_Y,
+                    DurationFormatter.a().formatMeasuredDuration(getContext(), trackingRecord),
+                    DurationFormatter.a().formatEffectiveDuration(getContext(), trackingRecord))
+                    );
         } else {
-            durationTextView.setText(DurationFormatterFactory.getFormatter(getContext(), duration).print(duration.toPeriod()));
+            durationTextView.setText(DurationFormatter.a().formatMeasuredDuration(getContext(), trackingRecord));
         }
     }
 

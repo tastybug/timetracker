@@ -10,10 +10,9 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
-import com.tastybug.timetracker.util.DurationFormatterFactory;
+import com.tastybug.timetracker.util.DurationFormatter;
 
 import org.joda.time.Duration;
-import org.joda.time.format.PeriodFormatter;
 
 public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
 
@@ -32,13 +31,12 @@ public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
         if (project.getTrackingRecords(getActivity()).isEmpty()) {
             return getString(R.string.msg_you_lose_no_tracking_records);
         } else {
-            Duration currentDuration = new StatisticProjectDuration(
+            Duration effectiveProjectDuration = new StatisticProjectDuration(
                     project.getTrackingConfiguration(getActivity()),
                     project.getTrackingRecords(getActivity()),
                     true
             ).get();
-            PeriodFormatter formatter = DurationFormatterFactory.getFormatter(getActivity(), currentDuration);
-            return getString(R.string.msg_you_lose_X, formatter.print(currentDuration.toPeriod()));
+            return getString(R.string.msg_you_lose_X, DurationFormatter.a().formatDuration(getActivity(), effectiveProjectDuration));
         }
     }
 
