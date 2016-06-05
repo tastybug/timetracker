@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
@@ -24,6 +25,7 @@ public class TrackingRecordModificationFragment extends Fragment {
     private TrackingRecordModificationUI ui;
 
     private Optional<String> existingTrackingRecordUuidOpt = Optional.absent();
+    private Optional<Boolean> isExistingTrackingRecordThatsRunning = Optional.absent();
     private Optional<String> creationForProjectUuid = Optional.absent();
 
     @Override
@@ -61,6 +63,7 @@ public class TrackingRecordModificationFragment extends Fragment {
 
     public void showTrackingRecordData(TrackingRecord trackingRecord) {
         this.existingTrackingRecordUuidOpt = Optional.of(trackingRecord.getUuid());
+        this.isExistingTrackingRecordThatsRunning = Optional.of(trackingRecord.isRunning());
 
         ui.renderStartDate(trackingRecord.getStart());
         ui.renderStartTime(trackingRecord.getStart());
@@ -74,6 +77,25 @@ public class TrackingRecordModificationFragment extends Fragment {
     }
 
     public boolean validateData() {
+        if (existingTrackingRecordUuidOpt.isPresent()
+                && isExistingTrackingRecordThatsRunning.isPresent()) {
+            return validateForRunningTrackingRecord();
+        } else {
+            return validateForCompletedTrackingRecord();
+        }
+    }
+
+    private boolean validateForRunningTrackingRecord() {
+        Optional<Date> startDate = ui.getAggregatedStartDate(true);
+        Optional<Date> endDate = ui.getAggregatedEndDate(false);
+        if(startDate.isPresent() && endDate.isPresent()) {
+            return ensureEndDateIsAfterStartDate(startDate.get(), endDate.get());
+        } else {
+            return startDate.isPresent();
+        }
+    }
+
+    private boolean validateForCompletedTrackingRecord() {
         Optional<Date> startDate = ui.getAggregatedStartDate(true);
         Optional<Date> endDate = ui.getAggregatedEndDate(true);
         if(startDate.isPresent() && endDate.isPresent()) {
@@ -84,10 +106,16 @@ public class TrackingRecordModificationFragment extends Fragment {
     }
 
     public ModifyTrackingRecordTask collectModificationsForEdit(ModifyTrackingRecordTask task) {
-        return task.withTrackingRecordUuid(existingTrackingRecordUuidOpt.get())
+        task.withTrackingRecordUuid(existingTrackingRecordUuidOpt.get())
                 .withStartDate(ui.getAggregatedStartDate(true).get())
-                .withEndDate(ui.getAggregatedEndDate(true).get())
-            .withDescription(ui.getDescriptionFromWidget());
+                .withDescription(ui.getDescriptionFromWidget());
+
+        if (isExistingTrackingRecordThatsRunning.isPresent() && isExistingTrackingRecordThatsRunning.get()) {
+            if (ui.getAggregatedEndDate(false).isPresent()) {
+                task.withEndDate(ui.getAggregatedEndDate(false).get());
+            }
+        }
+        return task;
     }
 
     public CreateTrackingRecordTask collectModificationsForCreate(CreateTrackingRecordTask task) {
