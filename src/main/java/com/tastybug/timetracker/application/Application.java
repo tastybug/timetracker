@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
 import com.tastybug.timetracker.util.FirstRunHelper;
 import com.tastybug.timetracker.util.VersionHelper;
@@ -11,10 +12,6 @@ import com.tastybug.timetracker.util.VersionHelper;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 public class Application extends android.app.Application {
-
-    static {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-    }
 
     private FirstRunHelper firstRunHelper;
     private VersionHelper versionHelper;
@@ -26,16 +23,21 @@ public class Application extends android.app.Application {
         versionHelper = new VersionHelper(this);
 
         initializeJoda();
+        initializeDayNightThemeMode();
         if (isFirstRun()) {
             runGenerateTestDataTask();
             declareFirstRunConsumed();
         }
 
-        printWelcomeToast();
+        showWelcomeToast();
     }
 
     private void initializeJoda() {
         JodaTimeAndroid.init(this);
+    }
+
+    private void initializeDayNightThemeMode() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
     }
 
     private boolean isFirstRun() {
@@ -56,10 +58,11 @@ public class Application extends android.app.Application {
         }
     }
 
-    private void printWelcomeToast() {
+    private void showWelcomeToast() {
         Toast.makeText(this,
-                versionHelper.getApplicationName() + " " + versionHelper.getVersionName(),
+                getString(R.string.app_start_welcome_app_name_X_at_version_Y,
+                        versionHelper.getApplicationName(),
+                        versionHelper.getVersionName()),
                 Toast.LENGTH_SHORT).show();
     }
-
 }

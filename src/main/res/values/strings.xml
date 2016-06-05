@@ -130,6 +130,10 @@
     <string name="snack_X_booked_on_project_Y">%1$s booked on %2$s</string>
     <string name="snack_describe_tracking_record">Add comment</string>
 
+    <!-- -->
+    <string name="app_start_welcome_app_name_X_at_version_Y">%1$s %2$s</string>
+
+
     <!-- placeholders -->
     <string name="sample_duration">11:45 hours</string>
     <string name="from_date_to_date">16. Maerz 2016 23:45:10 &#8212; 23.50:00</string>
