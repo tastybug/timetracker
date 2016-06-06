@@ -6,7 +6,7 @@ Fachliches Glossar
     * Projektbeschreibung
     
 * Zeiterfassungskonfiguration (Tracking Configuration)
-    * Projektzeitraum: Start- und Enddatum eines Projekts (jeweils optional) 
+    * Projektzeitraum (Time Frame): Start- und Enddatum eines Projekts (jeweils optional)
     * maximaler Projektumfang: eine Höchstdauer für ein Projekt
         * ein Projekt, auf welches mehr gebucht wurde als konfiguriert ist 'OVERBOOKED'
     * Rundungsstrategie: werden Zeiterfassungen nach Beendigung auf/ab gerundet?
@@ -15,6 +15,8 @@ Fachliches Glossar
     * effektiver Projektumfang (Project Duration): die Dauer eines Projektes auf Basis der bisherigen Zeiterfassungen ('es wurden bisher 10h erfasst')
     * Projekterfüllung (Project Completion): prozentuale Erfüllung eines Projekts. Ist gleich effektivem Projektumfang im Verhältnis zum max. Projektumfang.
         * ein Projekt ohne max. Umfang hat keine Projekterfüllung
+    * Projektfristerreichung (Project Expiration): prozentualer Wert der Fristerreichung eines Projekts. Messgenauigkeit in Stunden.
+        * ein Projekt ohne Start- oder Enddatum hat kein Projektablauf
     
 * Zeiterfassung / TrackingRecord: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
     * Start-,Endedatum der -
