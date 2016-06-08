@@ -4,9 +4,9 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
+import org.joda.time.Hours;
 
 import java.util.Date;
 
@@ -46,9 +46,9 @@ public class StatisticProjectExpiration {
             return Optional.of(100);
         }
 
-        Period fullTimeFrame = new Period(new LocalDateTime(startDate.get()), new LocalDateTime(endDate.get()));
-        Period expiredTimeFrame = new Period(new LocalDateTime(startDate.get()), new LocalDateTime(now));
-        return Optional.of((int)(expiredTimeFrame.toStandardHours().getHours()/(fullTimeFrame.toStandardHours().getHours()/100d)));
+        int full = Hours.hoursBetween(new DateTime(startDate.get()), new DateTime(endDate.get())).getHours();
+        int exp = Hours.hoursBetween(new DateTime(startDate.get()), new DateTime(now)).getHours();
+        return Optional.of((int)(exp/(full/100d)));
     }
 
     private Optional<Long> calculateRemainingDays() {
