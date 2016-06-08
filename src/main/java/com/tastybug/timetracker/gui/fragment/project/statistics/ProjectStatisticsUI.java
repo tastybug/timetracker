@@ -1,7 +1,8 @@
 package com.tastybug.timetracker.gui.fragment.project.statistics;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,9 +84,9 @@ public class ProjectStatisticsUI {
             timeframeCompletionProgressBar.setProgress(statistic.get().getExpirationPercent().get());
             timeframeCompletionProgressBar.setVisibility(View.VISIBLE);
             if (statistic.get().getExpirationPercent().get() > 80) {
-                timeframeCompletionProgressBar.setProgressDrawable(ContextCompat.getDrawable(context.getApplicationContext(),R.drawable.circular_progressbar_warning));
+                timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.RED));
             } else {
-                timeframeCompletionProgressBar.setProgressDrawable(ContextCompat.getDrawable(context.getApplicationContext(),R.drawable.circular_progressbar_normal));
+                timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.GREEN));
             }
         } else {
             timeframeCompletionProgressBar.setVisibility(View.GONE);
