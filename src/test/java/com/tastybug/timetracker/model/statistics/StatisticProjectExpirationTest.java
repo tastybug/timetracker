@@ -10,6 +10,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class StatisticProjectExpirationTest {
 
@@ -35,6 +36,9 @@ public class StatisticProjectExpirationTest {
 
         // then
         assertFalse(expirationPercentOpt.isPresent());
+
+        // and
+        assertFalse(statisticProjectExpiration.isExpired());
     }
 
     @Test public void projectWithoutStartdateHasNoExpiration() {
@@ -49,6 +53,9 @@ public class StatisticProjectExpirationTest {
 
         // then
         assertFalse(expirationPercentOpt.isPresent());
+
+        // and
+        assertFalse(statisticProjectExpiration.isExpired());
     }
 
     @Test public void canCalculateExpirationPercentWithHourPrecision() {
@@ -79,6 +86,9 @@ public class StatisticProjectExpirationTest {
 
         // then
         assertEquals(0, (int)expirationPercentOpt.get());
+
+        // and
+        assertFalse(statisticProjectExpiration.isExpired());
     }
 
     @Test public void aTimeFrameFromThePastHas100PercentExpiration() {
@@ -94,6 +104,68 @@ public class StatisticProjectExpirationTest {
 
         // then
         assertEquals(100, (int)expirationPercentOpt.get());
+
+        // and
+        assertTrue(statisticProjectExpiration.isExpired());
     }
 
+    @Test public void canCalculateRemainingDaysWhenTimeFrameHasNoYetStarted() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
+        configuration.setEnd(Optional.of(new LocalDateTime(2016, 12, 30, 8, 0).toDate()));
+        Date now = new LocalDateTime(2016, 12, 20, 8, 0).toDate();
+        StatisticProjectExpiration statisticProjectExpiration = new StatisticProjectExpiration(configuration, now);
+
+        // when
+        Optional<Long> remainingDays = statisticProjectExpiration.getRemainingDays();
+
+        // then
+        assertEquals(6, (long)remainingDays.get());
+    }
+
+    @Test public void canCalculateRemainingDaysWhenTimeFrameHasStarted() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
+        configuration.setEnd(Optional.of(new LocalDateTime(2016, 12, 30, 8, 0).toDate()));
+        Date now = new LocalDateTime(2016, 12, 25, 8, 0).toDate();
+        StatisticProjectExpiration statisticProjectExpiration = new StatisticProjectExpiration(configuration, now);
+
+        // when
+        Optional<Long> remainingDays = statisticProjectExpiration.getRemainingDays();
+
+        // then
+        assertEquals(5, (long)remainingDays.get());
+    }
+
+    @Test public void canCalculateRemainingDaysWhenTimeFrameLiesInPast() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
+        configuration.setEnd(Optional.of(new LocalDateTime(2016, 12, 30, 8, 0).toDate()));
+        Date now = new LocalDateTime(2016, 12, 31, 8, 0).toDate();
+        StatisticProjectExpiration statisticProjectExpiration = new StatisticProjectExpiration(configuration, now);
+
+        // when
+        Optional<Long> remainingDays = statisticProjectExpiration.getRemainingDays();
+
+        // then
+        assertEquals(0, (long)remainingDays.get());
+    }
+
+    @Test public void remainingDaysWithoutAnEndDateIsNotAvailable() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
+        configuration.setEnd(Optional.<Date>absent());
+        Date now = new LocalDateTime(2016, 12, 22, 8, 0).toDate();
+        StatisticProjectExpiration statisticProjectExpiration = new StatisticProjectExpiration(configuration, now);
+
+        // when
+        Optional<Long> remainingDays = statisticProjectExpiration.getRemainingDays();
+
+        // then
+        assertFalse(remainingDays.isPresent());
+    }
 }

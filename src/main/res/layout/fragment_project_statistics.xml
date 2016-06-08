@@ -1,22 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp" >
 
+    <ProgressBar
+        android:id="@+id/completion_timeframe"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="3dp"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/circular_progressbar_normal"
+        android:background="@drawable/circle_shape"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="100"
+        android:progress="65" />
+
     <TextView
         android:id="@+id/project_info_time_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:text="@string/project_remaining_days_X_until_Y"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignBottom="@+id/completion_timeframe"
+        android:layout_toRightOf="@+id/completion_timeframe"
+        android:layout_toEndOf="@+id/completion_timeframe" />
+
+    <ProgressBar
+        android:id="@+id/completion_duration"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="3dp"
+        android:layout_below="@id/completion_timeframe"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/circular_progressbar_normal"
+        android:background="@drawable/circle_shape"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="100"
+        android:progress="35" />
 
     <TextView
         android:id="@+id/project_info_current_project_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:text="@string/X_recorded_hours_so_far_from_a_total_of_Y"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignBottom="@+id/completion_duration"
+        android:layout_toRightOf="@+id/completion_duration"
+        android:layout_toEndOf="@+id/completion_duration" />
 
-</LinearLayout>
+
+</RelativeLayout>

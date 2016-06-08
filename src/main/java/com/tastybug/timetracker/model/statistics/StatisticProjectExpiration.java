@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 
+import org.joda.time.Duration;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 
@@ -13,6 +14,8 @@ public class StatisticProjectExpiration {
 
     private TrackingConfiguration trackingConfiguration;
     private Date now;
+    private Optional<Long> remainingDays;
+    private Optional<Integer> expirationPercent;
 
 
     public StatisticProjectExpiration(TrackingConfiguration trackingConfiguration) {
@@ -27,9 +30,11 @@ public class StatisticProjectExpiration {
 
         this.trackingConfiguration = trackingConfiguration;
         this.now = now;
+        this.remainingDays = calculateRemainingDays();
+        this.expirationPercent = calculateExpirationPercent();
     }
 
-    public Optional<Integer> getExpirationPercent() {
+    private Optional<Integer> calculateExpirationPercent() {
         Optional<Date> startDate = trackingConfiguration.getStart();
         Optional<Date> endDate = trackingConfiguration.getEnd();
         if (!startDate.isPresent() || !endDate.isPresent()) {
@@ -44,5 +49,31 @@ public class StatisticProjectExpiration {
         Period fullTimeFrame = new Period(new LocalDateTime(startDate.get()), new LocalDateTime(endDate.get()));
         Period expiredTimeFrame = new Period(new LocalDateTime(startDate.get()), new LocalDateTime(now));
         return Optional.of((int)(expiredTimeFrame.toStandardHours().getHours()/(fullTimeFrame.toStandardHours().getHours()/100d)));
+    }
+
+    private Optional<Long> calculateRemainingDays() {
+        if (!trackingConfiguration.getEnd().isPresent()) {
+            return Optional.absent();
+        }
+        Date start = trackingConfiguration.getStart().isPresent()
+                && trackingConfiguration.getStart().get().after(now) ? trackingConfiguration.getStart().get() : now;
+        if (start.after(trackingConfiguration.getEnd().get())) {
+            return Optional.of(0L);
+        }
+
+        Duration duration = new Duration(start.getTime(), trackingConfiguration.getEnd().get().getTime());
+        return Optional.of(duration.getStandardDays());
+    }
+
+    public Optional<Long> getRemainingDays() {
+        return remainingDays;
+    }
+
+    public Optional<Integer> getExpirationPercent() {
+        return expirationPercent;
+    }
+
+    public boolean isExpired() {
+        return expirationPercent.isPresent() && expirationPercent.get() == 100;
     }
 }
