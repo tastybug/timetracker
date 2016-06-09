@@ -103,7 +103,7 @@ public class TrackingDelegate {
         if (configuration.getHourLimit().isPresent()) {
             ArrayList<TrackingRecord> trackingRecordList = new TrackingRecordDAO(activity).getByProjectUuid(project.getUuid());
 
-            Duration effectiveDuration = new StatisticProjectDuration(configuration, trackingRecordList).get();
+            Duration effectiveDuration = new StatisticProjectDuration(configuration, trackingRecordList).getDuration();
             if (!effectiveDuration.isShorterThan(Duration.standardHours(configuration.getHourLimit().get()))) {
                 return configuration.getHourLimit();
             }

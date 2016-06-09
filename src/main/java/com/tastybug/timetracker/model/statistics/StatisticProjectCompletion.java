@@ -16,7 +16,7 @@ public class StatisticProjectCompletion {
     public StatisticProjectCompletion(TrackingConfiguration configuration,
                                       ArrayList<TrackingRecord> trackingRecords,
                                       boolean countRunning) {
-        this.currentDuration = new StatisticProjectDuration(configuration, trackingRecords, countRunning).get();
+        this.currentDuration = new StatisticProjectDuration(configuration, trackingRecords, countRunning).getDuration();
         this.trackingConfiguration = configuration;
     }
 

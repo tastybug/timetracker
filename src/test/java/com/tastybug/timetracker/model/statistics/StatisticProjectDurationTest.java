@@ -31,7 +31,7 @@ public class StatisticProjectDurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, list).get();
+        Duration duration = new StatisticProjectDuration(configuration, list).getDuration();
 
         // then
         assertEquals(0, duration.getStandardSeconds());
@@ -43,7 +43,7 @@ public class StatisticProjectDurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, list).get();
+        Duration duration = new StatisticProjectDuration(configuration, list).getDuration();
 
         // then
         assertEquals(0, duration.getStandardSeconds());
@@ -55,7 +55,7 @@ public class StatisticProjectDurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).get();
+        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).getDuration();
 
         // then: 2 * 10:10min
         assertEquals(2*(10*60+10), duration.getStandardSeconds());
@@ -67,7 +67,7 @@ public class StatisticProjectDurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWith10erRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).get();
+        Duration duration = new StatisticProjectDuration(configuration, trackingRecords).getDuration();
 
         // then: 2 * 20 minutes
         assertEquals(2*20*60, duration.getStandardSeconds());
@@ -79,7 +79,7 @@ public class StatisticProjectDurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        Duration duration = new StatisticProjectDuration(configuration, trackingRecords, false).get();
+        Duration duration = new StatisticProjectDuration(configuration, trackingRecords, false).getDuration();
 
         // then
         assertEquals(2*(10*60+10), duration.getStandardSeconds());

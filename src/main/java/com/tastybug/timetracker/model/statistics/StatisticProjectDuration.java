@@ -3,7 +3,6 @@ package com.tastybug.timetracker.model.statistics;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.rounding.RoundingStrategy;
 
 import org.joda.time.Duration;
 
@@ -36,7 +35,7 @@ public class StatisticProjectDuration {
         }
     }
 
-    public Duration get() {
+    public Duration getDuration() {
         return duration;
     }
 }

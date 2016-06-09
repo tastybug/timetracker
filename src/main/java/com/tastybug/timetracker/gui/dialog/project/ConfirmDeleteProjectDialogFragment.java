@@ -35,7 +35,7 @@ public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
                     project.getTrackingConfiguration(getActivity()),
                     project.getTrackingRecords(getActivity()),
                     true
-            ).get();
+            ).getDuration();
             return getString(R.string.msg_you_lose_X, DurationFormatter.a().formatDuration(getActivity(), effectiveProjectDuration));
         }
     }

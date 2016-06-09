@@ -62,7 +62,7 @@ public class ProjectListAdapter extends BaseAdapter {
 
         projectView.renderProjectRemainingTimeFrameInfo(getTrackingConfigurationAt(position));
         projectView.renderProjectDurationStatistic(getTrackingConfigurationAt(position),
-                getDurationStatisticAt(position).get());
+                getDurationStatisticAt(position).getDuration());
 
         return projectView;
     }

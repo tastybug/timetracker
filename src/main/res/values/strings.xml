@@ -51,7 +51,6 @@
     <string name="msg_tracking_duration_X">Duration %1$s</string>
 
     <!-- project statistics -->
-    <string name="project_ends_today">The project ends TODAY</string>
     <string name="project_ended_on_X">The project ended on %1$s.</string>
     <string name="project_remaining_days_X_until_Y">Remaining days %1$s (until %2$s)</string>
     <string name="X_recorded_hours_so_far">Recorded %1$sh</string>
