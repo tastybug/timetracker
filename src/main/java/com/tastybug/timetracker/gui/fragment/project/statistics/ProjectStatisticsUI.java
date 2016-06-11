@@ -84,21 +84,21 @@ public class ProjectStatisticsUI {
 
     private void renderProjectCompletionProgress(Optional<Project> projectOpt) {
         if (!projectOpt.isPresent()) {
-            durationCompletionProgressBar.setVisibility(View.GONE);
+//            durationCompletionProgressBar.setVisibility(View.GONE);
             return;
         }
         TrackingConfiguration configuration = projectOpt.get().getTrackingConfiguration(context);
         StatisticProjectCompletion statisticProjectCompletion = new StatisticProjectCompletion(configuration, projectOpt.get().getTrackingRecords(context), true);
 
         durationCompletionProgressBar.setVisibility(View.VISIBLE);
-        durationCompletionProgressBar.setProgress(statisticProjectCompletion.getCompletionPercent().get().intValue());
+        durationCompletionProgressBar.setProgress(statisticProjectCompletion.getCompletionPercent().or(0d).intValue());
         renderProjectCompletionProgressColoring(statisticProjectCompletion);
     }
 
     private void renderProjectCompletionProgressColoring(StatisticProjectCompletion statisticProjectCompletion) {
         if (statisticProjectCompletion.isOverbooked()) {
             durationCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.RED));
-        } else if (statisticProjectCompletion.getCompletionPercent().get().intValue() > 80) {
+        } else if (statisticProjectCompletion.getCompletionPercent().or(0d).intValue() > 80) {
             durationCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.YELLOW));
         } else {
             durationCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.GREEN));
