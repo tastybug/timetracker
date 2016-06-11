@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
@@ -25,7 +24,7 @@ public class TrackingRecordModificationFragment extends Fragment {
     private TrackingRecordModificationUI ui;
 
     private Optional<String> existingTrackingRecordUuidOpt = Optional.absent();
-    private Optional<Boolean> isExistingTrackingRecordThatsRunning = Optional.absent();
+    private Optional<Boolean> isExistingTrackingRecordThatIsRunning = Optional.absent();
     private Optional<String> creationForProjectUuid = Optional.absent();
 
     @Override
@@ -63,7 +62,7 @@ public class TrackingRecordModificationFragment extends Fragment {
 
     public void showTrackingRecordData(TrackingRecord trackingRecord) {
         this.existingTrackingRecordUuidOpt = Optional.of(trackingRecord.getUuid());
-        this.isExistingTrackingRecordThatsRunning = Optional.of(trackingRecord.isRunning());
+        this.isExistingTrackingRecordThatIsRunning = Optional.of(trackingRecord.isRunning());
 
         ui.renderStartDate(trackingRecord.getStart());
         ui.renderStartTime(trackingRecord.getStart());
@@ -78,7 +77,7 @@ public class TrackingRecordModificationFragment extends Fragment {
 
     public boolean validateData() {
         if (existingTrackingRecordUuidOpt.isPresent()
-                && isExistingTrackingRecordThatsRunning.isPresent()) {
+                && isExistingTrackingRecordThatIsRunning.isPresent()) {
             return validateForRunningTrackingRecord();
         } else {
             return validateForCompletedTrackingRecord();
@@ -110,10 +109,12 @@ public class TrackingRecordModificationFragment extends Fragment {
                 .withStartDate(ui.getAggregatedStartDate(true).get())
                 .withDescription(ui.getDescriptionFromWidget());
 
-        if (isExistingTrackingRecordThatsRunning.isPresent() && isExistingTrackingRecordThatsRunning.get()) {
+        if (isExistingTrackingRecordThatIsRunning.or(false)) {
             if (ui.getAggregatedEndDate(false).isPresent()) {
                 task.withEndDate(ui.getAggregatedEndDate(false).get());
             }
+        } else {
+            task.withEndDate(ui.getAggregatedEndDate(true).get());
         }
         return task;
     }
