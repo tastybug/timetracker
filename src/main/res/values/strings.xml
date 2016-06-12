@@ -15,33 +15,12 @@
     <string name="menu_edit_project">Edit Project</string>
     <string name="menu_delete_project">Delete Project</string>
 
-    <!-- project configuration -->
-    <string name="title_project_title">Project Title</string>
+    <!-- project creation -->
     <string name="hint_project_title">What is it called?</string>
-    <string name="title_project_description">Short Description</string>
-    <string name="hint_project_description">Use this field for a short (optional) project description. The description will be a part of reports.</string>
 
-    <!-- tracking configuration -->
-    <string name="project_configuration_for_project_X">%1$s Settings</string>
-    <string name="menu_confirm_project_configuration">Confirm</string>
-    <string name="title_project_hours_limited">Hour Limit</string>
-    <string name="project_hours_limited_not_limited">No Hour Limit</string>
-    <string name="set_no_date">None</string>
-    <string name="title_project_start_date">Start date</string>
-    <string name="project_starts_at_X">Starts At %1$s</string>
-    <string name="project_has_no_start_date">Open Start</string>
-    <string name="title_project_end_date">End date</string>
-    <string name="project_ends_at_X">Ends At %1$s</string>
-    <string name="project_has_no_end_date">Open End</string>
-    <string name="error_project_title_empty">Please provide a title</string>
-    <string name="error_start_after_end_date">Error: Start date is after end date!</string>
-    <string name="title_rounding_setting">Rounding After Tracking</string>
-    <string name="rounding_no_rounding_label">Perform no rounding</string>
-    <string name="rounding_minutes_down">Round down to full minutes</string>
-    <string name="rounding_minutes_up">Round up to full minutes</string>
-    <string name="rounding_ten_minutes_up">Round up to a full 10 minutes block</string>
-    <string name="rounding_thirty_minutes_up">Round up to a full half hour block</string>
-    <string name="rounding_sixty_minutes_up">Round up to full hours</string>
+    <!-- date/time picker dialogs -->
+    <string name="set_date">Set Date</string>
+    <string name="set_no_date">Set NO Date</string>
 
     <!-- project details -->
     <string name="message_no_project_selected">No project selected!</string>
@@ -143,5 +122,40 @@
     <string name="sample_remaining_days_X_until_date_Y">7 (24.12.2016)</string>
     <string name="sample_tracking_since_X">tracking since 24.12.2016 13:00</string>
     <string name="sample_tracking_duration_X">Duration 20:10:05hrs</string>
+
+    <!-- project settings -->
+    <string name="rounding_no_rounding_label">Perform no rounding</string>
+    <string name="rounding_minutes_down">Round down to full minutes</string>
+    <string name="rounding_minutes_up">Round up to full minutes</string>
+    <string name="rounding_ten_minutes_up">Round up to a full 10 minutes block</string>
+    <string name="rounding_thirty_minutes_up">Round up to a full half hour block</string>
+    <string name="rounding_sixty_minutes_up">Round up to full hours</string>
+    <string name="project_configuration_activity_title">Project Settings</string>
+    <string name="general_project__preference_group_title">General</string>
+    <string name="project_title_preference_key">project_title_preference_key</string>
+    <string name="project_title_preference_title">Project Title</string>
+    <string name="project_description_preference_key">project_description_preference_key</string>
+    <string name="project_description_preference_title">Project Description</string>
+    <string name="warning_invalid_title_was_reverted">Invalid title has been reverted</string>
+    <string name="warning_invalid_description_was_reverted">Invalid description has been reverted</string>
+    <string name="expiration_and_duration_limits_preference_group_title">Time Frame &amp; Limits</string>
+    <string name="tracking_configuration_hour_limit_preference_key">tracking_configuration_hour_limit_preference_key</string>
+    <string name="tracking_configuration_hour_limit_preference_title">Hour Limit</string>
+    <string name="tracking_configuration_hour_limit_preference_summary_none">No Hour Limit</string>
+    <string name="warning_invalid_hour_limit_was_reverted">Invalid hour limit has been reverted</string>
+    <string name="no_hour_limit">No hour limit set</string>
+    <string name="hour_limit_of_X_hours">Project limited to %1$s hours</string>
+    <string name="tracking_configuration_start_date_preference_key">tracking_configuration_start_date_preference_key</string>
+    <string name="tracking_configuration_start_date_preference_title">First Day</string>
+    <string name="tracking_configuration_start_date_preference_summary_none">The project starts at no specific date</string>
+    <string name="tracking_configuration_end_date_inclusive_preference_key">tracking_configuration_end_date_inclusive_preference_key</string>
+    <string name="tracking_configuration_end_date_inclusive_preference_title">Last Day</string>
+    <string name="tracking_configuration_end_date_inclusive_preference_summary_none">The project ends at no specific date</string>
+    <string name="starts_at_X">First day of project: %1$s</string>
+    <string name="ends_at_inclusive_X">Last day of project: %1$s</string>
+    <string name="warning_invalid_start_date_was_reverted">Invalid start date has been reverted!</string>
+    <string name="warning_invalid_end_date_was_reverted">Invalid end date has been reverted!</string>
+    <string name="tracking_configuration_rounding_strategy_preference_key">tracking_configuration_rounding_strategy_preference_key</string>
+    <string name="tracking_configuration_rounding_strategy_preference_title">Rounding strategy after tracking</string>
 
 </resources>

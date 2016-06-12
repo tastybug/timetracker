@@ -16,6 +16,7 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import java.util.Date;
 
+// TODO hier withoutX methoden anbieten, sonst muss man immer nachschauen, wie man einen Wert loswird!
 public class ConfigureProjectTask extends AbstractAsyncTask {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
@@ -80,10 +81,6 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         TrackingConfigurationDAO trackingConfigurationDAO = new TrackingConfigurationDAO(context);
         Project project = projectDAO.get(args.getString(PROJECT_UUID)).get();
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
-
-        /*
-            Note: both entities dont have a context as we want to alter the entities in a transactional way!
-         */
 
         if(arguments.containsKey(PROJECT_TITLE)) {
             project.setTitle(arguments.getString(PROJECT_TITLE));

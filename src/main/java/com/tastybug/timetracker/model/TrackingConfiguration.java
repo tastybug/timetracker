@@ -82,7 +82,12 @@ public class TrackingConfiguration extends Entity {
 
     public void setHourLimit(Optional<Integer> hourLimit) {
         Preconditions.checkNotNull(hourLimit);
-        this.hourLimit = hourLimit.orNull();
+        Preconditions.checkArgument(!(hourLimit.isPresent() && hourLimit.get() < 0));
+        if (hourLimit.isPresent() && hourLimit.get() == 0) {
+            this.hourLimit = null;
+        } else {
+            this.hourLimit = hourLimit.orNull();
+        }
     }
 
     public Optional<Date> getStart() {

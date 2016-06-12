@@ -72,6 +72,17 @@ public class TrackingConfigurationTest {
         assertFalse(trackingConfiguration.getHourLimit().isPresent());
     }
 
+    @Test public void zeroHourLimitEqualsNoHourLimit() {
+        // given
+        TrackingConfiguration trackingConfiguration = anInstance();
+
+        // when
+        trackingConfiguration.setHourLimit(Optional.of(0));
+
+        // then
+        assertFalse(trackingConfiguration.getHourLimit().isPresent());
+    }
+
     @Test public void noStartDateIsHandledWell() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
@@ -176,6 +187,15 @@ public class TrackingConfigurationTest {
 
         // when
         trackingConfiguration.setHourLimit(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void canNotSetNegativeHourLimit() {
+        // given
+        TrackingConfiguration trackingConfiguration = anInstance();
+
+        // expect
+        trackingConfiguration.setHourLimit(Optional.of(-1));
     }
 
     @Test(expected = NullPointerException.class)

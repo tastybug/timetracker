@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/general_project__preference_group_title" >
+
+        <EditTextPreference
+            android:key="@string/project_title_preference_key"
+            android:title="@string/project_title_preference_title" />
+        <!-- summary is set programmatically -->
+
+        <EditTextPreference
+            android:key="@string/project_description_preference_key"
+            android:title="@string/project_description_preference_title"
+            android:dialogTitle="@string/project_description_preference_title" />
+        <!-- summary is set programmatically -->
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

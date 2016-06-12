@@ -14,7 +14,7 @@ import android.widget.EditText;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.activity.ProjectConfigurationActivity;
+import com.tastybug.timetracker.gui.activity.NGProjectConfigurationActivity;
 import com.tastybug.timetracker.gui.activity.ProjectDetailsActivity;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.project.CreateProjectTask;
@@ -103,8 +103,8 @@ public class ProjectCreationDialog extends DialogFragment {
     }
 
     private void openProjectConfigurationActivity(String projectUuid) {
-        Intent intent = new Intent(getActivity(), ProjectConfigurationActivity.class);
-        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, projectUuid);
+        Intent intent = new Intent(getActivity(), NGProjectConfigurationActivity.class);
+        intent.putExtra(NGProjectConfigurationActivity.PROJECT_UUID, projectUuid);
         startActivity(intent);
     }
 

@@ -10,7 +10,7 @@
         </activity>
 
         <activity android:name=".gui.activity.ProjectDetailsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity android:name=".gui.activity.ProjectConfigurationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".gui.activity.NGProjectConfigurationActivity" android:noHistory="true"/>
         <activity android:name=".gui.activity.TrackingRecordModificationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan"/>
 
         <!--database stuff-->
