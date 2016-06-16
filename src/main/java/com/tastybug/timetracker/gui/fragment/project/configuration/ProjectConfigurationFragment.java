@@ -9,8 +9,10 @@ import android.widget.Toast;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.gui.activity.NGProjectConfigurationActivity;
+import com.tastybug.timetracker.gui.activity.ProjectConfigurationActivity;
+import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.OttoProvider;
@@ -21,7 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class NGTrackingConfigurationFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ProjectConfigurationFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private String projectUuid;
 
@@ -29,23 +31,30 @@ public class NGTrackingConfigurationFragment extends PreferenceFragment implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            this.projectUuid = savedInstanceState.getString(NGProjectConfigurationActivity.PROJECT_UUID);
+            this.projectUuid = savedInstanceState.getString(ProjectConfigurationActivity.PROJECT_UUID);
         } else {
-            this.projectUuid = getActivity().getIntent().getExtras().getString(NGProjectConfigurationActivity.PROJECT_UUID);
+            this.projectUuid = getActivity().getIntent().getExtras().getString(ProjectConfigurationActivity.PROJECT_UUID);
         }
 
+        Project project = getProjectFromDB();
         TrackingConfiguration trackingConfiguration = getTrackingConfigurationFromDB();
-        initPreferencesWithDataFromEntity(trackingConfiguration, PreferenceManager.getDefaultSharedPreferences(getActivity()));
-        addPreferencesFromResource(R.xml.tracking_configuration_preferences);
-        setSummariesAtPreferences(trackingConfiguration);
+        initPreferencesWithDataFromProject(PreferenceManager.getDefaultSharedPreferences(getActivity()), project, trackingConfiguration);
+        addPreferencesFromResource(R.xml.project_preferences);
+        setSummaries(project, trackingConfiguration);
+    }
+
+    private Project getProjectFromDB() {
+        return new ProjectDAO(getActivity()).get(this.projectUuid).get();
     }
 
     private TrackingConfiguration getTrackingConfigurationFromDB() {
         return new TrackingConfigurationDAO(getActivity()).getByProjectUuid(projectUuid).get();
     }
 
-    private void initPreferencesWithDataFromEntity(TrackingConfiguration trackingConfiguration, SharedPreferences sharedPref) {
+    private void initPreferencesWithDataFromProject(SharedPreferences sharedPref, Project project, TrackingConfiguration trackingConfiguration) {
         sharedPref.edit()
+                .putString(getString(R.string.project_title_preference_key), project.getTitle())
+                .putString(getString(R.string.project_description_preference_key), project.getDescription().or(""))
                 .putInt(getString(R.string.tracking_configuration_hour_limit_preference_key),
                         trackingConfiguration.getHourLimit().or(0))
                 .putLong(getString(R.string.tracking_configuration_start_date_preference_key),
@@ -57,7 +66,9 @@ public class NGTrackingConfigurationFragment extends PreferenceFragment implemen
                 .apply();
     }
 
-    private void setSummariesAtPreferences(TrackingConfiguration trackingConfiguration) {
+    private void setSummaries(Project project, TrackingConfiguration trackingConfiguration) {
+        findPreference(getString(R.string.project_title_preference_key)).setSummary(project.getTitle());
+        findPreference(getString(R.string.project_description_preference_key)).setSummary(project.getDescription().or(""));
         if (trackingConfiguration.getHourLimit().isPresent()) {
             findPreference(getString(R.string.tracking_configuration_hour_limit_preference_key)).setSummary(getString(R.string.hour_limit_of_X_hours, trackingConfiguration.getHourLimit().get()));
         } else {
@@ -82,7 +93,7 @@ public class NGTrackingConfigurationFragment extends PreferenceFragment implemen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(NGProjectConfigurationActivity.PROJECT_UUID, projectUuid);
+        outState.putString(ProjectConfigurationActivity.PROJECT_UUID, projectUuid);
     }
 
     @Override
@@ -103,7 +114,10 @@ public class NGTrackingConfigurationFragment extends PreferenceFragment implemen
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
+        Project project = getProjectFromDB();
         TrackingConfiguration trackingConfiguration = getTrackingConfigurationFromDB();
+        String title = sharedPreferences.getString(getString(R.string.project_title_preference_key),"");
+        String description = sharedPreferences.getString(getString(R.string.project_description_preference_key),"");
         Integer hourLimit = sharedPreferences.getInt(getString(R.string.tracking_configuration_hour_limit_preference_key), 0);
         Long startTimeStamp = sharedPreferences.getLong(getString(R.string.tracking_configuration_start_date_preference_key), -1L);
         Optional<Date> startDateOpt = startTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(startTimeStamp));
@@ -111,21 +125,50 @@ public class NGTrackingConfigurationFragment extends PreferenceFragment implemen
         Optional<Date> endDateInclusiveOpt = endTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(endTimeStamp));
         RoundingFactory.Strategy strategy = RoundingFactory.Strategy.valueOf(sharedPreferences.getString(getString(R.string.tracking_configuration_rounding_strategy_preference_key), RoundingFactory.Strategy.NO_ROUNDING.name()));
 
-        if (key.equals(getString(R.string.tracking_configuration_hour_limit_preference_key))
+        if (key.equals(getString(R.string.project_title_preference_key))
+                && !isTitleValid(title)) {
+            revertChanges(project, trackingConfiguration, sharedPreferences);
+            showWarningInvalidTitle();
+        } else if (key.equals(getString(R.string.project_description_preference_key))
+                && !isDescriptionValid(description)) {
+            revertChanges(project, trackingConfiguration, sharedPreferences);
+            showWarningInvalidDescription();
+        } else if (key.equals(getString(R.string.tracking_configuration_hour_limit_preference_key))
                 && !isHourLimitValid(hourLimit)) {
-            revertChanges(trackingConfiguration, sharedPreferences);
+            revertChanges(project, trackingConfiguration, sharedPreferences);
             showWarningInvalidHourLimit();
         } else if (key.equals(getString(R.string.tracking_configuration_start_date_preference_key))
-                    && !isStartDateValid(startDateOpt)) {
-            revertChanges(trackingConfiguration, sharedPreferences);
+                && !isStartDateValid(startDateOpt)) {
+            revertChanges(project, trackingConfiguration, sharedPreferences);
             showWarningInvalidStartDateLimit();
         } else if (key.equals(getString(R.string.tracking_configuration_end_date_inclusive_preference_key))
                 && !isEndDateValid(endDateInclusiveOpt)) {
-            revertChanges(trackingConfiguration, sharedPreferences);
+            revertChanges(project, trackingConfiguration, sharedPreferences);
             showWarningInvalidEndDateLimit();
         } else {
+            saveChanges(title, description);
             saveChanges(hourLimit, startDateOpt, endDateInclusiveOpt, strategy);
         }
+    }
+
+    private boolean isTitleValid(String projectTitle) {
+        try {
+            Project project1 = new Project("");
+            project1.setTitle(projectTitle);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isDescriptionValid(String description) {
+        try {
+            Project project1 = new Project("");
+            project1.setDescription(Optional.of(description));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isHourLimitValid(Integer limit) {
@@ -162,8 +205,24 @@ public class NGTrackingConfigurationFragment extends PreferenceFragment implemen
         Toast.makeText(getActivity(), R.string.warning_invalid_end_date_was_reverted, Toast.LENGTH_LONG).show();
     }
 
-    private void revertChanges(TrackingConfiguration configuration, SharedPreferences sharedPreferences) {
-        initPreferencesWithDataFromEntity(configuration, sharedPreferences);
+    private void showWarningInvalidTitle() {
+        Toast.makeText(getActivity(), R.string.warning_invalid_title_was_reverted, Toast.LENGTH_LONG).show();
+    }
+
+    private void showWarningInvalidDescription() {
+        Toast.makeText(getActivity(), R.string.warning_invalid_description_was_reverted, Toast.LENGTH_LONG).show();
+    }
+
+    private void revertChanges(Project project, TrackingConfiguration configuration, SharedPreferences sharedPreferences) {
+        initPreferencesWithDataFromProject(sharedPreferences, project, configuration);
+    }
+
+    private void saveChanges(String projectTitle, String description) {
+        ConfigureProjectTask.aTask(getActivity())
+                .withProjectUuid(projectUuid)
+                .withProjectTitle(projectTitle)
+                .withProjectDescription(description)
+                .execute();
     }
 
     private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, RoundingFactory.Strategy strategy) {
@@ -179,8 +238,9 @@ public class NGTrackingConfigurationFragment extends PreferenceFragment implemen
     @Subscribe
     public void handleProjectConfigured(ProjectConfiguredEvent event) {
         if (event.getProjectUuid().equals(projectUuid)) {
+            Project project = getProjectFromDB();
             TrackingConfiguration trackingConfiguration = getTrackingConfigurationFromDB();
-            setSummariesAtPreferences(trackingConfiguration);
+            setSummaries(project, trackingConfiguration);
         }
     }
 }

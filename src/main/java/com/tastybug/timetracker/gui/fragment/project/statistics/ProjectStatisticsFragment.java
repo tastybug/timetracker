@@ -14,7 +14,7 @@ import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.gui.activity.NGProjectConfigurationActivity;
+import com.tastybug.timetracker.gui.activity.ProjectConfigurationActivity;
 import com.tastybug.timetracker.gui.dialog.project.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.OttoProvider;
@@ -76,8 +76,8 @@ public class ProjectStatisticsFragment extends Fragment {
     }
 
     private void showProjectConfigurationActivity() {
-        Intent intent = new Intent(getActivity(), NGProjectConfigurationActivity.class);
-        intent.putExtra(NGProjectConfigurationActivity.PROJECT_UUID, currentProjectOpt.get().getUuid());
+        Intent intent = new Intent(getActivity(), ProjectConfigurationActivity.class);
+        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProjectOpt.get().getUuid());
         startActivity(intent);
     }
 
