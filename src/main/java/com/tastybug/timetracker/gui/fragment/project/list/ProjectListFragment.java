@@ -82,27 +82,36 @@ public class ProjectListFragment extends ListFragment {
 
     class UpdateProjectListOnTrackingEventsHandler extends AbstractOttoEventHandler {
 
+        @SuppressWarnings("unused")
         @Subscribe
         public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
             ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
         }
 
-        @Subscribe public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
+        @SuppressWarnings("unused")
+        @Subscribe
+        public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
             ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
         }
 
-        @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
+        @SuppressWarnings("unused")
+        @Subscribe
+        public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
             ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
         }
 
-        @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+        @SuppressWarnings("unused")
+        @Subscribe
+        public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
             ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
         }
     }
 
     class TestDataCreationHandler extends AbstractOttoEventHandler {
 
-        @Subscribe public void handleTestdataGenerated(TestdataGeneratedEvent event) {
+        @SuppressWarnings("unused")
+        @Subscribe
+        public void handleTestdataGenerated(TestdataGeneratedEvent event) {
             Toast.makeText(getActivity(), "DEBUG: Testdaten generiert!", Toast.LENGTH_LONG).show();
             setListAdapter(new ProjectListAdapter(getActivity()));
         }

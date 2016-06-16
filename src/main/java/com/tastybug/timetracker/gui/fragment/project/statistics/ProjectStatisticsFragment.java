@@ -87,12 +87,16 @@ public class ProjectStatisticsFragment extends Fragment {
         ui.renderProjectDuration(Optional.of(project));
     }
 
-    @Subscribe public void handleTrackingStarted(CreatedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingStarted(CreatedTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         showProjectDetailsFor(project);
     }
 
-    @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         showProjectDetailsFor(project);
     }

@@ -168,23 +168,33 @@ public class TrackingRecordModificationActivity extends BaseActivity {
                 .findFragmentById(R.id.fragment_tracking_record_editing);
     }
 
-    @Subscribe public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
         super.onBackPressed();
     }
 
-    @Subscribe public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
         super.onBackPressed();
     }
 
-    @Subscribe public void handleTrackingRecordDeletedEvent(DeletedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingRecordDeletedEvent(DeletedTrackingRecordEvent event) {
         super.onBackPressed();
     }
 
-    @Subscribe public void handleSaveThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.SaveThenBackpressRequestedEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleSaveThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.SaveThenBackpressRequestedEvent event) {
         performSaveModifications();
     }
 
-    @Subscribe public void handleDiscardThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.DiscardThenBackpressRequestedEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleDiscardThenBackpressRequestedEvent(ConfirmBackpressDialogFragment.DiscardThenBackpressRequestedEvent event) {
         super.onBackPressed();
     }
 

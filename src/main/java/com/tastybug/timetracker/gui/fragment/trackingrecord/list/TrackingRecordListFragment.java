@@ -73,21 +73,27 @@ public class TrackingRecordListFragment extends ListFragment {
         startActivity(intent);
     }
 
-    @Subscribe public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingRecordCreatedEvent(CreatedTrackingRecordEvent event) {
         if (projectUuidOpt.isPresent()
                 && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
             ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());
         }
     }
 
-    @Subscribe public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
         if (projectUuidOpt.isPresent()
                 && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
             ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());
         }
     }
 
-    @Subscribe public void handleTrackingRecordDeleted(DeletedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingRecordDeleted(DeletedTrackingRecordEvent event) {
         if (projectUuidOpt.isPresent()) {
             ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(projectUuidOpt.get());
         }

@@ -71,21 +71,27 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         }
     }
 
-    @Subscribe public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
         if (currentProjectOpt.isPresent()
                 && currentProjectOpt.get().getUuid().equals(event.getTrackingRecord().getProjectUuid())) {
             renderProject(new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get());
         }
     }
 
-    @Subscribe public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
         if (currentProjectOpt.isPresent()
                 && currentProjectOpt.get().getUuid().equals(event.getTrackingRecord().getProjectUuid())) {
             ui.visualizeOngoingTracking(Optional.of(event.getTrackingRecord()));
         }
     }
 
-    @Subscribe public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
         if (currentProjectOpt.isPresent()
                 && currentProjectOpt.get().getUuid().equals(event.getTrackingRecord().getProjectUuid())) {
             if (!new TrackingRecordDAO(getActivity()).getRunning(currentProjectOpt.get().getUuid()).isPresent()) {
@@ -94,7 +100,9 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         }
     }
 
-    @Subscribe public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
         if (currentProjectOpt.isPresent()
                 && currentProjectOpt.get().getUuid().equals(event.getTrackingRecord().getProjectUuid())) {
             if (!new TrackingRecordDAO(getActivity()).getRunning(currentProjectOpt.get().getUuid()).isPresent()) {
