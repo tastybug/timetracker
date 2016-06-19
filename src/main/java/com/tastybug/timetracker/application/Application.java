@@ -1,10 +1,12 @@
 package com.tastybug.timetracker.application;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.background.NotificationManagerBackgroundService;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
 import com.tastybug.timetracker.util.FirstRunHelper;
 import com.tastybug.timetracker.util.VersionHelper;
@@ -24,6 +26,7 @@ public class Application extends android.app.Application {
 
         initializeJoda();
         initializeDayNightThemeMode();
+        startNotificationManagerBackgroundService();
         if (isFirstRun()) {
             runGenerateTestDataTask();
             declareFirstRunConsumed();
@@ -34,6 +37,10 @@ public class Application extends android.app.Application {
 
     private void initializeJoda() {
         JodaTimeAndroid.init(this);
+    }
+
+    private void startNotificationManagerBackgroundService() {
+        startService(new Intent(this, NotificationManagerBackgroundService.class));
     }
 
     private void initializeDayNightThemeMode() {
