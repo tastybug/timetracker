@@ -158,4 +158,8 @@
     <string name="tracking_configuration_rounding_strategy_preference_key">tracking_configuration_rounding_strategy_preference_key</string>
     <string name="tracking_configuration_rounding_strategy_preference_title">Rounding strategy after tracking</string>
 
+    <!-- TrackingPlayer Notification -->
+    <string name="tracking_player_stop_button">Stop Tracking</string>
+
+
 </resources>

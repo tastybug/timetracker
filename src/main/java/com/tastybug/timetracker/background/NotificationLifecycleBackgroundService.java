@@ -19,7 +19,7 @@ import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 
-public class NotificationManagerBackgroundService extends Service {
+public class NotificationLifecycleBackgroundService extends Service {
 
     @Override
     public void onCreate() {
@@ -59,23 +59,21 @@ public class NotificationManagerBackgroundService extends Service {
     }
 
     private void startNotification(Project project) {
-        Intent intent = new Intent(this, ProjectDetailsActivity.class);
-        intent.putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         Notification noti = new Notification.Builder(this)
-                .setWhen(System.currentTimeMillis() + 2000)
                 .setContentTitle(project.getTitle())
                 .setContentText("Content Text hier")
-                .setContentIntent(pendingIntent)
+                .setContentIntent(getOpenProjectDetailsPendingIntentForProjectUuid(project))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setOngoing(false) //TODO needs to be true
-                .addAction(R.drawable.ic_modify, "Stop&Log", pendingIntent)
-                .addAction(R.drawable.ic_stop_tracking, "Stop", null)
+                .setOngoing(true)
+                .addAction(R.drawable.ic_stop_tracking,
+                        getString(R.string.tracking_player_stop_button),
+                        getStopPendingIntentForProjectWithUuid(project))
                 .build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Activity.NOTIFICATION_SERVICE);
 
+        notificationManager.cancel(0);
         notificationManager.notify(0, noti);
     }
 
@@ -83,6 +81,19 @@ public class NotificationManagerBackgroundService extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Activity.NOTIFICATION_SERVICE);
 
         notificationManager.cancel(0);
+    }
+
+    private PendingIntent getOpenProjectDetailsPendingIntentForProjectUuid(Project project) {
+        Intent intent = new Intent(this, ProjectDetailsActivity.class)
+                .putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
+        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private PendingIntent getStopPendingIntentForProjectWithUuid(Project project) {
+        Intent intent2 = new Intent(this, NotificationFacadeBackgroundService.class)
+                .putExtra(NotificationFacadeBackgroundService.PROJECT_UUID, project.getUuid())
+                .putExtra(NotificationFacadeBackgroundService.OPERATION, NotificationFacadeBackgroundService.STOP);
+        return PendingIntent.getService(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 }

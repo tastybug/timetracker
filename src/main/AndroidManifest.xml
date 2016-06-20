@@ -22,7 +22,8 @@
 
         <provider android:authorities="com.tastybug.timetracker" android:exported="false" android:multiprocess="true" android:name=".database.DatabaseContentProvider" android:launchMode="singleTask"/>
 
-        <service android:name=".background.NotificationManagerBackgroundService" android:exported="false"/>
+        <service android:name=".background.NotificationLifecycleBackgroundService" android:exported="false"/>
+        <service android:name=".background.NotificationFacadeBackgroundService" android:exported="false"/>
 
     </application>
 </manifest>
