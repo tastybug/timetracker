@@ -19,7 +19,7 @@ import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 
-public class NotificationLifecycleBackgroundService extends Service {
+public class TrackingPlayerLifecycleBackgroundService extends Service {
 
     @Override
     public void onCreate() {
@@ -90,9 +90,9 @@ public class NotificationLifecycleBackgroundService extends Service {
     }
 
     private PendingIntent getStopPendingIntentForProjectWithUuid(Project project) {
-        Intent intent2 = new Intent(this, NotificationFacadeBackgroundService.class)
-                .putExtra(NotificationFacadeBackgroundService.PROJECT_UUID, project.getUuid())
-                .putExtra(NotificationFacadeBackgroundService.OPERATION, NotificationFacadeBackgroundService.STOP);
+        Intent intent2 = new Intent(this, TrackingPlayerCallbackBackgroundService.class)
+                .putExtra(TrackingPlayerCallbackBackgroundService.PROJECT_UUID, project.getUuid())
+                .putExtra(TrackingPlayerCallbackBackgroundService.OPERATION, TrackingPlayerCallbackBackgroundService.STOP);
         return PendingIntent.getService(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

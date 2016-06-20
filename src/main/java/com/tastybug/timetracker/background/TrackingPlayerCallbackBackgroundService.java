@@ -6,17 +6,17 @@ import android.util.Log;
 
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 
-public class NotificationFacadeBackgroundService extends IntentService {
+public class TrackingPlayerCallbackBackgroundService extends IntentService {
 
-    private static final String TAG = NotificationFacadeBackgroundService.class.getSimpleName();
+    private static final String TAG = TrackingPlayerCallbackBackgroundService.class.getSimpleName();
 
     public static final String OPERATION = "OPERATION";
     public static final String START = "START";
     public static final String STOP = "STOP";
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
-    public NotificationFacadeBackgroundService() {
-        super(NotificationFacadeBackgroundService.class.getSimpleName());
+    public TrackingPlayerCallbackBackgroundService() {
+        super(TrackingPlayerCallbackBackgroundService.class.getSimpleName());
     }
 
     @Override
