@@ -15,9 +15,12 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.gui.activity.ProjectDetailsActivity;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
+
+import java.text.SimpleDateFormat;
 
 public class TrackingPlayerLifecycleBackgroundService extends Service {
 
@@ -45,55 +48,54 @@ public class TrackingPlayerLifecycleBackgroundService extends Service {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
-        startNotification(getProject(event.getTrackingRecord().getProjectUuid()));
+        Project project = new ProjectDAO(this).get(event.getTrackingRecord().getProjectUuid()).get();
+        startTrackingPlayer(project, event.getTrackingRecord());
     }
 
     @SuppressWarnings("unused")
     @Subscribe
     public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
-        stopNotification();
+        stopTrackingPlayer();
     }
 
-    private Project getProject(String uuid) {
-        return new ProjectDAO(this).get(uuid).get();
+    private void startTrackingPlayer(Project project, TrackingRecord trackingRecord) {
+        Notification notification = createTrackingPlayerNotification(project, trackingRecord);
+        getSystemNotificationManager().notify(0, notification);
     }
 
-    private void startNotification(Project project) {
+    private void stopTrackingPlayer() {
+        getSystemNotificationManager().cancel(0);
+    }
 
-        Notification noti = new Notification.Builder(this)
+    private NotificationManager getSystemNotificationManager() {
+        return (NotificationManager) getSystemService(Activity.NOTIFICATION_SERVICE);
+    }
+
+    private Notification createTrackingPlayerNotification(Project project, TrackingRecord trackingRecord) {
+        return new Notification.Builder(this)
                 .setContentTitle(project.getTitle())
-                .setContentText("Content Text hier")
-                .setContentIntent(getOpenProjectDetailsPendingIntentForProjectUuid(project))
+                .setContentText(getString(R.string.tracking_player_tracking_since_X,
+                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.SHORT).format(trackingRecord.getStart().get())))
+                .setContentIntent(createOpenProjectDetailsPendingIntentForProjectUuid(project))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
                 .addAction(R.drawable.ic_stop_tracking,
                         getString(R.string.tracking_player_stop_button),
-                        getStopPendingIntentForProjectWithUuid(project))
+                        createStopPendingIntentForProjectWithUuid(project))
                 .build();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Activity.NOTIFICATION_SERVICE);
-
-        notificationManager.cancel(0);
-        notificationManager.notify(0, noti);
     }
 
-    private void stopNotification() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Activity.NOTIFICATION_SERVICE);
-
-        notificationManager.cancel(0);
-    }
-
-    private PendingIntent getOpenProjectDetailsPendingIntentForProjectUuid(Project project) {
+    private PendingIntent createOpenProjectDetailsPendingIntentForProjectUuid(Project project) {
         Intent intent = new Intent(this, ProjectDetailsActivity.class)
                 .putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
         return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private PendingIntent getStopPendingIntentForProjectWithUuid(Project project) {
+    private PendingIntent createStopPendingIntentForProjectWithUuid(Project project) {
         Intent intent2 = new Intent(this, TrackingPlayerCallbackBackgroundService.class)
                 .putExtra(TrackingPlayerCallbackBackgroundService.PROJECT_UUID, project.getUuid())
                 .putExtra(TrackingPlayerCallbackBackgroundService.OPERATION, TrackingPlayerCallbackBackgroundService.STOP);
         return PendingIntent.getService(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
     }
-
 }
