@@ -159,7 +159,8 @@
     <string name="tracking_configuration_rounding_strategy_preference_title">Rounding strategy after tracking</string>
 
     <!-- TrackingPlayer Notification -->
-    <string name="tracking_player_stop_button">Stop Tracking</string>
+    <string name="tracking_player_stop_button">Log out</string>
+    <string name="tracking_player_switch_project">Switch</string>
     <string name="tracking_player_tracking_since_X">Tracking since %1$s</string>
 
 

@@ -80,6 +80,21 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
         return Optional.fromNullable(trackingRecord);
     }
 
+    public ArrayList<TrackingRecord> getRunning() {
+        Cursor cursor = context.getContentResolver().query(getQueryUri(),
+                getColumns(),
+                END_DATE_COLUMN + " IS NULL",
+                null,
+                null);
+
+        ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
+        while (cursor.moveToNext()) {
+            list.add(createEntityFromCursor(context, cursor));
+        }
+        cursor.close();
+        return list;
+    }
+
     @Override
     protected String getTableName() {
         return "tracking_record";

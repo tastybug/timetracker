@@ -12,7 +12,7 @@ import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Project extends Entity {
+public class Project extends Entity implements Comparable<Project> {
 
     private String uuid = UUID.randomUUID().toString();
     private String title;
@@ -86,5 +86,10 @@ public class Project extends Entity {
                 .add("title", getTitle())
                 .add("description", getDescription().orNull())
                 .toString();
+    }
+
+    @Override
+    public int compareTo(Project another) {
+        return getTitle().compareTo(another.getTitle());
     }
 }
