@@ -26,7 +26,7 @@ public class Application extends android.app.Application {
 
         initializeJoda();
         initializeDayNightThemeMode();
-        startNotificationManagerBackgroundService();
+        startTrackingPlayerLifecycleBackgroundService();
         if (isFirstRun()) {
             runGenerateTestDataTask();
             declareFirstRunConsumed();
@@ -39,7 +39,7 @@ public class Application extends android.app.Application {
         JodaTimeAndroid.init(this);
     }
 
-    private void startNotificationManagerBackgroundService() {
+    private void startTrackingPlayerLifecycleBackgroundService() {
         startService(new Intent(this, TrackingPlayerLifecycleBackgroundService.class));
     }
 
