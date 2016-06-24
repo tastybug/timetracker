@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.task.OttoEvent;
-import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.notification.TrackingPlayer;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 
 /**
+ * This service acts as the callback facade for the Tracking Player notification. Pressing
+ * some button on the player will result in a call to this service.
+ *
  * This background service only lives as long as the request!
  */
 public class TrackingPlayerCallbackBackgroundService extends IntentService {
@@ -21,9 +23,6 @@ public class TrackingPlayerCallbackBackgroundService extends IntentService {
     public static final String STOP_TRACKING_PROJECT = "STOP_TRACKING_PROJECT";
     public static final String PROJECT_UUID          = "PROJECT_UUID";
 
-    private OttoProvider ottoProvider = new OttoProvider();
-
-
     public TrackingPlayerCallbackBackgroundService() {
         super(TrackingPlayerCallbackBackgroundService.class.getSimpleName());
     }
@@ -32,34 +31,21 @@ public class TrackingPlayerCallbackBackgroundService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Preconditions.checkNotNull(intent.getExtras().getString(OPERATION));
         if (STOP_TRACKING_PROJECT.equals(intent.getExtras().getString(OPERATION))) {
-            stopTracking(intent.getExtras().getString(PROJECT_UUID));
+            handleStopTrackingRequested(intent.getExtras().getString(PROJECT_UUID));
         } else if (CYCLE_TO_NEXT_PROJECT.equals(intent.getExtras().getString(OPERATION))) {
-            publishSwitchProjectInTrackingPlayer(intent.getExtras().getString(PROJECT_UUID));
+            handleCycleProjectRequested(intent.getExtras().getString(PROJECT_UUID));
         } else {
             Log.wtf(TAG, "Unexpected intent: " + intent);
         }
     }
 
-    private void stopTracking(String projectUuid) {
+    private void handleStopTrackingRequested(String projectUuid) {
         Log.i(TAG, "Stopping tracking for project " + projectUuid);
         KickStopTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
     }
 
-    private void publishSwitchProjectInTrackingPlayer(String currentProjectUuid) {
+    private void handleCycleProjectRequested(String currentProjectUuid) {
         Log.i(TAG, "Cycling to next project coming from " + currentProjectUuid);
-        ottoProvider.getSharedBus().post(new SwitchProjectEvent(currentProjectUuid));
-    }
-
-    public static class SwitchProjectEvent implements OttoEvent {
-
-        private String currentProjectUuid;
-
-        public SwitchProjectEvent(String currentProjectUuid) {
-            this.currentProjectUuid = currentProjectUuid;
-        }
-
-        public String getCurrentProjectUuid() {
-            return currentProjectUuid;
-        }
+        new TrackingPlayer().showNextProject(this, currentProjectUuid);
     }
 }

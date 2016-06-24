@@ -11,6 +11,11 @@ import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 
+/**
+ * This long running service manages the Tracking Player notification regarding:
+ * * application startup: is the player to be displayed?
+ * * otto events (starting and stopping of trackings)
+ */
 public class TrackingPlayerLifecycleBackgroundService extends Service {
 
     @Override
@@ -47,12 +52,5 @@ public class TrackingPlayerLifecycleBackgroundService extends Service {
     @Subscribe
     public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
         new TrackingPlayer().revalidateVisibility(this);
-
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe
-    public void handleSwitchProjectRequest(TrackingPlayerCallbackBackgroundService.SwitchProjectEvent event) {
-        new TrackingPlayer().showNextProject(this, event.getCurrentProjectUuid());
     }
 }
