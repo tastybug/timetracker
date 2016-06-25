@@ -10,7 +10,7 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.gui.eventhandler.AbstractOttoEventHandler;
-import com.tastybug.timetracker.gui.eventhandler.ShowPostTrackingSummarySnackbarHandler;
+import com.tastybug.timetracker.gui.eventhandler.ShowPostTrackingSummarySnackBarHandler;
 import com.tastybug.timetracker.gui.fragment.project.statistics.ProjectStatisticsFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.control.TrackingControlPanelFragment;
 import com.tastybug.timetracker.gui.fragment.trackingrecord.list.TrackingRecordListFragment;
@@ -21,7 +21,7 @@ public class ProjectDetailsActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
-    private ShowPostTrackingSummarySnackbarHandler showPostTrackingSummarySnackbarHandler;
+    private ShowPostTrackingSummarySnackBarHandler showPostTrackingSummarySnackBarHandler;
     private BackPressOnProjectDeletion backPressOnProjectDeletion;
     private String projectUuid;
 
@@ -42,7 +42,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        showPostTrackingSummarySnackbarHandler = new ShowPostTrackingSummarySnackbarHandler(this);
+        showPostTrackingSummarySnackBarHandler = new ShowPostTrackingSummarySnackBarHandler(this);
         backPressOnProjectDeletion = new BackPressOnProjectDeletion();
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
@@ -60,7 +60,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        showPostTrackingSummarySnackbarHandler.stop();
+        showPostTrackingSummarySnackBarHandler.stop();
         backPressOnProjectDeletion.stop();
     }
 

@@ -16,6 +16,7 @@ public class TrackingConfiguration extends Entity {
     private String projectUuid;
     private Integer hourLimit;
     private Date start, end;
+    private boolean promptForDescription = false;
     private RoundingFactory.Strategy roundingStrategy;
 
 
@@ -33,12 +34,14 @@ public class TrackingConfiguration extends Entity {
                                  Integer hourLimit,
                                  Date start,
                                  Date end,
+                                 Boolean promptForDescription,
                                  RoundingFactory.Strategy roundingStrategy) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.hourLimit = hourLimit;
         this.start = start;
         this.end = end;
+        this.promptForDescription = promptForDescription;
         this.roundingStrategy = roundingStrategy;
     }
 
@@ -88,6 +91,14 @@ public class TrackingConfiguration extends Entity {
         } else {
             this.hourLimit = hourLimit.orNull();
         }
+    }
+
+    public boolean isPromptForDescription() {
+        return promptForDescription;
+    }
+
+    public void setPromptForDescription(boolean promptForDescription) {
+        this.promptForDescription = promptForDescription;
     }
 
     public Optional<Date> getStart() {
@@ -140,6 +151,7 @@ public class TrackingConfiguration extends Entity {
                 .add("hourLimit", getHourLimit().orNull())
                 .add("start", getStart().orNull())
                 .add("end", getEnd().orNull())
+                .add("promptForDescription", isPromptForDescription())
                 .add("roundingStrategy", getRoundingStrategy().name())
                 .toString();
     }

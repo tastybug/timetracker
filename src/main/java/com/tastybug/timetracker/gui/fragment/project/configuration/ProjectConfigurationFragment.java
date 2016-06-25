@@ -63,6 +63,8 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
                         trackingConfiguration.getEnd().isPresent() ? trackingConfiguration.getEndDateAsInclusive().get().getTime() : -1L)
                 .putString(getString(R.string.tracking_configuration_rounding_strategy_preference_key),
                         trackingConfiguration.getRoundingStrategy().name())
+                .putBoolean(getString(R.string.tracking_configuration_prompt_for_description_preference_key),
+                        trackingConfiguration.isPromptForDescription())
                 .apply();
     }
 
@@ -123,6 +125,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         Optional<Date> startDateOpt = startTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(startTimeStamp));
         Long endTimeStamp = sharedPreferences.getLong(getString(R.string.tracking_configuration_end_date_inclusive_preference_key), -1L);
         Optional<Date> endDateInclusiveOpt = endTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(endTimeStamp));
+        Boolean promptForDescription = sharedPreferences.getBoolean(getString(R.string.tracking_configuration_prompt_for_description_preference_key), false);
         RoundingFactory.Strategy strategy = RoundingFactory.Strategy.valueOf(sharedPreferences.getString(getString(R.string.tracking_configuration_rounding_strategy_preference_key), RoundingFactory.Strategy.NO_ROUNDING.name()));
 
         if (key.equals(getString(R.string.project_title_preference_key))
@@ -147,7 +150,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
             showWarningInvalidEndDateLimit();
         } else {
             saveChanges(title, description);
-            saveChanges(hourLimit, startDateOpt, endDateInclusiveOpt, strategy);
+            saveChanges(hourLimit, startDateOpt, endDateInclusiveOpt, promptForDescription, strategy);
         }
     }
 
@@ -225,16 +228,18 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
                 .execute();
     }
 
-    private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, RoundingFactory.Strategy strategy) {
+    private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, Boolean promptForDescription, RoundingFactory.Strategy strategy) {
         ConfigureProjectTask task = ConfigureProjectTask.aTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withHourLimit(hourLimit)
+                .withPromptForDescription(promptForDescription)
                 .withRoundingStrategy(strategy);
         task.withStartDate(startDateOpt.orNull());
         task.withInclusiveEndDate(endDateInclusiveOpt.orNull());
         task.execute();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void handleProjectConfigured(ProjectConfiguredEvent event) {
         if (event.getProjectUuid().equals(projectUuid)) {

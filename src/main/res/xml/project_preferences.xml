@@ -38,11 +38,21 @@
             android:title="@string/tracking_configuration_end_date_inclusive_preference_title" />
         <!-- summary is set programmatically -->
 
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/after_tracking_preference_group_title" >
+
         <ListPreference
             android:key="@string/tracking_configuration_rounding_strategy_preference_key"
             android:title="@string/tracking_configuration_rounding_strategy_preference_title"
             android:entries="@array/rouding_strategy_labels"
             android:entryValues="@array/rouding_strategy_values" />
+
+        <CheckBoxPreference
+            android:key="@string/tracking_configuration_prompt_for_description_preference_key"
+            android:title="@string/tracking_configuration_prompt_for_description_preference_title" />
 
     </PreferenceCategory>
 

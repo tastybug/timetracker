@@ -5,11 +5,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.gui.eventhandler.ShowPostTrackingSummarySnackbarHandler;
+import com.tastybug.timetracker.gui.eventhandler.ShowPostTrackingSummarySnackBarHandler;
 
 public class ProjectsActivity extends AppCompatActivity {
 
-    private ShowPostTrackingSummarySnackbarHandler showPostTrackingSummarySnackbarHandler;
+    private ShowPostTrackingSummarySnackBarHandler showPostTrackingSummarySnackBarHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +31,12 @@ public class ProjectsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        showPostTrackingSummarySnackbarHandler = new ShowPostTrackingSummarySnackbarHandler(this);
+        showPostTrackingSummarySnackBarHandler = new ShowPostTrackingSummarySnackBarHandler(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        showPostTrackingSummarySnackbarHandler.stop();
+        showPostTrackingSummarySnackBarHandler.stop();
     }
 }

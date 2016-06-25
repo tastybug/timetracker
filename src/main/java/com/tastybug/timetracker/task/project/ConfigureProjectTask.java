@@ -25,6 +25,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private static final String HOUR_LIMIT = "HOUR_LIMIT";
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE_INCLUSIVE = "END_DATE_INCLUSIVE";
+    private static final String PROMPT_FOR_DESCRIPTION = "PROMPT_FOR_DESCRIPTION";
     private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
     public static ConfigureProjectTask aTask(Context context) {
@@ -62,6 +63,11 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
     public ConfigureProjectTask withInclusiveEndDate(Date date) {
         arguments.putSerializable(END_DATE_INCLUSIVE, date);
+        return this;
+    }
+
+    public ConfigureProjectTask withPromptForDescription(Boolean promptForDescription) {
+        arguments.putBoolean(PROMPT_FOR_DESCRIPTION, promptForDescription);
         return this;
     }
 
@@ -105,6 +111,10 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
         if (arguments.containsKey(END_DATE_INCLUSIVE)) {
             trackingConfiguration.setEndAsInclusive(Optional.fromNullable((Date) arguments.getSerializable(END_DATE_INCLUSIVE)));
+        }
+
+        if (arguments.containsKey(PROMPT_FOR_DESCRIPTION)) {
+            trackingConfiguration.setPromptForDescription(arguments.getBoolean(PROMPT_FOR_DESCRIPTION, false));
         }
 
         if(arguments.containsKey(ROUNDING_STRATEGY)) {

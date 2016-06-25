@@ -7,26 +7,39 @@ import android.view.View;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
+import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.gui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.util.DurationFormatter;
 
-public class ShowPostTrackingSummarySnackbarHandler extends AbstractOttoEventHandler {
+public class ShowPostTrackingSummarySnackBarHandler extends AbstractOttoEventHandler {
 
     private Activity activity;
 
-    public ShowPostTrackingSummarySnackbarHandler(Activity activity) {
+    public ShowPostTrackingSummarySnackBarHandler(Activity activity) {
         this.activity = activity;
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
-        showTrackingSummary(event.getTrackingRecord());
+        if(askForDescriptionDirectly(event.getTrackingRecord().getProjectUuid())) {
+            EditTrackingRecordDescriptionDialogFragment
+                    .aDialog()
+                    .forTrackingRecord(event.getTrackingRecord())
+                    .show(activity.getFragmentManager(), getClass().getSimpleName());
+        } else {
+            showSummarySnackBar(event.getTrackingRecord());
+        }
     }
 
-    private void showTrackingSummary(final TrackingRecord trackingRecord) {
+    private boolean askForDescriptionDirectly(String projectUuid) {
+        return new TrackingConfigurationDAO(activity).getByProjectUuid(projectUuid).get().isPromptForDescription();
+    }
+
+    private void showSummarySnackBar(final TrackingRecord trackingRecord) {
         Project project = new ProjectDAO(activity).get(trackingRecord.getProjectUuid()).get();
         String durationString = DurationFormatter.a().formatEffectiveDuration(activity, trackingRecord);
 

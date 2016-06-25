@@ -124,12 +124,6 @@
     <string name="sample_tracking_duration_X">Duration 20:10:05hrs</string>
 
     <!-- project settings -->
-    <string name="rounding_no_rounding_label">Perform no rounding</string>
-    <string name="rounding_minutes_down">Round down to full minutes</string>
-    <string name="rounding_minutes_up">Round up to full minutes</string>
-    <string name="rounding_ten_minutes_up">Round up to a full 10 minutes block</string>
-    <string name="rounding_thirty_minutes_up">Round up to a full half hour block</string>
-    <string name="rounding_sixty_minutes_up">Round up to full hours</string>
     <string name="project_configuration_activity_title">Project Settings</string>
     <string name="general_project__preference_group_title">General</string>
     <string name="project_title_preference_key">project_title_preference_key</string>
@@ -155,8 +149,18 @@
     <string name="ends_at_inclusive_X">Last day of project: %1$s</string>
     <string name="warning_invalid_start_date_was_reverted">Invalid start date has been reverted!</string>
     <string name="warning_invalid_end_date_was_reverted">Invalid end date has been reverted!</string>
+
+    <string name="after_tracking_preference_group_title">After Each Tracking</string>
     <string name="tracking_configuration_rounding_strategy_preference_key">tracking_configuration_rounding_strategy_preference_key</string>
-    <string name="tracking_configuration_rounding_strategy_preference_title">Rounding strategy after tracking</string>
+    <string name="tracking_configuration_rounding_strategy_preference_title">Tracked time will ..</string>
+    <string name="rounding_no_rounding_label">.. not be rounded</string>
+    <string name="rounding_minutes_down">.. be rounded down to full minutes</string>
+    <string name="rounding_minutes_up">.. be rounded up to full minutes</string>
+    <string name="rounding_ten_minutes_up">.. be rounded up to a full 10 minutes block</string>
+    <string name="rounding_thirty_minutes_up">.. be rounded up to a full half hour block</string>
+    <string name="rounding_sixty_minutes_up">.. be rounded up to full hours</string>
+    <string name="tracking_configuration_prompt_for_description_preference_key">tracking_configuration_prompt_for_description_preference_key</string>
+    <string name="tracking_configuration_prompt_for_description_preference_title">Ask for a comment after each session</string>
 
     <!-- TrackingPlayer Notification -->
     <string name="tracking_player_stop_button">Log out</string>

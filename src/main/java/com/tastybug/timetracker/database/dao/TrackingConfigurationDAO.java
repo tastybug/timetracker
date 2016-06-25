@@ -23,6 +23,7 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
     static String HOUR_LIMIT_COLUMN = "hour_limit";
     static String START_DATE_COLUMN = "start_date";
     static String END_DATE_COLUMN = "end_date";
+    static String PROMPT_FOR_DESCRIPTION_COLUMN = "prompt_for_description";
     static String ROUNDING_STRATEGY_COLUMN = "rounding_strategy";
 
     static String[] COLUMNS = new String[] {
@@ -31,6 +32,7 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
             HOUR_LIMIT_COLUMN,
             START_DATE_COLUMN,
             END_DATE_COLUMN,
+            PROMPT_FOR_DESCRIPTION_COLUMN,
             ROUNDING_STRATEGY_COLUMN
     };
 
@@ -76,12 +78,16 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
                     ? null : cursor.getString(colsList.indexOf(START_DATE_COLUMN));
             String endDateString = cursor.isNull(colsList.indexOf(END_DATE_COLUMN))
                     ? null : cursor.getString(colsList.indexOf(END_DATE_COLUMN));
+            Boolean promptForDescription = !cursor.isNull(colsList.indexOf(PROMPT_FOR_DESCRIPTION_COLUMN))
+                    && cursor.getInt(colsList.indexOf(PROMPT_FOR_DESCRIPTION_COLUMN)) == 1;
+
             return new TrackingConfiguration(
                     cursor.getString(colsList.indexOf(UUID_COLUMN)),
                     cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN)),
                     hourLimit,
                     startDateString != null ? getIso8601DateFormatter().parse(startDateString) : null,
                     endDateString != null ? getIso8601DateFormatter().parse(endDateString) : null,
+                    promptForDescription,
                     RoundingFactory.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
             );
         } catch (ParseException pe) {
@@ -97,6 +103,7 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
         contentValues.put(PROJECT_UUID_COLUMN, entity.getProjectUuid());
         contentValues.put(START_DATE_COLUMN, formatDate(entity.getStart()));
         contentValues.put(END_DATE_COLUMN, formatDate(entity.getEnd()));
+        contentValues.put(PROMPT_FOR_DESCRIPTION_COLUMN, entity.isPromptForDescription() ? 1 : 0);
         contentValues.put(ROUNDING_STRATEGY_COLUMN, entity.getRoundingStrategy().name());
 
         return contentValues;
