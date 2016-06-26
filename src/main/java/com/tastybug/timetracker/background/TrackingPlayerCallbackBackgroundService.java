@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.gui.activity.TrackingRecordModificationActivity;
+import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.notification.TrackingPlayer;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 
@@ -41,11 +46,30 @@ public class TrackingPlayerCallbackBackgroundService extends IntentService {
 
     private void handleStopTrackingRequested(String projectUuid) {
         Log.i(TAG, "Stopping tracking for project " + projectUuid);
+        TrackingRecord runningTrackingRecord = new TrackingRecordDAO(this).getRunning(projectUuid).get();
         KickStopTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
+
+        if (isProjectRequiringDescriptionPromptAfterTracking(projectUuid)) {
+            showTrackingRecordEditingActivity(runningTrackingRecord);
+        }
     }
 
     private void handleCycleProjectRequested(String currentProjectUuid) {
         Log.i(TAG, "Cycling to next project coming from " + currentProjectUuid);
         new TrackingPlayer().showNextProject(this, currentProjectUuid);
+    }
+
+    private boolean isProjectRequiringDescriptionPromptAfterTracking(String projectUuid) {
+        TrackingConfiguration trackingConfiguration = new TrackingConfigurationDAO(this).getByProjectUuid(projectUuid).get();
+        return trackingConfiguration.isPromptForDescription();
+    }
+
+    private void showTrackingRecordEditingActivity(TrackingRecord trackingRecord) {
+        Intent intent = new Intent(getApplicationContext(), TrackingRecordModificationActivity.class);
+        intent.putExtra(TrackingRecordModificationActivity.TRACKING_RECORD_UUID, trackingRecord.getUuid());
+        intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        startActivity(intent);
     }
 }

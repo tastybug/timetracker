@@ -97,11 +97,9 @@ public class TrackingRecordModificationFragment extends Fragment {
     private boolean validateForCompletedTrackingRecord() {
         Optional<Date> startDate = ui.getAggregatedStartDate(true);
         Optional<Date> endDate = ui.getAggregatedEndDate(true);
-        if(startDate.isPresent() && endDate.isPresent()) {
-            return ensureEndDateIsAfterStartDate(startDate.get(), endDate.get());
-        } else {
-            return false;
-        }
+        return startDate.isPresent()
+                && endDate.isPresent()
+                && ensureEndDateIsAfterStartDate(startDate.get(), endDate.get());
     }
 
     public ModifyTrackingRecordTask collectModificationsForEdit(ModifyTrackingRecordTask task) {

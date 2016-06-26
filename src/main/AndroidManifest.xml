@@ -11,7 +11,13 @@
 
         <activity android:name=".gui.activity.ProjectDetailsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity android:name=".gui.activity.ProjectConfigurationActivity" android:noHistory="true"/>
-        <activity android:name=".gui.activity.TrackingRecordModificationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".gui.activity.TrackingRecordModificationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter> <!-- this allows the tracking player notification to open this activity from 'outside' -->
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="*/*"/>
+            </intent-filter>
+        </activity>
 
         <!--database stuff-->
         <meta-data android:name="database.schema.version.current" android:value="1"/>
