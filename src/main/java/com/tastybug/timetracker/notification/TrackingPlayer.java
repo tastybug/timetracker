@@ -56,7 +56,7 @@ public class TrackingPlayer {
         Notification.Builder notificationBuilder = new Notification.Builder(context)
                 .setContentTitle(project.getTitle())
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
-                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.SHORT).format(trackingRecord.getStart().get())))
+                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(trackingRecord.getStart().get())))
                 .setContentIntent(createOpenProjectDetailsPendingIntentForProjectUuid(context, project))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
