@@ -138,6 +138,7 @@ public class StatisticProjectCompletionTest {
                 1,
                 null,
                 null,
+                true,
                 RoundingFactory.Strategy.NO_ROUNDING);
     }
 
@@ -147,6 +148,7 @@ public class StatisticProjectCompletionTest {
                 null,
                 null,
                 null,
+                true,
                 RoundingFactory.Strategy.NO_ROUNDING);
     }
 

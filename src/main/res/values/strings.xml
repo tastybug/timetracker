@@ -164,8 +164,13 @@
 
     <!-- TrackingPlayer Notification -->
     <string name="tracking_player_stop_button">Log out</string>
+    <string name="tracking_player_start_button">Start</string>
+    <string name="tracking_player_resume_button">Resume</string>
+    <string name="tracking_player_pause_button">Pause</string>
+    <string name="tracking_player_dismiss_paused_button">Dismiss</string>
     <string name="tracking_player_switch_project">Switch</string>
     <string name="tracking_player_tracking_since_X">Tracking since %1$s</string>
+    <string name="paused_project">Currently paused ..</string>
 
 
 </resources>

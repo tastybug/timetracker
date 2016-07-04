@@ -1,18 +1,14 @@
-package com.tastybug.timetracker.notification;
+package com.tastybug.timetracker.trackingplayer;
 
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.background.TrackingPlayerCallbackBackgroundService;
 import com.tastybug.timetracker.database.dao.ProjectDAO;
 import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.gui.activity.ProjectDetailsActivity;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 
@@ -25,6 +21,8 @@ public class TrackingPlayer {
 
     // the ID of the tracking player as the OS' notfication manager requires it
     private static final int TRACKING_PLAYER_INTERNAL_NOTIFICATION_ID = 1;
+
+    private CallbackIntentFactory intentFactory = new CallbackIntentFactory();
 
     public TrackingPlayer() {}
 
@@ -57,18 +55,44 @@ public class TrackingPlayer {
                 .setContentTitle(project.getTitle())
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
                         SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(trackingRecord.getStart().get())))
-                .setContentIntent(createOpenProjectDetailsPendingIntentForProjectUuid(context, project))
+                .setContentIntent(intentFactory.createOpenProjectDetailsActivityIntent(context, project))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_stop_button),
-                        createStopPendingIntentForProjectWithUuid(context, project));
+                        intentFactory.createStopTrackingIntent(context, project))
+                .addAction(R.drawable.ic_pause_tracking,
+                        context.getString(R.string.tracking_player_pause_button),
+                        intentFactory.createStopTrackingIntent(context, project));
 
         if (getRunningProjects(context).size() > 1) {
             notificationBuilder.addAction(R.drawable.ic_switch_project,
                     context.getString(R.string.tracking_player_switch_project),
-                    createSwitchFromCurrentProjectIntent(context, project));
+                    intentFactory.createCycleProjectIntent(context, project));
+        }
+        return notificationBuilder;
+    }
+
+    private Notification.Builder getNotificationBuilderForPausedProject(Context context, Project project) {
+        Notification.Builder notificationBuilder = new Notification.Builder(context)
+                .setContentTitle(project.getTitle())
+                .setContentText(context.getString(R.string.paused_project))
+                .setContentIntent(intentFactory.createOpenProjectDetailsActivityIntent(context, project))
+                .setSmallIcon(R.drawable.ic_notification_ongoing)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                .setOngoing(true)
+                .addAction(R.drawable.ic_start_tracking,
+                        context.getString(R.string.tracking_player_resume_button),
+                        null)
+                .addAction(R.drawable.ic_start_tracking,
+                        context.getString(R.string.tracking_player_dismiss_paused_button),
+                        null);
+
+        if (getRunningProjects(context).size() > 1) {
+            notificationBuilder.addAction(R.drawable.ic_switch_project,
+                    context.getString(R.string.tracking_player_switch_project),
+                    intentFactory.createCycleProjectIntent(context, project));
         }
         return notificationBuilder;
     }
@@ -86,13 +110,7 @@ public class TrackingPlayer {
     }
 
     private ArrayList<Project> getRunningProjects(Context context) {
-        ProjectDAO projectDAO = new ProjectDAO(context);
-        ArrayList<TrackingRecord> runningRecords = new TrackingRecordDAO(context).getRunning();
-        ArrayList<Project> runningProjects = new ArrayList<>();
-        for (TrackingRecord record : runningRecords) {
-            runningProjects.add(projectDAO.get(record.getProjectUuid()).get());
-        }
-
+        ArrayList<Project> runningProjects = new TrackingPlayerModel(context).getRunningProjectList();
         Collections.sort(runningProjects);
         return runningProjects;
     }
@@ -105,25 +123,5 @@ public class TrackingPlayer {
         }
         // if the previous project is not in the list, just return the very first entry
         return projects.get(0);
-    }
-
-    private PendingIntent createOpenProjectDetailsPendingIntentForProjectUuid(Context context, Project project) {
-        Intent intent = new Intent(context, ProjectDetailsActivity.class)
-                .putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private PendingIntent createStopPendingIntentForProjectWithUuid(Context context, Project project) {
-        Intent intent = new Intent(context, TrackingPlayerCallbackBackgroundService.class)
-                .putExtra(TrackingPlayerCallbackBackgroundService.PROJECT_UUID, project.getUuid())
-                .putExtra(TrackingPlayerCallbackBackgroundService.OPERATION, TrackingPlayerCallbackBackgroundService.STOP_TRACKING_PROJECT);
-        return PendingIntent.getService(context, TrackingPlayerCallbackBackgroundService.STOP_TRACKING_PROJECT.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private PendingIntent createSwitchFromCurrentProjectIntent(Context context, Project project) {
-        Intent intent = new Intent(context, TrackingPlayerCallbackBackgroundService.class)
-                .putExtra(TrackingPlayerCallbackBackgroundService.PROJECT_UUID, project.getUuid())
-                .putExtra(TrackingPlayerCallbackBackgroundService.OPERATION, TrackingPlayerCallbackBackgroundService.CYCLE_TO_NEXT_PROJECT);
-        return PendingIntent.getService(context, TrackingPlayerCallbackBackgroundService.CYCLE_TO_NEXT_PROJECT.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

@@ -180,12 +180,13 @@ public class TrackingConfigurationDAOTest {
 
     @Test public void knowsAllColumns() {
         // expect
-        assertEquals(6, trackingConfigurationDAO.getColumns().length);
+        assertEquals(7, trackingConfigurationDAO.getColumns().length);
         assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.UUID_COLUMN));
         assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.PROJECT_UUID_COLUMN));
         assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.HOUR_LIMIT_COLUMN));
         assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.START_DATE_COLUMN));
         assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.END_DATE_COLUMN));
+        assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.PROMPT_FOR_DESCRIPTION_COLUMN));
         assertTrue(Arrays.asList(trackingConfigurationDAO.getColumns()).contains(TrackingConfigurationDAO.ROUNDING_STRATEGY_COLUMN));
     }
 
@@ -229,7 +230,8 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
-        when(cursor.getString(5)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
+        when(cursor.getInt(5)).thenReturn(1);
+        when(cursor.getString(6)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -242,7 +244,8 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(startDateString);
         when(cursor.getString(4)).thenReturn(endDateString);
-        when(cursor.getString(5)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
+        when(cursor.getInt(5)).thenReturn(1);
+        when(cursor.getString(6)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -254,7 +257,8 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getInt(2)).thenReturn(5);
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
-        when(cursor.getString(5)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
+        when(cursor.getInt(5)).thenReturn(1);
+        when(cursor.getString(6)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
         when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;

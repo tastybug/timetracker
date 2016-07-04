@@ -6,8 +6,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.background.TrackingPlayerLifecycleBackgroundService;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
+import com.tastybug.timetracker.trackingplayer.LifecycleService;
 import com.tastybug.timetracker.util.FirstRunHelper;
 import com.tastybug.timetracker.util.VersionHelper;
 
@@ -40,7 +40,7 @@ public class Application extends android.app.Application {
     }
 
     private void startTrackingPlayerLifecycleBackgroundService() {
-        startService(new Intent(this, TrackingPlayerLifecycleBackgroundService.class));
+        startService(new Intent(this, LifecycleService.class));
     }
 
     private void initializeDayNightThemeMode() {

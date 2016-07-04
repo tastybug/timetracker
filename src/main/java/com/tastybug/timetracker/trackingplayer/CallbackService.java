@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.background;
+package com.tastybug.timetracker.trackingplayer;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.gui.activity.TrackingRecordModificationActivity;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.notification.TrackingPlayer;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 
 /**
@@ -19,17 +18,17 @@ import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
  *
  * This background service only lives as long as the request!
  */
-public class TrackingPlayerCallbackBackgroundService extends IntentService {
+public class CallbackService extends IntentService {
 
-    private static final String TAG = TrackingPlayerCallbackBackgroundService.class.getSimpleName();
+    private static final String TAG = CallbackService.class.getSimpleName();
 
-    public static final String OPERATION             = "OPERATION";
-    public static final String CYCLE_TO_NEXT_PROJECT = "CYCLE_TO_NEXT_PROJECT";
-    public static final String STOP_TRACKING_PROJECT = "STOP_TRACKING_PROJECT";
-    public static final String PROJECT_UUID          = "PROJECT_UUID";
+    protected static final String OPERATION             = "OPERATION";
+    protected static final String CYCLE_TO_NEXT_PROJECT = "CYCLE_TO_NEXT_PROJECT";
+    protected static final String STOP_TRACKING_PROJECT = "STOP_TRACKING_PROJECT";
+    protected static final String PROJECT_UUID          = "PROJECT_UUID";
 
-    public TrackingPlayerCallbackBackgroundService() {
-        super(TrackingPlayerCallbackBackgroundService.class.getSimpleName());
+    public CallbackService() {
+        super(CallbackService.class.getSimpleName());
     }
 
     @Override

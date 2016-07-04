@@ -142,7 +142,7 @@ public class ProjectTest {
         // given
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);
-        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), null, null, null, RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), null, null, null, false, RoundingFactory.Strategy.NO_ROUNDING);
         when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
 
         // when

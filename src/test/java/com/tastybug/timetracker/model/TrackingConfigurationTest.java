@@ -43,7 +43,7 @@ public class TrackingConfigurationTest {
         // when
         DateTime start = new DateTime();
         DateTime end = start.plusDays(5);
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", 3, start.toDate(), end.toDate(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", 3, start.toDate(), end.toDate(), false, RoundingFactory.Strategy.NO_ROUNDING);
 
         // then
         assertNotNull(trackingConfiguration);

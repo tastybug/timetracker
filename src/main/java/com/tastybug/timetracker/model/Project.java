@@ -89,6 +89,11 @@ public class Project extends Entity implements Comparable<Project> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        return (o instanceof Project) && ((Project)o).getUuid().equals(getUuid());
+    }
+
+    @Override
     public int compareTo(Project another) {
         return getTitle().compareTo(another.getTitle());
     }

@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.background;
+package com.tastybug.timetracker.trackingplayer;
 
 import android.app.Service;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
-import com.tastybug.timetracker.notification.TrackingPlayer;
 import com.tastybug.timetracker.task.OttoProvider;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
@@ -16,7 +15,7 @@ import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
  * * application startup: is the player to be displayed?
  * * otto events (starting and stopping of trackings)
  */
-public class TrackingPlayerLifecycleBackgroundService extends Service {
+public class LifecycleService extends Service {
 
     @Override
     public void onCreate() {
