@@ -9,6 +9,7 @@ import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,20 +27,23 @@ public class TrackingPlayerModel {
         this.trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    public ArrayList<Project> getRunningProjectList() {
+    public ArrayList<Project> getSortedRunningProjectList() {
         ArrayList<Project> runningProjects = new ArrayList<>();
         for (TrackingRecord record : trackingRecordDAO.getRunning()) {
             runningProjects.add(projectDAO.get(record.getProjectUuid()).get());
         }
 
+        Collections.sort(runningProjects);
         return runningProjects;
     }
 
-    public ArrayList<Project> getPausedProjectList() {
+    public ArrayList<Project> getSortedPausedProjectList() {
         ArrayList<Project> pausedProjects = new ArrayList<>();
         for (String pausedProjectUuid : getPausedProjectUuidSet()) {
             pausedProjects.add(projectDAO.get(pausedProjectUuid).get());
         }
+
+        Collections.sort(pausedProjects);
         return  pausedProjects;
     }
 

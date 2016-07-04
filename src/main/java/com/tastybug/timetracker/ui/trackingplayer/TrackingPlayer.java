@@ -14,15 +14,17 @@ import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
+
+import static com.tastybug.timetracker.ui.trackingplayer.CallbackIntentFactory.createCycleProjectIntent;
+import static com.tastybug.timetracker.ui.trackingplayer.CallbackIntentFactory.createOpenProjectDetailsActivityIntent;
+import static com.tastybug.timetracker.ui.trackingplayer.CallbackIntentFactory.createPauseTrackingIntent;
+import static com.tastybug.timetracker.ui.trackingplayer.CallbackIntentFactory.createStopTrackingIntent;
 
 public class TrackingPlayer {
 
     // the ID of the tracking player as the OS' notfication manager requires it
     private static final int TRACKING_PLAYER_INTERNAL_NOTIFICATION_ID = 1;
-
-    private CallbackIntentFactory intentFactory = new CallbackIntentFactory();
 
     public TrackingPlayer() {}
 
@@ -55,21 +57,21 @@ public class TrackingPlayer {
                 .setContentTitle(project.getTitle())
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
                         SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(trackingRecord.getStart().get())))
-                .setContentIntent(intentFactory.createOpenProjectDetailsActivityIntent(context, project))
+                .setContentIntent(createOpenProjectDetailsActivityIntent(context, project))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_stop_button),
-                        intentFactory.createStopTrackingIntent(context, project))
+                        createStopTrackingIntent(context, project))
                 .addAction(R.drawable.ic_pause_tracking,
                         context.getString(R.string.tracking_player_pause_button),
-                        intentFactory.createStopTrackingIntent(context, project));
+                        createPauseTrackingIntent(context, project));
 
         if (getRunningProjects(context).size() > 1) {
             notificationBuilder.addAction(R.drawable.ic_switch_project,
                     context.getString(R.string.tracking_player_switch_project),
-                    intentFactory.createCycleProjectIntent(context, project));
+                    createCycleProjectIntent(context, project));
         }
         return notificationBuilder;
     }
@@ -78,7 +80,7 @@ public class TrackingPlayer {
         Notification.Builder notificationBuilder = new Notification.Builder(context)
                 .setContentTitle(project.getTitle())
                 .setContentText(context.getString(R.string.paused_project))
-                .setContentIntent(intentFactory.createOpenProjectDetailsActivityIntent(context, project))
+                .setContentIntent(createOpenProjectDetailsActivityIntent(context, project))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
@@ -92,7 +94,7 @@ public class TrackingPlayer {
         if (getRunningProjects(context).size() > 1) {
             notificationBuilder.addAction(R.drawable.ic_switch_project,
                     context.getString(R.string.tracking_player_switch_project),
-                    intentFactory.createCycleProjectIntent(context, project));
+                    createCycleProjectIntent(context, project));
         }
         return notificationBuilder;
     }
@@ -110,9 +112,7 @@ public class TrackingPlayer {
     }
 
     private ArrayList<Project> getRunningProjects(Context context) {
-        ArrayList<Project> runningProjects = new TrackingPlayerModel(context).getRunningProjectList();
-        Collections.sort(runningProjects);
-        return runningProjects;
+        return new TrackingPlayerModel(context).getSortedRunningProjectList();
     }
 
     private Project getNextRunningProject(ArrayList<Project> projects, String previousProjectUuid) {

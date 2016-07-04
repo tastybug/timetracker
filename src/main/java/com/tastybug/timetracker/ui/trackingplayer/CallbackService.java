@@ -22,10 +22,11 @@ public class CallbackService extends IntentService {
 
     private static final String TAG = CallbackService.class.getSimpleName();
 
-    protected static final String OPERATION             = "OPERATION";
-    protected static final String CYCLE_TO_NEXT_PROJECT = "CYCLE_TO_NEXT_PROJECT";
-    protected static final String STOP_TRACKING_PROJECT = "STOP_TRACKING_PROJECT";
-    protected static final String PROJECT_UUID          = "PROJECT_UUID";
+    protected static final String OPERATION                 = "OPERATION";
+    protected static final String CYCLE_TO_NEXT_PROJECT     = "CYCLE_TO_NEXT_PROJECT";
+    protected static final String STOP_TRACKING_PROJECT     = "STOP_TRACKING_PROJECT";
+    protected static final String PAUSE_TRACKING_PROJECT    = "PAUSE_TRACKING_PROJECT";
+    protected static final String PROJECT_UUID              = "PROJECT_UUID";
 
     public CallbackService() {
         super(CallbackService.class.getSimpleName());
@@ -34,10 +35,17 @@ public class CallbackService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Preconditions.checkNotNull(intent.getExtras().getString(OPERATION));
-        if (STOP_TRACKING_PROJECT.equals(intent.getExtras().getString(OPERATION))) {
-            handleStopTrackingRequested(intent.getExtras().getString(PROJECT_UUID));
-        } else if (CYCLE_TO_NEXT_PROJECT.equals(intent.getExtras().getString(OPERATION))) {
-            handleCycleProjectRequested(intent.getExtras().getString(PROJECT_UUID));
+        Preconditions.checkNotNull(intent.getExtras().getString(PROJECT_UUID));
+
+        String operation = intent.getExtras().getString(OPERATION);
+        String projectUuid = intent.getExtras().getString(PROJECT_UUID);
+
+        if (STOP_TRACKING_PROJECT.equals(operation)) {
+            handleStopTrackingRequested(projectUuid);
+        } else if (CYCLE_TO_NEXT_PROJECT.equals(operation)) {
+            handleCycleProjectRequested(projectUuid);
+        } else if (PAUSE_TRACKING_PROJECT.equals(operation)) {
+            handleCycleProjectRequested(projectUuid);
         } else {
             Log.wtf(TAG, "Unexpected intent: " + intent);
         }
@@ -51,6 +59,10 @@ public class CallbackService extends IntentService {
         if (isProjectRequiringDescriptionPromptAfterTracking(projectUuid)) {
             showTrackingRecordEditingActivity(runningTrackingRecord);
         }
+    }
+
+    private void handlePauseTrackingRequested(String projectUuid) {
+        throw new RuntimeException("Impl me");
     }
 
     private void handleCycleProjectRequested(String currentProjectUuid) {

@@ -9,27 +9,34 @@ import com.tastybug.timetracker.ui.projectdetails.ProjectDetailsActivity;
 
 public class CallbackIntentFactory {
 
-    public CallbackIntentFactory() {}
+    private CallbackIntentFactory() {}
 
 
-    public PendingIntent createOpenProjectDetailsActivityIntent(Context context, Project project) {
+    public static PendingIntent createOpenProjectDetailsActivityIntent(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDetailsActivity.class)
                 .putExtra(ProjectDetailsActivity.PROJECT_UUID, project.getUuid());
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public PendingIntent createStopTrackingIntent(Context context, Project affectedProject) {
+    public static PendingIntent createStopTrackingIntent(Context context, Project affectedProject) {
         Intent intent = new Intent(context, CallbackService.class)
                 .putExtra(CallbackService.PROJECT_UUID, affectedProject.getUuid())
                 .putExtra(CallbackService.OPERATION, CallbackService.STOP_TRACKING_PROJECT);
         return PendingIntent.getService(context, CallbackService.STOP_TRACKING_PROJECT.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public PendingIntent createCycleProjectIntent(Context context, Project currentProject) {
+    public static PendingIntent createCycleProjectIntent(Context context, Project currentProject) {
         Intent intent = new Intent(context, CallbackService.class)
                 .putExtra(CallbackService.PROJECT_UUID, currentProject.getUuid())
                 .putExtra(CallbackService.OPERATION, CallbackService.CYCLE_TO_NEXT_PROJECT);
         return PendingIntent.getService(context, CallbackService.CYCLE_TO_NEXT_PROJECT.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public static PendingIntent createPauseTrackingIntent(Context context, Project currentProject) {
+        Intent intent = new Intent(context, CallbackService.class)
+                .putExtra(CallbackService.PROJECT_UUID, currentProject.getUuid())
+                .putExtra(CallbackService.OPERATION, CallbackService.PAUSE_TRACKING_PROJECT);
+        return PendingIntent.getService(context, CallbackService.PAUSE_TRACKING_PROJECT.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 }
