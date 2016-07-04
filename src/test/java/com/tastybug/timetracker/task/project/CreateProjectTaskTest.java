@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Build;
 
 import com.squareup.otto.Bus;
-import com.tastybug.timetracker.task.OttoProvider;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 
 import org.junit.Before;
 import org.junit.Test;

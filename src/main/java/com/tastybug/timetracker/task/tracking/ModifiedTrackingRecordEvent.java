@@ -1,7 +1,7 @@
 package com.tastybug.timetracker.task.tracking;
 
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.task.OttoEvent;
 
 public class ModifiedTrackingRecordEvent implements OttoEvent {
 

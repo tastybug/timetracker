@@ -7,10 +7,10 @@ import android.util.Log;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.BuildConfig;
-import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
+import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 

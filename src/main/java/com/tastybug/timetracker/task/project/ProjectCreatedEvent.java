@@ -1,7 +1,7 @@
 package com.tastybug.timetracker.task.project;
 
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.task.OttoEvent;
 
 public class ProjectCreatedEvent implements OttoEvent {
 

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.tastybug.timetracker">
 
-    <application android:name=".application.Application" android:theme="@style/Theme.AppCompat.DayNight" android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name">
-        <activity android:name=".gui.activity.ProjectsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan">
+    <application android:name=".infrastructure.runtime.Application" android:theme="@style/Theme.AppCompat.DayNight" android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name">
+        <activity android:name=".ui.dashboard.ProjectsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".gui.activity.ProjectDetailsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity android:name=".gui.activity.ProjectConfigurationActivity" android:noHistory="true"/>
-        <activity android:name=".gui.activity.TrackingRecordModificationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan">
+        <activity android:name=".ui.projectdetails.ProjectDetailsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".ui.projectconfiguration.ProjectConfigurationActivity" android:noHistory="true"/>
+        <activity android:name=".ui.trackingrecordmodification.TrackingRecordModificationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter> <!-- this allows the tracking player notification to open this activity from 'outside' -->
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -19,10 +19,10 @@
             </intent-filter>
         </activity>
 
-        <provider android:authorities="com.tastybug.timetracker" android:exported="false" android:multiprocess="true" android:name=".database.DatabaseContentProvider" android:launchMode="singleTask"/>
+        <provider android:authorities="com.tastybug.timetracker" android:exported="false" android:multiprocess="true" android:name=".infrastructure.db.DatabaseContentProvider" android:launchMode="singleTask"/>
 
-        <service android:name=".trackingplayer.LifecycleService" android:exported="false"/>
-        <service android:name=".trackingplayer.CallbackService" android:exported="false"/>
+        <service android:name=".ui.trackingplayer.LifecycleService" android:exported="false"/>
+        <service android:name=".ui.trackingplayer.CallbackService" android:exported="false"/>
 
         <!--database stuff-->
         <meta-data android:name="database.schema.version.current" android:value="1"/>

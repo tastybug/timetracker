@@ -20,7 +20,7 @@
     <PreferenceCategory
         android:title="@string/expiration_and_duration_limits_preference_group_title" >
 
-        <com.tastybug.timetracker.gui.fragment.project.configuration.HourLimitPickerDialog
+        <com.tastybug.timetracker.ui.projectconfiguration.HourLimitPickerDialog
             android:id="@+id/hour_limit_picker"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -28,12 +28,12 @@
             android:title="@string/tracking_configuration_hour_limit_preference_title" />
         <!-- summary is set programmatically -->
 
-        <com.tastybug.timetracker.gui.fragment.project.configuration.DatePickerPreference
+        <com.tastybug.timetracker.ui.projectconfiguration.DatePickerPreference
             android:key="@string/tracking_configuration_start_date_preference_key"
             android:title="@string/tracking_configuration_start_date_preference_title" />
         <!-- summary is set programmatically -->
 
-        <com.tastybug.timetracker.gui.fragment.project.configuration.DatePickerPreference
+        <com.tastybug.timetracker.ui.projectconfiguration.DatePickerPreference
             android:key="@string/tracking_configuration_end_date_inclusive_preference_key"
             android:title="@string/tracking_configuration_end_date_inclusive_preference_title" />
         <!-- summary is set programmatically -->

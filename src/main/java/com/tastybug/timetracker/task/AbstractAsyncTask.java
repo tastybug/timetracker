@@ -9,7 +9,8 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.tastybug.timetracker.database.dao.EntityDAO;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
+import com.tastybug.timetracker.model.dao.EntityDAO;
 
 import java.util.ArrayList;
 

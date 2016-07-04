@@ -2,8 +2,8 @@ package com.tastybug.timetracker.model;
 
 import android.content.Context;
 
-import com.tastybug.timetracker.database.dao.DAOFactory;
-import com.tastybug.timetracker.database.dao.EntityDAO;
+import com.tastybug.timetracker.model.dao.DAOFactory;
+import com.tastybug.timetracker.model.dao.EntityDAO;
 
 import java.io.Serializable;
 

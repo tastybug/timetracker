@@ -6,8 +6,8 @@ import android.util.Log;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.BuildConfig;
-import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 public class KickStartTrackingRecordTask extends AbstractAsyncTask {

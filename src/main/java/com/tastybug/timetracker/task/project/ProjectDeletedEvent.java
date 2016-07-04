@@ -1,6 +1,6 @@
 package com.tastybug.timetracker.task.project;
 
-import com.tastybug.timetracker.task.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 
 public class ProjectDeletedEvent implements OttoEvent {
 

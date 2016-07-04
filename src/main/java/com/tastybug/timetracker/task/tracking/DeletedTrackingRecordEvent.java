@@ -1,6 +1,6 @@
 package com.tastybug.timetracker.task.tracking;
 
-import com.tastybug.timetracker.task.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 
 public class DeletedTrackingRecordEvent implements OttoEvent {
 

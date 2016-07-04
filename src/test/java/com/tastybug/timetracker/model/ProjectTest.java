@@ -5,10 +5,10 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.database.dao.DAOFactory;
-import com.tastybug.timetracker.database.dao.ProjectDAO;
-import com.tastybug.timetracker.database.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.database.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.model.dao.DAOFactory;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
+import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.junit.Before;
