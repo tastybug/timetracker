@@ -170,7 +170,7 @@
     <string name="tracking_player_dismiss_paused_button">Dismiss</string>
     <string name="tracking_player_switch_project">Switch</string>
     <string name="tracking_player_tracking_since_X">Tracking since %1$s</string>
-    <string name="paused_project">Currently paused ..</string>
+    <string name="tracking_player_paused_since_X">Paused since %1$s</string>
 
 
 </resources>

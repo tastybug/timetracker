@@ -99,13 +99,17 @@ public class TrackingPlayer {
     }
 
     private Notification.Builder getNotificationBuilderForPausedProject(Context context, Project project) {
+        TrackingRecord latestRecord = new TrackingRecordDAO(context).getLatestByStartDateForProjectUuid(project.getUuid()).get();
+
         Notification.Builder notificationBuilder = new Notification.Builder(context)
                 .setContentTitle(project.getTitle())
-                .setContentText(context.getString(R.string.paused_project))
+                .setContentText(context.getString(R.string.tracking_player_paused_since_X,
+                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT)
+                                .format(latestRecord.getEnd().get())))
                 .setContentIntent(createOpenProjectDetailsActivityIntent(context, project))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                .setOngoing(true)
+                .setOngoing(false)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),
                         createDismissPausedIntent(context, project))
@@ -114,9 +118,11 @@ public class TrackingPlayer {
                         createUnpauseTrackingIntent(context, project));
 
         if (model.getSortedRunningAndPausedProjectList().size() > 1) {
-            notificationBuilder.addAction(R.drawable.ic_switch_project,
+            notificationBuilder
+                .addAction(R.drawable.ic_switch_project,
                     context.getString(R.string.tracking_player_switch_project),
-                    createCycleProjectIntent(context, project));
+                    createCycleProjectIntent(context, project))
+                .setOngoing(true); // if multiple projects are ongoing, this must not be dismissable
         }
         return notificationBuilder;
     }
