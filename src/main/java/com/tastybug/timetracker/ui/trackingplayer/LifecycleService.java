@@ -26,7 +26,7 @@ public class LifecycleService extends Service {
         new OttoProvider().getSharedBus().register(this);
 
         //
-        new TrackingPlayer().revalidateVisibility(this);
+        new TrackingPlayer(this).revalidateVisibility(this);
     }
 
     @Override
@@ -44,12 +44,12 @@ public class LifecycleService extends Service {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
-        new TrackingPlayer().showProject(this, event.getTrackingRecord());
+        new TrackingPlayer(this).showRunningProject(this, event.getTrackingRecord());
     }
 
     @SuppressWarnings("unused")
     @Subscribe
     public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
-        new TrackingPlayer().revalidateVisibility(this);
+        new TrackingPlayer(this).revalidateVisibility(this);
     }
 }

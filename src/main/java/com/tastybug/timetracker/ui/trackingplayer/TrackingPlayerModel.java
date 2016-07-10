@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class TrackingPlayerModel {
 
-    private static final String PAUSED_PROJECTS_PREF_KEY = "PAUSED_PROJECTS_PREF_KEY";
+    private static final String PAUSED_PROJECTS_KEY = "PAUSED_PROJECTS_KEY";
 
     private Context context;
     private ProjectDAO projectDAO;
@@ -27,37 +27,49 @@ public class TrackingPlayerModel {
         this.trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    public ArrayList<Project> getSortedRunningProjectList() {
+    public ArrayList<Project> getSortedRunningAndPausedProjectList() {
         ArrayList<Project> runningProjects = new ArrayList<>();
         for (TrackingRecord record : trackingRecordDAO.getRunning()) {
             runningProjects.add(projectDAO.get(record.getProjectUuid()).get());
         }
+        for (String pausedProjectUuid : getPausedProjectUuidSet()) {
+            runningProjects.add(projectDAO.get(pausedProjectUuid).get());
+        }
+
 
         Collections.sort(runningProjects);
         return runningProjects;
     }
 
-    public ArrayList<Project> getSortedPausedProjectList() {
-        ArrayList<Project> pausedProjects = new ArrayList<>();
-        for (String pausedProjectUuid : getPausedProjectUuidSet()) {
-            pausedProjects.add(projectDAO.get(pausedProjectUuid).get());
-        }
-
-        Collections.sort(pausedProjects);
-        return  pausedProjects;
+    public void addPausedProject(String projectUuid) {
+        SharedPreferences prefs = getPreferences();
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> pausedList = prefs.getStringSet(PAUSED_PROJECTS_KEY, new HashSet<String>());
+        pausedList.add(projectUuid);
+        editor.putStringSet(PAUSED_PROJECTS_KEY, pausedList);
+        editor.apply();
     }
 
-    public Set<String> getPausedProjectUuidSet() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("TrackingPlayerSettings", Context.MODE_PRIVATE);
-        return new HashSet<>(sharedPreferences.getStringSet(PAUSED_PROJECTS_PREF_KEY, new HashSet<String>()));
+    public void removePausedProject(String projectUuid) {
+        SharedPreferences prefs = getPreferences();
+        SharedPreferences.Editor editor = prefs.edit();
+        Set<String> pausedList = prefs.getStringSet(PAUSED_PROJECTS_KEY, new HashSet<String>());
+        pausedList.remove(projectUuid);
+        editor.putStringSet(PAUSED_PROJECTS_KEY, pausedList);
+        editor.apply();
     }
 
-    public void addPausedProject() {
-
+    public boolean isProjectPaused(String projectUuid) {
+        SharedPreferences prefs = getPreferences();
+        return prefs.getStringSet(PAUSED_PROJECTS_KEY, new HashSet<String>()).contains(projectUuid);
     }
 
-    public void removePausedProject() {
+    private Set<String> getPausedProjectUuidSet() {
+        return getPreferences().getStringSet(PAUSED_PROJECTS_KEY, new HashSet<String>());
+    }
 
+    private SharedPreferences getPreferences() {
+        return context.getSharedPreferences("PausedProjectsManager", Context.MODE_PRIVATE);
     }
 
 }

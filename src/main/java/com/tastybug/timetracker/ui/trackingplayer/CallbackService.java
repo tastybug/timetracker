@@ -9,6 +9,7 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationActivity;
 
@@ -24,8 +25,11 @@ public class CallbackService extends IntentService {
 
     protected static final String OPERATION                 = "OPERATION";
     protected static final String CYCLE_TO_NEXT_PROJECT     = "CYCLE_TO_NEXT_PROJECT";
+    protected static final String START_TRACKING_PROJECT    = "START_TRACKING_PROJECT";
     protected static final String STOP_TRACKING_PROJECT     = "STOP_TRACKING_PROJECT";
+    protected static final String DISMISS_PAUSED_PROJECT    = "DISMISS_PAUSED_PROJECT";
     protected static final String PAUSE_TRACKING_PROJECT    = "PAUSE_TRACKING_PROJECT";
+    protected static final String UNPAUSE_TRACKING_PROJECT  = "UNPAUSE_TRACKING_PROJECT";
     protected static final String PROJECT_UUID              = "PROJECT_UUID";
 
     public CallbackService() {
@@ -42,13 +46,23 @@ public class CallbackService extends IntentService {
 
         if (STOP_TRACKING_PROJECT.equals(operation)) {
             handleStopTrackingRequested(projectUuid);
+        } else if (START_TRACKING_PROJECT.equals(operation)) {
+            handleStartTrackingRequest(projectUuid);
         } else if (CYCLE_TO_NEXT_PROJECT.equals(operation)) {
             handleCycleProjectRequested(projectUuid);
         } else if (PAUSE_TRACKING_PROJECT.equals(operation)) {
-            handleCycleProjectRequested(projectUuid);
+            handlePauseTrackingRequested(projectUuid);
+        } else if (UNPAUSE_TRACKING_PROJECT.equals(operation)) {
+            handleUnpauseTrackingRequest(projectUuid);
+        } else if (DISMISS_PAUSED_PROJECT.equals(operation)) {
+            handleDismissPausedProjectRequested(projectUuid);
         } else {
             Log.wtf(TAG, "Unexpected intent: " + intent);
         }
+    }
+
+    private void handleStartTrackingRequest(String projectUuid) {
+        KickStartTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
     }
 
     private void handleStopTrackingRequested(String projectUuid) {
@@ -62,12 +76,25 @@ public class CallbackService extends IntentService {
     }
 
     private void handlePauseTrackingRequested(String projectUuid) {
-        throw new RuntimeException("Impl me");
+        handleStopTrackingRequested(projectUuid);
+        //
+        addProjectToPausedList(projectUuid);
+        new TrackingPlayer(getApplicationContext()).showPausedProject(getApplicationContext(), projectUuid);
+    }
+
+    private void handleUnpauseTrackingRequest(String projectUuid) {
+        removeProjectFromPausedList(projectUuid);
+        KickStartTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
+    }
+
+    private void handleDismissPausedProjectRequested(String projectUuid) {
+        removeProjectFromPausedList(projectUuid);
+        new TrackingPlayer(getApplicationContext()).revalidateVisibility(getApplicationContext());
     }
 
     private void handleCycleProjectRequested(String currentProjectUuid) {
         Log.i(TAG, "Cycling to next project coming from " + currentProjectUuid);
-        new TrackingPlayer().showNextProject(this, currentProjectUuid);
+        new TrackingPlayer(getApplicationContext()).showNextProject(this, currentProjectUuid);
     }
 
     private boolean isProjectRequiringDescriptionPromptAfterTracking(String projectUuid) {
@@ -82,5 +109,14 @@ public class CallbackService extends IntentService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(Intent.ACTION_VIEW);
         startActivity(intent);
+    }
+
+    private void addProjectToPausedList(String projectUuid) {
+        new TrackingPlayerModel(getApplicationContext()).addPausedProject(projectUuid);
+    }
+
+    private void removeProjectFromPausedList(String projectUuid) {
+        // TODO es koennen pausierte Projekte auch aus der App heraus gestartet werden; in diesem Fall das Projekt aus der Pauseliste entfernen!
+        new TrackingPlayerModel(getApplicationContext()).removePausedProject(projectUuid);
     }
 }
