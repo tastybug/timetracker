@@ -79,7 +79,7 @@ public class CallbackService extends IntentService {
         handleStopTrackingRequested(projectUuid);
         //
         addProjectToPausedList(projectUuid);
-        new TrackingPlayer(getApplicationContext()).showPausedProject(getApplicationContext(), projectUuid);
+        new TrackingPlayer(getApplicationContext()).showPausedProject(projectUuid);
     }
 
     private void handleUnpauseTrackingRequest(String projectUuid) {
@@ -89,12 +89,12 @@ public class CallbackService extends IntentService {
 
     private void handleDismissPausedProjectRequested(String projectUuid) {
         removeProjectFromPausedList(projectUuid);
-        new TrackingPlayer(getApplicationContext()).revalidateVisibility(getApplicationContext());
+        new TrackingPlayer(getApplicationContext()).revalidateVisibility();
     }
 
     private void handleCycleProjectRequested(String currentProjectUuid) {
         Log.i(TAG, "Cycling to next project coming from " + currentProjectUuid);
-        new TrackingPlayer(getApplicationContext()).showNextProject(this, currentProjectUuid);
+        new TrackingPlayer(getApplicationContext()).showNextProject(currentProjectUuid);
     }
 
     private boolean isProjectRequiringDescriptionPromptAfterTracking(String projectUuid) {
@@ -116,7 +116,6 @@ public class CallbackService extends IntentService {
     }
 
     private void removeProjectFromPausedList(String projectUuid) {
-        // TODO es koennen pausierte Projekte auch aus der App heraus gestartet werden; in diesem Fall das Projekt aus der Pauseliste entfernen!
         new TrackingPlayerModel(getApplicationContext()).removePausedProject(projectUuid);
     }
 }

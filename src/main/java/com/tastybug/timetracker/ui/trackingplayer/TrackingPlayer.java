@@ -28,48 +28,50 @@ public class TrackingPlayer {
     // the ID of the tracking player as the OS' notfication manager requires it
     private static final int TRACKING_PLAYER_INTERNAL_NOTIFICATION_ID = 1;
 
+    private Context context;
     private TrackingPlayerModel model;
 
     public TrackingPlayer(Context context) {
+        this.context = context;
         model = new TrackingPlayerModel(context);
     }
 
-    public void showRunningProject(Context context, TrackingRecord trackingRecord) {
+    public void showRunningProject(TrackingRecord trackingRecord) {
         Project project = new ProjectDAO(context).get(trackingRecord.getProjectUuid()).get();
-        showRunningProject(context, project, trackingRecord);
+        showRunningProject(project, trackingRecord);
     }
 
-    private void showRunningProject(Context context, Project project, TrackingRecord runningTrackingRecord) {
-        showNotification(context, getNotificationBuilderForRecord(context, project, runningTrackingRecord).build());
+    private void showRunningProject(Project project, TrackingRecord runningTrackingRecord) {
+        showNotification(getNotificationBuilderForRecord(context, project, runningTrackingRecord).build());
     }
 
-    public void showNextProject(Context context, String currentProjectUuid) {
+    public void showNextProject(String currentProjectUuid) {
         ArrayList<Project> runningProjects = model.getSortedRunningAndPausedProjectList();
         Project nextProject = getNextRunningProject(runningProjects, currentProjectUuid);
         if (model.isProjectPaused(nextProject.getUuid())) {
-            showPausedProject(context, nextProject.getUuid());
+            showPausedProject(nextProject.getUuid());
         } else {
-            showRunningProject(context, nextProject, new TrackingRecordDAO(context).getRunning(nextProject.getUuid()).get());
+            showRunningProject(nextProject, new TrackingRecordDAO(context).getRunning(nextProject.getUuid()).get());
         }
     }
 
-    public void revalidateVisibility(Context context) {
+    public void revalidateVisibility() {
         ArrayList<Project> runningAndPausedProjectList = model.getSortedRunningAndPausedProjectList();
         if (runningAndPausedProjectList.isEmpty()) {
-            dismissNotification(context);
+            dismissNotification();
         } else {
             Project project = runningAndPausedProjectList.get(0);
             if (model.isProjectPaused(project.getUuid())) {
-                showPausedProject(context, project.getUuid());
+                showPausedProject(project.getUuid());
             } else {
-                showRunningProject(context, project, new TrackingRecordDAO(context).getRunning(project.getUuid()).get());
+                showRunningProject(project, new TrackingRecordDAO(context).getRunning(project.getUuid()).get());
             }
         }
     }
 
-    public void showPausedProject(Context context, String projectUuid) {
+    public void showPausedProject(String projectUuid) {
         Project project = new ProjectDAO(context).get(projectUuid).get();
-        showNotification(context, getNotificationBuilderForPausedProject(context, project).build());
+        showNotification(getNotificationBuilderForPausedProject(context, project).build());
     }
 
     private Notification.Builder getNotificationBuilderForRecord(Context context, Project project, TrackingRecord trackingRecord) {
@@ -104,12 +106,12 @@ public class TrackingPlayer {
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
-                .addAction(R.drawable.ic_start_tracking,
-                        context.getString(R.string.tracking_player_resume_button),
-                        createUnpauseTrackingIntent(context, project))
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),
-                        createDismissPausedIntent(context, project));
+                        createDismissPausedIntent(context, project))
+                .addAction(R.drawable.ic_start_tracking,
+                        context.getString(R.string.tracking_player_resume_button),
+                        createUnpauseTrackingIntent(context, project));
 
         if (model.getSortedRunningAndPausedProjectList().size() > 1) {
             notificationBuilder.addAction(R.drawable.ic_switch_project,
@@ -119,15 +121,15 @@ public class TrackingPlayer {
         return notificationBuilder;
     }
 
-    private void showNotification(Context context, Notification notification) {
-        getSystemNotificationManager(context).notify(TRACKING_PLAYER_INTERNAL_NOTIFICATION_ID, notification);
+    private void showNotification(Notification notification) {
+        getSystemNotificationManager().notify(TRACKING_PLAYER_INTERNAL_NOTIFICATION_ID, notification);
     }
 
-    private void dismissNotification(Context context) {
-        getSystemNotificationManager(context).cancel(TRACKING_PLAYER_INTERNAL_NOTIFICATION_ID);
+    private void dismissNotification() {
+        getSystemNotificationManager().cancel(TRACKING_PLAYER_INTERNAL_NOTIFICATION_ID);
     }
 
-    private NotificationManager getSystemNotificationManager(Context context) {
+    private NotificationManager getSystemNotificationManager() {
         return (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
     }
 

@@ -163,7 +163,7 @@
     <string name="tracking_configuration_prompt_for_description_preference_title">Ask for a comment after each session</string>
 
     <!-- TrackingPlayer Notification -->
-    <string name="tracking_player_stop_button">Log out</string>
+    <string name="tracking_player_stop_button">Stop</string>
     <string name="tracking_player_start_button">Start</string>
     <string name="tracking_player_resume_button">Resume</string>
     <string name="tracking_player_pause_button">Pause</string>
