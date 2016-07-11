@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
+import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 
@@ -61,5 +62,14 @@ public class LifecycleService extends Service {
         } else {
             player.showSomeProjectOrHide();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleProjectDeleted(ProjectDeletedEvent event) {
+        new TrackingPlayerModel(this).removePausedProject(event.getProjectUuid());
+        // we cannot be sure whether the deleted project is being displayed
+        // so just to be in the clear we revalidate the TrackingPlayer
+        new TrackingPlayer(this).showSomeProjectOrHide();
     }
 }
