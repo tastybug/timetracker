@@ -3,9 +3,7 @@ package com.tastybug.timetracker.infrastructure.runtime;
 import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
 import com.tastybug.timetracker.ui.trackingplayer.LifecycleService;
 
@@ -29,8 +27,6 @@ public class Application extends android.app.Application {
             runGenerateTestDataTask();
             declareFirstRunConsumed();
         }
-
-        showWelcomeToast();
     }
 
     private void initializeJoda() {
@@ -61,13 +57,5 @@ public class Application extends android.app.Application {
                     + versionHelper.getVersionName()
                     + " is not a SNAPSHOT release!");
         }
-    }
-
-    private void showWelcomeToast() {
-        Toast.makeText(this,
-                getString(R.string.app_start_welcome_app_name_X_at_version_Y,
-                        versionHelper.getApplicationName(),
-                        versionHelper.getVersionName()),
-                Toast.LENGTH_SHORT).show();
     }
 }
