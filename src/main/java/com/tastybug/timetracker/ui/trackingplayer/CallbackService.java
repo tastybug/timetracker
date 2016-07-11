@@ -25,7 +25,6 @@ public class CallbackService extends IntentService {
 
     protected static final String OPERATION                 = "OPERATION";
     protected static final String CYCLE_TO_NEXT_PROJECT     = "CYCLE_TO_NEXT_PROJECT";
-    protected static final String START_TRACKING_PROJECT    = "START_TRACKING_PROJECT";
     protected static final String STOP_TRACKING_PROJECT     = "STOP_TRACKING_PROJECT";
     protected static final String DISMISS_PAUSED_PROJECT    = "DISMISS_PAUSED_PROJECT";
     protected static final String PAUSE_TRACKING_PROJECT    = "PAUSE_TRACKING_PROJECT";
@@ -46,8 +45,6 @@ public class CallbackService extends IntentService {
 
         if (STOP_TRACKING_PROJECT.equals(operation)) {
             handleStopTrackingRequested(projectUuid);
-        } else if (START_TRACKING_PROJECT.equals(operation)) {
-            handleStartTrackingRequest(projectUuid);
         } else if (CYCLE_TO_NEXT_PROJECT.equals(operation)) {
             handleCycleProjectRequested(projectUuid);
         } else if (PAUSE_TRACKING_PROJECT.equals(operation)) {
@@ -59,10 +56,6 @@ public class CallbackService extends IntentService {
         } else {
             Log.wtf(TAG, "Unexpected intent: " + intent);
         }
-    }
-
-    private void handleStartTrackingRequest(String projectUuid) {
-        KickStartTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
     }
 
     private void handleStopTrackingRequested(String projectUuid) {
@@ -77,9 +70,8 @@ public class CallbackService extends IntentService {
 
     private void handlePauseTrackingRequested(String projectUuid) {
         handleStopTrackingRequested(projectUuid);
-        //
         addProjectToPausedList(projectUuid);
-        new TrackingPlayer(getApplicationContext()).showProject(projectUuid);
+        // now we wait for the otto event regarding the stopping
     }
 
     private void handleUnpauseTrackingRequest(String projectUuid) {
@@ -89,12 +81,12 @@ public class CallbackService extends IntentService {
 
     private void handleDismissPausedProjectRequested(String projectUuid) {
         removeProjectFromPausedList(projectUuid);
-        new TrackingPlayer(getApplicationContext()).revalidateVisibility();
+        new TrackingPlayer(getApplicationContext()).showSomeProjectOrHide();
     }
 
     private void handleCycleProjectRequested(String currentProjectUuid) {
         Log.i(TAG, "Cycling to next project coming from " + currentProjectUuid);
-        new TrackingPlayer(getApplicationContext()).showNextProject(currentProjectUuid);
+        new TrackingPlayer(getApplicationContext()).cycleProject(currentProjectUuid);
     }
 
     private boolean isProjectRequiringDescriptionPromptAfterTracking(String projectUuid) {

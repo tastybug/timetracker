@@ -11,6 +11,7 @@ import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class TrackingPlayerModel {
@@ -61,6 +62,25 @@ public class TrackingPlayerModel {
     public boolean isProjectPaused(String projectUuid) {
         SharedPreferences prefs = getPreferences();
         return prefs.getStringSet(PAUSED_PROJECTS_KEY, new HashSet<String>()).contains(projectUuid);
+    }
+
+    public Project getNextProject(String currentProjectUuid) {
+        ArrayList<Project> projects = getOngoingProjects();
+        for (Iterator<Project> i = projects.iterator(); i.hasNext();) {
+            if (i.next().getUuid().equals(currentProjectUuid)) {
+                return i.hasNext() ? i.next() : projects.get(0);
+            }
+        }
+        // if the current project is not in the list, just return the very first entry
+        return projects.get(0);
+    }
+
+    protected Project getProject(String projectUuid) {
+        return projectDAO.get(projectUuid).get();
+    }
+
+    protected TrackingRecord getRunningTrackingRecord(String projectUuid) {
+        return trackingRecordDAO.getRunning(projectUuid).get();
     }
 
     private Set<String> getPausedProjectUuidSet() {

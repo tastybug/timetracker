@@ -9,12 +9,10 @@ import android.graphics.BitmapFactory;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import static com.tastybug.timetracker.ui.trackingplayer.CallbackIntentFactory.createCycleProjectIntent;
 import static com.tastybug.timetracker.ui.trackingplayer.CallbackIntentFactory.createDismissPausedIntent;
@@ -37,23 +35,20 @@ public class TrackingPlayer {
     }
 
     public void showProject(String projectUuid) {
-        Project project = new ProjectDAO(context).get(projectUuid).get();
+        Project project = model.getProject(projectUuid);
         if (model.isProjectPaused(projectUuid)) {
-            showNotification(getNotificationBuilderForPausedProject(context, project).build());
+            showNotificationForPaused(context, project);
         } else {
-            TrackingRecord runningTrackingRecord = new TrackingRecordDAO(context)
-                    .getRunning(projectUuid).get();
-            showNotification(getNotificationBuilderForRecord(context, project, runningTrackingRecord).build());
+            showNotificationForRunning(project, model.getRunningTrackingRecord(projectUuid));
         }
     }
 
-    public void showNextProject(String currentProjectUuid) {
-        ArrayList<Project> runningProjects = model.getOngoingProjects();
-        Project nextProject = getNextRunningProject(runningProjects, currentProjectUuid);
+    public void cycleProject(String currentProjectUuid) {
+        Project nextProject = model.getNextProject(currentProjectUuid);
         showProject(nextProject.getUuid());
     }
 
-    public void revalidateVisibility() {
+    public void showSomeProjectOrHide() {
         ArrayList<Project> runningAndPausedProjectList = model.getOngoingProjects();
         if (runningAndPausedProjectList.isEmpty()) {
             dismissNotification();
@@ -62,15 +57,11 @@ public class TrackingPlayer {
         }
     }
 
-    private Notification.Builder getNotificationBuilderForRecord(Context context, Project project, TrackingRecord trackingRecord) {
-        Notification.Builder notificationBuilder = new Notification.Builder(context)
-                .setContentTitle(project.getTitle())
+    private void showNotificationForRunning(Project project, TrackingRecord trackingRecord) {
+        Notification.Builder notificationBuilder = getBasicNotificationBuilder(project)
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
-                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(trackingRecord.getStart().get())))
-                .setContentIntent(createOpenProjectDetailsActivityIntent(context, project))
-                .setSmallIcon(R.drawable.ic_notification_ongoing)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                .setOngoing(true)
+                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT)
+                                .format(trackingRecord.getStart().get())))
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_stop_button),
                         createStopTrackingIntent(context, project))
@@ -78,26 +69,16 @@ public class TrackingPlayer {
                         context.getString(R.string.tracking_player_pause_button),
                         createPauseTrackingIntent(context, project));
 
-        if (model.getOngoingProjects().size() > 1) {
-            notificationBuilder.addAction(R.drawable.ic_switch_project,
-                    context.getString(R.string.tracking_player_switch_project),
-                    createCycleProjectIntent(context, project));
-        }
-        return notificationBuilder;
+        showNotification(notificationBuilder.build());
     }
 
-    private Notification.Builder getNotificationBuilderForPausedProject(Context context, Project project) {
+    private void showNotificationForPaused(Context context, Project project) {
         TrackingRecord latestRecord = new TrackingRecordDAO(context).getLatestByStartDateForProjectUuid(project.getUuid()).get();
 
-        Notification.Builder notificationBuilder = new Notification.Builder(context)
-                .setContentTitle(project.getTitle())
+        Notification.Builder notificationBuilder = getBasicNotificationBuilder(project)
                 .setContentText(context.getString(R.string.tracking_player_paused_since_X,
                         SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT)
                                 .format(latestRecord.getEnd().get())))
-                .setContentIntent(createOpenProjectDetailsActivityIntent(context, project))
-                .setSmallIcon(R.drawable.ic_notification_ongoing)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                .setOngoing(false)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),
                         createDismissPausedIntent(context, project))
@@ -105,13 +86,24 @@ public class TrackingPlayer {
                         context.getString(R.string.tracking_player_resume_button),
                         createUnpauseTrackingIntent(context, project));
 
+        showNotification(notificationBuilder.build());
+    }
+
+    private Notification.Builder getBasicNotificationBuilder(Project project) {
+        Notification.Builder notificationBuilder = new Notification.Builder(context)
+                .setContentTitle(project.getTitle())
+                .setSmallIcon(R.drawable.ic_notification_ongoing)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                .setOngoing(true)
+                .setContentIntent(createOpenProjectDetailsActivityIntent(context, project));
+
         if (model.getOngoingProjects().size() > 1) {
             notificationBuilder
-                .addAction(R.drawable.ic_switch_project,
-                    context.getString(R.string.tracking_player_switch_project),
-                    createCycleProjectIntent(context, project))
-                .setOngoing(true); // if multiple projects are ongoing, this must not be dismissable
+                    .addAction(R.drawable.ic_switch_project,
+                            context.getString(R.string.tracking_player_switch_project),
+                            createCycleProjectIntent(context, project));
         }
+
         return notificationBuilder;
     }
 
@@ -125,16 +117,5 @@ public class TrackingPlayer {
 
     private NotificationManager getSystemNotificationManager() {
         return (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
-    }
-
-    // TODO das in das model verschieben
-    private Project getNextRunningProject(ArrayList<Project> projects, String previousProjectUuid) {
-        for (Iterator<Project> i = projects.iterator(); i.hasNext();) {
-            if (i.next().getUuid().equals(previousProjectUuid)) {
-                return i.hasNext() ? i.next() : projects.get(0);
-            }
-        }
-        // if the previous project is not in the list, just return the very first entry
-        return projects.get(0);
     }
 }

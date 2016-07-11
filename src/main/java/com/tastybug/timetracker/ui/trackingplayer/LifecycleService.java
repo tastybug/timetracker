@@ -26,7 +26,7 @@ public class LifecycleService extends Service {
         new OttoProvider().getSharedBus().register(this);
 
         //
-        new TrackingPlayer(this).revalidateVisibility();
+        new TrackingPlayer(this).showSomeProjectOrHide();
     }
 
     @Override
@@ -53,6 +53,13 @@ public class LifecycleService extends Service {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
-        new TrackingPlayer(this).revalidateVisibility();
+        String projectUuid = event.getTrackingRecord().getProjectUuid();
+        TrackingPlayer player = new TrackingPlayer(this);
+
+        if (new TrackingPlayerModel(this).isProjectPaused(projectUuid)) {
+            player.showProject(projectUuid);
+        } else {
+            player.showSomeProjectOrHide();
+        }
     }
 }
