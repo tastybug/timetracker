@@ -47,7 +47,7 @@ public class LifecycleService extends Service {
         // paused projects can be restarted from within the app -> these have to be removed from the
         // list of paused projects manually
         new TrackingPlayerModel(this).removePausedProject(event.getTrackingRecord().getProjectUuid());
-        new TrackingPlayer(this).showRunningProject(event.getTrackingRecord());
+        new TrackingPlayer(this).showProject(event.getTrackingRecord().getProjectUuid());
     }
 
     @SuppressWarnings("unused")

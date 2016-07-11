@@ -79,7 +79,7 @@ public class CallbackService extends IntentService {
         handleStopTrackingRequested(projectUuid);
         //
         addProjectToPausedList(projectUuid);
-        new TrackingPlayer(getApplicationContext()).showPausedProject(projectUuid);
+        new TrackingPlayer(getApplicationContext()).showProject(projectUuid);
     }
 
     private void handleUnpauseTrackingRequest(String projectUuid) {

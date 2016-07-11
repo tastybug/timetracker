@@ -36,42 +36,30 @@ public class TrackingPlayer {
         model = new TrackingPlayerModel(context);
     }
 
-    public void showRunningProject(TrackingRecord trackingRecord) {
-        Project project = new ProjectDAO(context).get(trackingRecord.getProjectUuid()).get();
-        showRunningProject(project, trackingRecord);
-    }
-
-    private void showRunningProject(Project project, TrackingRecord runningTrackingRecord) {
-        showNotification(getNotificationBuilderForRecord(context, project, runningTrackingRecord).build());
+    public void showProject(String projectUuid) {
+        Project project = new ProjectDAO(context).get(projectUuid).get();
+        if (model.isProjectPaused(projectUuid)) {
+            showNotification(getNotificationBuilderForPausedProject(context, project).build());
+        } else {
+            TrackingRecord runningTrackingRecord = new TrackingRecordDAO(context)
+                    .getRunning(projectUuid).get();
+            showNotification(getNotificationBuilderForRecord(context, project, runningTrackingRecord).build());
+        }
     }
 
     public void showNextProject(String currentProjectUuid) {
-        ArrayList<Project> runningProjects = model.getSortedRunningAndPausedProjectList();
+        ArrayList<Project> runningProjects = model.getOngoingProjects();
         Project nextProject = getNextRunningProject(runningProjects, currentProjectUuid);
-        if (model.isProjectPaused(nextProject.getUuid())) {
-            showPausedProject(nextProject.getUuid());
-        } else {
-            showRunningProject(nextProject, new TrackingRecordDAO(context).getRunning(nextProject.getUuid()).get());
-        }
+        showProject(nextProject.getUuid());
     }
 
     public void revalidateVisibility() {
-        ArrayList<Project> runningAndPausedProjectList = model.getSortedRunningAndPausedProjectList();
+        ArrayList<Project> runningAndPausedProjectList = model.getOngoingProjects();
         if (runningAndPausedProjectList.isEmpty()) {
             dismissNotification();
         } else {
-            Project project = runningAndPausedProjectList.get(0);
-            if (model.isProjectPaused(project.getUuid())) {
-                showPausedProject(project.getUuid());
-            } else {
-                showRunningProject(project, new TrackingRecordDAO(context).getRunning(project.getUuid()).get());
-            }
+            showProject(runningAndPausedProjectList.get(0).getUuid());
         }
-    }
-
-    public void showPausedProject(String projectUuid) {
-        Project project = new ProjectDAO(context).get(projectUuid).get();
-        showNotification(getNotificationBuilderForPausedProject(context, project).build());
     }
 
     private Notification.Builder getNotificationBuilderForRecord(Context context, Project project, TrackingRecord trackingRecord) {
@@ -90,7 +78,7 @@ public class TrackingPlayer {
                         context.getString(R.string.tracking_player_pause_button),
                         createPauseTrackingIntent(context, project));
 
-        if (model.getSortedRunningAndPausedProjectList().size() > 1) {
+        if (model.getOngoingProjects().size() > 1) {
             notificationBuilder.addAction(R.drawable.ic_switch_project,
                     context.getString(R.string.tracking_player_switch_project),
                     createCycleProjectIntent(context, project));
@@ -117,7 +105,7 @@ public class TrackingPlayer {
                         context.getString(R.string.tracking_player_resume_button),
                         createUnpauseTrackingIntent(context, project));
 
-        if (model.getSortedRunningAndPausedProjectList().size() > 1) {
+        if (model.getOngoingProjects().size() > 1) {
             notificationBuilder
                 .addAction(R.drawable.ic_switch_project,
                     context.getString(R.string.tracking_player_switch_project),
@@ -139,6 +127,7 @@ public class TrackingPlayer {
         return (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
     }
 
+    // TODO das in das model verschieben
     private Project getNextRunningProject(ArrayList<Project> projects, String previousProjectUuid) {
         for (Iterator<Project> i = projects.iterator(); i.hasNext();) {
             if (i.next().getUuid().equals(previousProjectUuid)) {

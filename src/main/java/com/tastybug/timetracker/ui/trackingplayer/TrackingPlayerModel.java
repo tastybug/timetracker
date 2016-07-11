@@ -27,7 +27,7 @@ public class TrackingPlayerModel {
         this.trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    public ArrayList<Project> getSortedRunningAndPausedProjectList() {
+    public ArrayList<Project> getOngoingProjects() {
         ArrayList<Project> runningProjects = new ArrayList<>();
         for (TrackingRecord record : trackingRecordDAO.getRunning()) {
             runningProjects.add(projectDAO.get(record.getProjectUuid()).get());
@@ -35,7 +35,6 @@ public class TrackingPlayerModel {
         for (String pausedProjectUuid : getPausedProjectUuidSet()) {
             runningProjects.add(projectDAO.get(pausedProjectUuid).get());
         }
-
 
         Collections.sort(runningProjects);
         return runningProjects;
