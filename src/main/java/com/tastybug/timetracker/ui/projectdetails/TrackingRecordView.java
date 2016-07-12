@@ -19,10 +19,7 @@ import java.text.DateFormat;
 
 public class TrackingRecordView extends LinearLayout {
 
-    private TextView timeFrameTextView,
-                     durationTextView,
-                     descriptionTextView;
-
+    private TextView durationTextView, timeFrameTextView, descriptionTextView;
 
     public TrackingRecordView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,14 +27,13 @@ public class TrackingRecordView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_tracking_record, this, true);
 
-        timeFrameTextView = (TextView) findViewById(R.id.time_frame_line);
-        durationTextView = (TextView) findViewById(R.id.duration_line);
+        durationTextView = (TextView) findViewById(R.id.effective_duration);
+        timeFrameTextView = (TextView) findViewById(R.id.time_frame);
         descriptionTextView = (TextView) findViewById(R.id.description);
     }
 
     public void showTrackingRecord(TrackingConfiguration trackingConfiguration,
                                    TrackingRecord trackingRecord) {
-        timeFrameTextView.setText(trackingRecord.toString());
         renderTimeFrame(trackingRecord);
         renderDuration(trackingConfiguration, trackingRecord);
         renderDescription(trackingRecord);
@@ -47,22 +43,22 @@ public class TrackingRecordView extends LinearLayout {
         Preconditions.checkState(trackingRecord.isFinished() || trackingRecord.isRunning(),
                 "TrackingRecord not started yet, this is not supposed to happen!");
         String timeFrameText;
-        DateFormat startDateFormatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 
         if (trackingRecord.isRunning()) {
+            DateFormat ongoingFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
             timeFrameText = getContext().getString(R.string.running_since_X,
-                    startDateFormatter.format(trackingRecord.getStart().get()));
+                    ongoingFormatter.format(trackingRecord.getStart().get()));
         } else {
-            DateFormat endDateFormatter;
+            DateFormat finishedFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
             if (isCompletedOnSameDay(trackingRecord)) {
-                endDateFormatter = DateFormat.getTimeInstance(DateFormat.MEDIUM);
+                timeFrameText = finishedFormatter.format(trackingRecord.getStart().get());
             } else {
-                endDateFormatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+                timeFrameText = getContext().getString(R.string.running_from_X_until_Y,
+                        finishedFormatter.format(trackingRecord.getStart().get()),
+                        finishedFormatter.format(trackingRecord.getEnd().get()));
             }
-            timeFrameText = getContext().getString(R.string.running_from_X_until_Y,
-                    startDateFormatter.format(trackingRecord.getStart().get()),
-                    endDateFormatter.format(trackingRecord.getEnd().get()));
         }
+
         timeFrameTextView.setText(timeFrameText);
     }
 
@@ -73,11 +69,7 @@ public class TrackingRecordView extends LinearLayout {
 
         if (trackingRecord.isFinished()
                 && trackingConfiguration.hasAlteringRoundingStrategy()) {
-            durationTextView.setText(
-                    getContext().getString(R.string.duration_X_effectively_Y,
-                    DurationFormatter.a().formatMeasuredDuration(getContext(), trackingRecord),
-                    DurationFormatter.a().formatEffectiveDuration(getContext(), trackingRecord))
-                    );
+            durationTextView.setText(DurationFormatter.a().formatEffectiveDuration(getContext(), trackingRecord));
         } else {
             durationTextView.setText(DurationFormatter.a().formatMeasuredDuration(getContext(), trackingRecord));
         }

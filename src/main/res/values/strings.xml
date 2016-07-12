@@ -51,9 +51,8 @@
     <string name="hint_time">Time</string>
 
     <!-- tracking record view -->
-    <string name="running_since_X">Tracking since %1$s</string>
+    <string name="running_since_X">Started %1$s</string>
     <string name="running_from_X_until_Y">%1$s - %2$s</string>
-    <string name="duration_X_effectively_Y">%1$s (rounded to %2$s)</string>
 
     <!-- duration printing -->
     <string name="seconds_short">secs</string>
@@ -113,8 +112,10 @@
 
 
     <!-- placeholders -->
-    <string name="sample_duration">11:45 hours</string>
-    <string name="from_date_to_date">16. Maerz 2016 23:45:10 &#8212; 23.50:00</string>
+    <string name="sample_duration">11:45:00 hrs</string>
+    <string name="sample_local_date">16. Maerz 2016</string>
+    <string name="sample_from_date_to_date">16. Maerz 2016 23:45:10 &#8212; 23.50:00</string>
+    <string name="sample_from_date_to_date_and_calculative_duration">(16. Maerz 2016 23:45:10 &#8212; 23.50:00, 20:10:05 hrs)</string>
     <string name="sample_tracking_record_log">This is a first line\nand this one a second</string>
     <string name="sample_project_title">A Project Title</string>
     <string name="sample_tracking_record_summary">last: 7:30 &#8212; 19:00 24.12.2016</string>
