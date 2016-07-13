@@ -8,13 +8,12 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.util.Formatter;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
 
@@ -85,8 +84,8 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
                     cursor.getString(colsList.indexOf(UUID_COLUMN)),
                     cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN)),
                     hourLimit,
-                    startDateString != null ? getIso8601DateFormatter().parse(startDateString) : null,
-                    endDateString != null ? getIso8601DateFormatter().parse(endDateString) : null,
+                    startDateString != null ? Formatter.iso8601().parse(startDateString) : null,
+                    endDateString != null ? Formatter.iso8601().parse(endDateString) : null,
                     promptForDescription,
                     RoundingFactory.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
             );
@@ -111,12 +110,8 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
 
     private String formatDate(Optional<Date> date) {
         if (date.isPresent()) {
-            return getIso8601DateFormatter().format(date.get());
+            return Formatter.iso8601().format(date.get());
         }
         return null;
-    }
-
-    private static SimpleDateFormat getIso8601DateFormatter() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     }
 }

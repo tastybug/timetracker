@@ -7,14 +7,13 @@ import android.database.Cursor;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.util.Formatter;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
 
@@ -122,8 +121,8 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
             return new TrackingRecord(
                     uuid,
                     projectUuid,
-                    startAsString != null ? getIso8601DateFormatter().parse(startAsString) : null,
-                    endAsString != null ? getIso8601DateFormatter().parse(endAsString) : null,
+                    startAsString != null ? Formatter.iso8601().parse(startAsString) : null,
+                    endAsString != null ? Formatter.iso8601().parse(endAsString) : null,
                     description
             );
         } catch (ParseException pe) {
@@ -145,12 +144,8 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
 
     private String formatDate(Optional<Date> date) {
         if (date.isPresent()) {
-            return getIso8601DateFormatter().format(date.get());
+            return Formatter.iso8601().format(date.get());
         }
         return null;
-    }
-
-    private static SimpleDateFormat getIso8601DateFormatter() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     }
 }

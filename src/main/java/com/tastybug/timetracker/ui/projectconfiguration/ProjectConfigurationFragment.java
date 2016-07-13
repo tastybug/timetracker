@@ -17,9 +17,8 @@ import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
+import com.tastybug.timetracker.util.Formatter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ProjectConfigurationFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -77,13 +76,13 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         }
         if (trackingConfiguration.getStart().isPresent()) {
             findPreference(getString(R.string.tracking_configuration_start_date_preference_key))
-                    .setSummary(getString(R.string.starts_at_X, SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(trackingConfiguration.getStart().get())));
+                    .setSummary(getString(R.string.starts_at_X, Formatter.date().format(trackingConfiguration.getStart().get())));
         } else {
             findPreference(getString(R.string.tracking_configuration_start_date_preference_key)).setSummary(R.string.tracking_configuration_start_date_preference_summary_none);
         }
         if (trackingConfiguration.getEnd().isPresent()) {
             findPreference(getString(R.string.tracking_configuration_end_date_inclusive_preference_key))
-                    .setSummary(getString(R.string.ends_at_inclusive_X, SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(trackingConfiguration.getEndDateAsInclusive().get())));
+                    .setSummary(getString(R.string.ends_at_inclusive_X, Formatter.date().format(trackingConfiguration.getEndDateAsInclusive().get())));
         } else {
             findPreference(getString(R.string.tracking_configuration_end_date_inclusive_preference_key)).setSummary(R.string.tracking_configuration_end_date_inclusive_preference_summary_none);
         }

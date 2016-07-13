@@ -10,8 +10,8 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.util.Formatter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static com.tastybug.timetracker.ui.trackingplayer.CallbackIntentFactory.createCycleProjectIntent;
@@ -60,8 +60,7 @@ public class TrackingPlayer {
     private void showNotificationForRunning(Project project, TrackingRecord trackingRecord) {
         Notification.Builder notificationBuilder = getBasicNotificationBuilder(project)
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
-                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT)
-                                .format(trackingRecord.getStart().get())))
+                        Formatter.dateTime().format(trackingRecord.getStart().get())))
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_stop_button),
                         createStopTrackingIntent(context, project))
@@ -77,8 +76,7 @@ public class TrackingPlayer {
 
         Notification.Builder notificationBuilder = getBasicNotificationBuilder(project)
                 .setContentText(context.getString(R.string.tracking_player_paused_since_X,
-                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT)
-                                .format(latestRecord.getEnd().get())))
+                        Formatter.dateTime().format(latestRecord.getEnd().get())))
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),
                         createDismissPausedIntent(context, project))

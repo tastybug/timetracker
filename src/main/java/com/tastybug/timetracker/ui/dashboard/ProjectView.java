@@ -17,10 +17,10 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 import com.tastybug.timetracker.ui.shared.TrackingDelegate;
+import com.tastybug.timetracker.util.Formatter;
 
 import org.joda.time.Duration;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ProjectView extends LinearLayout implements View.OnClickListener {
@@ -96,11 +96,11 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
                 projectRemainingDaysLabel.setText(R.string.label_remaining_days_until_date_Y);
                 projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_X_until_date_Y,
                         remainingDays,
-                        SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(trackingConfiguration.getEnd().get())));
+                        Formatter.date().format(trackingConfiguration.getEnd().get())));
             } else {
                 projectRemainingDaysLabel.setText(R.string.label_remaining_days_over);
                 projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_over_since_X,
-                        SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(trackingConfiguration.getEnd().get())));
+                        Formatter.date().format(trackingConfiguration.getEnd().get())));
             }
             projectRemainingDaysContainer.setVisibility(View.VISIBLE);
         } else {
@@ -136,10 +136,10 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         if(lastTrackingRecordOpt.isPresent()) {
             if (lastTrackingRecordOpt.get().isRunning()) {
                 lastRecordSummaryView.setText(getContext().getString(R.string.current_record_started_at_X,
-                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.SHORT).format(lastTrackingRecordOpt.get().getStart().get())));
+                        Formatter.dateTime().format(lastTrackingRecordOpt.get().getStart().get())));
             } else {
                 lastRecordSummaryView.setText(getContext().getString(R.string.last_record_ended_at_X,
-                        SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.SHORT).format(lastTrackingRecordOpt.get().getEnd().get())));
+                        Formatter.dateTime().format(lastTrackingRecordOpt.get().getEnd().get())));
             }
         } else {
             lastRecordSummaryView.setText("");
