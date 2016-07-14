@@ -12,10 +12,10 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.ui.shared.DurationFormatter;
+import com.tastybug.timetracker.util.Formatter;
 
 import org.joda.time.LocalDate;
 
-import java.text.DateFormat;
 import java.util.Date;
 
 public class TrackingControlPanelUI {
@@ -73,15 +73,9 @@ public class TrackingControlPanelUI {
     }
 
     private String getStartDateAsString(Date startDate) {
-        DateFormat startDateFormatter;
-        if (new LocalDate().isEqual(new LocalDate(startDate))) {
-            // today
-            startDateFormatter = DateFormat.getTimeInstance(DateFormat.MEDIUM);
-        } else {
-            // yesterday or even farther away
-            startDateFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-        }
-        return startDateFormatter.format(startDate);
+        return new LocalDate().isEqual(new LocalDate(startDate))
+                ? Formatter.time().format(startDate) // today
+                : Formatter.dateTime().format(startDate); // yesterday or even farther away
     }
 
     private Runnable updateUITask = new Runnable() {

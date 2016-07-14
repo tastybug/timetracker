@@ -12,6 +12,7 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.ui.shared.DurationFormatter;
+import com.tastybug.timetracker.util.Formatter;
 
 import org.joda.time.LocalDate;
 
@@ -45,11 +46,11 @@ public class TrackingRecordView extends LinearLayout {
         String timeFrameText;
 
         if (trackingRecord.isRunning()) {
-            DateFormat ongoingFormatter = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+            DateFormat ongoingFormatter = Formatter.dateTime();
             timeFrameText = getContext().getString(R.string.running_since_X,
                     ongoingFormatter.format(trackingRecord.getStart().get()));
         } else {
-            DateFormat finishedFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            DateFormat finishedFormatter = Formatter.date();
             if (isCompletedOnSameDay(trackingRecord)) {
                 timeFrameText = finishedFormatter.format(trackingRecord.getStart().get());
             } else {

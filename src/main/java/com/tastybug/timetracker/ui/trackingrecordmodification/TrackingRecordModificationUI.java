@@ -14,14 +14,13 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.ui.dialog.picker.DatePickerDialogFragment;
 import com.tastybug.timetracker.ui.dialog.picker.TimePickerDialogFragment;
+import com.tastybug.timetracker.util.Formatter;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class TrackingRecordModificationUI {
 
@@ -114,8 +113,7 @@ public class TrackingRecordModificationUI {
 
     public void renderStartDate(Optional<Date> dateOptional) {
         if(dateOptional.isPresent()) {
-            SimpleDateFormat f = new SimpleDateFormat("dd.MM.yy", Locale.US);
-            startDateEditText.setText(context.getString(R.string.from_X, f.format(dateOptional.get())));
+            startDateEditText.setText(context.getString(R.string.from_X, Formatter.date().format(dateOptional.get())));
             startDateEditText.setTag(dateOptional.get());
         } else {
             startDateEditText.setText("");
@@ -125,8 +123,7 @@ public class TrackingRecordModificationUI {
 
     public void renderStartTime(Optional<Date> dateOptional) {
         if(dateOptional.isPresent()) {
-            SimpleDateFormat f = new SimpleDateFormat("HH:mm", Locale.US);
-            startTimeEditText.setText(f.format(dateOptional.get()));
+            startTimeEditText.setText(Formatter.time().format(dateOptional.get()));
             startTimeEditText.setTag(dateOptional.get());
         } else {
             startTimeEditText.setText("");
@@ -136,8 +133,7 @@ public class TrackingRecordModificationUI {
 
     public void renderEndDate(Optional<Date> dateOptional) {
         if(dateOptional.isPresent()) {
-            SimpleDateFormat f = new SimpleDateFormat("dd.MM.yy", Locale.US);
-            endDateEditText.setText(context.getString(R.string.until_X, f.format(dateOptional.get())));
+            endDateEditText.setText(context.getString(R.string.until_X, Formatter.date().format(dateOptional.get())));
             endDateEditText.setTag(dateOptional.get());
         } else {
             endDateEditText.setText("");
@@ -147,8 +143,7 @@ public class TrackingRecordModificationUI {
 
     public void renderEndTime(Optional<Date> dateOptional) {
         if(dateOptional.isPresent()) {
-            SimpleDateFormat f = new SimpleDateFormat("HH:mm", Locale.US);
-            endTimeEditText.setText(f.format(dateOptional.get()));
+            endTimeEditText.setText(Formatter.time().format(dateOptional.get()));
             endTimeEditText.setTag(dateOptional.get());
         } else {
             endTimeEditText.setText("");
@@ -254,6 +249,7 @@ public class TrackingRecordModificationUI {
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void handleDatePicked(DatePickerDialogFragment.DatePickedEvent event) {
         if (TrackingRecordModificationUI.START_DATE_TOPIC.equals(event.getTopic())) {
             renderStartDate(Optional.of(event.getDate().get().toDate()));
