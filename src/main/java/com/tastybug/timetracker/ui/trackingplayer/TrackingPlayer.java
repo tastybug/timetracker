@@ -61,6 +61,7 @@ public class TrackingPlayer {
         Notification.Builder notificationBuilder = getBasicNotificationBuilder(project)
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
                         Formatter.dateTime().format(trackingRecord.getStart().get())))
+                .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_stop_button),
                         createStopTrackingIntent(context, project))
@@ -77,6 +78,7 @@ public class TrackingPlayer {
         Notification.Builder notificationBuilder = getBasicNotificationBuilder(project)
                 .setContentText(context.getString(R.string.tracking_player_paused_since_X,
                         Formatter.dateTime().format(latestRecord.getEnd().get())))
+                .setSmallIcon(R.drawable.ic_trackingplayer_paused)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),
                         createDismissPausedIntent(context, project))
@@ -90,7 +92,6 @@ public class TrackingPlayer {
     private Notification.Builder getBasicNotificationBuilder(Project project) {
         Notification.Builder notificationBuilder = new Notification.Builder(context)
                 .setContentTitle(project.getTitle())
-                .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
                 .setContentIntent(createOpenProjectDetailsActivityIntent(context, project));
