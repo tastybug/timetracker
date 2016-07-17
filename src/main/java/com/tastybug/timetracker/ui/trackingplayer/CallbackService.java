@@ -11,6 +11,7 @@ import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
+import com.tastybug.timetracker.ui.trackingplayer.internal.NotificationModel;
 import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationActivity;
 
 /**
@@ -23,13 +24,13 @@ public class CallbackService extends IntentService {
 
     private static final String TAG = CallbackService.class.getSimpleName();
 
-    protected static final String OPERATION                 = "OPERATION";
-    protected static final String CYCLE_TO_NEXT_PROJECT     = "CYCLE_TO_NEXT_PROJECT";
-    protected static final String STOP_TRACKING_PROJECT     = "STOP_TRACKING_PROJECT";
-    protected static final String DISMISS_PAUSED_PROJECT    = "DISMISS_PAUSED_PROJECT";
-    protected static final String PAUSE_TRACKING_PROJECT    = "PAUSE_TRACKING_PROJECT";
-    protected static final String UNPAUSE_TRACKING_PROJECT  = "UNPAUSE_TRACKING_PROJECT";
-    protected static final String PROJECT_UUID              = "PROJECT_UUID";
+    public static final String OPERATION                 = "OPERATION";
+    public static final String CYCLE_TO_NEXT_PROJECT     = "CYCLE_TO_NEXT_PROJECT";
+    public static final String STOP_TRACKING_PROJECT     = "STOP_TRACKING_PROJECT";
+    public static final String DISMISS_PAUSED_PROJECT    = "DISMISS_PAUSED_PROJECT";
+    public static final String PAUSE_TRACKING_PROJECT    = "PAUSE_TRACKING_PROJECT";
+    public static final String UNPAUSE_TRACKING_PROJECT  = "UNPAUSE_TRACKING_PROJECT";
+    public static final String PROJECT_UUID              = "PROJECT_UUID";
 
     public CallbackService() {
         super(CallbackService.class.getSimpleName());
@@ -104,10 +105,10 @@ public class CallbackService extends IntentService {
     }
 
     private void addProjectToPausedList(String projectUuid) {
-        new TrackingPlayerModel(getApplicationContext()).addPausedProject(projectUuid);
+        new NotificationModel(getApplicationContext()).addPausedProject(projectUuid);
     }
 
     private void removeProjectFromPausedList(String projectUuid) {
-        new TrackingPlayerModel(getApplicationContext()).removePausedProject(projectUuid);
+        new NotificationModel(getApplicationContext()).removePausedProject(projectUuid);
     }
 }

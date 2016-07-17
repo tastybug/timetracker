@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.ui.trackingplayer;
+package com.tastybug.timetracker.ui.trackingplayer.internal;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class TrackingPlayerModel {
+public class NotificationModel {
 
     private static final String PAUSED_PROJECTS_KEY = "PAUSED_PROJECTS_KEY";
 
@@ -22,7 +22,7 @@ public class TrackingPlayerModel {
     private ProjectDAO projectDAO;
     private TrackingRecordDAO trackingRecordDAO;
 
-    public TrackingPlayerModel(Context context) {
+    public NotificationModel(Context context) {
         this.context = context;
         this.projectDAO = new ProjectDAO(context);
         this.trackingRecordDAO = new TrackingRecordDAO(context);
@@ -75,11 +75,11 @@ public class TrackingPlayerModel {
         return projects.get(0);
     }
 
-    protected Project getProject(String projectUuid) {
+    public Project getProject(String projectUuid) {
         return projectDAO.get(projectUuid).get();
     }
 
-    protected TrackingRecord getRunningTrackingRecord(String projectUuid) {
+    public TrackingRecord getRunningTrackingRecord(String projectUuid) {
         return trackingRecordDAO.getRunning(projectUuid).get();
     }
 

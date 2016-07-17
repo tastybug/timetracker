@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.ui.trackingplayer;
+package com.tastybug.timetracker.ui.trackingplayer.internal;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.ui.projectdetails.ProjectDetailsActivity;
+import com.tastybug.timetracker.ui.trackingplayer.CallbackService;
 
 public class CallbackIntentFactory {
 

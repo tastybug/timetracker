@@ -10,6 +10,7 @@ import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
+import com.tastybug.timetracker.ui.trackingplayer.internal.NotificationModel;
 
 /**
  * This long running service manages the Tracking Player notification regarding:
@@ -47,7 +48,7 @@ public class LifecycleService extends Service {
     public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
         // paused projects can be restarted from within the app -> these have to be removed from the
         // list of paused projects manually
-        new TrackingPlayerModel(this).removePausedProject(event.getTrackingRecord().getProjectUuid());
+        new NotificationModel(this).removePausedProject(event.getTrackingRecord().getProjectUuid());
         new TrackingPlayer(this).showProject(event.getTrackingRecord().getProjectUuid());
     }
 
@@ -57,7 +58,7 @@ public class LifecycleService extends Service {
         String projectUuid = event.getTrackingRecord().getProjectUuid();
         TrackingPlayer player = new TrackingPlayer(this);
 
-        if (new TrackingPlayerModel(this).isProjectPaused(projectUuid)) {
+        if (new NotificationModel(this).isProjectPaused(projectUuid)) {
             player.showProject(projectUuid);
         } else {
             player.showSomeProjectOrHide();
@@ -67,7 +68,7 @@ public class LifecycleService extends Service {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleProjectDeleted(ProjectDeletedEvent event) {
-        new TrackingPlayerModel(this).removePausedProject(event.getProjectUuid());
+        new NotificationModel(this).removePausedProject(event.getProjectUuid());
         // we cannot be sure whether the deleted project is being displayed
         // so just to be in the clear we revalidate the TrackingPlayer
         new TrackingPlayer(this).showSomeProjectOrHide();
