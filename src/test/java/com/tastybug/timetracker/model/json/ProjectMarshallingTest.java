@@ -7,15 +7,18 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -31,6 +34,11 @@ public class ProjectMarshallingTest {
     private TrackingConfigurationMarshalling trackingConfigurationMarshalling = mock(TrackingConfigurationMarshalling.class);
 
     private ProjectMarshalling subject = new ProjectMarshalling(projectDAOMock, trackingConfigurationMarshalling);
+
+    @Before
+    public void setup() throws Exception {
+        when(trackingConfigurationMarshalling.generateJSON(anyString())).thenReturn(Arrays.asList(new JSONObject()));
+    }
 
     @Test
     public void can_marshal_a_project_uuid() throws Exception {
@@ -122,6 +130,17 @@ public class ProjectMarshallingTest {
 
         // and
         assertEquals("lala", jsons.get(0).getString(ProjectMarshalling.TITLE));
+    }
+
+    public void can_marshall_a_tracking_configuration() throws Exception {
+        // given
+        when(trackingConfigurationMarshalling.generateJSON(anyString())).thenReturn(Arrays.asList(new JSONObject()));
+
+        // when
+        List<JSONObject> jsons = subject.generateJSON();
+
+        // then
+        assertNotNull(jsons.get(0).getJSONObject(ProjectMarshalling.TRACKING_CONFIGURATION));
     }
 
     ArrayList<Project> aListOfTwoProjects() {
