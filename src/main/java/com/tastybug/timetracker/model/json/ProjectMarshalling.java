@@ -5,6 +5,7 @@ import android.content.Context;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,9 +18,11 @@ public class ProjectMarshalling {
     static String TITLE = "title";
     static String DESCRIPTION = "description";
     static String TRACKING_CONFIGURATION = "tracking_configuration";
+    static String TRACKING_RECORDS = "tracking_records";
 
     private ProjectDAO projectDAO;
     private TrackingConfigurationMarshalling trackingConfigurationMarshalling;
+    private TrackingRecordMarshalling trackingRecordMarshalling;
 
     public ProjectMarshalling(Context context) {
         projectDAO = new ProjectDAO(context);
@@ -27,9 +30,11 @@ public class ProjectMarshalling {
     }
 
     public ProjectMarshalling(ProjectDAO projectDAO,
-                              TrackingConfigurationMarshalling trackingConfigurationMarshalling) {
+                              TrackingConfigurationMarshalling trackingConfigurationMarshalling,
+                              TrackingRecordMarshalling trackingRecordMarshalling) {
         this.projectDAO = projectDAO;
         this.trackingConfigurationMarshalling = trackingConfigurationMarshalling;
+        this.trackingRecordMarshalling = trackingRecordMarshalling;
     }
 
     protected JSONObject getAsJson(Project project) throws JSONException {
@@ -41,6 +46,9 @@ public class ProjectMarshalling {
         }
         json.put(TRACKING_CONFIGURATION,
                 trackingConfigurationMarshalling.getAsJsonByProjectUuid(project.getUuid()));
+
+        JSONArray array = new JSONArray(trackingRecordMarshalling.getAsJsonByProjectUuid(project.getUuid()));
+        json.put(TRACKING_RECORDS, array);
         return json;
     }
 

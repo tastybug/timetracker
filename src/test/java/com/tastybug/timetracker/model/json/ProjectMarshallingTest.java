@@ -14,6 +14,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -28,14 +29,18 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class ProjectMarshallingTest {
 
-    private ProjectDAO projectDAOMock = mock(ProjectDAO.class);
-    private TrackingConfigurationMarshalling trackingConfigurationMarshalling = mock(TrackingConfigurationMarshalling.class);
+    ProjectDAO projectDAOMock = mock(ProjectDAO.class);
+    TrackingConfigurationMarshalling trackingConfigurationMarshalling = mock(TrackingConfigurationMarshalling.class);
+    TrackingRecordMarshalling trackingRecordMarshalling = mock(TrackingRecordMarshalling.class);
 
-    private ProjectMarshalling subject = new ProjectMarshalling(projectDAOMock, trackingConfigurationMarshalling);
+    ProjectMarshalling subject = new ProjectMarshalling(projectDAOMock,
+            trackingConfigurationMarshalling,
+            trackingRecordMarshalling);
 
     @Before
     public void setup() throws Exception {
         when(trackingConfigurationMarshalling.getAsJsonByProjectUuid(anyString())).thenReturn(new JSONObject());
+        when(trackingRecordMarshalling.getAsJsonByProjectUuid(anyString())).thenReturn(Arrays.asList(new JSONObject()));
     }
 
     @Test
@@ -114,6 +119,37 @@ public class ProjectMarshallingTest {
 
         // then
         verify(trackingConfigurationMarshalling, times(1)).getAsJsonByProjectUuid(project.getUuid());
+    }
+
+    @Test
+    public void getAsJson_calls_tracking_record_marshaller_for_tracking_record_jsons() throws Exception {
+        // given
+        Project project = new Project("one");
+        when(trackingRecordMarshalling.getAsJsonByProjectUuid(project.getUuid())).thenReturn(Arrays.asList(new JSONObject()));
+
+        // when
+        subject.getAsJson(project);
+
+        // then
+        verify(trackingRecordMarshalling, times(1)).getAsJsonByProjectUuid(project.getUuid());
+    }
+
+    @Test
+    public void getAsJson_stores_tracking_records_created_by_marshaller_in_project_json() throws Exception {
+        // given
+        Project project = new Project("one");
+        JSONObject json = new JSONObject();
+        json.put("name", "value");
+        when(trackingRecordMarshalling.getAsJsonByProjectUuid(project.getUuid())).thenReturn(Arrays.asList(json));
+
+        // when
+        JSONObject projectJson = subject.getAsJson(project);
+
+        // then
+        assertEquals("value", projectJson.getJSONArray(ProjectMarshalling.TRACKING_RECORDS).getJSONObject(0).get("name"));
+
+        // and
+        assertEquals(1, projectJson.getJSONArray(ProjectMarshalling.TRACKING_RECORDS).length());
     }
 
     @Test
