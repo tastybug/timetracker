@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectMarshalling implements JsonMarshaller {
+public class ProjectMarshalling {
 
     static String UUID = "uuid";
     static String TITLE = "title";
@@ -26,7 +26,8 @@ public class ProjectMarshalling implements JsonMarshaller {
         trackingConfigurationMarshalling = new TrackingConfigurationMarshalling(context);
     }
 
-    public ProjectMarshalling(ProjectDAO projectDAO, TrackingConfigurationMarshalling trackingConfigurationMarshalling) {
+    public ProjectMarshalling(ProjectDAO projectDAO,
+                              TrackingConfigurationMarshalling trackingConfigurationMarshalling) {
         this.projectDAO = projectDAO;
         this.trackingConfigurationMarshalling = trackingConfigurationMarshalling;
     }
@@ -39,23 +40,15 @@ public class ProjectMarshalling implements JsonMarshaller {
             json.put(DESCRIPTION, project.getDescription().get());
         }
         json.put(TRACKING_CONFIGURATION,
-                trackingConfigurationMarshalling.generateJSON(project.getUuid()).get(0));
+                trackingConfigurationMarshalling.getAsJsonByProjectUuid(project.getUuid()));
         return json;
     }
 
-    @Override
-    public List<JSONObject> generateJSON() throws JSONException {
+    public List<JSONObject> dumpAllProjectsAsJSONs() throws JSONException {
         ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<>();
         for (Project project : projectDAO.getAll()) {
             jsonObjectArrayList.add(getAsJson(project));
         }
-        return jsonObjectArrayList;
-    }
-
-    @Override
-    public List<JSONObject> generateJSON(String projectUuid) throws JSONException {
-        ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<>();
-        jsonObjectArrayList.add(getAsJson(projectDAO.get(projectUuid).get()));
         return jsonObjectArrayList;
     }
 }

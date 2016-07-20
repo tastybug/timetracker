@@ -9,10 +9,7 @@ import com.tastybug.timetracker.util.Formatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TrackingConfigurationMarshalling implements JsonMarshaller {
+public class TrackingConfigurationMarshalling {
 
     static String UUID_COLUMN = "uuid";
     static String PROJECT_UUID_COLUMN = "project_uuid";
@@ -51,19 +48,7 @@ public class TrackingConfigurationMarshalling implements JsonMarshaller {
         return json;
     }
 
-    @Override
-    public List<JSONObject> generateJSON() throws JSONException {
-        ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<>();
-        for (TrackingConfiguration tc : trackingConfigurationDAO.getAll()) {
-            jsonObjectArrayList.add(getAsJson(tc));
-        }
-        return jsonObjectArrayList;
-    }
-
-    @Override
-    public List<JSONObject> generateJSON(String projectUuid) throws JSONException {
-        ArrayList<JSONObject> jsonObjectArrayList = new ArrayList<>();
-        jsonObjectArrayList.add(getAsJson(trackingConfigurationDAO.get(projectUuid).get()));
-        return jsonObjectArrayList;
+    protected JSONObject getAsJsonByProjectUuid(String projectUuid) throws JSONException {
+        return getAsJson(trackingConfigurationDAO.getByProjectUuid(projectUuid).get());
     }
 }

@@ -14,16 +14,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -35,7 +31,7 @@ public class TrackingConfigurationMarshallingTest {
     TrackingConfigurationMarshalling subject = new TrackingConfigurationMarshalling(trackingConfigurationDAOMock);
 
     @Test
-    public void can_marshal_a_uuid() throws Exception {
+    public void getAsJson_can_marshal_a_uuid() throws Exception {
         // given
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
 
@@ -47,7 +43,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_a_project_uuid() throws Exception {
+    public void getAsJson_can_marshal_a_project_uuid() throws Exception {
         // given
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
 
@@ -59,7 +55,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_a_hour_limit() throws Exception {
+    public void getAsJson_can_marshal_a_hour_limit() throws Exception {
         // given
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
         trackingConfiguration.setHourLimit(Optional.of(1));
@@ -72,7 +68,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_without_hour_limit() throws Exception {
+    public void getAsJson_can_marshal_without_hour_limit() throws Exception {
         // given
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
         trackingConfiguration.setHourLimit(Optional.<Integer>absent());
@@ -85,7 +81,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_a_start_date() throws Exception {
+    public void getAsJson_can_marshal_a_start_date() throws Exception {
         // given
         Date date = new Date();
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
@@ -99,7 +95,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_without_start_date() throws Exception {
+    public void getAsJson_can_marshal_without_start_date() throws Exception {
         // given
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
         trackingConfiguration.setStart(Optional.<Date>absent());
@@ -112,7 +108,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_an_end_date() throws Exception {
+    public void getAsJson_can_marshal_an_end_date() throws Exception {
         // given
         Date date = new Date();
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
@@ -126,7 +122,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_without_end_date() throws Exception {
+    public void getAsJson_can_marshal_without_end_date() throws Exception {
         // given
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
         trackingConfiguration.setEnd(Optional.<Date>absent());
@@ -139,7 +135,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_description_prompting_flag() throws Exception {
+    public void getAsJson_can_marshal_description_prompting_flag() throws Exception {
         // given
         Date date = new Date();
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
@@ -153,7 +149,7 @@ public class TrackingConfigurationMarshallingTest {
     }
 
     @Test
-    public void can_marshal_all_rounding_strategies() throws Exception {
+    public void getAsJson_can_marshal_all_rounding_strategies() throws Exception {
         for (RoundingFactory.Strategy strategy : RoundingFactory.Strategy.values()) {
             // given
             TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
@@ -167,54 +163,18 @@ public class TrackingConfigurationMarshallingTest {
         }
     }
 
-    @Test
-    public void can_marshall_when_no_configuration_is_available() throws Exception {
-        // given
-        when(trackingConfigurationDAOMock.getAll()).thenReturn(new ArrayList<TrackingConfiguration>());
+    @Test(expected = NullPointerException.class)
+    public void getAsJsonByProjectUuid_yields_NPE_on_null_project_uuid_argument() throws Exception {
+        // expect
+        subject.getAsJsonByProjectUuid(null);
+    }
 
+    @Test(expected = IllegalStateException.class)
+    public void getAsJsonByProjectUuid_yields_IllegalStateException_on_unknown_project_uuid_argument() throws Exception {
         // when
-        List<JSONObject> jsons = subject.generateJSON();
+        when(trackingConfigurationDAOMock.getByProjectUuid(anyString())).thenReturn(Optional.<TrackingConfiguration>absent());
 
         // then
-        assertTrue(jsons.isEmpty());
-
-        // and
-        verify(trackingConfigurationDAOMock, times(1)).getAll();
+        subject.getAsJsonByProjectUuid("unknown-project-uuid");
     }
-
-    @Test
-    public void can_marshall_multiple_configurations() throws Exception {
-        // given
-        ArrayList<TrackingConfiguration> projects = aListOfTwoConfigurations();
-        when(trackingConfigurationDAOMock.getAll()).thenReturn(projects);
-
-        // when
-        List<JSONObject> jsons = subject.generateJSON();
-
-        // then
-        assertEquals(2, jsons.size());
-    }
-
-    public void can_marshall_a_specific_configuration_by_project_uuid() throws Exception {
-        // given
-        when(trackingConfigurationDAOMock.get(anyString())).thenReturn(Optional.of(new TrackingConfiguration("project-uuid")));
-
-        // when
-        List<JSONObject> jsons = subject.generateJSON();
-
-        // then
-        assertEquals(1, jsons.size());
-
-        // and
-        assertEquals("project-uuid", jsons.get(0).getString(TrackingConfigurationMarshalling.PROJECT_UUID_COLUMN));
-    }
-
-    ArrayList<TrackingConfiguration> aListOfTwoConfigurations() {
-        ArrayList<TrackingConfiguration> list = new ArrayList<>();
-        list.add(new TrackingConfiguration("one"));
-        list.add(new TrackingConfiguration("two"));
-
-        return list;
-    }
-
 }

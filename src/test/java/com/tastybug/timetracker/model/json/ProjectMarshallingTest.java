@@ -14,11 +14,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -37,11 +35,11 @@ public class ProjectMarshallingTest {
 
     @Before
     public void setup() throws Exception {
-        when(trackingConfigurationMarshalling.generateJSON(anyString())).thenReturn(Arrays.asList(new JSONObject()));
+        when(trackingConfigurationMarshalling.getAsJsonByProjectUuid(anyString())).thenReturn(new JSONObject());
     }
 
     @Test
-    public void can_marshal_a_project_uuid() throws Exception {
+    public void getAsJson_can_marshal_a_project_uuid() throws Exception {
         // given
         Project project = new Project("title");
 
@@ -53,7 +51,7 @@ public class ProjectMarshallingTest {
     }
 
     @Test
-    public void can_marshal_a_project_title() throws Exception {
+    public void getAsJson_can_marshal_a_project_title() throws Exception {
         // given
         Project project = new Project("title");
 
@@ -65,7 +63,7 @@ public class ProjectMarshallingTest {
     }
 
     @Test
-    public void can_marshal_a_project_description() throws Exception {
+    public void getAsJson_can_marshal_a_project_description() throws Exception {
         // given
         Project project = new Project("title");
         project.setDescription(Optional.of("blub"));
@@ -78,7 +76,7 @@ public class ProjectMarshallingTest {
     }
 
     @Test
-    public void can_marshal_a_project_without_description() throws Exception {
+    public void getAsJson_can_marshal_a_project_without_description() throws Exception {
         // given
         Project project = new Project("title");
         project.setDescription(Optional.<String>absent());
@@ -91,56 +89,59 @@ public class ProjectMarshallingTest {
     }
 
     @Test
-    public void can_marshall_when_no_project_is_available() throws Exception {
+    public void getAsJson_stores_tracking_configuration_created_by_marshaller_in_project_json() throws Exception {
+        // given
+        Project project = new Project("one");
+        JSONObject json = new JSONObject();
+        json.put("name", "value");
+        when(trackingConfigurationMarshalling.getAsJsonByProjectUuid(project.getUuid())).thenReturn(json);
+
+        // when
+        JSONObject projectJson = subject.getAsJson(project);
+
+        // then
+        assertEquals("value", projectJson.getJSONObject(ProjectMarshalling.TRACKING_CONFIGURATION).get("name"));
+    }
+
+    @Test
+    public void getAsJson_calls_tracking_configuration_marshaller_for_tracking_configuration_jsons() throws Exception {
+        // given
+        Project project = new Project("one");
+        when(trackingConfigurationMarshalling.getAsJsonByProjectUuid(project.getUuid())).thenReturn(new JSONObject());
+
+        // when
+        subject.getAsJson(project);
+
+        // then
+        verify(trackingConfigurationMarshalling, times(1)).getAsJsonByProjectUuid(project.getUuid());
+    }
+
+    @Test
+    public void dumpAllProjectsAsJSONs_is_successful_but_returns_empty_json_list_when_no_project_is_in_DB() throws Exception {
         // given
         when(projectDAOMock.getAll()).thenReturn(new ArrayList<Project>());
 
         // when
-        List<JSONObject> jsons = subject.generateJSON();
+        List<JSONObject> allProjectsAsJSONs = subject.dumpAllProjectsAsJSONs();
 
         // then
-        assertTrue(jsons.isEmpty());
+        assertTrue(allProjectsAsJSONs.isEmpty());
 
         // and
         verify(projectDAOMock, times(1)).getAll();
     }
 
     @Test
-    public void can_marshall_multiple_projects() throws Exception {
+    public void dumpAllProjectsAsJSONs_returns_correct_list_of_jsons_with_multiple_existing_projects_in_DB() throws Exception {
         // given
         ArrayList<Project> projects = aListOfTwoProjects();
         when(projectDAOMock.getAll()).thenReturn(projects);
 
         // when
-        List<JSONObject> jsons = subject.generateJSON();
+        List<JSONObject> allProjectsAsJSONs = subject.dumpAllProjectsAsJSONs();
 
         // then
-        assertEquals(2, jsons.size());
-    }
-
-    public void can_marshall_a_specific_project_by_uuid() throws Exception {
-        // given
-        when(projectDAOMock.get(anyString())).thenReturn(Optional.of(new Project("lala")));
-
-        // when
-        List<JSONObject> jsons = subject.generateJSON();
-
-        // then
-        assertEquals(1, jsons.size());
-
-        // and
-        assertEquals("lala", jsons.get(0).getString(ProjectMarshalling.TITLE));
-    }
-
-    public void can_marshall_a_tracking_configuration() throws Exception {
-        // given
-        when(trackingConfigurationMarshalling.generateJSON(anyString())).thenReturn(Arrays.asList(new JSONObject()));
-
-        // when
-        List<JSONObject> jsons = subject.generateJSON();
-
-        // then
-        assertNotNull(jsons.get(0).getJSONObject(ProjectMarshalling.TRACKING_CONFIGURATION));
+        assertEquals(2, allProjectsAsJSONs.size());
     }
 
     ArrayList<Project> aListOfTwoProjects() {
