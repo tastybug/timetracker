@@ -8,11 +8,8 @@ import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class JsonExportBuilder {
 
@@ -41,18 +38,17 @@ public class JsonExportBuilder {
         return this;
     }
 
-    public List<ProjectJSON> build() throws JSONException {
-        List<ProjectJSON> jsonObjectArrayList;
+    public JSONArray build() throws JSONException {
+        JSONArray jsonArray = new JSONArray();
         if (projectUuidOpt.isPresent()) {
             Project project = projectDAO.get(projectUuidOpt.get()).get();
-            jsonObjectArrayList = Arrays.asList(createProjectJson(project));
+            jsonArray.put(createProjectJson(project));
         } else {
-            jsonObjectArrayList = new ArrayList<>();
             for (Project project : projectDAO.getAll()) {
-                jsonObjectArrayList.add(createProjectJson(project));
+                jsonArray.put(createProjectJson(project));
             }
         }
-        return jsonObjectArrayList;
+        return jsonArray;
     }
 
     private ProjectJSON createProjectJson(Project project) throws JSONException {
