@@ -11,7 +11,7 @@ import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class JsonExportBuilder {
+public class JsonMarshallingBuilder {
 
     private ProjectDAO projectDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
@@ -19,21 +19,21 @@ public class JsonExportBuilder {
 
     private Optional<String> projectUuidOpt = Optional.absent();
 
-    public JsonExportBuilder(Context context) {
+    public JsonMarshallingBuilder(Context context) {
         this.projectDAO = new ProjectDAO(context);
         this.trackingConfigurationDAO = new TrackingConfigurationDAO(context);
         this.trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    public JsonExportBuilder(ProjectDAO projectDAO,
-                             TrackingConfigurationDAO trackingConfigurationDAO,
-                             TrackingRecordDAO trackingRecordDAO) {
+    public JsonMarshallingBuilder(ProjectDAO projectDAO,
+                                  TrackingConfigurationDAO trackingConfigurationDAO,
+                                  TrackingRecordDAO trackingRecordDAO) {
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
         this.trackingRecordDAO = trackingRecordDAO;
     }
 
-    public JsonExportBuilder withProjectUuid(String projectUuid) {
+    public JsonMarshallingBuilder withProjectUuid(String projectUuid) {
         projectUuidOpt = Optional.of(projectUuid);
         return this;
     }

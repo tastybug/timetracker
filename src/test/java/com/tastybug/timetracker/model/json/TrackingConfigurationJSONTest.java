@@ -7,6 +7,8 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.util.Formatter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -14,8 +16,16 @@ import org.robolectric.annotation.Config;
 
 import java.util.Date;
 
+import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.END_DATE_COLUMN;
+import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.HOUR_LIMIT_COLUMN;
+import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.PROJECT_UUID_COLUMN;
+import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.PROMPT_FOR_DESCRIPTION_COLUMN;
+import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.ROUNDING_STRATEGY_COLUMN;
+import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.START_DATE_COLUMN;
+import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.UUID_COLUMN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
@@ -30,7 +40,7 @@ public class TrackingConfigurationJSONTest {
         TrackingConfigurationJSON json = new TrackingConfigurationJSON(trackingConfiguration);
 
         // then
-        assertEquals(json.getString(TrackingConfigurationJSON.UUID_COLUMN), trackingConfiguration.getUuid());
+        assertEquals(json.getString(UUID_COLUMN), trackingConfiguration.getUuid());
     }
 
     @Test
@@ -155,4 +165,52 @@ public class TrackingConfigurationJSONTest {
         }
     }
 
+    @Test
+    public void can_import_a_json() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+
+        // when
+        TrackingConfigurationJSON subject = new TrackingConfigurationJSON(toImportFrom);
+
+        // then
+        assertEquals(toImportFrom.get(UUID_COLUMN), subject.get(UUID_COLUMN));
+        assertEquals(toImportFrom.get(PROJECT_UUID_COLUMN), subject.get(PROJECT_UUID_COLUMN));
+        assertEquals(toImportFrom.getInt(HOUR_LIMIT_COLUMN), subject.getInt(HOUR_LIMIT_COLUMN));
+        assertEquals(toImportFrom.getString(START_DATE_COLUMN), subject.getString(START_DATE_COLUMN));
+        assertEquals(toImportFrom.getString(END_DATE_COLUMN), subject.getString(END_DATE_COLUMN));
+        assertEquals(toImportFrom.getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN), subject.getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN));
+        assertEquals(toImportFrom.getString(ROUNDING_STRATEGY_COLUMN), subject.getString(ROUNDING_STRATEGY_COLUMN));
+    }
+
+    @Test
+    public void can_import_a_json_without_hour_limit() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+        toImportFrom.put(HOUR_LIMIT_COLUMN, null);
+
+        // when
+        TrackingConfigurationJSON subject = new TrackingConfigurationJSON(toImportFrom);
+
+        // then
+        assertTrue(subject.isNull(HOUR_LIMIT_COLUMN));
+    }
+
+    @Test
+    public void to_tracking_configuration_can_deal_with_any_incoming_type_of_rounding_strategy() {
+        fail();
+    }
+
+    private JSONObject aTrackingConfigurationJSONToImport() throws JSONException{
+        JSONObject toImportFrom = new JSONObject();
+        toImportFrom.put(UUID_COLUMN, "1234");
+        toImportFrom.put(PROJECT_UUID_COLUMN, "1234");
+        toImportFrom.put(HOUR_LIMIT_COLUMN, 1);
+        toImportFrom.put(START_DATE_COLUMN, 1);
+        toImportFrom.put(END_DATE_COLUMN, 1);
+        toImportFrom.put(PROMPT_FOR_DESCRIPTION_COLUMN, false);
+        toImportFrom.put(ROUNDING_STRATEGY_COLUMN, RoundingFactory.Strategy.NO_ROUNDING.name());
+
+        return toImportFrom;
+    }
 }

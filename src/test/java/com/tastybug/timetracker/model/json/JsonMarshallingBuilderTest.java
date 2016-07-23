@@ -29,13 +29,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class JsonExportBuilderTest {
+public class JsonMarshallingBuilderTest {
 
     ProjectDAO projectDAO = mock(ProjectDAO.class);
     TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
     TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
 
-    JsonExportBuilder builder = new JsonExportBuilder(projectDAO, trackingConfigurationDAO, trackingRecordDAO);
+    JsonMarshallingBuilder builder = new JsonMarshallingBuilder(projectDAO, trackingConfigurationDAO, trackingRecordDAO);
 
     @Test
     public void build_exports_one_project_when_providing_a_project_uuid() throws JSONException {

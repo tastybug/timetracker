@@ -29,6 +29,7 @@ public class TrackingConfiguration extends Entity {
         this.roundingStrategy = strategy;
     }
 
+    // TODO diesen konstruktor nicht mehr nutzen, besser den mit den optionals
     public TrackingConfiguration(String uuid,
                                  String projectUuid,
                                  Integer hourLimit,
@@ -42,6 +43,22 @@ public class TrackingConfiguration extends Entity {
         this.start = start;
         this.end = end;
         this.promptForDescription = promptForDescription;
+        this.roundingStrategy = roundingStrategy;
+    }
+
+    public TrackingConfiguration(String uuid,
+                                 String projectUuid,
+                                 Optional<Integer> hourLimit,
+                                 Optional<Date> start,
+                                 Optional<Date> end,
+                                 Optional<Boolean> promptForDescription,
+                                 RoundingFactory.Strategy roundingStrategy) {
+        this.uuid = uuid;
+        this.projectUuid = projectUuid;
+        this.hourLimit = hourLimit.orNull();
+        this.start = start.orNull();
+        this.end = end.orNull();
+        this.promptForDescription = promptForDescription.or(false);
         this.roundingStrategy = roundingStrategy;
     }
 
