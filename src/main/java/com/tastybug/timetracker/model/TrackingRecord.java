@@ -18,8 +18,8 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
-    private Date start, end;
-    private String description;
+    private Optional<Date> start = Optional.absent(), end = Optional.absent();
+    private Optional<String> description = Optional.absent();
 
 
     public TrackingRecord() {}
@@ -28,7 +28,11 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         this.projectUuid = projectUuid;
     }
 
-    public TrackingRecord(String uuid, String projectUuid, Date start, Date end, String description) {
+    public TrackingRecord(String uuid,
+                          String projectUuid,
+                          Optional<Date> start,
+                          Optional<Date> end,
+                          Optional<String> description) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.start = start;
@@ -60,15 +64,15 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         if (getStart().isPresent()) {
             throw new IllegalStateException(toString() + " is already started!");
         }
-        this.start = new Date();
+        this.start = Optional.of(new Date());
     }
 
     public Optional<Date> getStart() {
-        return Optional.fromNullable(start);
+        return start;
     }
 
-    public void setStart(Date start) {
-        Preconditions.checkNotNull(start);
+    public void setStart(Optional<Date> start) {
+        Preconditions.checkArgument(start.isPresent());
         this.start = start;
     }
 
@@ -79,15 +83,15 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         if (getEnd().isPresent()) {
             throw new IllegalStateException(toString() + " is already stopped!");
         }
-        this.end = new Date();
+        this.end = Optional.of(new Date());
     }
 
     public Optional<Date> getEnd() {
-        return Optional.fromNullable(end);
+        return end;
     }
 
-    public void setEnd(Date end) {
-        Preconditions.checkNotNull(end);
+    public void setEnd(Optional<Date> end) {
+        Preconditions.checkArgument(end.isPresent());
         this.end = end;
     }
 
@@ -100,20 +104,24 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
     }
 
     public void setDescription(Optional<String> description) {
-        this.description = description.orNull();
+        if (description.isPresent() && TextUtils.isEmpty(description.get())) {
+            this.description = Optional.absent();
+        } else {
+            this.description = description;
+        }
     }
 
     public Optional<String> getDescription() {
-        return Optional.fromNullable(TextUtils.isEmpty(description) ? null : description);
+        return description;
     }
 
     public Optional<Duration> toDuration() {
         // when creating the duration, shave off additional millis as it confuses the duration
         // calculation, resulting in e.g. a 5 minutes duration coming out as 4:59
         if (isRunning()) {
-            return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime().withMillisOfSecond(0)));
+            return Optional.of(new Duration(new DateTime(start.get()).withMillisOfSecond(0), new DateTime().withMillisOfSecond(0)));
         } else if (isFinished()){
-            return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime(end).withMillisOfSecond(0)));
+            return Optional.of(new Duration(new DateTime(start.get()).withMillisOfSecond(0), new DateTime(end.get()).withMillisOfSecond(0)));
         } else {
             return Optional.absent();
         }

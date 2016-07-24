@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -135,9 +136,9 @@ public class StatisticProjectCompletionTest {
     private TrackingConfiguration aTrackingConfigurationWithLimit() {
         return new TrackingConfiguration("uuid",
                 "some project uuid",
-                1,
-                null,
-                null,
+                Optional.of(1),
+                Optional.<Date>absent(),
+                Optional.<Date>absent(),
                 true,
                 RoundingFactory.Strategy.NO_ROUNDING);
     }
@@ -145,9 +146,9 @@ public class StatisticProjectCompletionTest {
     private TrackingConfiguration aTrackingConfigurationWithoutLimit() {
         return new TrackingConfiguration("uuid",
                 "some project uuid",
-                null,
-                null,
-                null,
+                Optional.<Integer>absent(),
+                Optional.<Date>absent(),
+                Optional.<Date>absent(),
                 true,
                 RoundingFactory.Strategy.NO_ROUNDING);
     }
@@ -162,6 +163,12 @@ public class StatisticProjectCompletionTest {
         DateTime start = new DateTime(2015, 1, 1, 13, 30, 0);
         DateTime stop = new DateTime(2015, 1, 1, 13, 40, 0);
 
-        return new TrackingRecord("uuid", "some project uuid", start.toDate(), stop.toDate(), "some description");
+        return new TrackingRecord(
+                "uuid",
+                "some project uuid",
+                Optional.of(start.toDate()),
+                Optional.of(stop.toDate()),
+                Optional.of("some description")
+        );
     }
 }

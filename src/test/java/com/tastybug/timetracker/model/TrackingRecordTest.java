@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -106,16 +108,16 @@ public class TrackingRecordTest {
         trackingRecord.setProjectUuid(null);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void canNotSetNullStartDate() {
         // expect
-        new TrackingRecord().setStart(null);
+        new TrackingRecord().setStart(Optional.<Date>absent());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void canNotSetNullEndDate() {
+    @Test(expected = IllegalArgumentException.class)
+    public void canNotSetNoEndDate() {
         // expect
-        new TrackingRecord().setEnd(null);
+        new TrackingRecord().setEnd(Optional.<Date>absent());
     }
 
     @Test public void canTellIfIsRunningOrFinished() {
@@ -179,19 +181,19 @@ public class TrackingRecordTest {
         assertFalse(record.isVeryShort());
 
         // when
-        record.setStart(new LocalDateTime(2016,12,24,12,0,0).toDate());
+        record.setStart(Optional.of(new LocalDateTime(2016,12,24,12,0,0).toDate()));
 
         // expect: even when not finished yet, it counts as very short
         assertTrue(record.isVeryShort());
 
         // when: its very short
-        record.setEnd(new LocalDateTime(2016,12,24,12,TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate());
+        record.setEnd(Optional.of(new LocalDateTime(2016,12,24,12,TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate()));
 
         // expect
         assertTrue(record.isVeryShort());
 
         // when: its not very short
-        record.setEnd(new LocalDateTime(2016,12,24,12,1+TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate());
+        record.setEnd(Optional.of(new LocalDateTime(2016,12,24,12,1+TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate()));
 
         // expect
         assertFalse(record.isVeryShort());

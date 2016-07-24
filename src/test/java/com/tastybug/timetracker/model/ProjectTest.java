@@ -17,6 +17,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -142,7 +144,7 @@ public class ProjectTest {
         // given
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);
-        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), null, null, null, false, RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), Optional.<Integer>absent(), Optional.<Date>absent(), Optional.<Date>absent(), false, RoundingFactory.Strategy.NO_ROUNDING);
         when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
 
         // when

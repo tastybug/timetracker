@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.model.statistics;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -102,12 +104,12 @@ public class StatisticProjectDurationTest {
         DateTime start = new DateTime(2015, 1, 1, 13, 30, 0);
         DateTime stop = new DateTime(2015, 1, 1, 13, 40, 10);
 
-        return new TrackingRecord("uuid", "some project uuid", start.toDate(), stop.toDate(), "some description");
+        return new TrackingRecord("uuid", "some project uuid", Optional.of(start.toDate()), Optional.of(stop.toDate()), Optional.of("some description"));
     }
 
     private TrackingRecord anOngoingTrackingRecord() {
         DateTime start = new DateTime(2015, 1, 1, 13, 30, 0);
 
-        return new TrackingRecord("uuid", "some project uuid", start.toDate(), null, "some description");
+        return new TrackingRecord("uuid", "some project uuid", Optional.of(start.toDate()), Optional.<Date>absent(), Optional.of("some description"));
     }
 }

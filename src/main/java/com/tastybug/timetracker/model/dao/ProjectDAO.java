@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Project;
 
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class ProjectDAO extends EntityDAO<Project> {
         return new Project(
                 cursor.getString(colsList.indexOf(UUID_COLUMN)),
                 cursor.getString(colsList.indexOf(TITLE_COLUMN)),
-                cursor.getString(colsList.indexOf(DESCRIPTION_COLUMN))
+                Optional.fromNullable(cursor.getString(colsList.indexOf(DESCRIPTION_COLUMN)))
                 );
     }
 

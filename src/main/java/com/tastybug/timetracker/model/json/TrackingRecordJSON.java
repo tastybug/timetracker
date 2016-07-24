@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.model.json;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.util.Formatter;
 
@@ -7,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Date;
 
 public class TrackingRecordJSON extends JSONObject {
 
@@ -33,18 +35,18 @@ public class TrackingRecordJSON extends JSONObject {
     protected TrackingRecordJSON(JSONObject jsonObject) throws JSONException {
         put(ID_COLUMN, jsonObject.get(ID_COLUMN));
         put(PROJECT_UUID_COLUMN, jsonObject.get(PROJECT_UUID_COLUMN));
-        put(START_DATE_COLUMN, jsonObject.optString(START_DATE_COLUMN));
-        put(END_DATE_COLUMN, jsonObject.optString(END_DATE_COLUMN));
-        put(DESCRIPTION_COLUMN, jsonObject.optString(DESCRIPTION_COLUMN));
+        put(START_DATE_COLUMN, jsonObject.isNull(START_DATE_COLUMN) ? null : jsonObject.getString(START_DATE_COLUMN));
+        put(END_DATE_COLUMN, jsonObject.isNull(END_DATE_COLUMN) ? null : jsonObject.getString(END_DATE_COLUMN));
+        put(DESCRIPTION_COLUMN, jsonObject.isNull(DESCRIPTION_COLUMN) ? null : jsonObject.getString(DESCRIPTION_COLUMN));
     }
 
-    protected TrackingRecord getTrackingRecord() throws JSONException, ParseException {
+    protected TrackingRecord toTrackingRecord() throws JSONException, ParseException {
         return new TrackingRecord(
                 getString(ID_COLUMN),
                 getString(PROJECT_UUID_COLUMN),
-                isNull(START_DATE_COLUMN) ? null : Formatter.iso8601().parse(getString(START_DATE_COLUMN)),
-                isNull(END_DATE_COLUMN) ? null : Formatter.iso8601().parse(getString(END_DATE_COLUMN)),
-                optString(DESCRIPTION_COLUMN)
+                isNull(START_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(START_DATE_COLUMN))),
+                isNull(END_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(END_DATE_COLUMN))),
+                Optional.fromNullable(optString(DESCRIPTION_COLUMN, null))
         );
     }
 }

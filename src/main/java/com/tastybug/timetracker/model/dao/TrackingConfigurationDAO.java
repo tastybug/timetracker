@@ -83,9 +83,9 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
             return new TrackingConfiguration(
                     cursor.getString(colsList.indexOf(UUID_COLUMN)),
                     cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN)),
-                    hourLimit,
-                    startDateString != null ? Formatter.iso8601().parse(startDateString) : null,
-                    endDateString != null ? Formatter.iso8601().parse(endDateString) : null,
+                    Optional.fromNullable(hourLimit),
+                    startDateString != null ? Optional.of(Formatter.iso8601().parse(startDateString)) : Optional.<Date>absent(),
+                    endDateString != null ? Optional.of(Formatter.iso8601().parse(endDateString)) : Optional.<Date>absent(),
                     promptForDescription,
                     RoundingFactory.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
             );

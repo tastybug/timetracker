@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.model.json;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.util.Formatter;
@@ -8,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Date;
 
 public class TrackingConfigurationJSON extends JSONObject {
 
@@ -46,14 +48,12 @@ public class TrackingConfigurationJSON extends JSONObject {
     }
 
     protected TrackingConfiguration toTrackingConfiguration() throws JSONException, ParseException {
-        // hier den konstruktor mit den optionals nutzen
-        // und in der entity tests fuer diesen Konstruktor nachpflegen
         return new TrackingConfiguration(
                 getString(UUID_COLUMN),
                 getString(PROJECT_UUID_COLUMN),
-                isNull(HOUR_LIMIT_COLUMN) ? null : getInt(HOUR_LIMIT_COLUMN),
-                isNull(START_DATE_COLUMN) ? null : Formatter.iso8601().parse(getString(START_DATE_COLUMN)),
-                isNull(END_DATE_COLUMN) ? null : Formatter.iso8601().parse(getString(END_DATE_COLUMN)),
+                isNull(HOUR_LIMIT_COLUMN) ? Optional.<Integer>absent() : Optional.of(getInt(HOUR_LIMIT_COLUMN)),
+                isNull(START_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(START_DATE_COLUMN))),
+                isNull(END_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(END_DATE_COLUMN))),
                 getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN),
                 RoundingFactory.Strategy.valueOf(getString(ROUNDING_STRATEGY_COLUMN))
         );

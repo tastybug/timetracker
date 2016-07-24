@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class TrackingConfigurationTest {
 
-    Context contextMock = mock(Context.class);
     DAOFactory daoFactory = mock(DAOFactory.class);
     TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
 
@@ -43,7 +42,7 @@ public class TrackingConfigurationTest {
         // when
         DateTime start = new DateTime();
         DateTime end = start.plusDays(5);
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", 3, start.toDate(), end.toDate(), false, RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", Optional.of(3), Optional.of(start.toDate()), Optional.of(end.toDate()), false, RoundingFactory.Strategy.NO_ROUNDING);
 
         // then
         assertNotNull(trackingConfiguration);

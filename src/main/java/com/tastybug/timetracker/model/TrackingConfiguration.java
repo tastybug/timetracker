@@ -14,8 +14,8 @@ public class TrackingConfiguration extends Entity {
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
-    private Integer hourLimit;
-    private Date start, end;
+    private Optional<Integer> hourLimit = Optional.absent();
+    private Optional<Date> start = Optional.absent(), end = Optional.absent();
     private boolean promptForDescription = false;
     private RoundingFactory.Strategy roundingStrategy;
 
@@ -29,12 +29,11 @@ public class TrackingConfiguration extends Entity {
         this.roundingStrategy = strategy;
     }
 
-    // TODO diesen konstruktor nicht mehr nutzen, besser den mit den optionals
     public TrackingConfiguration(String uuid,
                                  String projectUuid,
-                                 Integer hourLimit,
-                                 Date start,
-                                 Date end,
+                                 Optional<Integer> hourLimit,
+                                 Optional<Date> start,
+                                 Optional<Date> end,
                                  Boolean promptForDescription,
                                  RoundingFactory.Strategy roundingStrategy) {
         this.uuid = uuid;
@@ -43,22 +42,6 @@ public class TrackingConfiguration extends Entity {
         this.start = start;
         this.end = end;
         this.promptForDescription = promptForDescription;
-        this.roundingStrategy = roundingStrategy;
-    }
-
-    public TrackingConfiguration(String uuid,
-                                 String projectUuid,
-                                 Optional<Integer> hourLimit,
-                                 Optional<Date> start,
-                                 Optional<Date> end,
-                                 Optional<Boolean> promptForDescription,
-                                 RoundingFactory.Strategy roundingStrategy) {
-        this.uuid = uuid;
-        this.projectUuid = projectUuid;
-        this.hourLimit = hourLimit.orNull();
-        this.start = start.orNull();
-        this.end = end.orNull();
-        this.promptForDescription = promptForDescription.or(false);
         this.roundingStrategy = roundingStrategy;
     }
 
@@ -97,17 +80,13 @@ public class TrackingConfiguration extends Entity {
     }
 
     public Optional<Integer> getHourLimit() {
-        return Optional.fromNullable(hourLimit);
+        return hourLimit;
     }
 
     public void setHourLimit(Optional<Integer> hourLimit) {
         Preconditions.checkNotNull(hourLimit);
         Preconditions.checkArgument(!(hourLimit.isPresent() && hourLimit.get() < 0));
-        if (hourLimit.isPresent() && hourLimit.get() == 0) {
-            this.hourLimit = null;
-        } else {
-            this.hourLimit = hourLimit.orNull();
-        }
+        this.hourLimit = (hourLimit.isPresent() && hourLimit.get() == 0) ? Optional.<Integer>absent() : hourLimit;
     }
 
     public boolean isPromptForDescription() {
@@ -119,7 +98,7 @@ public class TrackingConfiguration extends Entity {
     }
 
     public Optional<Date> getStart() {
-        return Optional.fromNullable(start);
+        return start;
     }
 
     public void setStart(Optional<Date> start) {
@@ -127,16 +106,16 @@ public class TrackingConfiguration extends Entity {
         if (getEnd().isPresent() && start.isPresent()) {
             Preconditions.checkArgument(start.get().before(getEnd().get()), "Start date cannot be after end date!");
         }
-        this.start = start.orNull();
+        this.start = start;
     }
 
     public Optional<Date> getEnd() {
-        return Optional.fromNullable(end);
+        return end;
     }
 
     public Optional<Date> getEndDateAsInclusive() {
-        if (end != null) {
-            DateTime inclusiveDate = new DateTime(end).minusDays(1);
+        if (getEnd().isPresent()) {
+            DateTime inclusiveDate = new DateTime(end.get()).minusDays(1);
             return Optional.of(inclusiveDate.toDate());
         } else {
             return Optional.absent();
@@ -148,7 +127,7 @@ public class TrackingConfiguration extends Entity {
         if (getStart().isPresent() && end.isPresent()) {
             Preconditions.checkArgument(end.get().after(getStart().get()), "End date cannot be before start date!");
         }
-        this.end = end.orNull();
+        this.end = end;
     }
 
     public void setEndAsInclusive(Optional<Date> endAsInclusive) {

@@ -16,12 +16,12 @@ public class Project extends Entity implements Comparable<Project> {
 
     private String uuid = UUID.randomUUID().toString();
     private String title;
-    private String description;
+    private Optional<String> description = Optional.absent();
     private TrackingConfiguration trackingConfiguration;
     private ArrayList<TrackingRecord> trackingRecords;
 
 
-    public Project(String uuid, String title, String description) {
+    public Project(String uuid, String title, Optional<String> description) {
         this.uuid = uuid;
         this.title = title;
         this.description = description;
@@ -52,12 +52,12 @@ public class Project extends Entity implements Comparable<Project> {
     }
 
     public Optional<String> getDescription() {
-        return Optional.fromNullable(description);
+        return description;
     }
 
     public void setDescription(Optional<String> description) {
         Preconditions.checkNotNull(description);
-        this.description = description.orNull();
+        this.description = description;
     }
 
     public ArrayList<TrackingRecord> getTrackingRecords(Context context) {

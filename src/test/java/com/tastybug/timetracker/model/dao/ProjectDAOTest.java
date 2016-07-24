@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Project;
 
 import org.junit.Before;
@@ -109,7 +110,7 @@ public class ProjectDAOTest {
 
     @Test public void canUpdateProject() {
         // given
-        Project project = new Project("1", "title", null);
+        Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -121,7 +122,7 @@ public class ProjectDAOTest {
 
     @Test public void canDeleteProject() {
         // given
-        Project project = new Project("1", "title", null);
+        Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -133,7 +134,7 @@ public class ProjectDAOTest {
 
     @Test public void canDeleteProjectByUuid() {
         // given
-        Project project = new Project("1", "title", null);
+        Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -145,7 +146,7 @@ public class ProjectDAOTest {
 
     @Test public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        Project project = new Project("1", "title", null);
+        Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when

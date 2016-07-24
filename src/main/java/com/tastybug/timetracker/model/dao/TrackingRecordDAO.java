@@ -121,9 +121,9 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
             return new TrackingRecord(
                     uuid,
                     projectUuid,
-                    startAsString != null ? Formatter.iso8601().parse(startAsString) : null,
-                    endAsString != null ? Formatter.iso8601().parse(endAsString) : null,
-                    description
+                    startAsString != null ? Optional.of(Formatter.iso8601().parse(startAsString)) : Optional.<Date>absent(),
+                    endAsString != null ? Optional.of(Formatter.iso8601().parse(endAsString)) : Optional.<Date>absent(),
+                    Optional.fromNullable(description)
             );
         } catch (ParseException pe) {
             throw new IllegalArgumentException("Problem parsing date.", pe);

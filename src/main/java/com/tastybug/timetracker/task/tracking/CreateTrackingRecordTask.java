@@ -52,8 +52,8 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
     @Override
     protected void performBackgroundStuff(Bundle args) {
         trackingRecord = new TrackingRecord(arguments.getString(PROJECT_UUID));
-        trackingRecord.setStart((Date)arguments.getSerializable(START_DATE));
-        trackingRecord.setEnd((Date)arguments.getSerializable(END_DATE));
+        trackingRecord.setStart(Optional.fromNullable((Date)arguments.getSerializable(START_DATE)));
+        trackingRecord.setEnd(Optional.fromNullable((Date)arguments.getSerializable(END_DATE)));
         if(arguments.containsKey(DESCRIPTION_OPT)) {
             trackingRecord.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
         }
