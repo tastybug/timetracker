@@ -24,8 +24,8 @@ import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.ROUN
 import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.START_DATE_COLUMN;
 import static com.tastybug.timetracker.model.json.TrackingConfigurationJSON.UUID_COLUMN;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
@@ -197,8 +197,101 @@ public class TrackingConfigurationJSONTest {
     }
 
     @Test
-    public void to_tracking_configuration_can_deal_with_any_incoming_type_of_rounding_strategy() {
-        fail();
+    public void can_import_a_json_without_start_date() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+        toImportFrom.put(START_DATE_COLUMN, null);
+
+        // when
+        TrackingConfigurationJSON subject = new TrackingConfigurationJSON(toImportFrom);
+
+        // then
+        assertTrue(subject.isNull(START_DATE_COLUMN));
+    }
+
+    @Test
+    public void can_import_a_json_without_end_date() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+        toImportFrom.put(END_DATE_COLUMN, null);
+
+        // when
+        TrackingConfigurationJSON subject = new TrackingConfigurationJSON(toImportFrom);
+
+        // then
+        assertTrue(subject.isNull(END_DATE_COLUMN));
+    }
+
+    @Test
+    public void to_tracking_configuration_contains_all_attributes_if_set() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+
+        // when
+        TrackingConfiguration trackingConfiguration = new TrackingConfigurationJSON(toImportFrom).toTrackingConfiguration();
+
+        // then
+        assertEquals(toImportFrom.get(UUID_COLUMN), trackingConfiguration.getUuid());
+        assertEquals(toImportFrom.get(PROJECT_UUID_COLUMN), trackingConfiguration.getProjectUuid());
+        assertEquals(toImportFrom.getInt(HOUR_LIMIT_COLUMN), trackingConfiguration.getHourLimit().get().intValue());
+        assertEquals(toImportFrom.getString(START_DATE_COLUMN), Formatter.iso8601().format(trackingConfiguration.getStart().get()));
+        assertEquals(toImportFrom.getString(END_DATE_COLUMN), Formatter.iso8601().format(trackingConfiguration.getEnd().get()));
+        assertEquals(toImportFrom.getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN), trackingConfiguration.isPromptForDescription());
+        assertEquals(toImportFrom.getString(ROUNDING_STRATEGY_COLUMN), trackingConfiguration.getRoundingStrategy().name());
+    }
+
+    @Test
+    public void to_tracking_configuration_can_deal_with_missing_hour_limits() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+        toImportFrom.put(HOUR_LIMIT_COLUMN, null);
+
+        // when
+        TrackingConfiguration trackingConfiguration = new TrackingConfigurationJSON(toImportFrom).toTrackingConfiguration();
+
+        // then
+        assertFalse(trackingConfiguration.getHourLimit().isPresent());
+    }
+
+    @Test
+    public void to_tracking_configuration_can_deal_with_missing_start_dates() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+        toImportFrom.put(START_DATE_COLUMN, null);
+
+        // when
+        TrackingConfiguration trackingConfiguration = new TrackingConfigurationJSON(toImportFrom).toTrackingConfiguration();
+
+        // then
+        assertFalse(trackingConfiguration.getStart().isPresent());
+    }
+
+    @Test
+    public void to_tracking_configuration_can_deal_with_missing_end_dates() throws Exception {
+        // given
+        JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+        toImportFrom.put(END_DATE_COLUMN, null);
+
+        // when
+        TrackingConfiguration trackingConfiguration = new TrackingConfigurationJSON(toImportFrom).toTrackingConfiguration();
+
+        // then
+        assertFalse(trackingConfiguration.getEnd().isPresent());
+    }
+
+    @Test
+    public void to_tracking_configuration_can_deal_with_any_type_of_rounding_strategy() throws Exception {
+        for (RoundingFactory.Strategy strategy : RoundingFactory.Strategy.values()) {
+            // given
+            JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
+            toImportFrom.put(ROUNDING_STRATEGY_COLUMN, strategy.name());
+
+            // when
+            TrackingConfiguration trackingConfiguration = new TrackingConfigurationJSON(toImportFrom).toTrackingConfiguration();
+
+            // then
+            assertEquals(strategy, trackingConfiguration.getRoundingStrategy());
+        }
     }
 
     private JSONObject aTrackingConfigurationJSONToImport() throws JSONException{
@@ -206,8 +299,8 @@ public class TrackingConfigurationJSONTest {
         toImportFrom.put(UUID_COLUMN, "1234");
         toImportFrom.put(PROJECT_UUID_COLUMN, "1234");
         toImportFrom.put(HOUR_LIMIT_COLUMN, 1);
-        toImportFrom.put(START_DATE_COLUMN, 1);
-        toImportFrom.put(END_DATE_COLUMN, 1);
+        toImportFrom.put(START_DATE_COLUMN, Formatter.iso8601().format(new Date()));
+        toImportFrom.put(END_DATE_COLUMN, Formatter.iso8601().format(new Date()));
         toImportFrom.put(PROMPT_FOR_DESCRIPTION_COLUMN, false);
         toImportFrom.put(ROUNDING_STRATEGY_COLUMN, RoundingFactory.Strategy.NO_ROUNDING.name());
 

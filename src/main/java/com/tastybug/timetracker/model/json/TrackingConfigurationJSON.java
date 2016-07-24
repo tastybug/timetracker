@@ -41,7 +41,7 @@ public class TrackingConfigurationJSON extends JSONObject {
         put(HOUR_LIMIT_COLUMN, jsonObject.isNull(HOUR_LIMIT_COLUMN) ? null : jsonObject.getInt(HOUR_LIMIT_COLUMN));
         put(START_DATE_COLUMN, jsonObject.isNull(START_DATE_COLUMN) ? null : jsonObject.getString(START_DATE_COLUMN));
         put(END_DATE_COLUMN, jsonObject.isNull(END_DATE_COLUMN) ? null : jsonObject.getString(END_DATE_COLUMN));
-        put(PROMPT_FOR_DESCRIPTION_COLUMN, jsonObject.isNull(PROMPT_FOR_DESCRIPTION_COLUMN) ? null : jsonObject.getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN));
+        put(PROMPT_FOR_DESCRIPTION_COLUMN, jsonObject.getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN));
         put(ROUNDING_STRATEGY_COLUMN, jsonObject.getString(ROUNDING_STRATEGY_COLUMN));
     }
 
@@ -51,10 +51,10 @@ public class TrackingConfigurationJSON extends JSONObject {
         return new TrackingConfiguration(
                 getString(UUID_COLUMN),
                 getString(PROJECT_UUID_COLUMN),
-                optInt(HOUR_LIMIT_COLUMN),
+                isNull(HOUR_LIMIT_COLUMN) ? null : getInt(HOUR_LIMIT_COLUMN),
                 isNull(START_DATE_COLUMN) ? null : Formatter.iso8601().parse(getString(START_DATE_COLUMN)),
                 isNull(END_DATE_COLUMN) ? null : Formatter.iso8601().parse(getString(END_DATE_COLUMN)),
-                getBoolean(PROJECT_UUID_COLUMN),
+                getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN),
                 RoundingFactory.Strategy.valueOf(getString(ROUNDING_STRATEGY_COLUMN))
         );
     }
