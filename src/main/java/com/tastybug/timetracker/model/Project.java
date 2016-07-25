@@ -60,6 +60,10 @@ public class Project extends Entity implements Comparable<Project> {
         this.description = description;
     }
 
+    public ArrayList<TrackingRecord> getTrackingRecords() {
+        return trackingRecords;
+    }
+
     public ArrayList<TrackingRecord> getTrackingRecords(Context context) {
         Preconditions.checkNotNull(context);
 
@@ -72,6 +76,10 @@ public class Project extends Entity implements Comparable<Project> {
 
     public void setTrackingRecords(ArrayList<TrackingRecord> trackingRecords) {
         this.trackingRecords = trackingRecords;
+    }
+
+    public TrackingConfiguration getTrackingConfiguration() {
+        return trackingConfiguration;
     }
 
     public TrackingConfiguration getTrackingConfiguration(Context context) {

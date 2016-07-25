@@ -132,7 +132,7 @@ public class ProjectTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void gettingTrackingConfigurationWithoutContextYieldsException() {
+    public void lazilyGettingTrackingConfigurationWithoutContextYieldsException() {
         // given
         Project project = new Project("project title");
 
@@ -140,7 +140,7 @@ public class ProjectTest {
         project.getTrackingConfiguration(null);
     }
 
-    @Test public void canGetTrackingConfiguration() {
+    @Test public void canLazilyGetTrackingConfiguration() {
         // given
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);

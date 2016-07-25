@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.model.json;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
@@ -21,12 +22,25 @@ public class ProjectJSON extends JSONObject {
     static String TRACKING_CONFIGURATION = "tracking_configuration";
     static String TRACKING_RECORDS = "tracking_records";
 
+    /**
+     * The caller has to provide a full project, including TrackingConfiguration and the list
+     * of TrackingRecords (can be empty of course).
+     *
+     * @throws JSONException
+     * @throws NullPointerException if the caller didn't properly assemble the project by leaving
+     * out the TrackingConfiguration and/or TrackingRecord list
+     */
     protected ProjectJSON(Project project) throws JSONException {
+        Preconditions.checkNotNull(project.getTrackingConfiguration());
+        Preconditions.checkNotNull(project.getTrackingRecords());
+
         put(UUID, project.getUuid());
         put(TITLE, project.getTitle());
         if (project.getDescription().isPresent()) {
             put(DESCRIPTION, project.getDescription().get());
         }
+        setTrackingConfiguration(project.getTrackingConfiguration());
+        setTrackingRecords(project.getTrackingRecords());
     }
 
     protected ProjectJSON(JSONObject toImport) throws JSONException {

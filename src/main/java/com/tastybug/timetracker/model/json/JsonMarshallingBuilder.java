@@ -52,10 +52,9 @@ public class JsonMarshallingBuilder {
     }
 
     private ProjectJSON createProjectJson(Project project) throws JSONException {
-        ProjectJSON projectJSON = new ProjectJSON(project);
-        projectJSON.setTrackingConfiguration(trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get());
-        projectJSON.setTrackingRecords(trackingRecordDAO.getByProjectUuid(project.getUuid()));
+        project.setTrackingConfiguration(trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get());
+        project.setTrackingRecords(trackingRecordDAO.getByProjectUuid(project.getUuid()));
 
-        return projectJSON;
+        return new ProjectJSON(project);
     }
 }
