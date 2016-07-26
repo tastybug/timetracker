@@ -2,9 +2,8 @@ package com.tastybug.timetracker.infrastructure.runtime;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 
-import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
+import com.tastybug.timetracker.infrastructure.backup.DataChangeListenerBackgroundService;
 import com.tastybug.timetracker.ui.trackingplayer.LifecycleService;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -23,6 +22,7 @@ public class Application extends android.app.Application {
         initializeJoda();
         initializeDayNightThemeMode();
         startTrackingPlayerLifecycleBackgroundService();
+        startBackupDataChangeListenerBackgroundService();
         if (isFirstRun()) {
             runGenerateTestDataTask();
             declareFirstRunConsumed();
@@ -35,6 +35,10 @@ public class Application extends android.app.Application {
 
     private void startTrackingPlayerLifecycleBackgroundService() {
         startService(new Intent(this, LifecycleService.class));
+    }
+
+    private void startBackupDataChangeListenerBackgroundService() {
+        startService(new Intent(this, DataChangeListenerBackgroundService.class));
     }
 
     private void initializeDayNightThemeMode() {
@@ -50,12 +54,12 @@ public class Application extends android.app.Application {
     }
 
     private void runGenerateTestDataTask() {
-        if (versionHelper.isDevelopmentVersion()) {
-            new TestDataGenerationTask(this).execute();
-        } else {
-            Log.i(getClass().getSimpleName(), "Skipping test data generation,"
-                    + versionHelper.getVersionName()
-                    + " is not a SNAPSHOT release!");
-        }
+//        if (versionHelper.isDevelopmentVersion()) {
+//            new TestDataGenerationTask(this).execute();
+//        } else {
+//            Log.i(getClass().getSimpleName(), "Skipping test data generation,"
+//                    + versionHelper.getVersionName()
+//                    + " is not a SNAPSHOT release!");
+//        }
     }
 }

@@ -71,7 +71,7 @@ public class ProjectJSON extends JSONObject {
         JSONArray array = getJSONArray(TRACKING_RECORDS);
         ArrayList<TrackingRecord> trackingRecords = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
-            trackingRecords.add(new TrackingRecordJSON(array.getJSONObject(0)).toTrackingRecord());
+            trackingRecords.add(new TrackingRecordJSON(array.getJSONObject(i)).toTrackingRecord());
         }
 
         return trackingRecords;

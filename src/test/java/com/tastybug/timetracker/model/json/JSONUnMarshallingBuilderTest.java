@@ -41,8 +41,8 @@ public class JSONUnMarshallingBuilderTest {
         assertEquals(project.getUuid(), projects.get(0).getUuid());
     }
 
-    @Test(expected = NullPointerException.class)
-    public void building_with_unset_json_array_argument_yields_NPE() throws Exception {
+    @Test(expected = IllegalArgumentException.class)
+    public void building_with_unset_json_array_argument_yields_IAE() throws Exception {
         // when
         new JSONUnMarshallingBuilder().build();
     }

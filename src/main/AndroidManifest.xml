@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.tastybug.timetracker">
 
-    <application android:name=".infrastructure.runtime.Application" android:theme="@style/Theme.AppCompat.DayNight" android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name">
+    <application android:name=".infrastructure.runtime.Application" android:theme="@style/Theme.AppCompat.DayNight" android:allowBackup="true" android:backupAgent=".infrastructure.backup.BackupAgentFacade" android:icon="@mipmap/ic_launcher" android:label="@string/app_name">
         <activity android:name=".ui.dashboard.ProjectsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,6 +23,7 @@
 
         <service android:name=".ui.trackingplayer.LifecycleService" android:exported="false"/>
         <service android:name=".ui.trackingplayer.CallbackService" android:exported="false"/>
+        <service android:name=".infrastructure.backup.DataChangeListenerBackgroundService" android:exported="false"/>
 
         <!--database stuff-->
         <meta-data android:name="database.schema.version.current" android:value="1"/>
@@ -30,6 +31,9 @@
         <meta-data android:name="database.scripts.folder" android:value="sql"/>
         <meta-data android:name="database.scripts.prefix.model" android:value="ddl_"/>
         <meta-data android:name="database.scripts.prefix.data" android:value="dml_"/>
+
+        <!-- is bound to package name: com.tastybug.timetracker! -->
+        <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAI4NY7lBYy4bsP2CCmClPU0vxESyjDojQysxElAw" />
 
     </application>
 </manifest>

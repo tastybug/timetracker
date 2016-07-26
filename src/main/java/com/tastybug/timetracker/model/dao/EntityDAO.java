@@ -79,6 +79,10 @@ public abstract class EntityDAO<T extends Entity> {
         return ContentProviderOperation.newUpdate(getUpdateUri(entity)).withValues(getContentValues(entity)).withSelection(getPKColumn() + "=?", new String[]{entity.getUuid()}).build();
     }
 
+    public ContentProviderOperation getBatchDeleteAll(T entity) {
+        return ContentProviderOperation.newDelete(getUpdateUri(entity)).build();
+    }
+
     public abstract String getPKColumn();
 
     public abstract String[] getColumns();
