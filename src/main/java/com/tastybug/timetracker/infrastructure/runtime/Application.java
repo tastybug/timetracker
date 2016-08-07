@@ -11,20 +11,17 @@ import net.danlew.android.joda.JodaTimeAndroid;
 public class Application extends android.app.Application {
 
     private FirstRunHelper firstRunHelper;
-    private VersionHelper versionHelper;
 
     @Override
     public void onCreate() {
         super.onCreate();
         firstRunHelper = new FirstRunHelper(this);
-        versionHelper = new VersionHelper(this);
 
         initializeJoda();
         initializeDayNightThemeMode();
         startTrackingPlayerLifecycleBackgroundService();
         startBackupDataChangeListenerBackgroundService();
         if (isFirstRun()) {
-            runGenerateTestDataTask();
             declareFirstRunConsumed();
         }
     }
@@ -51,15 +48,5 @@ public class Application extends android.app.Application {
 
     private void declareFirstRunConsumed() {
         firstRunHelper.declareFirstRunConsumed();
-    }
-
-    private void runGenerateTestDataTask() {
-//        if (versionHelper.isDevelopmentVersion()) {
-//            new TestDataGenerationTask(this).execute();
-//        } else {
-//            Log.i(getClass().getSimpleName(), "Skipping test data generation,"
-//                    + versionHelper.getVersionName()
-//                    + " is not a SNAPSHOT release!");
-//        }
     }
 }

@@ -8,4 +8,7 @@
     <item name="fragment_tracking_record_list" type="id"/>
     <item name="fragment_tracking_record_editing" type="id"/>
 
+    <!-- action bar entries -->
+    <item name="menu_item_generate_testdata" type="id"/>
+
 </resources>

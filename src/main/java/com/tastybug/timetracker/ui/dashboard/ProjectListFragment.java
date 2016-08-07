@@ -11,9 +11,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
+import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.backup.in.BackupRestoredEvent;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
 import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
@@ -68,6 +70,9 @@ public class ProjectListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_project_list, menu);
+        if (BuildConfig.DEBUG) {
+            menu.add(Menu.NONE, R.id.menu_item_generate_testdata, 100, getString(R.string.menu_item_generate_testdata));
+        }
     }
 
     @Override
@@ -77,6 +82,9 @@ public class ProjectListFragment extends ListFragment {
                 ProjectCreationDialog
                         .aDialog()
                         .show(getFragmentManager(), getClass().getSimpleName());
+                return true;
+            case R.id.menu_item_generate_testdata:
+                new TestDataGenerationTask(getActivity()).execute();
                 return true;
             default:
                 super.onOptionsItemSelected(item);
