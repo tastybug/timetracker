@@ -24,6 +24,7 @@ import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.ui.projectdetails.ProjectDetailsActivity;
+import com.tastybug.timetracker.ui.settings.SettingsActivity;
 
 public class ProjectListFragment extends ListFragment {
 
@@ -79,17 +80,33 @@ public class ProjectListFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_create_project:
-                ProjectCreationDialog
-                        .aDialog()
-                        .show(getFragmentManager(), getClass().getSimpleName());
+                showProjectCreationDialog();
+                return true;
+            case R.id.menu_application_settings:
+                showSettingsActivity();
                 return true;
             case R.id.menu_item_generate_testdata:
-                new TestDataGenerationTask(getActivity()).execute();
+                generateTestdata();
                 return true;
             default:
                 super.onOptionsItemSelected(item);
                 return false;
         }
+    }
+
+    private void showProjectCreationDialog() {
+        ProjectCreationDialog
+                .aDialog()
+                .show(getFragmentManager(), getClass().getSimpleName());
+    }
+
+    private void generateTestdata() {
+        new TestDataGenerationTask(getActivity()).execute();
+    }
+
+    private void showSettingsActivity() {
+        Intent intent = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(intent);
     }
 
     class UpdateProjectListOnTrackingEventsHandler extends AbstractOttoEventHandler {

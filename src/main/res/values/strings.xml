@@ -14,6 +14,7 @@
     <string name="menu_create_project">Create Project</string>
     <string name="menu_edit_project">Edit Project</string>
     <string name="menu_delete_project">Delete Project</string>
+    <string name="menu_settings">Settings</string>
 
     <!-- project creation -->
     <string name="hint_project_title">What is it called?</string>
@@ -178,6 +179,13 @@
 
     <!-- backup stuff -->
     <string name="msg_backup_has_been_restored">Backup has been restored!</string>
+
+    <!-- project settings -->
+    <string name="application_settings_activity_title">Settings</string>
+    <string name="backup_preference_group_title">Backup</string>
+    <string name="backup_enabled_preference_key">backup_enabled_preference_key</string>
+    <string name="backup_enabled_preference_title">Use Android Backup Service</string>
+    <string name="backup_enabled_preference_description">Perform background backups using the Android Backup Service. Data is stored on Google servers.</string>
 
 
 </resources>

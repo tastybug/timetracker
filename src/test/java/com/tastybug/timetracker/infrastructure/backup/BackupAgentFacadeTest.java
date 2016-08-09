@@ -9,6 +9,7 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.infrastructure.backup.in.InternalRestoreService;
 import com.tastybug.timetracker.infrastructure.backup.out.InternalBackupService;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -21,6 +22,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -29,8 +31,14 @@ public class BackupAgentFacadeTest {
 
     InternalBackupService internalBackupService = mock(InternalBackupService.class);
     InternalRestoreService internalRestoreService = mock(InternalRestoreService.class);
+    BackupEnabledService backupEnabledService = mock(BackupEnabledService.class);
 
-    BackupAgentFacade subject = new BackupAgentFacade(internalBackupService, internalRestoreService);
+    BackupAgentFacade subject = new BackupAgentFacade(internalBackupService, internalRestoreService, backupEnabledService);
+
+    @Before
+    public void setup() {
+        when(backupEnabledService.isBackupFacilityEnabled()).thenReturn(true);
+    }
 
     @Test
     public void onBackup_skips_backup_if_not_deemed_necessary() throws Exception {
@@ -64,6 +72,18 @@ public class BackupAgentFacadeTest {
     }
 
     @Test
+    public void onBackup_is_noop_if_backup_is_disabled() throws Exception {
+        // given
+        when(backupEnabledService.isBackupFacilityEnabled()).thenReturn(false);
+
+        // when
+        subject.onBackup(null, null, null);
+
+        // then
+        verifyZeroInteractions(internalBackupService);
+    }
+
+    @Test
     public void onRestore_calls_internal_restore_service_for_restore() throws Exception {
         // when
         subject.onRestore(null, 1234, null);
@@ -73,4 +93,17 @@ public class BackupAgentFacadeTest {
                 eq(1234),
                 (ParcelFileDescriptor)any());
     }
+
+    @Test
+    public void onRestore_is_noop_if_backup_is_disabled() throws Exception {
+        // given
+        when(backupEnabledService.isBackupFacilityEnabled()).thenReturn(false);
+
+        // when
+        subject.onRestore(null, 1234, null);
+
+        // then
+        verifyZeroInteractions(internalRestoreService);
+    }
+
 }

@@ -5,6 +5,7 @@
     <item name="fragment_project_statistics" type="id"/>
     <item name="fragment_tracking_control_panel" type="id"/>
     <item name="fragment_project_configuration" type="id"/>
+    <item name="fragment_application_settings" type="id"/>
     <item name="fragment_tracking_record_list" type="id"/>
     <item name="fragment_tracking_record_editing" type="id"/>
 

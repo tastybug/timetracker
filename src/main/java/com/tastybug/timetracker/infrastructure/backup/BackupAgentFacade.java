@@ -22,6 +22,7 @@ public class BackupAgentFacade extends BackupAgent {
 
     private InternalBackupService internalBackupService;
     private InternalRestoreService internalRestoreService;
+    private BackupEnabledService backupEnabledService;
     private OttoProvider ottoProvider = new OttoProvider();
 
     public BackupAgentFacade() {
@@ -29,9 +30,11 @@ public class BackupAgentFacade extends BackupAgent {
     }
 
     public BackupAgentFacade(InternalBackupService internalBackupService,
-                             InternalRestoreService internalRestoreService) {
+                             InternalRestoreService internalRestoreService,
+                             BackupEnabledService backupEnabledService) {
         this.internalBackupService = internalBackupService;
         this.internalRestoreService = internalRestoreService;
+        this.backupEnabledService = backupEnabledService;
     }
 
     @Override
@@ -39,7 +42,13 @@ public class BackupAgentFacade extends BackupAgent {
                          BackupDataOutput data,
                          ParcelFileDescriptor newState) throws IOException {
         Log.i(getClass().getSimpleName(), "onBackup");
-        initServices();
+        initDependencies();
+
+        if (!backupEnabledService.isBackupFacilityEnabled()) {
+            Log.d(getClass().getSimpleName(), "Backup disabled..");
+            return;
+        }
+
         Optional<Date> lastBackupDate = internalBackupService.getLastBackupDate(oldState);
         if (internalBackupService.checkBackupNecessary(lastBackupDate)) {
             internalBackupService.performBackup(oldState, data, newState);
@@ -53,15 +62,24 @@ public class BackupAgentFacade extends BackupAgent {
                           int appVersionCode,
                           ParcelFileDescriptor newState) throws IOException {
         Log.i(getClass().getSimpleName(), "onRestore");
-        initServices();
+        initDependencies();
+
+        if (!backupEnabledService.isBackupFacilityEnabled()) {
+            Log.d(getClass().getSimpleName(), "Backup disabled..");
+            return;
+        }
+
         internalRestoreService.performRestore(data, appVersionCode, newState);
         ottoProvider.getSharedBus().post(new BackupRestoredEvent());
     }
 
-    private void initServices() {
+    private void initDependencies() {
         if (internalRestoreService == null || internalBackupService == null) {
             this.internalBackupService = new InternalBackupService(getApplicationContext());
             this.internalRestoreService = new InternalRestoreService(getApplicationContext());
+        }
+        if (backupEnabledService == null) {
+            this.backupEnabledService = new BackupEnabledService(getApplicationContext());
         }
     }
 }

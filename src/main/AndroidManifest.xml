@@ -11,6 +11,7 @@
 
         <activity android:name=".ui.projectdetails.ProjectDetailsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity android:name=".ui.projectconfiguration.ProjectConfigurationActivity" android:noHistory="true"/>
+        <activity android:name=".ui.settings.SettingsActivity" android:noHistory="true"/>
         <activity android:name=".ui.trackingrecordmodification.TrackingRecordModificationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter> <!-- this allows the tracking player notification to open this activity from 'outside' -->
                 <action android:name="android.intent.action.VIEW"/>
