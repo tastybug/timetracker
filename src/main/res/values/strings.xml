@@ -180,12 +180,22 @@
     <!-- backup stuff -->
     <string name="msg_backup_has_been_restored">Backup has been restored!</string>
 
-    <!-- project settings -->
+    <!-- settings -->
     <string name="application_settings_activity_title">Settings</string>
     <string name="backup_preference_group_title">Backup</string>
     <string name="backup_enabled_preference_key">backup_enabled_preference_key</string>
     <string name="backup_enabled_preference_title">Use Android Backup Service</string>
     <string name="backup_enabled_preference_description">Perform background backups using the Android Backup Service. Data is stored on Google servers.</string>
+    <string name="libraries_and_trademarks_screen_title">Libraries &amp; Trademarks</string>
+    <string name="libraries_group_title">Libraries used</string>
+    <string name="guava_library_title">Guava (Apache License 2.0)</string>
+    <string name="otto_library_title">Otto (Apache License 2.0)</string>
+    <string name="joda_library_title">Joda-Time (Apache License 2.0)</string>
+    <string name="trademarks_group_title">Trademarks</string>
+    <string name="trademark_android_title">Android, Google, Google Drive</string>
+    <string name="trademark_android_summary">Android, Google and Google Drive are trademarks of Google Corporation.</string>
+    <string name="trademarks_other_title">Other Trademarks</string>
+    <string name="trademarks_other_summary">All other trademarks belong to their respective owners.</string>
 
 
 </resources>

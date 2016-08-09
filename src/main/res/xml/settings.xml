@@ -12,4 +12,34 @@
 
     </PreferenceCategory>
 
+    <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title" >
+
+        <PreferenceCategory android:title="@string/libraries_group_title" >
+
+            <Preference android:title="@string/guava_library_title" >
+                <intent android:action="android.intent.action.VIEW"
+                    android:data="https://github.com/google/guava/blob/master/COPYING" />
+            </Preference>
+            <Preference android:title="@string/otto_library_title" >
+                <intent android:action="android.intent.action.VIEW"
+                    android:data="http://square.github.io/otto/#license" />
+            </Preference>
+            <Preference android:title="@string/joda_library_title" >
+                <intent android:action="android.intent.action.VIEW"
+                    android:data="http://www.joda.org/joda-time/license.html" />
+            </Preference>
+
+        </PreferenceCategory>
+
+        <PreferenceCategory android:title="@string/trademarks_group_title" >
+
+            <Preference android:title="@string/trademark_android_title"
+                android:summary="@string/trademark_android_summary"/>
+            <Preference android:title="@string/trademarks_other_title"
+                android:summary="@string/trademarks_other_summary"/>
+
+        </PreferenceCategory>
+
+    </PreferenceScreen>
+
 </PreferenceScreen>
