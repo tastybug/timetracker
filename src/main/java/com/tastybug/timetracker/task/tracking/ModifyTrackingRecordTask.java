@@ -22,6 +22,7 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
 
     private TrackingRecord trackingRecord;
+    private boolean wasStopped = false;
 
     public static ModifyTrackingRecordTask aTask(Context context) {
         return new ModifyTrackingRecordTask(context);
@@ -66,6 +67,7 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
             trackingRecord.setStart(Optional.of((Date)arguments.getSerializable(START_DATE)));
         }
         if(arguments.containsKey(END_DATE)) {
+            wasStopped = trackingRecord.isRunning();
             trackingRecord.setEnd(Optional.of((Date)arguments.getSerializable(END_DATE)));
         }
         if(arguments.containsKey(DESCRIPTION_OPT)) {
@@ -79,7 +81,7 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
         if (BuildConfig.DEBUG) {
             Log.i(getClass().getSimpleName(), "Modified tracking record " + trackingRecord);
         }
-        ottoProvider.getSharedBus().post(new ModifiedTrackingRecordEvent(trackingRecord));
+        ottoProvider.getSharedBus().post(new ModifiedTrackingRecordEvent(trackingRecord, wasStopped));
     }
 
 }

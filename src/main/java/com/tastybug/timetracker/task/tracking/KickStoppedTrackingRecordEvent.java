@@ -5,6 +5,6 @@ import com.tastybug.timetracker.model.TrackingRecord;
 public class KickStoppedTrackingRecordEvent extends ModifiedTrackingRecordEvent {
 
     public KickStoppedTrackingRecordEvent(TrackingRecord trackingRecord) {
-        super(trackingRecord);
+        super(trackingRecord, true);
     }
 }

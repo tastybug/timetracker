@@ -10,6 +10,7 @@ import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.trackingplayer.internal.NotificationModel;
 
 /**
@@ -55,13 +56,24 @@ public class LifecycleService extends Service {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
-        String projectUuid = event.getTrackingRecord().getProjectUuid();
+        handleProjectStopped(event.getTrackingRecord().getProjectUuid());
+    }
+
+    private void handleProjectStopped(String projectUuid) {
         TrackingPlayer player = new TrackingPlayer(this);
 
         if (new NotificationModel(this).isProjectPaused(projectUuid)) {
             player.showProject(projectUuid);
         } else {
             player.showSomeProjectOrHide();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleTrackingRecordModified(ModifiedTrackingRecordEvent event) {
+        if (event.wasStopped()) {
+            handleProjectStopped(event.getTrackingRecord().getProjectUuid());
         }
     }
 
