@@ -38,8 +38,23 @@ android {
     }
     productFlavors {
     }
+    signingConfigs {
+        release {
+            storeFile file("timetracker.keystore")
+            storePassword TIMETRACKER_RELEASE_STORE_PASSWORD // ~/.gradle/gradle.properties
+            keyAlias "timetracker"
+            keyPassword TIMETRACKER_RELEASE_KEY_PASSWORD // ~/.gradle/gradle.properties
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android.txt"),
+                    "proguard-rules.pro"
+        }
+    }
 }
-
 
 dependencies {
     compile 'com.google.guava:guava:18.0'
