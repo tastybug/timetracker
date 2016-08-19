@@ -2,13 +2,14 @@ package com.tastybug.timetracker.infrastructure.backup;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.util.Formatter;
 
 import java.text.ParseException;
 import java.util.Date;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class BackupLog {
 
@@ -48,33 +49,33 @@ public class BackupLog {
     public void logBackupSuccess(Optional<Date> lastBackupDate) {
         storeLastSuccessfulBackupDate(lastBackupDate);
         editor.putString(BACKUP_SUCCESSFUL_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
-        Log.i(TAG, "Successfully completed backup.");
+        logInfo(TAG, "Successfully completed backup.");
     }
 
     public void logBackupUnnecessary(Optional<Date> lastBackupDate) {
         storeLastSuccessfulBackupDate(lastBackupDate);
         editor.putString(BACKUP_UNNECESSARY_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
-        Log.i(TAG, "Skipped backup as not necessary.");
+        logInfo(TAG, "Skipped backup as not necessary.");
     }
 
     public void logBackupFail(Optional<Date> lastBackupDate, String message) {
         storeLastSuccessfulBackupDate(lastBackupDate);
         editor.putString(BACKUP_FAILED_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
         editor.putString(BACKUP_FAILED_MSG, message).apply();
-        Log.i(TAG, "Failed backup, msg was: " + message);
+        logInfo(TAG, "Failed backup, msg was: " + message);
     }
 
     public void logRestoreSuccess(int versionCode) {
         editor.putInt(RESTORE_SUCCESSFUL_APP_CODE, versionCode)
                 .putString(RESTORE_SUCCESSFUL_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
-        Log.i(TAG, "Successfully restored backup!");
+        logInfo(TAG, "Successfully restored backup!");
     }
 
     public void logRestoreFail(int versionCode, String message) {
         editor.putInt(RESTORE_FAILED_APP_CODE, versionCode)
                 .putString(RESTORE_FAILED_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate()))
                 .putString(RESTORE_FAILED_MSG, message).apply();
-        Log.i(TAG, "Failed backup restoration, msg was: " + message);
+        logInfo(TAG, "Failed backup restoration, msg was: " + message);
     }
 
     public Optional<Date> getPreviousSuccessBackupDate() throws ParseException {

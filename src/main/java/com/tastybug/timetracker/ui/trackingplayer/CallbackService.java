@@ -2,7 +2,6 @@ package com.tastybug.timetracker.ui.trackingplayer;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
@@ -13,6 +12,9 @@ import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
 import com.tastybug.timetracker.ui.trackingplayer.internal.NotificationModel;
 import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationActivity;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logError;
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 /**
  * This service acts as the callback facade for the Tracking Player notification. Pressing
@@ -55,12 +57,12 @@ public class CallbackService extends IntentService {
         } else if (DISMISS_PAUSED_PROJECT.equals(operation)) {
             handleDismissPausedProjectRequested(projectUuid);
         } else {
-            Log.wtf(TAG, "Unexpected intent: " + intent);
+            logError(TAG, "Unexpected intent: " + intent);
         }
     }
 
     private void handleStopTrackingRequested(String projectUuid) {
-        Log.i(TAG, "Stopping tracking for project " + projectUuid);
+        logInfo(TAG, "Stopping tracking for project " + projectUuid);
         TrackingRecord runningTrackingRecord = new TrackingRecordDAO(this).getRunning(projectUuid).get();
         KickStopTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
 
@@ -86,7 +88,7 @@ public class CallbackService extends IntentService {
     }
 
     private void handleCycleProjectRequested(String currentProjectUuid) {
-        Log.i(TAG, "Cycling to next project coming from " + currentProjectUuid);
+        logInfo(TAG, "Cycling to next project coming from " + currentProjectUuid);
         new TrackingPlayer(getApplicationContext()).cycleProject(currentProjectUuid);
     }
 

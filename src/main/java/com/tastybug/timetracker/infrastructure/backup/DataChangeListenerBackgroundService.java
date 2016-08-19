@@ -5,7 +5,6 @@ import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
@@ -18,6 +17,9 @@ import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
+import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
+
 public class DataChangeListenerBackgroundService extends Service {
 
     @Override
@@ -27,19 +29,19 @@ public class DataChangeListenerBackgroundService extends Service {
             android.os.Debug.waitForDebugger();
         }
         new OttoProvider().getSharedBus().register(this);
-        Log.i(getClass().getSimpleName(), "started.");
+        logInfo(getClass().getSimpleName(), "started.");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         new OttoProvider().getSharedBus().unregister(this);
-        Log.i(getClass().getSimpleName(), "stopped.");
+        logInfo(getClass().getSimpleName(), "stopped.");
     }
 
     private void requestBackup(OttoEvent ottoEvent) {
         new BackupManager(this).dataChanged();
-        Log.d(getClass().getSimpleName(), "Requested backup after " + ottoEvent.getClass().getSimpleName());
+        logDebug(getClass().getSimpleName(), "Requested backup after " + ottoEvent.getClass().getSimpleName());
     }
 
     @Nullable
