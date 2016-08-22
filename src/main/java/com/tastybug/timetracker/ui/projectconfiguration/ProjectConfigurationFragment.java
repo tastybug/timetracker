@@ -116,8 +116,8 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
                                           String key) {
         Project project = getProjectFromDB();
         TrackingConfiguration trackingConfiguration = getTrackingConfigurationFromDB();
-        String title = sharedPreferences.getString(getString(R.string.project_title_preference_key),"");
-        String description = sharedPreferences.getString(getString(R.string.project_description_preference_key),"");
+        String title = sharedPreferences.getString(getString(R.string.project_title_preference_key), "");
+        String description = sharedPreferences.getString(getString(R.string.project_description_preference_key), "");
         Integer hourLimit = sharedPreferences.getInt(getString(R.string.tracking_configuration_hour_limit_preference_key), 0);
         Long startTimeStamp = sharedPreferences.getLong(getString(R.string.tracking_configuration_start_date_preference_key), -1L);
         Optional<Date> startDateOpt = startTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(startTimeStamp));

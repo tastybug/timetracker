@@ -68,7 +68,7 @@ public class Project extends Entity implements Comparable<Project> {
         Preconditions.checkNotNull(context);
 
         if (trackingRecords == null) {
-            trackingRecords = ((TrackingRecordDAO)daoFactory.getDao(TrackingRecord.class, context))
+            trackingRecords = ((TrackingRecordDAO) daoFactory.getDao(TrackingRecord.class, context))
                     .getByProjectUuid(getUuid());
         }
         return trackingRecords;
@@ -86,7 +86,7 @@ public class Project extends Entity implements Comparable<Project> {
         Preconditions.checkNotNull(context);
 
         if (trackingConfiguration == null) {
-            trackingConfiguration = ((TrackingConfigurationDAO)daoFactory.getDao(TrackingConfiguration.class, context))
+            trackingConfiguration = ((TrackingConfigurationDAO) daoFactory.getDao(TrackingConfiguration.class, context))
                     .getByProjectUuid(getUuid()).orNull();
         }
         return trackingConfiguration;
@@ -106,7 +106,7 @@ public class Project extends Entity implements Comparable<Project> {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Project) && ((Project)o).getUuid().equals(getUuid());
+        return (o instanceof Project) && ((Project) o).getUuid().equals(getUuid());
     }
 
     @Override

@@ -13,7 +13,8 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 public class DurationFormatter {
 
-    public DurationFormatter() {}
+    public DurationFormatter() {
+    }
 
     public static DurationFormatter a() {
         return new DurationFormatter();

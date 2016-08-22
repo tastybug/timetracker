@@ -14,9 +14,9 @@ import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class CreateTrackingRecordTask extends AbstractAsyncTask {
 
-    private static final String PROJECT_UUID    = "PROJECT_UUID";
-    private static final String START_DATE      = "START_DATE";
-    private static final String END_DATE        = "END_DATE";
+    private static final String PROJECT_UUID = "PROJECT_UUID";
+    private static final String START_DATE = "START_DATE";
+    private static final String END_DATE = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
 
     private TrackingRecord trackingRecord;
@@ -52,10 +52,10 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
     @Override
     protected void performBackgroundStuff(Bundle args) {
         trackingRecord = new TrackingRecord(arguments.getString(PROJECT_UUID));
-        trackingRecord.setStart(Optional.fromNullable((Date)arguments.getSerializable(START_DATE)));
-        trackingRecord.setEnd(Optional.fromNullable((Date)arguments.getSerializable(END_DATE)));
-        if(arguments.containsKey(DESCRIPTION_OPT)) {
-            trackingRecord.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
+        trackingRecord.setStart(Optional.fromNullable((Date) arguments.getSerializable(START_DATE)));
+        trackingRecord.setEnd(Optional.fromNullable((Date) arguments.getSerializable(END_DATE)));
+        if (arguments.containsKey(DESCRIPTION_OPT)) {
+            trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
         storeBatchOperation(trackingRecord.getDAO(context).getBatchCreate(trackingRecord));
     }
@@ -63,8 +63,8 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
     @Override
     protected void validateArguments() throws NullPointerException {
         Preconditions.checkArgument(arguments.containsKey(PROJECT_UUID)
-                                    && arguments.containsKey(START_DATE)
-                                    && arguments.containsKey(END_DATE));
+                && arguments.containsKey(START_DATE)
+                && arguments.containsKey(END_DATE));
     }
 
     protected void onPostExecute(Long result) {

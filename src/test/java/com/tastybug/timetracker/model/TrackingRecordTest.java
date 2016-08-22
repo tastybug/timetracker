@@ -32,11 +32,13 @@ public class TrackingRecordTest {
     DAOFactory daoFactory = mock(DAOFactory.class);
     TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
 
-    @Before public void setup() {
+    @Before
+    public void setup() {
         when(daoFactory.getDao(eq(TrackingRecord.class), isA(Context.class))).thenReturn(trackingRecordDAO);
     }
 
-    @Test public void canStartATrackingRecordAndStopItLater() {
+    @Test
+    public void canStartATrackingRecordAndStopItLater() {
         // given:
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.getStart().isPresent());
@@ -57,7 +59,8 @@ public class TrackingRecordTest {
         assertTrue(trackingRecord.getEnd().isPresent());
     }
 
-    @Test public void canSetDescriptionAtTrackingRecord() {
+    @Test
+    public void canSetDescriptionAtTrackingRecord() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.getDescription().isPresent());
@@ -120,7 +123,8 @@ public class TrackingRecordTest {
         new TrackingRecord().setEnd(Optional.<Date>absent());
     }
 
-    @Test public void canTellIfIsRunningOrFinished() {
+    @Test
+    public void canTellIfIsRunningOrFinished() {
         // given:
         TrackingRecord trackingRecord;
 
@@ -146,7 +150,8 @@ public class TrackingRecordTest {
         assertTrue(trackingRecord.isFinished());
     }
 
-    @Test public void canJodaDurationWhenRunningOrFinished() {
+    @Test
+    public void canJodaDurationWhenRunningOrFinished() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.toDuration().isPresent());
@@ -164,7 +169,8 @@ public class TrackingRecordTest {
         assertTrue(trackingRecord.toDuration().isPresent());
     }
 
-    @Test public void anEmptyDescriptionIsLikeANullDescription() {
+    @Test
+    public void anEmptyDescriptionIsLikeANullDescription() {
         // given
         TrackingRecord record = new TrackingRecord();
         record.setDescription(Optional.of(""));
@@ -173,7 +179,8 @@ public class TrackingRecordTest {
         assertFalse(record.getDescription().isPresent());
     }
 
-    @Test public void canTellWhetherItsVeryShort() {
+    @Test
+    public void canTellWhetherItsVeryShort() {
         // given
         TrackingRecord record = new TrackingRecord();
 
@@ -181,19 +188,19 @@ public class TrackingRecordTest {
         assertFalse(record.isVeryShort());
 
         // when
-        record.setStart(Optional.of(new LocalDateTime(2016,12,24,12,0,0).toDate()));
+        record.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate()));
 
         // expect: even when not finished yet, it counts as very short
         assertTrue(record.isVeryShort());
 
         // when: its very short
-        record.setEnd(Optional.of(new LocalDateTime(2016,12,24,12,TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate()));
+        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS, 0).toDate()));
 
         // expect
         assertTrue(record.isVeryShort());
 
         // when: its not very short
-        record.setEnd(Optional.of(new LocalDateTime(2016,12,24,12,1+TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS,0).toDate()));
+        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, 1 + TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS, 0).toDate()));
 
         // expect
         assertFalse(record.isVeryShort());

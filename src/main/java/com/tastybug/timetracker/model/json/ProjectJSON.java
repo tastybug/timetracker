@@ -28,7 +28,7 @@ public class ProjectJSON extends JSONObject {
      *
      * @throws JSONException
      * @throws NullPointerException if the caller didn't properly assemble the project by leaving
-     * out the TrackingConfiguration and/or TrackingRecord list
+     *                              out the TrackingConfiguration and/or TrackingRecord list
      */
     protected ProjectJSON(Project project) throws JSONException {
         Preconditions.checkNotNull(project.getTrackingConfiguration());

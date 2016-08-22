@@ -46,10 +46,11 @@ public class TrackingRecordDAOTest {
         when(context.getContentResolver()).thenReturn(resolver);
     }
 
-    @Test public void canGetExistingTrackingRecordById() {
+    @Test
+    public void canGetExistingTrackingRecordById() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2");
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -63,10 +64,11 @@ public class TrackingRecordDAOTest {
         assertNotNull(tf.getEnd());
     }
 
-    @Test public void gettingNonexistingProjectByIdYieldsNull() {
+    @Test
+    public void gettingNonexistingProjectByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -80,7 +82,7 @@ public class TrackingRecordDAOTest {
     public void malformedStartDateStringLeadsToException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -91,17 +93,18 @@ public class TrackingRecordDAOTest {
     public void malformedEndDateStringLeadsToException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
         trackingRecordDAO.get("1");
     }
 
-    @Test public void getAllWorksForExistingTrackingRecords() {
+    @Test
+    public void getAllWorksForExistingTrackingRecords() {
         // given
         Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(aCursorWith2TrackingRecords);
 
         // when
@@ -111,10 +114,11 @@ public class TrackingRecordDAOTest {
         assertEquals(2, trackingRecords.size());
     }
 
-    @Test public void getAllReturnsEmptyListForLackOfEntities() {
+    @Test
+    public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(noProjects);
 
         // when
@@ -124,10 +128,11 @@ public class TrackingRecordDAOTest {
         assertEquals(0, trackingRecords.size());
     }
 
-    @Test public void getLatestByStartDateReturnsFirstEntry() {
+    @Test
+    public void getLatestByStartDateReturnsFirstEntry() {
         // given
         Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(aCursorWith2TrackingRecords);
 
         // when
@@ -137,10 +142,11 @@ public class TrackingRecordDAOTest {
         assertEquals("uuid1", recordOptional.get().getUuid());
     }
 
-    @Test public void getLatestByStartDateReturnsEmptyOptionalOnNoTrackingRecords() {
+    @Test
+    public void getLatestByStartDateReturnsEmptyOptionalOnNoTrackingRecords() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(noProjects);
 
         // when
@@ -150,7 +156,8 @@ public class TrackingRecordDAOTest {
         assertFalse(recordOptional.isPresent());
     }
 
-    @Test public void canCreateTrackingRecord() {
+    @Test
+    public void canCreateTrackingRecord() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
 
@@ -161,7 +168,8 @@ public class TrackingRecordDAOTest {
         assertNotNull(trackingRecord.getUuid());
     }
 
-    @Test public void canUpdateTrackingRecord() {
+    @Test
+    public void canUpdateTrackingRecord() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
@@ -173,7 +181,8 @@ public class TrackingRecordDAOTest {
         assertEquals(1, updateCount);
     }
 
-    @Test public void canDeleteTrackingRecord() {
+    @Test
+    public void canDeleteTrackingRecord() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
@@ -185,7 +194,8 @@ public class TrackingRecordDAOTest {
         assertTrue(success);
     }
 
-    @Test public void deleteReturnsFalseWhenNotSuccessful() {
+    @Test
+    public void deleteReturnsFalseWhenNotSuccessful() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
@@ -197,12 +207,14 @@ public class TrackingRecordDAOTest {
         assertFalse(success);
     }
 
-    @Test public void providesCorrectPrimaryKeyColumn() {
+    @Test
+    public void providesCorrectPrimaryKeyColumn() {
         // expect
         assertEquals(TrackingRecordDAO.ID_COLUMN, trackingRecordDAO.getPKColumn());
     }
 
-    @Test public void knowsAllColumns() {
+    @Test
+    public void knowsAllColumns() {
         // expect
         assertEquals(5, trackingRecordDAO.getColumns().length);
         assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.ID_COLUMN));
@@ -216,7 +228,7 @@ public class TrackingRecordDAOTest {
     public void gettingAllTrackinRecordsByNullProjectUuidYieldsException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
         when(cursor.moveToNext()).thenReturn(true);
 
@@ -224,10 +236,11 @@ public class TrackingRecordDAOTest {
         trackingRecordDAO.getByProjectUuid(null);
     }
 
-    @Test public void canGetTrackingRecordsByProjectUuid() {
+    @Test
+    public void canGetTrackingRecordsByProjectUuid() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2");
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
         when(cursor.moveToNext()).thenReturn(true, false);
 
@@ -242,10 +255,11 @@ public class TrackingRecordDAOTest {
         assertNotNull(trackingRecords.get(0).getEnd());
     }
 
-    @Test public void gettingTrackingRecordsByUnknownProjectUuidYieldsEmptyList() {
+    @Test
+    public void gettingTrackingRecordsByUnknownProjectUuidYieldsEmptyList() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when

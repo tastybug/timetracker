@@ -37,7 +37,7 @@ public class CheckInTask extends AbstractAsyncTask {
     @Override
     protected void performBackgroundStuff(Bundle args) {
         String projectUuid = arguments.getString(PROJECT_UUID);
-        if(new TrackingRecordDAO(context).getRunning(projectUuid).isPresent()) {
+        if (new TrackingRecordDAO(context).getRunning(projectUuid).isPresent()) {
             throw new IllegalArgumentException("Project is already tracking!");
         }
 

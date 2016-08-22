@@ -38,14 +38,16 @@ public class ProjectDAOTest {
     // test subject
     ProjectDAO projectDAO = new ProjectDAO(context);
 
-    @Before public void setup() {
+    @Before
+    public void setup() {
         when(context.getContentResolver()).thenReturn(resolver);
     }
 
-    @Test public void canGetExistingProjectById() {
+    @Test
+    public void canGetExistingProjectById() {
         // given
         Cursor cursor = aProjectCursor("1", "title", "desc");
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -58,10 +60,11 @@ public class ProjectDAOTest {
         assertEquals("desc", project.getDescription().get());
     }
 
-    @Test public void gettingNonexistingProjectByIdYieldsNull() {
+    @Test
+    public void gettingNonexistingProjectByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
         // when
@@ -71,10 +74,11 @@ public class ProjectDAOTest {
         assertNull(project);
     }
 
-    @Test public void getAllWorksForExistingProjects() {
+    @Test
+    public void getAllWorksForExistingProjects() {
         // given
         Cursor multipleProjects = aCursorWith2Projects();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(multipleProjects);
 
         // when
@@ -84,10 +88,11 @@ public class ProjectDAOTest {
         assertEquals(2, projects.size());
     }
 
-    @Test public void getAllReturnsEmptyListForLackOfEntities() {
+    @Test
+    public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class),any(String.class),any(String[].class),any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(noProjects);
 
         // when
@@ -97,7 +102,8 @@ public class ProjectDAOTest {
         assertEquals(0, projects.size());
     }
 
-    @Test public void canCreateProject() {
+    @Test
+    public void canCreateProject() {
         // given
         Project project = new Project("title");
 
@@ -108,7 +114,8 @@ public class ProjectDAOTest {
         assertNotNull(project.getUuid());
     }
 
-    @Test public void canUpdateProject() {
+    @Test
+    public void canUpdateProject() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
@@ -120,7 +127,8 @@ public class ProjectDAOTest {
         assertEquals(1, updateCount);
     }
 
-    @Test public void canDeleteProject() {
+    @Test
+    public void canDeleteProject() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
@@ -132,7 +140,8 @@ public class ProjectDAOTest {
         assertTrue(success);
     }
 
-    @Test public void canDeleteProjectByUuid() {
+    @Test
+    public void canDeleteProjectByUuid() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
@@ -144,7 +153,8 @@ public class ProjectDAOTest {
         assertTrue(success);
     }
 
-    @Test public void deleteReturnsFalseWhenNotSuccessful() {
+    @Test
+    public void deleteReturnsFalseWhenNotSuccessful() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent());
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
@@ -156,12 +166,14 @@ public class ProjectDAOTest {
         assertFalse(success);
     }
 
-    @Test public void providesCorrectPrimaryKeyColumn() {
+    @Test
+    public void providesCorrectPrimaryKeyColumn() {
         // expect
         assertEquals(ProjectDAO.UUID_COLUMN, projectDAO.getPKColumn());
     }
 
-    @Test public void knowsAllColumns() {
+    @Test
+    public void knowsAllColumns() {
         // expect
         assertEquals(3, projectDAO.getColumns().length);
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.UUID_COLUMN));

@@ -80,7 +80,7 @@ public class TrackingControlPanelUI {
 
     private Runnable updateUITask = new Runnable() {
         public void run() {
-            if(TrackingControlPanelUI.this.ongoingTrackingRecordOpt.isPresent()) {
+            if (TrackingControlPanelUI.this.ongoingTrackingRecordOpt.isPresent()) {
                 visualizeOngoingTracking(TrackingControlPanelUI.this.ongoingTrackingRecordOpt);
             }
             uiUpdateHandler.postDelayed(updateUITask, 1000);

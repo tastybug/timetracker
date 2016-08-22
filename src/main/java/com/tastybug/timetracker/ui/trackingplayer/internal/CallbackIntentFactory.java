@@ -10,7 +10,8 @@ import com.tastybug.timetracker.ui.trackingplayer.CallbackService;
 
 public class CallbackIntentFactory {
 
-    private CallbackIntentFactory() {}
+    private CallbackIntentFactory() {
+    }
 
 
     public static PendingIntent createOpenProjectDetailsActivityIntent(Context context, Project project) {
@@ -34,6 +35,7 @@ public class CallbackIntentFactory {
     public static PendingIntent createUnpauseTrackingIntent(Context context, Project currentProject) {
         return createCallbackIntent(context, currentProject.getUuid(), CallbackService.UNPAUSE_TRACKING_PROJECT);
     }
+
     public static PendingIntent createDismissPausedIntent(Context context, Project affectedProject) {
         return createCallbackIntent(context, affectedProject.getUuid(), CallbackService.DISMISS_PAUSED_PROJECT);
     }

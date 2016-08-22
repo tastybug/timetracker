@@ -48,7 +48,8 @@ public class ProjectTest {
         when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
     }
 
-    @Test public void canCreateProjectWithTitle() {
+    @Test
+    public void canCreateProjectWithTitle() {
         // when
         Project project = new Project("project title");
 
@@ -57,7 +58,8 @@ public class ProjectTest {
         assertEquals("project title", project.getTitle());
     }
 
-    @Test public void noProjectDescriptionIsHandledWell() {
+    @Test
+    public void noProjectDescriptionIsHandledWell() {
         // given
         Project project = new Project("project title");
 
@@ -119,7 +121,8 @@ public class ProjectTest {
         project.getTrackingRecords(null);
     }
 
-    @Test public void canLazilyGetTrackingRecords() {
+    @Test
+    public void canLazilyGetTrackingRecords() {
         // given
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);
@@ -140,7 +143,8 @@ public class ProjectTest {
         project.getTrackingConfiguration(null);
     }
 
-    @Test public void canLazilyGetTrackingConfiguration() {
+    @Test
+    public void canLazilyGetTrackingConfiguration() {
         // given
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);

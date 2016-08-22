@@ -34,10 +34,10 @@ public class TrackingRecordModificationFragment extends Fragment {
         View rootView = ui.inflateWidgets(inflater, container, getFragmentManager());
 
         if (savedInstanceState != null) {
-            ui.renderStartDate(Optional.fromNullable((Date)savedInstanceState.getSerializable(START_DATE)));
-            ui.renderStartTime(Optional.fromNullable((Date)savedInstanceState.getSerializable(START_TIME)));
-            ui.renderEndDate(Optional.fromNullable((Date)savedInstanceState.getSerializable(END_DATE)));
-            ui.renderEndTime(Optional.fromNullable((Date)savedInstanceState.getSerializable(END_TIME)));
+            ui.renderStartDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(START_DATE)));
+            ui.renderStartTime(Optional.fromNullable((Date) savedInstanceState.getSerializable(START_TIME)));
+            ui.renderEndDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(END_DATE)));
+            ui.renderEndTime(Optional.fromNullable((Date) savedInstanceState.getSerializable(END_TIME)));
             ui.renderDescription(Optional.fromNullable(savedInstanceState.getString(DESCRIPTION)));
         }
         return rootView;
@@ -87,7 +87,7 @@ public class TrackingRecordModificationFragment extends Fragment {
     private boolean validateForRunningTrackingRecord() {
         Optional<Date> startDate = ui.getAggregatedStartDate(true);
         Optional<Date> endDate = ui.getAggregatedEndDate(false);
-        if(startDate.isPresent() && endDate.isPresent()) {
+        if (startDate.isPresent() && endDate.isPresent()) {
             return ensureEndDateIsAfterStartDate(startDate.get(), endDate.get());
         } else {
             return startDate.isPresent();

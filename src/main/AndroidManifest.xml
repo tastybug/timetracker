@@ -1,40 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.tastybug.timetracker">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tastybug.timetracker">
 
-    <application android:name=".infrastructure.runtime.Application" android:theme="@style/Theme.AppCompat.DayNight" android:allowBackup="true" android:backupAgent=".infrastructure.backup.BackupAgentFacade" android:icon="@mipmap/ic_launcher" android:label="@string/app_name">
-        <activity android:name=".ui.dashboard.ProjectsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan">
+    <application
+        android:name=".infrastructure.runtime.Application"
+        android:theme="@style/Theme.AppCompat.DayNight"
+        android:allowBackup="true"
+        android:backupAgent=".infrastructure.backup.BackupAgentFacade"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name">
+        <activity
+            android:name=".ui.dashboard.ProjectsActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.projectdetails.ProjectDetailsActivity" android:launchMode="singleTop" android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity android:name=".ui.projectconfiguration.ProjectConfigurationActivity" android:noHistory="true"/>
-        <activity android:name=".ui.settings.SettingsActivity" android:noHistory="true"/>
-        <activity android:name=".ui.trackingrecordmodification.TrackingRecordModificationActivity" android:launchMode="singleTop"  android:noHistory="true" android:windowSoftInputMode="stateHidden|adjustPan">
+        <activity
+            android:name=".ui.projectdetails.ProjectDetailsActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".ui.projectconfiguration.ProjectConfigurationActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".ui.trackingrecordmodification.TrackingRecordModificationActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter> <!-- this allows the tracking player notification to open this activity from 'outside' -->
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="*/*"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
 
-        <provider android:authorities="com.tastybug.timetracker" android:exported="false" android:multiprocess="true" android:name=".infrastructure.db.DatabaseContentProvider" android:launchMode="singleTask"/>
+        <provider
+            android:authorities="com.tastybug.timetracker"
+            android:exported="false"
+            android:multiprocess="true"
+            android:name=".infrastructure.db.DatabaseContentProvider"
+            android:launchMode="singleTask" />
 
-        <service android:name=".ui.trackingplayer.LifecycleService" android:exported="false"/>
-        <service android:name=".ui.trackingplayer.CallbackService" android:exported="false"/>
-        <service android:name=".infrastructure.backup.DataChangeListenerBackgroundService" android:exported="false"/>
+        <service
+            android:name=".ui.trackingplayer.LifecycleService"
+            android:exported="false" />
+        <service
+            android:name=".ui.trackingplayer.CallbackService"
+            android:exported="false" />
+        <service
+            android:name=".infrastructure.backup.DataChangeListenerBackgroundService"
+            android:exported="false" />
 
         <!--database stuff-->
-        <meta-data android:name="database.schema.version.current" android:value="1"/>
-        <meta-data android:name="database.file.name" android:value="timetracker.database"/>
-        <meta-data android:name="database.scripts.folder" android:value="sql"/>
-        <meta-data android:name="database.scripts.prefix.model" android:value="ddl_"/>
-        <meta-data android:name="database.scripts.prefix.data" android:value="dml_"/>
+        <meta-data
+            android:name="database.schema.version.current"
+            android:value="1" />
+        <meta-data
+            android:name="database.file.name"
+            android:value="timetracker.database" />
+        <meta-data
+            android:name="database.scripts.folder"
+            android:value="sql" />
+        <meta-data
+            android:name="database.scripts.prefix.model"
+            android:value="ddl_" />
+        <meta-data
+            android:name="database.scripts.prefix.data"
+            android:value="dml_" />
 
         <!-- is bound to package name: com.tastybug.timetracker! -->
-        <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAI4NY7lBYy4bsP2CCmClPU0vxESyjDojQysxElAw" />
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAI4NY7lBYy4bsP2CCmClPU0vxESyjDojQysxElAw" />
 
     </application>
 </manifest>

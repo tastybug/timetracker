@@ -88,6 +88,6 @@ public class TrackingRecordView extends LinearLayout {
     private boolean isCompletedOnSameDay(TrackingRecord trackingRecord) {
         return trackingRecord.isFinished()
                 && new LocalDate(trackingRecord.getStart().get())
-                    .isEqual(new LocalDate(trackingRecord.getEnd().get()));
+                .isEqual(new LocalDate(trackingRecord.getEnd().get()));
     }
 }

@@ -88,15 +88,15 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         Project project = projectDAO.get(args.getString(PROJECT_UUID)).get();
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
 
-        if(arguments.containsKey(PROJECT_TITLE)) {
+        if (arguments.containsKey(PROJECT_TITLE)) {
             project.setTitle(arguments.getString(PROJECT_TITLE));
         }
 
-        if(arguments.containsKey(PROJECT_DESCRIPTION)) {
+        if (arguments.containsKey(PROJECT_DESCRIPTION)) {
             project.setDescription(Optional.fromNullable(arguments.getString(PROJECT_DESCRIPTION)));
         }
 
-        if(arguments.containsKey(HOUR_LIMIT)) {
+        if (arguments.containsKey(HOUR_LIMIT)) {
             trackingConfiguration.setHourLimit(Optional.fromNullable((Integer) arguments.getSerializable(HOUR_LIMIT)));
         }
 
@@ -117,7 +117,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
             trackingConfiguration.setPromptForDescription(arguments.getBoolean(PROMPT_FOR_DESCRIPTION, false));
         }
 
-        if(arguments.containsKey(ROUNDING_STRATEGY)) {
+        if (arguments.containsKey(ROUNDING_STRATEGY)) {
             trackingConfiguration.setRoundingStrategy((RoundingFactory.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
         }
 

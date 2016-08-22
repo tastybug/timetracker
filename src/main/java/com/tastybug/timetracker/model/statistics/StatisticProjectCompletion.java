@@ -22,7 +22,7 @@ public class StatisticProjectCompletion {
 
     public Optional<Double> getCompletionPercent() {
         if (trackingConfiguration.getHourLimit().isPresent()) {
-            double completionPercent = currentDuration.getStandardSeconds()/(trackingConfiguration.getHourLimit().get()*60*60/100);
+            double completionPercent = currentDuration.getStandardSeconds() / (trackingConfiguration.getHourLimit().get() * 60 * 60 / 100);
             return Optional.of(completionPercent);
         } else {
             return Optional.absent();
@@ -36,7 +36,7 @@ public class StatisticProjectCompletion {
 
     public Optional<Duration> getRemainingDuration() {
         Optional<Duration> remainderOpt;
-        if(trackingConfiguration.getHourLimit().isPresent()) {
+        if (trackingConfiguration.getHourLimit().isPresent()) {
             if (isOverbooked()) {
                 // overbooked project
                 remainderOpt = Optional.of(Duration.millis(0));

@@ -17,7 +17,8 @@ public class BackupDateAccessor {
 
     private static final String TAG = BackupDateAccessor.class.getSimpleName();
 
-    public BackupDateAccessor() {}
+    public BackupDateAccessor() {
+    }
 
     public Optional<Date> readLastBackupDate(ParcelFileDescriptor state) {
         FileInputStream instream = null;
@@ -34,7 +35,8 @@ public class BackupDateAccessor {
                 if (instream != null) {
                     instream.close();
                 }
-            } catch (IOException ioe2) {}
+            } catch (IOException ioe2) {
+            }
         }
     }
 
@@ -57,7 +59,8 @@ public class BackupDateAccessor {
                 if (outstream != null) {
                     outstream.close();
                 }
-            } catch (IOException ioe2) {}
+            } catch (IOException ioe2) {
+            }
         }
     }
 }

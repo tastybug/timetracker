@@ -149,7 +149,7 @@ public class ProjectStatisticsUI {
     private void renderProjectTimeFrameProgressColoring(StatisticProjectExpiration statistic) {
         if (statistic.getExpirationPercent().get() > 100) {
             timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.RED));
-        } if (statistic.getExpirationPercent().get() > 80) {
+        } else if (statistic.getExpirationPercent().get() > 80) {
             timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.YELLOW));
         } else {
             timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.GREEN));

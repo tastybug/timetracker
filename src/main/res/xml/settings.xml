@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="@string/backup_preference_group_title" >
+    <PreferenceCategory android:title="@string/backup_preference_group_title">
 
         <CheckBoxPreference
             android:key="@string/backup_enabled_preference_key"
             android:defaultValue="false"
             android:title="@string/backup_enabled_preference_title"
-            android:summary="@string/backup_enabled_preference_description"/>
+            android:summary="@string/backup_enabled_preference_description" />
 
     </PreferenceCategory>
 
-    <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title" >
+    <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title">
 
-        <PreferenceCategory android:title="@string/libraries_group_title" >
+        <PreferenceCategory android:title="@string/libraries_group_title">
 
-            <Preference android:title="@string/guava_library_title" >
-                <intent android:action="android.intent.action.VIEW"
+            <Preference android:title="@string/guava_library_title">
+                <intent
+                    android:action="android.intent.action.VIEW"
                     android:data="https://github.com/google/guava/blob/master/COPYING" />
             </Preference>
-            <Preference android:title="@string/otto_library_title" >
-                <intent android:action="android.intent.action.VIEW"
+            <Preference android:title="@string/otto_library_title">
+                <intent
+                    android:action="android.intent.action.VIEW"
                     android:data="http://square.github.io/otto/#license" />
             </Preference>
-            <Preference android:title="@string/joda_library_title" >
-                <intent android:action="android.intent.action.VIEW"
+            <Preference android:title="@string/joda_library_title">
+                <intent
+                    android:action="android.intent.action.VIEW"
                     android:data="http://www.joda.org/joda-time/license.html" />
             </Preference>
 
         </PreferenceCategory>
 
-        <PreferenceCategory android:title="@string/trademarks_group_title" >
+        <PreferenceCategory android:title="@string/trademarks_group_title">
 
-            <Preference android:title="@string/trademark_android_title"
-                android:summary="@string/trademark_android_summary"/>
-            <Preference android:title="@string/trademarks_other_title"
-                android:summary="@string/trademarks_other_summary"/>
+            <Preference
+                android:title="@string/trademark_android_title"
+                android:summary="@string/trademark_android_summary" />
+            <Preference
+                android:title="@string/trademarks_other_title"
+                android:summary="@string/trademarks_other_summary" />
 
         </PreferenceCategory>
 

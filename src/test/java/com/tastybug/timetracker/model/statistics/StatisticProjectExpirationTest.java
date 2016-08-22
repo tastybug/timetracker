@@ -24,7 +24,8 @@ public class StatisticProjectExpirationTest {
         new StatisticProjectExpiration(new TrackingConfiguration("project-uuid"), null);
     }
 
-    @Test public void projectWithoutEnddateHasNoExpiration() {
+    @Test
+    public void projectWithoutEnddateHasNoExpiration() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new Date()));
@@ -41,7 +42,8 @@ public class StatisticProjectExpirationTest {
         assertFalse(statisticProjectExpiration.isExpired());
     }
 
-    @Test public void projectWithoutStartdateHasNoExpiration() {
+    @Test
+    public void projectWithoutStartdateHasNoExpiration() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.<Date>absent());
@@ -58,7 +60,8 @@ public class StatisticProjectExpirationTest {
         assertFalse(statisticProjectExpiration.isExpired());
     }
 
-    @Test public void canCalculateExpirationPercentWithHourPrecision() {
+    @Test
+    public void canCalculateExpirationPercentWithHourPrecision() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
@@ -70,10 +73,11 @@ public class StatisticProjectExpirationTest {
         Optional<Integer> expirationPercentOpt = statisticProjectExpiration.getExpirationPercent();
 
         // then: 20h out of 24h equals 16,666% (=16) expiration
-        assertEquals(16, (int)expirationPercentOpt.get());
+        assertEquals(16, (int) expirationPercentOpt.get());
     }
 
-    @Test public void aTimeFrameStartingInTheFutureHasZeroExpiration() {
+    @Test
+    public void aTimeFrameStartingInTheFutureHasZeroExpiration() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
@@ -85,13 +89,14 @@ public class StatisticProjectExpirationTest {
         Optional<Integer> expirationPercentOpt = statisticProjectExpiration.getExpirationPercent();
 
         // then
-        assertEquals(0, (int)expirationPercentOpt.get());
+        assertEquals(0, (int) expirationPercentOpt.get());
 
         // and
         assertFalse(statisticProjectExpiration.isExpired());
     }
 
-    @Test public void aTimeFrameFromThePastHas100PercentExpiration() {
+    @Test
+    public void aTimeFrameFromThePastHas100PercentExpiration() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
@@ -103,13 +108,14 @@ public class StatisticProjectExpirationTest {
         Optional<Integer> expirationPercentOpt = statisticProjectExpiration.getExpirationPercent();
 
         // then
-        assertEquals(100, (int)expirationPercentOpt.get());
+        assertEquals(100, (int) expirationPercentOpt.get());
 
         // and
         assertTrue(statisticProjectExpiration.isExpired());
     }
 
-    @Test public void canCalculateRemainingDaysWhenTimeFrameHasNoYetStarted() {
+    @Test
+    public void canCalculateRemainingDaysWhenTimeFrameHasNoYetStarted() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
@@ -121,10 +127,11 @@ public class StatisticProjectExpirationTest {
         Optional<Long> remainingDays = statisticProjectExpiration.getRemainingDays();
 
         // then
-        assertEquals(6, (long)remainingDays.get());
+        assertEquals(6, (long) remainingDays.get());
     }
 
-    @Test public void canCalculateRemainingDaysWhenTimeFrameHasStarted() {
+    @Test
+    public void canCalculateRemainingDaysWhenTimeFrameHasStarted() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
@@ -136,10 +143,11 @@ public class StatisticProjectExpirationTest {
         Optional<Long> remainingDays = statisticProjectExpiration.getRemainingDays();
 
         // then
-        assertEquals(5, (long)remainingDays.get());
+        assertEquals(5, (long) remainingDays.get());
     }
 
-    @Test public void canCalculateRemainingDaysWhenTimeFrameLiesInPast() {
+    @Test
+    public void canCalculateRemainingDaysWhenTimeFrameLiesInPast() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));
@@ -151,10 +159,11 @@ public class StatisticProjectExpirationTest {
         Optional<Long> remainingDays = statisticProjectExpiration.getRemainingDays();
 
         // then
-        assertEquals(0, (long)remainingDays.get());
+        assertEquals(0, (long) remainingDays.get());
     }
 
-    @Test public void remainingDaysWithoutAnEndDateIsNotAvailable() {
+    @Test
+    public void remainingDaysWithoutAnEndDateIsNotAvailable() {
         // given
         TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
         configuration.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 8, 0).toDate()));

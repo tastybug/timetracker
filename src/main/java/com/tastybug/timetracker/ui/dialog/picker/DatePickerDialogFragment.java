@@ -29,7 +29,8 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     private String topic;
     private boolean canReturnNone = true;
 
-    public DatePickerDialogFragment() {}
+    public DatePickerDialogFragment() {
+    }
 
     public void setTopic(String topic) {
         this.topic = topic;
@@ -56,7 +57,7 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
         DatePickerDialog dialog = new DatePickerDialog(getActivity(),
                 this,
                 presetDate.getYear(),
-                presetDate.getMonthOfYear()-1,
+                presetDate.getMonthOfYear() - 1,
                 presetDate.getDayOfMonth());
         if (canReturnNone) {
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.set_no_date), new DialogInterface.OnClickListener() {
@@ -81,7 +82,7 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        ottoProvider.getSharedBus().post(new DatePickedEvent(topic, new DateTime(year, month+1, day, 0, 0)));
+        ottoProvider.getSharedBus().post(new DatePickedEvent(topic, new DateTime(year, month + 1, day, 0, 0)));
     }
 
     public static class DatePickedEvent implements OttoEvent {

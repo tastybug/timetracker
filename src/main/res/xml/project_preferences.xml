@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="@string/general_project__preference_group_title" >
+    <PreferenceCategory android:title="@string/general_project__preference_group_title">
 
         <EditTextPreference
             android:key="@string/project_title_preference_key"
@@ -17,8 +16,7 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/expiration_and_duration_limits_preference_group_title" >
+    <PreferenceCategory android:title="@string/expiration_and_duration_limits_preference_group_title">
 
         <com.tastybug.timetracker.ui.projectconfiguration.HourLimitPickerDialog
             android:id="@+id/hour_limit_picker"
@@ -41,8 +39,7 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory
-        android:title="@string/after_tracking_preference_group_title" >
+    <PreferenceCategory android:title="@string/after_tracking_preference_group_title">
 
         <ListPreference
             android:key="@string/tracking_configuration_rounding_strategy_preference_key"

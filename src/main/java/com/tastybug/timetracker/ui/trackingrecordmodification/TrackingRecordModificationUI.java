@@ -112,7 +112,7 @@ public class TrackingRecordModificationUI {
     }
 
     public void renderStartDate(Optional<Date> dateOptional) {
-        if(dateOptional.isPresent()) {
+        if (dateOptional.isPresent()) {
             startDateEditText.setText(context.getString(R.string.from_X, Formatter.date().format(dateOptional.get())));
             startDateEditText.setTag(dateOptional.get());
         } else {
@@ -122,7 +122,7 @@ public class TrackingRecordModificationUI {
     }
 
     public void renderStartTime(Optional<Date> dateOptional) {
-        if(dateOptional.isPresent()) {
+        if (dateOptional.isPresent()) {
             startTimeEditText.setText(Formatter.time().format(dateOptional.get()));
             startTimeEditText.setTag(dateOptional.get());
         } else {
@@ -132,7 +132,7 @@ public class TrackingRecordModificationUI {
     }
 
     public void renderEndDate(Optional<Date> dateOptional) {
-        if(dateOptional.isPresent()) {
+        if (dateOptional.isPresent()) {
             endDateEditText.setText(context.getString(R.string.until_X, Formatter.date().format(dateOptional.get())));
             endDateEditText.setTag(dateOptional.get());
         } else {
@@ -142,7 +142,7 @@ public class TrackingRecordModificationUI {
     }
 
     public void renderEndTime(Optional<Date> dateOptional) {
-        if(dateOptional.isPresent()) {
+        if (dateOptional.isPresent()) {
             endTimeEditText.setText(Formatter.time().format(dateOptional.get()));
             endTimeEditText.setTag(dateOptional.get());
         } else {
@@ -168,7 +168,7 @@ public class TrackingRecordModificationUI {
     }
 
     public Optional<Date> getStartTimeFromWidget(boolean blame) {
-        Optional<Date> dateOptional =  Optional.fromNullable((Date) startTimeEditText.getTag());
+        Optional<Date> dateOptional = Optional.fromNullable((Date) startTimeEditText.getTag());
         if (blame) {
             startTimeEditText.setError(dateOptional.isPresent()
                     ? null
@@ -188,7 +188,7 @@ public class TrackingRecordModificationUI {
     }
 
     public Optional<Date> getEndTimeFromWidget(boolean blame) {
-        Optional<Date> dateOptional =  Optional.fromNullable((Date) endTimeEditText.getTag());
+        Optional<Date> dateOptional = Optional.fromNullable((Date) endTimeEditText.getTag());
         if (blame) {
             endTimeEditText.setError(dateOptional.isPresent()
                     ? null

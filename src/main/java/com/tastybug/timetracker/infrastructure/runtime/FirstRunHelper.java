@@ -13,11 +13,11 @@ public class FirstRunHelper {
         this.context = context;
     }
 
-    public boolean isFirstRun () {
+    public boolean isFirstRun() {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(FIRST_RUN_KEY, true);
     }
 
-    public void declareFirstRunConsumed () {
+    public void declareFirstRunConsumed() {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(FIRST_RUN_KEY, false).apply();
     }
 

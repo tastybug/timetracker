@@ -114,25 +114,25 @@ public class ProjectListFragment extends ListFragment {
         @SuppressWarnings("unused")
         @Subscribe
         public void handleTrackingCreated(CreatedTrackingRecordEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
         }
 
         @SuppressWarnings("unused")
         @Subscribe
         public void handleCheckIn(CheckInEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
         }
 
         @SuppressWarnings("unused")
         @Subscribe
         public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
         }
 
         @SuppressWarnings("unused")
         @Subscribe
         public void handleCheckOut(CheckOutEvent event) {
-            ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
+            ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
         }
     }
 

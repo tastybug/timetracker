@@ -5,7 +5,7 @@ import android.util.Log;
 public class ConditionalLog {
 
     public static void logError(String tag, String message) {
-        log(Log.ERROR, tag,message);
+        log(Log.ERROR, tag, message);
     }
 
     public static void logError(String tag, String message, Exception e) {
@@ -16,21 +16,21 @@ public class ConditionalLog {
     }
 
     public static void logWarn(String tag, String message) {
-        log(Log.WARN, tag,message);
+        log(Log.WARN, tag, message);
     }
 
     public static void logInfo(String tag, String message) {
-        log(Log.INFO, tag,message);
+        log(Log.INFO, tag, message);
     }
 
     public static void logDebug(String tag, String message) {
-        log(Log.DEBUG, tag,message);
+        log(Log.DEBUG, tag, message);
     }
 
     private static void log(int level, String tag, String message) {
         String validatedTag = getTagWithValidLength(tag);
         if (Log.isLoggable(validatedTag, level)) {
-            switch(level) {
+            switch (level) {
                 case Log.DEBUG:
                     Log.d(validatedTag, message);
                     break;

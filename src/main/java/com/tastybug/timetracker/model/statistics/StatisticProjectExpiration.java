@@ -48,7 +48,7 @@ public class StatisticProjectExpiration {
 
         int full = Hours.hoursBetween(new DateTime(startDate.get()), new DateTime(endDate.get())).getHours();
         int exp = Hours.hoursBetween(new DateTime(startDate.get()), new DateTime(now)).getHours();
-        return Optional.of((int)(exp/(full/100d)));
+        return Optional.of((int) (exp / (full / 100d)));
     }
 
     private Optional<Long> calculateRemainingDays() {

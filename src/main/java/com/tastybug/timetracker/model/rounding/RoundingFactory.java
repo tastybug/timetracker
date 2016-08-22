@@ -29,7 +29,8 @@ public class RoundingFactory {
         }
     }
 
-    public RoundingFactory() {}
+    public RoundingFactory() {
+    }
 
     public RoundingStrategy getStrategy(Strategy strategy) {
         return strategy.getStrategy();

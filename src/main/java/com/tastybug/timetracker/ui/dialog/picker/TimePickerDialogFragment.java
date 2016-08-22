@@ -30,7 +30,8 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
     private String topic;
     private boolean canReturnNone = true;
 
-    public TimePickerDialogFragment() {}
+    public TimePickerDialogFragment() {
+    }
 
     public void setTopic(String topic) {
         this.topic = topic;

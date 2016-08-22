@@ -39,7 +39,7 @@ public class ProjectCreationDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             existingTitle = (Optional<String>) savedInstanceState.getSerializable(TITLE_OPT);
         }
 
@@ -54,7 +54,7 @@ public class ProjectCreationDialog extends DialogFragment {
         return alertDialog;
     }
 
-    private void fixDialogButtonsDontDismiss(final AlertDialog alertDialog ) {
+    private void fixDialogButtonsDontDismiss(final AlertDialog alertDialog) {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
             public void onShow(DialogInterface dialog) {

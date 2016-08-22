@@ -9,17 +9,18 @@ import java.io.Serializable;
 
 public abstract class Entity implements Serializable {
 
-	protected DAOFactory daoFactory = new DAOFactory();
+    protected DAOFactory daoFactory = new DAOFactory();
 
-    public Entity() {}
+    public Entity() {
+    }
 
     public void setDAOFactory(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
-	public abstract String getUuid();
+    public abstract String getUuid();
 
-	public abstract void setUuid(String uuid);
+    public abstract void setUuid(String uuid);
 
     public EntityDAO getDAO(Context context) {
         return daoFactory.getDao(getClass(), context);

@@ -33,8 +33,8 @@ public class TrackingRecordListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        if(savedInstanceState != null) {
-            projectUuidOpt = (Optional<String>)savedInstanceState.getSerializable(PROJECT_UUID_OPT);
+        if (savedInstanceState != null) {
+            projectUuidOpt = (Optional<String>) savedInstanceState.getSerializable(PROJECT_UUID_OPT);
         }
     }
 
@@ -120,7 +120,7 @@ public class TrackingRecordListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(projectUuidOpt.isPresent()) {
+        if (projectUuidOpt.isPresent()) {
             showProject(projectUuidOpt.get());
         } else {
             showNoProject();
@@ -146,7 +146,7 @@ public class TrackingRecordListFragment extends ListFragment {
     private Runnable updateUITask = new Runnable() {
         public void run() {
             if (getListAdapter() != null) {
-                ((TrackingRecordListAdapter)getListAdapter()).notifyDataSetChanged();
+                ((TrackingRecordListAdapter) getListAdapter()).notifyDataSetChanged();
             }
             uiUpdateHandler.postDelayed(updateUITask, 1000);
         }

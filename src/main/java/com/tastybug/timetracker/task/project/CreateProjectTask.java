@@ -14,7 +14,7 @@ import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class CreateProjectTask extends AbstractAsyncTask {
 
-    private static final String PROJECT_TITLE       = "PROJECT_TITLE";
+    private static final String PROJECT_TITLE = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
 
 

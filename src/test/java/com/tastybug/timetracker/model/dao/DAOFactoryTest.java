@@ -19,7 +19,8 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class DAOFactoryTest {
 
-    @Test public void returnsAllExpectedDaos() {
+    @Test
+    public void returnsAllExpectedDaos() {
         // expect
         assertTrue(new DAOFactory().getDao(Project.class, mock(Context.class)) instanceof ProjectDAO);
         assertTrue(new DAOFactory().getDao(TrackingConfiguration.class, mock(Context.class)) instanceof TrackingConfigurationDAO);

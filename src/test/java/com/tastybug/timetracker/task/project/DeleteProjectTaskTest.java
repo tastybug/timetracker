@@ -46,7 +46,7 @@ public class DeleteProjectTaskTest {
         task.execute();
 
         // then
-        verify(resolver, times(1)).delete(eq(new ProjectDAO(context).getQueryUri()), isA(String.class), eq(new String[] {"123"}));
+        verify(resolver, times(1)).delete(eq(new ProjectDAO(context).getQueryUri()), isA(String.class), eq(new String[]{"123"}));
         verify(ottoBus, times(1)).post(isA(ProjectDeletedEvent.class));
     }
 

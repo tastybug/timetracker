@@ -7,7 +7,8 @@ import java.io.IOException;
 
 public class BackupDataEntryReader {
 
-    BackupDataEntryReader() {}
+    BackupDataEntryReader() {
+    }
 
     protected byte[] getPayloadFromBackupData(BackupDataInput data) throws IOException {
         byte[] payload = new byte[data.getDataSize()];

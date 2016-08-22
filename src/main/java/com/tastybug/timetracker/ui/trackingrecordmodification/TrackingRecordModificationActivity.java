@@ -50,7 +50,7 @@ public class TrackingRecordModificationActivity extends BaseActivity {
         }
         Preconditions.checkArgument(projectUuidOpt.isPresent() || trackingRecordUuidOpt.isPresent(), "Neither project uuid nor tracking record uuid available.");
 
-        if(trackingRecordUuidOpt.isPresent()) {
+        if (trackingRecordUuidOpt.isPresent()) {
             setTitle(R.string.title_tracking_record_editing);
             renderExistingTrackingRecord(getTrackingRecordByUuid(trackingRecordUuidOpt.get()));
         } else {
@@ -71,7 +71,7 @@ public class TrackingRecordModificationActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater=getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_tracking_record_editing, menu);
         menu.findItem(R.id.menu_delete_tracking_record).setVisible(trackingRecordUuidOpt.isPresent());
 
@@ -93,7 +93,7 @@ public class TrackingRecordModificationActivity extends BaseActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(trackingRecordUuidOpt.isPresent()) {
+        if (trackingRecordUuidOpt.isPresent()) {
             outState.putString(TRACKING_RECORD_UUID, trackingRecordUuidOpt.get());
         } else {
             outState.putString(PROJECT_UUID, projectUuidOpt.get());

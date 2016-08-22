@@ -43,7 +43,7 @@ public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             this.trackingRecord = (TrackingRecord) savedInstanceState.getSerializable(TRACKING_RECORD);
         }
 

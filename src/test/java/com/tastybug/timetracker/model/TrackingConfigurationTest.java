@@ -54,7 +54,8 @@ public class TrackingConfigurationTest {
         assertEquals(RoundingFactory.Strategy.NO_ROUNDING, trackingConfiguration.getRoundingStrategy());
     }
 
-    @Test public void noHourLimitIsHandledWell() {
+    @Test
+    public void noHourLimitIsHandledWell() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -71,7 +72,8 @@ public class TrackingConfigurationTest {
         assertFalse(trackingConfiguration.getHourLimit().isPresent());
     }
 
-    @Test public void zeroHourLimitEqualsNoHourLimit() {
+    @Test
+    public void zeroHourLimitEqualsNoHourLimit() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -82,7 +84,8 @@ public class TrackingConfigurationTest {
         assertFalse(trackingConfiguration.getHourLimit().isPresent());
     }
 
-    @Test public void noStartDateIsHandledWell() {
+    @Test
+    public void noStartDateIsHandledWell() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -100,7 +103,8 @@ public class TrackingConfigurationTest {
         assertFalse(trackingConfiguration.getStart().isPresent());
     }
 
-    @Test public void noEndDateIsHandledWell() {
+    @Test
+    public void noEndDateIsHandledWell() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -121,7 +125,8 @@ public class TrackingConfigurationTest {
         assertFalse(trackingConfiguration.getEndDateAsInclusive().isPresent());
     }
 
-    @Test public void canGetEnddateAsAnInclusiveDate() {
+    @Test
+    public void canGetEnddateAsAnInclusiveDate() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -134,7 +139,8 @@ public class TrackingConfigurationTest {
         assertEquals(expectedInclusiveDate.toDate(), trackingConfiguration.getEndDateAsInclusive().get());
     }
 
-    @Test public void canSetEnddateAsInclusiveDate() {
+    @Test
+    public void canSetEnddateAsInclusiveDate() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
         DateTime lastInclusiveDate = new DateTime(2015, 12, 31, 0, 0);

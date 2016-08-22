@@ -52,7 +52,7 @@ public class ProjectListAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        if( convertView == null ){
+        if (convertView == null) {
             convertView = new ProjectView(activity, null);
         }
         Project project = getProjectAt(position);

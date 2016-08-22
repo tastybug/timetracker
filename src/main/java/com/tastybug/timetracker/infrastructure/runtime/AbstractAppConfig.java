@@ -28,7 +28,7 @@ public abstract class AbstractAppConfig {
         }
     }
 
-    protected String getStringValue (String key) {
+    protected String getStringValue(String key) {
         try {
             return getMetaDataBundle(context).getString(key);
         } catch (PackageManager.NameNotFoundException nnfe) {
@@ -36,7 +36,7 @@ public abstract class AbstractAppConfig {
         }
     }
 
-    protected Bundle getMetaDataBundle (Context context) throws PackageManager.NameNotFoundException {
+    protected Bundle getMetaDataBundle(Context context) throws PackageManager.NameNotFoundException {
         ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
         return ai.metaData;
     }

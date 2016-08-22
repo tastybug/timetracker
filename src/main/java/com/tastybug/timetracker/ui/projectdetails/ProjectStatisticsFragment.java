@@ -64,7 +64,7 @@ public class ProjectStatisticsFragment extends Fragment {
             case R.id.menu_delete_project:
                 ConfirmDeleteProjectDialogFragment.aDialog()
                         .forProject(currentProjectOpt.get())
-                        .show(getFragmentManager(),getClass().getSimpleName());
+                        .show(getFragmentManager(), getClass().getSimpleName());
                 return true;
             case R.id.menu_configure_project:
                 showProjectConfigurationActivity();

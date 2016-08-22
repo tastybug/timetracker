@@ -25,7 +25,7 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
     static String PROMPT_FOR_DESCRIPTION_COLUMN = "prompt_for_description";
     static String ROUNDING_STRATEGY_COLUMN = "rounding_strategy";
 
-    static String[] COLUMNS = new String[] {
+    static String[] COLUMNS = new String[]{
             UUID_COLUMN,
             PROJECT_UUID_COLUMN,
             HOUR_LIMIT_COLUMN,

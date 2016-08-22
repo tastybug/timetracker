@@ -22,7 +22,8 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
     private Optional<String> description = Optional.absent();
 
 
-    public TrackingRecord() {}
+    public TrackingRecord() {
+    }
 
     public TrackingRecord(String projectUuid) {
         this.projectUuid = projectUuid;
@@ -120,7 +121,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         // calculation, resulting in e.g. a 5 minutes duration coming out as 4:59
         if (isRunning()) {
             return Optional.of(new Duration(new DateTime(start.get()).withMillisOfSecond(0), new DateTime().withMillisOfSecond(0)));
-        } else if (isFinished()){
+        } else if (isFinished()) {
             return Optional.of(new Duration(new DateTime(start.get()).withMillisOfSecond(0), new DateTime(end.get()).withMillisOfSecond(0)));
         } else {
             return Optional.absent();

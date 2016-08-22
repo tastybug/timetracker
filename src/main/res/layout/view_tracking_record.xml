@@ -27,7 +27,7 @@
             android:layout_toRightOf="@id/time_frame"
             android:layout_toEndOf="@id/time_frame"
             android:layout_alignBaseline="@id/time_frame"
-            android:gravity="end"/>
+            android:gravity="end" />
 
     </RelativeLayout>
 

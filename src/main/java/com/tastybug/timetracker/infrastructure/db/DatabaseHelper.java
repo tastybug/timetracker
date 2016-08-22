@@ -19,127 +19,126 @@ import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-	private static DatabaseHelper sharedInstance;
+    private static DatabaseHelper sharedInstance;
 
     private DatabaseAppConfig appConfig;
-	private int dbVersion;
-	private Context context;
+    private int dbVersion;
+    private Context context;
 
 
-	public static synchronized DatabaseHelper getInstance (Context context) {
-		if (sharedInstance == null) {
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (sharedInstance == null) {
             DatabaseAppConfig appConfig = new DatabaseAppConfig(context);
             sharedInstance = new DatabaseHelper(context, appConfig);
         }
-		return sharedInstance;
-	}
+        return sharedInstance;
+    }
 
-	private DatabaseHelper(Context context, DatabaseAppConfig config) {
-		super(context,
-				config.getDatabaseFileName(),
-				null,
-				config.getCurrentSchemaVersion());
-		this.dbVersion = config.getCurrentSchemaVersion();
-		this.context = context;
+    private DatabaseHelper(Context context, DatabaseAppConfig config) {
+        super(context,
+                config.getDatabaseFileName(),
+                null,
+                config.getCurrentSchemaVersion());
+        this.dbVersion = config.getCurrentSchemaVersion();
+        this.context = context;
         this.appConfig = config;
-	}
+    }
 
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-		logDebug(getClass().getSimpleName(), "Starting database creation..");
-    	db.beginTransaction(); // unlike onUpgrade, onCreate doesnt execute within in transaction implicitly
-		db.execSQL("PRAGMA foreign_keys=ON;");
-		performDbUpgrade(db, 0, dbVersion); // treat creation as an upgrade from version 0
-		db.setTransactionSuccessful();
-		db.endTransaction();
-		logDebug(getClass().getSimpleName(), ".. database creation finished successfully.");
-	}
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        logDebug(getClass().getSimpleName(), "Starting database creation..");
+        db.beginTransaction(); // unlike onUpgrade, onCreate doesnt execute within in transaction implicitly
+        db.execSQL("PRAGMA foreign_keys=ON;");
+        performDbUpgrade(db, 0, dbVersion); // treat creation as an upgrade from version 0
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        logDebug(getClass().getSimpleName(), ".. database creation finished successfully.");
+    }
 
-	@Override
-	// http://stackoverflow.com/questions/2545558/foreign-key-constraints-in-android-using-sqlite-on-delete-cascade
-	public void onOpen(SQLiteDatabase db) {
-	    super.onOpen(db);
-	    if (!db.isReadOnly()) {
-	        // Enable foreign key constraints
-	        db.execSQL("PRAGMA foreign_keys=ON;");
-	    }
-	}
+    @Override
+    // http://stackoverflow.com/questions/2545558/foreign-key-constraints-in-android-using-sqlite-on-delete-cascade
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            // Enable foreign key constraints
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
+    }
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		logInfo(getClass().getSimpleName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ".");
-		performDbUpgrade(db, oldVersion, newVersion);
-	}
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        logInfo(getClass().getSimpleName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ".");
+        performDbUpgrade(db, oldVersion, newVersion);
+    }
 
-	private void performDbUpgrade (SQLiteDatabase db, int oldVersion, int newVersion) {
-		String scriptFolder = appConfig.getDatabaseScriptsFolder();
-		String modelScriptPrefix = appConfig.getDatabaseScriptsModelPrefix();
-		String defaultScriptPrefix = appConfig.getDatabaseScriptsDataPrefix();
-		try {
-			for (; oldVersion < newVersion; oldVersion++) {
-				performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + modelScriptPrefix, oldVersion + 1);
-				performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + defaultScriptPrefix, oldVersion + 1);
+    private void performDbUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        String scriptFolder = appConfig.getDatabaseScriptsFolder();
+        String modelScriptPrefix = appConfig.getDatabaseScriptsModelPrefix();
+        String defaultScriptPrefix = appConfig.getDatabaseScriptsDataPrefix();
+        try {
+            for (; oldVersion < newVersion; oldVersion++) {
+                performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + modelScriptPrefix, oldVersion + 1);
+                performIterativeSQLUpgrade(context, db, scriptFolder + File.separator + defaultScriptPrefix, oldVersion + 1);
 
-				// if possible, do a localized upgrade as well
-				if (!defaultScriptPrefix.equals(getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion))) {
-					performIterativeSQLUpgrade(context,
-							db,
-							scriptFolder + File.separator + getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion),
-							oldVersion + 1);
-				}
-			}
-		} catch (IOException ioe) {
+                // if possible, do a localized upgrade as well
+                if (!defaultScriptPrefix.equals(getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion))) {
+                    performIterativeSQLUpgrade(context,
+                            db,
+                            scriptFolder + File.separator + getBestDataFilePrefix(context, scriptFolder, defaultScriptPrefix, newVersion),
+                            oldVersion + 1);
+                }
+            }
+        } catch (IOException ioe) {
             // to prevent successful completion of the surrounding transaction, we need an unchecked exception
-			throw new RuntimeException("Failed db upgrade from " + oldVersion + " to " + newVersion + " due to " + ioe.toString() + ".");
-		}
-	}
+            throw new RuntimeException("Failed db upgrade from " + oldVersion + " to " + newVersion + " due to " + ioe.toString() + ".");
+        }
+    }
 
-	private String getBestDataFilePrefix (Context context, String scriptFolder, String defaultDataPrefix, int newVersion) {
-		try {
-			List<String> assets = Arrays.asList(context.getAssets().list(scriptFolder));
-			String localizedName = Locale.getDefault().getCountry().toLowerCase(Locale.ENGLISH) + "_" + defaultDataPrefix;
-			if (assets.contains(localizedName + newVersion))
-				return localizedName;
-			else
-				return defaultDataPrefix;
-		} catch (IOException ioe) {
-			logError(getClass().getSimpleName(), "Error while looking up database script folder: " + ioe.getMessage());
-	    	return defaultDataPrefix;
-	    }
-	}
+    private String getBestDataFilePrefix(Context context, String scriptFolder, String defaultDataPrefix, int newVersion) {
+        try {
+            List<String> assets = Arrays.asList(context.getAssets().list(scriptFolder));
+            String localizedName = Locale.getDefault().getCountry().toLowerCase(Locale.ENGLISH) + "_" + defaultDataPrefix;
+            if (assets.contains(localizedName + newVersion))
+                return localizedName;
+            else
+                return defaultDataPrefix;
+        } catch (IOException ioe) {
+            logError(getClass().getSimpleName(), "Error while looking up database script folder: " + ioe.getMessage());
+            return defaultDataPrefix;
+        }
+    }
 
-	/**
-	 * This reads a file from assets, executing every line as a SQL-Statement.
-	 *
-	 * @param context				the context
-	 * @param db					the database
-	 * @param pathBase				the file prefix (sql/db_ or sql/data_)
-	 * @param versionToUpgradeTo	the new db version
-	 *
-	 * @return number of executed calls
-	 */
-	private int performIterativeSQLUpgrade (Context context, SQLiteDatabase db, String pathBase, int versionToUpgradeTo) throws IOException {
-	    try {
-			logDebug(getClass().getSimpleName(), "Calling database upgrade/creation script for version " + versionToUpgradeTo + ": " + pathBase + versionToUpgradeTo);
-		    int result = 0;
+    /**
+     * This reads a file from assets, executing every line as a SQL-Statement.
+     *
+     * @param context            the context
+     * @param db                 the database
+     * @param pathBase           the file prefix (sql/db_ or sql/data_)
+     * @param versionToUpgradeTo the new db version
+     * @return number of executed calls
+     */
+    private int performIterativeSQLUpgrade(Context context, SQLiteDatabase db, String pathBase, int versionToUpgradeTo) throws IOException {
+        try {
+            logDebug(getClass().getSimpleName(), "Calling database upgrade/creation script for version " + versionToUpgradeTo + ": " + pathBase + versionToUpgradeTo);
+            int result = 0;
 
-		    InputStream myInput = context.getAssets().open(pathBase + versionToUpgradeTo);
-		    BufferedReader insertReader = new BufferedReader(new InputStreamReader(myInput));
+            InputStream myInput = context.getAssets().open(pathBase + versionToUpgradeTo);
+            BufferedReader insertReader = new BufferedReader(new InputStreamReader(myInput));
 
-		    String insertStmt;
-		    while (insertReader.ready()) {
-		        insertStmt = insertReader.readLine();
-		        if (!insertStmt.trim().startsWith("--") && insertStmt.length() > 0) {
-		        	db.execSQL(insertStmt);
-		        	result++;
-		        }
-		    }
-		    insertReader.close();
-			logDebug(getClass().getSimpleName(), "Executed " + result + " statements, not counting empty lines and comments.");
-		    return result;
-	    } catch (IOException ioe) {
-			logError(getClass().getSimpleName(), "Error while performing iterative database upgrade: " + ioe.toString());
-	    	throw ioe;
-	    }
-	}
+            String insertStmt;
+            while (insertReader.ready()) {
+                insertStmt = insertReader.readLine();
+                if (!insertStmt.trim().startsWith("--") && insertStmt.length() > 0) {
+                    db.execSQL(insertStmt);
+                    result++;
+                }
+            }
+            insertReader.close();
+            logDebug(getClass().getSimpleName(), "Executed " + result + " statements, not counting empty lines and comments.");
+            return result;
+        } catch (IOException ioe) {
+            logError(getClass().getSimpleName(), "Error while performing iterative database upgrade: " + ioe.toString());
+            throw ioe;
+        }
+    }
 }

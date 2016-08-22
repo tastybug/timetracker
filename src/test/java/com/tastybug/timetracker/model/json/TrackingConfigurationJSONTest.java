@@ -294,7 +294,7 @@ public class TrackingConfigurationJSONTest {
         }
     }
 
-    private JSONObject aTrackingConfigurationJSONToImport() throws JSONException{
+    private JSONObject aTrackingConfigurationJSONToImport() throws JSONException {
         JSONObject toImportFrom = new JSONObject();
         toImportFrom.put(UUID_COLUMN, "1234");
         toImportFrom.put(PROJECT_UUID_COLUMN, "1234");

@@ -61,8 +61,8 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
     public void renderProjectDurationStatistic(TrackingConfiguration configuration,
                                                Duration duration) {
         projectDurationStatisticLabel.setText(configuration.getHourLimit().isPresent()
-                                              ? R.string.duration_label_X_of_Y
-                                              : R.string.duration_label_X_no_max);
+                ? R.string.duration_label_X_of_Y
+                : R.string.duration_label_X_no_max);
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {
                 projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
@@ -114,13 +114,13 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         if (ongoing.isPresent()) {
             CheckOutTask.aTask(getContext()).withProjectUuid(projectUuid).execute();
         } else {
-            CheckInDelegate.aDelegate((Activity)getContext()).startTracking(project);
+            CheckInDelegate.aDelegate((Activity) getContext()).startTracking(project);
         }
     }
 
     private void renderTrackingControlButton() {
         Optional<TrackingRecord> ongoingTracking = new TrackingRecordDAO(getContext()).getRunning(project.getUuid());
-        if(ongoingTracking.isPresent()) {
+        if (ongoingTracking.isPresent()) {
             trackingStartStopButton.setImageResource(R.drawable.ic_stop_tracking);
         } else {
             trackingStartStopButton.setImageResource(R.drawable.ic_start_tracking);
@@ -133,7 +133,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
     }
 
     private void renderLastTrackingRecord(Optional<TrackingRecord> lastTrackingRecordOpt) {
-        if(lastTrackingRecordOpt.isPresent()) {
+        if (lastTrackingRecordOpt.isPresent()) {
             if (lastTrackingRecordOpt.get().isRunning()) {
                 lastRecordSummaryView.setText(getContext().getString(R.string.current_record_started_at_X,
                         Formatter.dateTime().format(lastTrackingRecordOpt.get().getStart().get())));

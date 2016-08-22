@@ -20,7 +20,8 @@ import static org.junit.Assert.assertTrue;
 
 public class StatisticProjectCompletionTest {
 
-    @Test public void handlesProjectWithoutRecordsCorrectly() {
+    @Test
+    public void handlesProjectWithoutRecordsCorrectly() {
         // given
         ArrayList<TrackingRecord> trackingRecords = new ArrayList<TrackingRecord>();
         StatisticProjectCompletion subject = new StatisticProjectCompletion(aTrackingConfigurationWithLimit(),
@@ -46,7 +47,8 @@ public class StatisticProjectCompletionTest {
         assertEquals(Duration.standardHours(aTrackingConfigurationWithLimit().getHourLimit().get()), remainder.get());
     }
 
-    @Test public void handlesProjectWithoutHourLimitCorrectly() {
+    @Test
+    public void handlesProjectWithoutHourLimitCorrectly() {
         // given
         ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10MinDuration());
         StatisticProjectCompletion subject = new StatisticProjectCompletion(aTrackingConfigurationWithoutLimit(),
@@ -68,7 +70,8 @@ public class StatisticProjectCompletionTest {
         assertFalse(remainder.isPresent());
     }
 
-    @Test public void handlesProjectWithLimitAndExistingTrackingRecordsCorrectly() {
+    @Test
+    public void handlesProjectWithLimitAndExistingTrackingRecordsCorrectly() {
         // given
         ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(
                 aTrackingRecordWith10MinDuration(),
@@ -97,7 +100,8 @@ public class StatisticProjectCompletionTest {
         assertEquals(40, remainder.get().getStandardMinutes());
     }
 
-    @Test public void handlesOverbookedProjectCorrectly() {
+    @Test
+    public void handlesOverbookedProjectCorrectly() {
         // given
         ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(
                 aTrackingRecordWith10MinDuration(),

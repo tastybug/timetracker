@@ -53,7 +53,7 @@ public class XMinutesUpTest extends AbstractRoundingTestcase {
         long seconds = XMinutesUp.tenMinutesUp().getDurationInSeconds(duration);
 
         // then: its rounded to 20 minutes
-        assertEquals(20*60, seconds);
+        assertEquals(20 * 60, seconds);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class XMinutesUpTest extends AbstractRoundingTestcase {
         long seconds = XMinutesUp.tenMinutesUp().getDurationInSeconds(duration);
 
         // then: its rounded to 10 minutes
-        assertEquals(10*60, seconds);
+        assertEquals(10 * 60, seconds);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class XMinutesUpTest extends AbstractRoundingTestcase {
         long seconds = XMinutesUp.tenMinutesUp().getDurationInSeconds(duration);
 
         // then: its not altered
-        assertEquals(10*60, seconds);
+        assertEquals(10 * 60, seconds);
     }
 
     protected Duration get9MinutesDuration() {

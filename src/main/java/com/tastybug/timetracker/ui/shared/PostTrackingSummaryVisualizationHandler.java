@@ -25,7 +25,7 @@ public class PostTrackingSummaryVisualizationHandler extends AbstractOttoEventHa
     @SuppressWarnings("unused")
     @Subscribe
     public void handleCheckOut(CheckOutEvent event) {
-        if(askForDescriptionDirectly(event.getTrackingRecord().getProjectUuid())) {
+        if (askForDescriptionDirectly(event.getTrackingRecord().getProjectUuid())) {
             EditTrackingRecordDescriptionDialogFragment
                     .aDialog()
                     .forTrackingRecord(event.getTrackingRecord())
@@ -46,16 +46,16 @@ public class PostTrackingSummaryVisualizationHandler extends AbstractOttoEventHa
         Snackbar.make(getRootViewOfCurrentActivity(activity),
                 activity.getString(R.string.snack_X_booked_on_project_Y, durationString, project.getTitle()),
                 Snackbar.LENGTH_LONG)
-            .setAction(R.string.snack_describe_tracking_record, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EditTrackingRecordDescriptionDialogFragment
-                            .aDialog()
-                            .forTrackingRecord(trackingRecord)
-                            .show(activity.getFragmentManager(), getClass().getSimpleName());
-                }
-            })
-            .show();
+                .setAction(R.string.snack_describe_tracking_record, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditTrackingRecordDescriptionDialogFragment
+                                .aDialog()
+                                .forTrackingRecord(trackingRecord)
+                                .show(activity.getFragmentManager(), getClass().getSimpleName());
+                    }
+                })
+                .show();
     }
 
     private View getRootViewOfCurrentActivity(Activity activity) {

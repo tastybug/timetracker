@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <fragment class="com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationFragment"
-            android:id="@id/fragment_tracking_record_editing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_tracking_record_editing" />
+    <fragment
+        class="com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationFragment"
+        android:id="@id/fragment_tracking_record_editing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_tracking_record_editing" />
 
 </ScrollView>

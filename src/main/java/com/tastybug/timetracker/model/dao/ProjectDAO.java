@@ -16,7 +16,7 @@ public class ProjectDAO extends EntityDAO<Project> {
     static String TITLE_COLUMN = "title";
     static String DESCRIPTION_COLUMN = "description";
 
-    static String[] COLUMNS = new String[] {
+    static String[] COLUMNS = new String[]{
             UUID_COLUMN,
             TITLE_COLUMN,
             DESCRIPTION_COLUMN
@@ -49,7 +49,7 @@ public class ProjectDAO extends EntityDAO<Project> {
                 cursor.getString(colsList.indexOf(UUID_COLUMN)),
                 cursor.getString(colsList.indexOf(TITLE_COLUMN)),
                 Optional.fromNullable(cursor.getString(colsList.indexOf(DESCRIPTION_COLUMN)))
-                );
+        );
     }
 
     @Override

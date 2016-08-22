@@ -15,42 +15,42 @@ public class DatabaseContentProvider extends android.content.ContentProvider {
     protected DatabaseHelper databaseHelper;
 
     @Override
-	public boolean onCreate() {
-		databaseHelper = DatabaseHelper.getInstance(getContext());
+    public boolean onCreate() {
+        databaseHelper = DatabaseHelper.getInstance(getContext());
         return true;
     }
 
-	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-	    SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-	    queryBuilder.setTables(getTableByUri(uri));
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables(getTableByUri(uri));
 
-	    Cursor cursor = queryBuilder.query(databaseHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = queryBuilder.query(databaseHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
-	    return cursor;
-	}
+        return cursor;
+    }
 
-	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
         return databaseHelper.getWritableDatabase().delete(getTableByUri(uri), selection, selectionArgs);
-	}
+    }
 
-	@Override
-	public String getType(Uri uri) {
-		return null;
-	}
+    @Override
+    public String getType(Uri uri) {
+        return null;
+    }
 
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
         long returnVal = databaseHelper.getWritableDatabase().insert(getTableByUri(uri), null, values);
         return ContentUris.withAppendedId(uri, returnVal);
-	}
+    }
 
-	@Override
-	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    @Override
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return databaseHelper.getWritableDatabase().update(getTableByUri(uri), values, selection, selectionArgs);
-	}
+    }
 
     static String getTableByUri(Uri uri) {
         return uri.getPathSegments().get(0);

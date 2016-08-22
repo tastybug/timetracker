@@ -88,9 +88,9 @@ public class ConfirmCheckInViolatesConfigurationDialog extends DialogFragment {
     }
 
     private String getMessage() {
-        if(startDateOpt.isPresent()) {
-           return getString(R.string.warning_tracking_before_project_time_frame_which_starts_at_X,
-                   Formatter.date().format(startDateOpt.get()));
+        if (startDateOpt.isPresent()) {
+            return getString(R.string.warning_tracking_before_project_time_frame_which_starts_at_X,
+                    Formatter.date().format(startDateOpt.get()));
         } else if (endDateOpt.isPresent()) {
             return getString(R.string.warning_tracking_after_project_time_frame_which_ended_on_X,
                     Formatter.date().format(endDateOpt.get()));

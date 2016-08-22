@@ -23,7 +23,7 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
     static String END_DATE_COLUMN = "end_date";
     static String DESCRIPTION_COLUMN = "description";
 
-    static String[] COLUMNS = new String[] {
+    static String[] COLUMNS = new String[]{
             ID_COLUMN,
             PROJECT_UUID_COLUMN,
             START_DATE_COLUMN,

@@ -132,7 +132,7 @@ public class TrackingConfiguration extends Entity {
 
     public void setEndAsInclusive(Optional<Date> endAsInclusive) {
         Preconditions.checkNotNull(endAsInclusive);
-        if(endAsInclusive.isPresent()) {
+        if (endAsInclusive.isPresent()) {
             DateTime dateTime = new DateTime(endAsInclusive.get());
             setEnd(Optional.of(dateTime.plusDays(1).toDate()));
         } else {

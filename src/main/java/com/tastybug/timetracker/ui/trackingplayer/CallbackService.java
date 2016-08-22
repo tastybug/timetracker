@@ -19,20 +19,20 @@ import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 /**
  * This service acts as the callback facade for the Tracking Player notification. Pressing
  * some button on the player will result in a call to this service.
- *
+ * <p/>
  * This background service only lives as long as the request!
  */
 public class CallbackService extends IntentService {
 
     private static final String TAG = CallbackService.class.getSimpleName();
 
-    public static final String OPERATION                 = "OPERATION";
-    public static final String CYCLE_TO_NEXT_PROJECT     = "CYCLE_TO_NEXT_PROJECT";
-    public static final String STOP_TRACKING_PROJECT     = "STOP_TRACKING_PROJECT";
-    public static final String DISMISS_PAUSED_PROJECT    = "DISMISS_PAUSED_PROJECT";
-    public static final String PAUSE_TRACKING_PROJECT    = "PAUSE_TRACKING_PROJECT";
-    public static final String UNPAUSE_TRACKING_PROJECT  = "UNPAUSE_TRACKING_PROJECT";
-    public static final String PROJECT_UUID              = "PROJECT_UUID";
+    public static final String OPERATION = "OPERATION";
+    public static final String CYCLE_TO_NEXT_PROJECT = "CYCLE_TO_NEXT_PROJECT";
+    public static final String STOP_TRACKING_PROJECT = "STOP_TRACKING_PROJECT";
+    public static final String DISMISS_PAUSED_PROJECT = "DISMISS_PAUSED_PROJECT";
+    public static final String PAUSE_TRACKING_PROJECT = "PAUSE_TRACKING_PROJECT";
+    public static final String UNPAUSE_TRACKING_PROJECT = "UNPAUSE_TRACKING_PROJECT";
+    public static final String PROJECT_UUID = "PROJECT_UUID";
 
     public CallbackService() {
         super(CallbackService.class.getSimpleName());

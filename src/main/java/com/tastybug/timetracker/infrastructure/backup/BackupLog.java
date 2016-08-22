@@ -134,7 +134,8 @@ public class BackupLog {
 
     class DateProvider {
 
-        public DateProvider() {}
+        public DateProvider() {
+        }
 
         public Date getCurrentDate() {
             return new Date();

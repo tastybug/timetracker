@@ -338,7 +338,7 @@ public class BackupLogTest {
         Optional<Integer> appCodeOptional = subject.getSuccessRestoreAppCode();
 
         // then
-        assertEquals(1234, (int)appCodeOptional.get());
+        assertEquals(1234, (int) appCodeOptional.get());
     }
 
     @Test
@@ -389,7 +389,7 @@ public class BackupLogTest {
         Optional<Integer> appCodeOptional = subject.getFailedRestoreAppCode();
 
         // then
-        assertEquals(1234, (int)appCodeOptional.get());
+        assertEquals(1234, (int) appCodeOptional.get());
     }
 
     @Test

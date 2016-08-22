@@ -16,7 +16,8 @@ public class JSONUnMarshallingBuilder {
     private byte[] data;
     private JSONArray projectArray;
 
-    public JSONUnMarshallingBuilder() {}
+    public JSONUnMarshallingBuilder() {
+    }
 
     public JSONUnMarshallingBuilder withByteArray(byte[] data) {
         this.data = data;

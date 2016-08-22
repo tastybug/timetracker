@@ -8,11 +8,11 @@ public class DatabaseAppConfig extends AbstractAppConfig {
 
     private static final String DATABASE_SCHEMA_VERSION_CURRENT = "database.schema.version.current";
 
-    private static final String DATABASE_FILE_NAME              = "database.file.name";
+    private static final String DATABASE_FILE_NAME = "database.file.name";
 
-    private static final String DATABASE_SCRIPTS_FOLDER 		= "database.scripts.folder";
-    private static final String DATABASE_SCRIPTS_MODEL_PREFIX 	= "database.scripts.prefix.model";
-    private static final String DATABASE_SCRIPTS_DATA_PREFIX 	= "database.scripts.prefix.data";
+    private static final String DATABASE_SCRIPTS_FOLDER = "database.scripts.folder";
+    private static final String DATABASE_SCRIPTS_MODEL_PREFIX = "database.scripts.prefix.model";
+    private static final String DATABASE_SCRIPTS_DATA_PREFIX = "database.scripts.prefix.data";
 
     public DatabaseAppConfig(Context context) {
         super(context);

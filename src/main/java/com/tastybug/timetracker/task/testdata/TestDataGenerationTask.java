@@ -40,7 +40,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void validateArguments() throws NullPointerException {}
+    protected void validateArguments() throws NullPointerException {
+    }
 
     private void createProjectWithLoooongTitle() {
         Project project = new Project("Donaudampfschifffahrtsgesellschaftskapitaen Heinz Kaluppke");
@@ -81,7 +82,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
         TrackingRecord record;
         LocalDateTime time = new LocalDateTime(2016, 11, 24, 9, 0);
-        for (int i=0; i<200; i++) {
+        for (int i = 0; i < 200; i++) {
             record = new TrackingRecord(project.getUuid());
             record.setStart(Optional.of(time.toDate()));
             time = time.plusHours(1);

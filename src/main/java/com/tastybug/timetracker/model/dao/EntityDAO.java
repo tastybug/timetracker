@@ -41,7 +41,7 @@ public abstract class EntityDAO<T extends Entity> {
         return Optional.fromNullable(t);
     }
 
-    public ArrayList<T> getAll () {
+    public ArrayList<T> getAll() {
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), null, null, null);
         ArrayList<T> list = new ArrayList<T>();
         while (cursor.moveToNext()) {
@@ -51,7 +51,7 @@ public abstract class EntityDAO<T extends Entity> {
         return list;
     }
 
-    public Uri create (T entity) {
+    public Uri create(T entity) {
         Uri uri = context.getContentResolver().insert(getQueryUri(), getContentValues(entity));
         return uri;
     }

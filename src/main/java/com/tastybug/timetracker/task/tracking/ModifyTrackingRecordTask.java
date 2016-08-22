@@ -63,15 +63,15 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
         String trackingRecordUuid = arguments.getString(TRACKING_RECORD_UUID);
         trackingRecord = new TrackingRecordDAO(context).get(trackingRecordUuid).get();
 
-        if(arguments.containsKey(START_DATE)) {
-            trackingRecord.setStart(Optional.of((Date)arguments.getSerializable(START_DATE)));
+        if (arguments.containsKey(START_DATE)) {
+            trackingRecord.setStart(Optional.of((Date) arguments.getSerializable(START_DATE)));
         }
-        if(arguments.containsKey(END_DATE)) {
+        if (arguments.containsKey(END_DATE)) {
             wasStopped = trackingRecord.isRunning();
-            trackingRecord.setEnd(Optional.of((Date)arguments.getSerializable(END_DATE)));
+            trackingRecord.setEnd(Optional.of((Date) arguments.getSerializable(END_DATE)));
         }
-        if(arguments.containsKey(DESCRIPTION_OPT)) {
-            trackingRecord.setDescription((Optional<String>)arguments.getSerializable(DESCRIPTION_OPT));
+        if (arguments.containsKey(DESCRIPTION_OPT)) {
+            trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
 
         storeBatchOperation(trackingRecord.getDAO(context).getBatchUpdate(trackingRecord));

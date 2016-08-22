@@ -70,10 +70,10 @@ public class DatePickerPreference extends DialogPreference {
                 initialLocalDate = new LocalDate(new Date(getPersistedLong(new Date().getTime())));
             }
         } else {
-            initialLocalDate = new LocalDate(new Date((Long)defaultValue));
+            initialLocalDate = new LocalDate(new Date((Long) defaultValue));
         }
         year = initialLocalDate.getYear();
-        monthOfYear = initialLocalDate.getMonthOfYear()-1;
-        dayOfMonth = initialLocalDate.getDayOfMonth()-1;
+        monthOfYear = initialLocalDate.getMonthOfYear() - 1;
+        dayOfMonth = initialLocalDate.getDayOfMonth() - 1;
     }
 }

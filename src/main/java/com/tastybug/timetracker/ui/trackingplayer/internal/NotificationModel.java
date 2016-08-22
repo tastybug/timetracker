@@ -66,7 +66,7 @@ public class NotificationModel {
 
     public Project getNextProject(String currentProjectUuid) {
         ArrayList<Project> projects = getOngoingProjects();
-        for (Iterator<Project> i = projects.iterator(); i.hasNext();) {
+        for (Iterator<Project> i = projects.iterator(); i.hasNext(); ) {
             if (i.next().getUuid().equals(currentProjectUuid)) {
                 return i.hasNext() ? i.next() : projects.get(0);
             }

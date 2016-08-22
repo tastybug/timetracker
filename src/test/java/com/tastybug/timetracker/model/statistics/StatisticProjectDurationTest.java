@@ -27,7 +27,8 @@ public class StatisticProjectDurationTest {
         new StatisticProjectDuration(new TrackingConfiguration("some project uuid"), null);
     }
 
-    @Test public void canCreateStatisticForEmptyListOfTrackingRecords() {
+    @Test
+    public void canCreateStatisticForEmptyListOfTrackingRecords() {
         // given
         ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
@@ -39,7 +40,8 @@ public class StatisticProjectDurationTest {
         assertEquals(0, duration.getStandardSeconds());
     }
 
-    @Test public void canCalculateWhenNoRoundingIsConfigured() {
+    @Test
+    public void canCalculateWhenNoRoundingIsConfigured() {
         // given
         ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
@@ -51,7 +53,8 @@ public class StatisticProjectDurationTest {
         assertEquals(0, duration.getStandardSeconds());
     }
 
-    @Test public void canCalculateEffectiveProjectDurationWithNoRounding() {
+    @Test
+    public void canCalculateEffectiveProjectDurationWithNoRounding() {
         // given
         ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10Min10SecsDuration(), aTrackingRecordWith10Min10SecsDuration());
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
@@ -60,10 +63,11 @@ public class StatisticProjectDurationTest {
         Duration duration = new StatisticProjectDuration(configuration, trackingRecords).getDuration();
 
         // then: 2 * 10:10min
-        assertEquals(2*(10*60+10), duration.getStandardSeconds());
+        assertEquals(2 * (10 * 60 + 10), duration.getStandardSeconds());
     }
 
-    @Test public void canCalculateEffectiveProjectDurationWith10erRounding() {
+    @Test
+    public void canCalculateEffectiveProjectDurationWith10erRounding() {
         // given
         ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10Min10SecsDuration(), aTrackingRecordWith10Min10SecsDuration());
         TrackingConfiguration configuration = aTrackingConfigurationWith10erRounding();
@@ -72,10 +76,11 @@ public class StatisticProjectDurationTest {
         Duration duration = new StatisticProjectDuration(configuration, trackingRecords).getDuration();
 
         // then: 2 * 20 minutes
-        assertEquals(2*20*60, duration.getStandardSeconds());
+        assertEquals(2 * 20 * 60, duration.getStandardSeconds());
     }
 
-    @Test public void calculationIgnoresIncompleteTrackingRecordsWhenTold() {
+    @Test
+    public void calculationIgnoresIncompleteTrackingRecordsWhenTold() {
         // given
         ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10Min10SecsDuration(), anOngoingTrackingRecord(), aTrackingRecordWith10Min10SecsDuration());
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
@@ -84,7 +89,7 @@ public class StatisticProjectDurationTest {
         Duration duration = new StatisticProjectDuration(configuration, trackingRecords, false).getDuration();
 
         // then
-        assertEquals(2*(10*60+10), duration.getStandardSeconds());
+        assertEquals(2 * (10 * 60 + 10), duration.getStandardSeconds());
     }
 
     private TrackingConfiguration aTrackingConfigurationWithNoRounding() {
