@@ -17,9 +17,9 @@ import com.tastybug.timetracker.infrastructure.backup.in.BackupRestoredEvent;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
 import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
+import com.tastybug.timetracker.task.tracking.CheckInEvent;
+import com.tastybug.timetracker.task.tracking.CheckOutEvent;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.dialog.project.ProjectCreationDialog;
@@ -119,7 +119,7 @@ public class ProjectListFragment extends ListFragment {
 
         @SuppressWarnings("unused")
         @Subscribe
-        public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
+        public void handleCheckIn(CheckInEvent event) {
             ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
         }
 
@@ -131,7 +131,7 @@ public class ProjectListFragment extends ListFragment {
 
         @SuppressWarnings("unused")
         @Subscribe
-        public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+        public void handleCheckOut(CheckOutEvent event) {
             ((ProjectListAdapter)getListAdapter()).notifyDataSetChanged();
         }
     }

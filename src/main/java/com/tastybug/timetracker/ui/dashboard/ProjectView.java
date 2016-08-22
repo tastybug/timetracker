@@ -15,8 +15,8 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
-import com.tastybug.timetracker.ui.shared.TrackingDelegate;
+import com.tastybug.timetracker.task.tracking.CheckOutTask;
+import com.tastybug.timetracker.ui.shared.CheckInDelegate;
 import com.tastybug.timetracker.util.Formatter;
 
 import org.joda.time.Duration;
@@ -112,9 +112,9 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         String projectUuid = project.getUuid();
         Optional<TrackingRecord> ongoing = new TrackingRecordDAO(getContext()).getRunning(projectUuid);
         if (ongoing.isPresent()) {
-            KickStopTrackingRecordTask.aTask(getContext()).withProjectUuid(projectUuid).execute();
+            CheckOutTask.aTask(getContext()).withProjectUuid(projectUuid).execute();
         } else {
-            TrackingDelegate.aDelegate((Activity)getContext()).startTracking(project);
+            CheckInDelegate.aDelegate((Activity)getContext()).startTracking(project);
         }
     }
 

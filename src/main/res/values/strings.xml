@@ -85,8 +85,8 @@
     <string name="button_open_configuration_after_project_creation">Advanced</string>
 
     <!-- warning dialog tracking is out of project time frame -->
-    <string name="warning_tracking_before_project_time_frame_which_starts_at_X">This project starts at %1$s!\nDo you want to start tracking now?</string>
-    <string name="warning_tracking_after_project_time_frame_which_ended_on_X">This project ended on %1$s!\nDo you still want to start tracking now?</string>
+    <string name="warning_tracking_before_project_time_frame_which_starts_at_X">This project starts at %1$s!\nDo you want to check in now?</string>
+    <string name="warning_tracking_after_project_time_frame_which_ended_on_X">This project ended on %1$s!\nDo you still want to check in now?</string>
 
     <!-- warning dialog tracking beyond project amount -->
     <string name="warning_tracking_exceeds_project_amount_of_X_hours">Project hour limit (%1$s) reached.\nStill keep tracking?</string>
@@ -168,8 +168,8 @@
     <string name="tracking_configuration_prompt_for_description_preference_title">Ask for a comment after each session</string>
 
     <!-- TrackingPlayer Notification -->
-    <string name="tracking_player_stop_button">Stop</string>
-    <string name="tracking_player_start_button">Start</string>
+    <string name="tracking_player_check_out_button">Check Out</string>
+    <string name="tracking_player_check_in_button">Check In</string>
     <string name="tracking_player_resume_button">Resume</string>
     <string name="tracking_player_pause_button">Pause</string>
     <string name="tracking_player_dismiss_paused_button">Dismiss</string>

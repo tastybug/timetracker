@@ -12,9 +12,9 @@ import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
 import com.tastybug.timetracker.task.project.ProjectCreatedEvent;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
+import com.tastybug.timetracker.task.tracking.CheckInEvent;
+import com.tastybug.timetracker.task.tracking.CheckOutEvent;
 import com.tastybug.timetracker.task.tracking.DeletedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
@@ -70,13 +70,13 @@ public class DataChangeListenerBackgroundService extends Service {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingStarted(KickStartedTrackingRecordEvent event) {
+    public void handleCheckIn(CheckInEvent event) {
         requestBackup(event);
     }
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingStopped(KickStoppedTrackingRecordEvent event) {
+    public void handleCheckOut(CheckOutEvent event) {
         requestBackup(event);
     }
 

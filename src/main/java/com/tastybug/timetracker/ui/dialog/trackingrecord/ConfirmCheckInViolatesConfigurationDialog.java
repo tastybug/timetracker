@@ -8,12 +8,12 @@ import android.os.Bundle;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.CheckInTask;
 import com.tastybug.timetracker.util.Formatter;
 
 import java.util.Date;
 
-public class ConfirmTrackingViolatesConfigurationDialog extends DialogFragment {
+public class ConfirmCheckInViolatesConfigurationDialog extends DialogFragment {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String START_DATE_OPT = "START_DATE_OPT";
@@ -25,26 +25,26 @@ public class ConfirmTrackingViolatesConfigurationDialog extends DialogFragment {
     private Optional<Date> endDateOpt = Optional.absent();
     private Optional<Integer> maxHoursOpt = Optional.absent();
 
-    public static ConfirmTrackingViolatesConfigurationDialog aDialog() {
-        return new ConfirmTrackingViolatesConfigurationDialog();
+    public static ConfirmCheckInViolatesConfigurationDialog aDialog() {
+        return new ConfirmCheckInViolatesConfigurationDialog();
     }
 
-    public ConfirmTrackingViolatesConfigurationDialog forProjectUuid(String trackingRecordUuid) {
+    public ConfirmCheckInViolatesConfigurationDialog forProjectUuid(String trackingRecordUuid) {
         this.projectUuid = trackingRecordUuid;
         return this;
     }
 
-    public ConfirmTrackingViolatesConfigurationDialog withViolatedProjectStartDate(Date date) {
+    public ConfirmCheckInViolatesConfigurationDialog withViolatedProjectStartDate(Date date) {
         this.startDateOpt = Optional.of(date);
         return this;
     }
 
-    public ConfirmTrackingViolatesConfigurationDialog withViolatedProjectEndDate(Date date) {
+    public ConfirmCheckInViolatesConfigurationDialog withViolatedProjectEndDate(Date date) {
         this.endDateOpt = Optional.of(date);
         return this;
     }
 
-    public ConfirmTrackingViolatesConfigurationDialog withViolatedProjectAmount(int maxHours) {
+    public ConfirmCheckInViolatesConfigurationDialog withViolatedProjectAmount(int maxHours) {
         this.maxHoursOpt = Optional.of(maxHours);
         return this;
     }
@@ -74,7 +74,7 @@ public class ConfirmTrackingViolatesConfigurationDialog extends DialogFragment {
         builder.setMessage(getMessage())
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        KickStartTrackingRecordTask.aTask(getActivity())
+                        CheckInTask.aTask(getActivity())
                                 .withProjectUuid(projectUuid)
                                 .execute();
                     }

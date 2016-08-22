@@ -8,8 +8,8 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.CheckInTask;
+import com.tastybug.timetracker.task.tracking.CheckOutTask;
 import com.tastybug.timetracker.ui.trackingplayer.internal.NotificationModel;
 import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationActivity;
 
@@ -64,7 +64,7 @@ public class CallbackService extends IntentService {
     private void handleStopTrackingRequested(String projectUuid) {
         logInfo(TAG, "Stopping tracking for project " + projectUuid);
         TrackingRecord runningTrackingRecord = new TrackingRecordDAO(this).getRunning(projectUuid).get();
-        KickStopTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
+        CheckOutTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
 
         if (isProjectRequiringDescriptionPromptAfterTracking(projectUuid)) {
             showTrackingRecordEditingActivity(runningTrackingRecord);
@@ -79,7 +79,7 @@ public class CallbackService extends IntentService {
 
     private void handleUnpauseTrackingRequest(String projectUuid) {
         removeProjectFromPausedList(projectUuid);
-        KickStartTrackingRecordTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
+        CheckInTask.aTask(getApplicationContext()).withProjectUuid(projectUuid).execute();
     }
 
     private void handleDismissPausedProjectRequested(String projectUuid) {

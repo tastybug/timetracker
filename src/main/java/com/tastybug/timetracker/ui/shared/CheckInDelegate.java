@@ -9,8 +9,8 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
-import com.tastybug.timetracker.task.tracking.KickStartTrackingRecordTask;
-import com.tastybug.timetracker.ui.dialog.trackingrecord.ConfirmTrackingViolatesConfigurationDialog;
+import com.tastybug.timetracker.task.tracking.CheckInTask;
+import com.tastybug.timetracker.ui.dialog.trackingrecord.ConfirmCheckInViolatesConfigurationDialog;
 
 import org.joda.time.Duration;
 
@@ -18,19 +18,19 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Dieser Delegate kapselt einige Vorpruefungen, die beim Start eines Trackings durchgefuehrt werden
+ * Dieser Delegate kapselt einige Vorpruefungen, die beim CheckIn durchgefuehrt werden
  * muessen und in der UI mittels Warnungsdialogen angezeigt werden muessen.
- * Da das Tracking von mehreren Stellen aus gestartet werden kann, ist das hier zentralisiert.
+ * Da das CheckIn von mehreren Stellen aus gestartet werden kann, ist das hier zentralisiert.
  */
-public class TrackingDelegate {
+public class CheckInDelegate {
 
     private Activity activity;
 
-    public static TrackingDelegate aDelegate(Activity activity) {
-        return new TrackingDelegate(activity);
+    public static CheckInDelegate aDelegate(Activity activity) {
+        return new CheckInDelegate(activity);
     }
 
-    protected TrackingDelegate(Activity activity) {
+    protected CheckInDelegate(Activity activity) {
         this.activity = activity;
     }
 
@@ -41,7 +41,7 @@ public class TrackingDelegate {
         } else if (blameProjectAmountViolation(project)) {
             return;
         } else {
-            KickStartTrackingRecordTask.aTask(activity).withProjectUuid(project.getUuid()).execute();
+            CheckInTask.aTask(activity).withProjectUuid(project.getUuid()).execute();
         }
     }
 
@@ -49,7 +49,7 @@ public class TrackingDelegate {
         Optional<Integer> violatedProjectAmount = getProjectAmountIfViolated(project);
 
         if (violatedProjectAmount.isPresent()) {
-            ConfirmTrackingViolatesConfigurationDialog.aDialog()
+            ConfirmCheckInViolatesConfigurationDialog.aDialog()
                     .forProjectUuid(project.getUuid())
                     .withViolatedProjectAmount(violatedProjectAmount.get())
                     .show(activity.getFragmentManager(), getClass().getSimpleName());
@@ -62,13 +62,13 @@ public class TrackingDelegate {
         Optional<Date> violatedEndDate = getProjectEndDateIfViolated(project);
 
         if (violatedStartDate.isPresent()) {
-            ConfirmTrackingViolatesConfigurationDialog.aDialog()
+            ConfirmCheckInViolatesConfigurationDialog.aDialog()
                     .forProjectUuid(project.getUuid())
                     .withViolatedProjectStartDate(violatedStartDate.get())
                     .show(activity.getFragmentManager(), getClass().getSimpleName());
 
         } else if (violatedEndDate.isPresent()) {
-            ConfirmTrackingViolatesConfigurationDialog.aDialog()
+            ConfirmCheckInViolatesConfigurationDialog.aDialog()
                     .forProjectUuid(project.getUuid())
                     .withViolatedProjectEndDate(violatedEndDate.get())
                     .show(activity.getFragmentManager(), getClass().getSimpleName());

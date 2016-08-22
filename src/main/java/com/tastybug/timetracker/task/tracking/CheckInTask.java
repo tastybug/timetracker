@@ -10,21 +10,21 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
-public class KickStartTrackingRecordTask extends AbstractAsyncTask {
+public class CheckInTask extends AbstractAsyncTask {
 
-    static final String PROJECT_UUID    = "PROJECT_UUID";
+    static final String PROJECT_UUID = "PROJECT_UUID";
 
     private TrackingRecord trackingRecord;
 
-    public static KickStartTrackingRecordTask aTask(Context context) {
-        return new KickStartTrackingRecordTask(context);
+    public static CheckInTask aTask(Context context) {
+        return new CheckInTask(context);
     }
 
-    protected KickStartTrackingRecordTask(Context context) {
+    protected CheckInTask(Context context) {
         super(context);
     }
 
-    public KickStartTrackingRecordTask withProjectUuid(String projectUuid) {
+    public CheckInTask withProjectUuid(String projectUuid) {
         arguments.putString(PROJECT_UUID, projectUuid);
         return this;
     }
@@ -48,8 +48,8 @@ public class KickStartTrackingRecordTask extends AbstractAsyncTask {
 
     protected void onPostExecute(Long result) {
         if (BuildConfig.DEBUG) {
-            Log.i(getClass().getSimpleName(), "Kick started tracking record " + trackingRecord);
+            Log.i(getClass().getSimpleName(), "Performed CheckIn " + trackingRecord);
         }
-        ottoProvider.getSharedBus().post(new KickStartedTrackingRecordEvent(trackingRecord));
+        ottoProvider.getSharedBus().post(new CheckInEvent(trackingRecord));
     }
 }

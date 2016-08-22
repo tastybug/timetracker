@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
-import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.CheckInEvent;
+import com.tastybug.timetracker.task.tracking.CheckOutEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.trackingplayer.internal.NotificationModel;
 
@@ -46,7 +46,7 @@ public class LifecycleService extends Service {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
+    public void handleCheckIn(CheckInEvent event) {
         // paused projects can be restarted from within the app -> these have to be removed from the
         // list of paused projects manually
         new NotificationModel(this).removePausedProject(event.getTrackingRecord().getProjectUuid());
@@ -55,7 +55,7 @@ public class LifecycleService extends Service {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+    public void handleCheckOut(CheckOutEvent event) {
         handleProjectStopped(event.getTrackingRecord().getProjectUuid());
     }
 

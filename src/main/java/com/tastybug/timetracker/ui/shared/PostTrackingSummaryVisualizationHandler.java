@@ -10,7 +10,7 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.CheckOutEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
 
@@ -24,7 +24,7 @@ public class PostTrackingSummaryVisualizationHandler extends AbstractOttoEventHa
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+    public void handleCheckOut(CheckOutEvent event) {
         if(askForDescriptionDirectly(event.getTrackingRecord().getProjectUuid())) {
             EditTrackingRecordDescriptionDialogFragment
                     .aDialog()

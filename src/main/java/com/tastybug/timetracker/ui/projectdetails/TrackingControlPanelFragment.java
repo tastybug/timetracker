@@ -15,12 +15,12 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.task.tracking.CheckInEvent;
+import com.tastybug.timetracker.task.tracking.CheckOutEvent;
+import com.tastybug.timetracker.task.tracking.CheckOutTask;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStartedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.KickStopTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.KickStoppedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
-import com.tastybug.timetracker.ui.shared.TrackingDelegate;
+import com.tastybug.timetracker.ui.shared.CheckInDelegate;
 
 public class TrackingControlPanelFragment extends Fragment implements View.OnClickListener {
 
@@ -65,9 +65,9 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         String projectUuid = currentProjectOpt.get().getUuid();
         Optional<TrackingRecord> ongoing = new TrackingRecordDAO(getActivity()).getRunning(projectUuid);
         if (ongoing.isPresent()) {
-            KickStopTrackingRecordTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
+            CheckOutTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
         } else {
-            TrackingDelegate.aDelegate(getActivity()).startTracking(currentProjectOpt.get());
+            CheckInDelegate.aDelegate(getActivity()).startTracking(currentProjectOpt.get());
         }
     }
 
@@ -82,7 +82,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingKickStarted(KickStartedTrackingRecordEvent event) {
+    public void handleCheckIn(CheckInEvent event) {
         if (currentProjectOpt.isPresent()
                 && currentProjectOpt.get().getUuid().equals(event.getTrackingRecord().getProjectUuid())) {
             ui.visualizeOngoingTracking(Optional.of(event.getTrackingRecord()));
@@ -102,7 +102,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingKickStopped(KickStoppedTrackingRecordEvent event) {
+    public void handleCheckOut(CheckOutEvent event) {
         if (currentProjectOpt.isPresent()
                 && currentProjectOpt.get().getUuid().equals(event.getTrackingRecord().getProjectUuid())) {
             if (!new TrackingRecordDAO(getActivity()).getRunning(currentProjectOpt.get().getUuid()).isPresent()) {

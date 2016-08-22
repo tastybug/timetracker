@@ -51,7 +51,7 @@ public class NotificationBuilder {
                         Formatter.dateTime().format(trackingRecord.getStart().get())))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .addAction(R.drawable.ic_stop_tracking,
-                        context.getString(R.string.tracking_player_stop_button),
+                        context.getString(R.string.tracking_player_check_out_button),
                         createStopTrackingIntent(context, project))
                 .addAction(R.drawable.ic_pause_tracking,
                         context.getString(R.string.tracking_player_pause_button),

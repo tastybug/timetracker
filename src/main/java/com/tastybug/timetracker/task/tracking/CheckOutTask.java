@@ -10,21 +10,21 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
-public class KickStopTrackingRecordTask extends AbstractAsyncTask {
+public class CheckOutTask extends AbstractAsyncTask {
 
-    static final String PROJECT_UUID    = "PROJECT_UUID";
+    static final String PROJECT_UUID = "PROJECT_UUID";
 
     protected TrackingRecord trackingRecord;
 
-    public static KickStopTrackingRecordTask aTask(Context context) {
-        return new KickStopTrackingRecordTask(context);
+    public static CheckOutTask aTask(Context context) {
+        return new CheckOutTask(context);
     }
 
-    protected KickStopTrackingRecordTask(Context context) {
+    protected CheckOutTask(Context context) {
         super(context);
     }
 
-    public KickStopTrackingRecordTask withProjectUuid(String projectUuid) {
+    public CheckOutTask withProjectUuid(String projectUuid) {
         arguments.putString(PROJECT_UUID, projectUuid);
         return this;
     }
@@ -46,8 +46,8 @@ public class KickStopTrackingRecordTask extends AbstractAsyncTask {
 
     protected void onPostExecute(Long result) {
         if (BuildConfig.DEBUG) {
-            Log.i(getClass().getSimpleName(), "Kick stopped tracking record " + trackingRecord);
+            Log.i(getClass().getSimpleName(), "Performed CheckOut " + trackingRecord);
         }
-        ottoProvider.getSharedBus().post(new KickStoppedTrackingRecordEvent(trackingRecord));
+        ottoProvider.getSharedBus().post(new CheckOutEvent(trackingRecord));
     }
 }

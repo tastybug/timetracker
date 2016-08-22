@@ -26,5 +26,6 @@ Fachliches Glossar
 * Zeiterfassungshistorie / TrackingLog: eine Liste aller TrackingRecords zu einem Projekt in chronologischer Reihenfolge
 
 * Verben
-    * Kickstart: Starten einer Zeiterfassung
-    * Kickstop: Stoppen einer Zeiterfassung
+    * CheckIn: Starten einer Zeiterfassung
+    * CheckOut: Stoppen einer Zeiterfassung
+    * Pausieren: alias eines Checkouts
