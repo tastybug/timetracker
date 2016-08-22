@@ -21,8 +21,13 @@ public class ConditionalLog {
     }
 
     private static void log(int level, String tag, String message) {
-        if (Log.isLoggable(tag, level)) {
-            Log.i(tag, message);
+        String validatedTag = getTagWithValidLength(tag);
+        if (Log.isLoggable(validatedTag, level)) {
+            Log.i(validatedTag, message);
         }
+    }
+
+    private static String getTagWithValidLength(String tag) {
+        return tag.length() > 23 ? tag.substring(0, 23) : tag;
     }
 }
