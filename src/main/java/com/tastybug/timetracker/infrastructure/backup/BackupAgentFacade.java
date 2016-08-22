@@ -4,7 +4,6 @@ import android.app.backup.BackupAgent;
 import android.app.backup.BackupDataInput;
 import android.app.backup.BackupDataOutput;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.infrastructure.backup.in.BackupRestoredEvent;
@@ -14,6 +13,9 @@ import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 
 import java.io.IOException;
 import java.util.Date;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 /**
  * @link https://developer.android.com/guide/topics/data/backup.html
@@ -26,7 +28,7 @@ public class BackupAgentFacade extends BackupAgent {
     private OttoProvider ottoProvider = new OttoProvider();
 
     public BackupAgentFacade() {
-        Log.i(getClass().getSimpleName(), "Starting BackupAgentFacade");
+        logInfo(getClass().getSimpleName(), "Starting BackupAgentFacade");
     }
 
     public BackupAgentFacade(InternalBackupService internalBackupService,
@@ -41,11 +43,11 @@ public class BackupAgentFacade extends BackupAgent {
     public void onBackup(ParcelFileDescriptor oldState,
                          BackupDataOutput data,
                          ParcelFileDescriptor newState) throws IOException {
-        Log.i(getClass().getSimpleName(), "onBackup");
+        logInfo(getClass().getSimpleName(), "onBackup");
         initDependencies();
 
         if (!backupEnabledService.isBackupFacilityEnabled()) {
-            Log.d(getClass().getSimpleName(), "Backup disabled..");
+            logDebug(getClass().getSimpleName(), "Backup disabled..");
             return;
         }
 
@@ -61,11 +63,11 @@ public class BackupAgentFacade extends BackupAgent {
     public void onRestore(BackupDataInput data,
                           int appVersionCode,
                           ParcelFileDescriptor newState) throws IOException {
-        Log.i(getClass().getSimpleName(), "onRestore");
+        logInfo(getClass().getSimpleName(), "onRestore");
         initDependencies();
 
         if (!backupEnabledService.isBackupFacilityEnabled()) {
-            Log.d(getClass().getSimpleName(), "Backup disabled..");
+            logDebug(getClass().getSimpleName(), "Backup disabled..");
             return;
         }
 

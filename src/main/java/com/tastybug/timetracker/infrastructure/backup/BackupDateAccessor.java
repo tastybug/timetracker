@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.infrastructure.backup;
 
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import com.google.common.base.Optional;
 
@@ -11,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logError;
 
 public class BackupDateAccessor {
 
@@ -50,7 +51,7 @@ public class BackupDateAccessor {
             out.writeLong(date.getTime());
             out.flush();
         } catch (IOException ioe) {
-            Log.e(TAG, "Error while writing backup date: " + ioe.getMessage(), ioe);
+            logError(TAG, "Error while writing backup date: " + ioe.getMessage(), ioe);
         } finally {
             try {
                 if (outstream != null) {

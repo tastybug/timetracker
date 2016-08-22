@@ -3,11 +3,9 @@ package com.tastybug.timetracker.ui.projectdetails;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.squareup.otto.Subscribe;
-import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
@@ -15,6 +13,8 @@ import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.core.BaseActivity;
 import com.tastybug.timetracker.ui.dashboard.ProjectsActivity;
 import com.tastybug.timetracker.ui.shared.PostTrackingSummaryVisualizationHandler;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
 
 public class ProjectDetailsActivity extends BaseActivity {
 
@@ -99,9 +99,7 @@ public class ProjectDetailsActivity extends BaseActivity {
             Das Eventhandling muss in der Activity passieren, da das Fragment nicht weiss, ob es two-pane oder single-pane
             ausgefuehrt wird. Ergo muss die Activity entscheiden, wie eine Projektloeschung sich navigatorisch auswirkt.
              */
-            if (BuildConfig.DEBUG) {
-                Log.d(getClass().getSimpleName(), "Deleted project " + event.getProjectUuid());
-            }
+            logDebug(getClass().getSimpleName(), "Deleted project " + event.getProjectUuid());
             onBackPressed();
         }
     }

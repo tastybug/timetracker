@@ -2,12 +2,12 @@ package com.tastybug.timetracker.task.tracking;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class DeleteTrackingRecordTask extends AbstractAsyncTask {
 
@@ -39,9 +39,7 @@ public class DeleteTrackingRecordTask extends AbstractAsyncTask {
 
     protected void onPostExecute(Long result) {
         String uuid = arguments.getString(TRACKING_RECORD_UUID);
-        if (BuildConfig.DEBUG) {
-            Log.i(getClass().getSimpleName(), "Deleted tracking record " + uuid);
-        }
+        logInfo(getClass().getSimpleName(), "Deleted tracking record " + uuid);
         ottoProvider.getSharedBus().post(new DeletedTrackingRecordEvent(uuid));
     }
 }

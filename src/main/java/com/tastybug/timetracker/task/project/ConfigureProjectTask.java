@@ -2,11 +2,9 @@ package com.tastybug.timetracker.task.project;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
@@ -15,6 +13,8 @@ import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import java.util.Date;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 // TODO hier withoutX methoden anbieten, sonst muss man immer nachschauen, wie man einen Wert loswird!
 public class ConfigureProjectTask extends AbstractAsyncTask {
@@ -126,9 +126,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        if (BuildConfig.DEBUG) {
-            Log.i(getClass().getSimpleName(), "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
-        }
+        logInfo(getClass().getSimpleName(), "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
         ottoProvider.getSharedBus().post(new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID)));
     }
 

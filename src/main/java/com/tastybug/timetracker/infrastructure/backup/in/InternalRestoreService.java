@@ -3,7 +3,6 @@ package com.tastybug.timetracker.infrastructure.backup.in;
 import android.app.backup.BackupDataInput;
 import android.content.Context;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import com.tastybug.timetracker.infrastructure.backup.BackupDateAccessor;
 import com.tastybug.timetracker.infrastructure.backup.BackupLog;
@@ -11,6 +10,8 @@ import com.tastybug.timetracker.model.Project;
 
 import java.io.IOException;
 import java.util.List;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logError;
 
 public class InternalRestoreService {
 
@@ -45,11 +46,11 @@ public class InternalRestoreService {
             backupDateAccessor.writeBackupDate(newState);
             backupLog.logRestoreSuccess(appVersionCode);
         } catch (IOException ioe) {
-            Log.e(TAG, "Error while restoring: " + ioe.getMessage(), ioe);
+            logError(TAG, "Error while restoring: " + ioe.getMessage(), ioe);
             backupLog.logRestoreFail(appVersionCode, ioe.getMessage());
             throw ioe;
         } catch (Exception e) {
-            Log.e(TAG, "Error while restoring: " + e.getMessage(), e);
+            logError(TAG, "Error while restoring: " + e.getMessage(), e);
             backupLog.logRestoreFail(appVersionCode, e.getMessage());
         }
     }

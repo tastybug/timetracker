@@ -3,7 +3,6 @@ package com.tastybug.timetracker.infrastructure.backup.out;
 import android.app.backup.BackupDataOutput;
 import android.content.Context;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.infrastructure.backup.BackupDateAccessor;
@@ -11,6 +10,9 @@ import com.tastybug.timetracker.infrastructure.backup.BackupLog;
 
 import java.io.IOException;
 import java.util.Date;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logError;
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class InternalBackupService {
 
@@ -45,9 +47,9 @@ public class InternalBackupService {
         boolean result = !lastBackupDate.isPresent() ||
                 dataChangeIndicator.hasDataChangesSince(lastBackupDate.get());
         if (lastBackupDate.isPresent()) {
-            Log.i(TAG, "Last backup was: " + lastBackupDate.get() + ", data " + (dataChangeIndicator.hasDataChangesSince(lastBackupDate.get()) ? "has changed" : "has not changed"));
+            logInfo(TAG, "Last backup was: " + lastBackupDate.get() + ", data " + (dataChangeIndicator.hasDataChangesSince(lastBackupDate.get()) ? "has changed" : "has not changed"));
         } else {
-            Log.i(TAG, "Very first backup commencing now..");
+            logInfo(TAG, "Very first backup commencing now..");
         }
         if (!result) {
             backupLog.logBackupUnnecessary(lastBackupDate);
@@ -64,11 +66,11 @@ public class InternalBackupService {
             backupDateAccessor.writeBackupDate(newState);
             backupLog.logBackupSuccess(lastBackupDate);
         } catch (IOException ioe) {
-            Log.e(TAG, "Error while generating backup: " + ioe.getMessage(), ioe);
+            logError(TAG, "Error while generating backup: " + ioe.getMessage(), ioe);
             backupLog.logBackupFail(lastBackupDate, ioe.getMessage());
             throw ioe;
         } catch (Exception e) {
-            Log.e(TAG, "Error while generating backup: " + e.getMessage(), e);
+            logError(TAG, "Error while generating backup: " + e.getMessage(), e);
             backupLog.logBackupFail(lastBackupDate, e.getMessage());
         }
     }

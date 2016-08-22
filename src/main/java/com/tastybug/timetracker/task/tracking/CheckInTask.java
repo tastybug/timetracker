@@ -2,13 +2,13 @@ package com.tastybug.timetracker.task.tracking;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class CheckInTask extends AbstractAsyncTask {
 
@@ -47,9 +47,7 @@ public class CheckInTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        if (BuildConfig.DEBUG) {
-            Log.i(getClass().getSimpleName(), "Performed CheckIn " + trackingRecord);
-        }
+        logInfo(getClass().getSimpleName(), "Performed CheckIn " + trackingRecord);
         ottoProvider.getSharedBus().post(new CheckInEvent(trackingRecord));
     }
 }

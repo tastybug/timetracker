@@ -8,6 +8,13 @@ public class ConditionalLog {
         log(Log.ERROR, tag,message);
     }
 
+    public static void logError(String tag, String message, Exception e) {
+        String validatedTag = getTagWithValidLength(tag);
+        if (Log.isLoggable(validatedTag, Log.ERROR)) {
+            Log.e(validatedTag, message, e);
+        }
+    }
+
     public static void logWarn(String tag, String message) {
         log(Log.WARN, tag,message);
     }
@@ -23,7 +30,22 @@ public class ConditionalLog {
     private static void log(int level, String tag, String message) {
         String validatedTag = getTagWithValidLength(tag);
         if (Log.isLoggable(validatedTag, level)) {
-            Log.i(validatedTag, message);
+            switch(level) {
+                case Log.DEBUG:
+                    Log.d(validatedTag, message);
+                    break;
+                case Log.INFO:
+                    Log.i(validatedTag, message);
+                    break;
+                case Log.WARN:
+                    Log.w(validatedTag, message);
+                    break;
+                case Log.ERROR:
+                    Log.e(validatedTag, message);
+                    break;
+                default:
+                    Log.wtf(validatedTag, message);
+            }
         }
     }
 

@@ -2,7 +2,6 @@ package com.tastybug.timetracker.task.testdata;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Project;
@@ -13,6 +12,8 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class TestDataGenerationTask extends AbstractAsyncTask {
 
@@ -34,7 +35,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
     }
 
     protected void onPostExecute(Long result) {
-        Log.i(getClass().getSimpleName(), "Created test data");
+        logInfo(getClass().getSimpleName(), "Created test data");
         ottoProvider.getSharedBus().post(new TestdataGeneratedEvent());
     }
 
