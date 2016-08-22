@@ -92,6 +92,7 @@ public class ProjectCreationDialog extends DialogFragment {
                 .execute();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void handleProjectCreatedEvent(ProjectCreatedEvent event) {
         if (openConfigurationAfterCreation) {
