@@ -65,7 +65,7 @@ public class NotificationBuilder {
         notificationBuilder
                 .setContentText(context.getString(R.string.tracking_player_paused_since_X,
                         Formatter.dateTime().format(latestRecord.getEnd().get())))
-                .setSmallIcon(R.drawable.ic_trackingplayer_paused)
+                .setSmallIcon(R.drawable.ic_notification_paused)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),
                         createDismissPausedIntent(context, project))
