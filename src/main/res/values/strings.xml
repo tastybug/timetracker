@@ -197,5 +197,10 @@
     <string name="trademarks_other_title">Other Trademarks</string>
     <string name="trademarks_other_summary">All other trademarks belong to their respective owners.</string>
 
+    <!-- warning notifications -->
+    <string name="project_X_completion_warning">%1$s completion warning</string>
+    <string name="more_than_90_percent_completion_reached">More than 90&#37; of allotted hours used.</string>
+    <string name="project_X_expiration_warning">%1$s expiration warning</string>
+    <string name="project_ends_on_X">Project ends on %1$s.</string>
 
 </resources>

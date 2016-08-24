@@ -57,6 +57,9 @@
         <service
             android:name=".infrastructure.backup.DataChangeListenerBackgroundService"
             android:exported="false" />
+        <service
+            android:name=".ui.warn.WarningEventListenerService"
+            android:exported="false" />
 
         <!--database stuff-->
         <meta-data

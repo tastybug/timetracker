@@ -7,12 +7,13 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StatisticProjectDuration {
 
     private Duration duration = new Duration(0);
 
-    public StatisticProjectDuration(TrackingConfiguration configuration, ArrayList<TrackingRecord> trackingRecords, boolean countRunning) {
+    public StatisticProjectDuration(TrackingConfiguration configuration, List<TrackingRecord> trackingRecords, boolean countRunning) {
         Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(trackingRecords);
 
@@ -25,7 +26,7 @@ public class StatisticProjectDuration {
     }
 
     private void performCalculation(TrackingConfiguration configuration,
-                                    ArrayList<TrackingRecord> trackingRecords,
+                                    List<TrackingRecord> trackingRecords,
                                     boolean countRunning) {
         for (TrackingRecord trackingRecord : trackingRecords) {
             if (trackingRecord.isRunning() && !countRunning) {
