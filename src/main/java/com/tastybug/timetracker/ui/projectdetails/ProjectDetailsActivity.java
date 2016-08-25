@@ -12,7 +12,7 @@ import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.core.BaseActivity;
 import com.tastybug.timetracker.ui.dashboard.ProjectsActivity;
-import com.tastybug.timetracker.ui.shared.PostTrackingSummaryVisualizationHandler;
+import com.tastybug.timetracker.ui.delegate.CheckoutAskForDescriptionDelegate;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
 
@@ -20,7 +20,7 @@ public class ProjectDetailsActivity extends BaseActivity {
 
     public static final String PROJECT_UUID = "PROJECT_UUID";
 
-    private PostTrackingSummaryVisualizationHandler postTrackingSummaryVisualizationHandler;
+    private CheckoutAskForDescriptionDelegate checkoutAskForDescriptionDelegate;
     private BackPressOnProjectDeletion backPressOnProjectDeletion;
     private String projectUuid;
 
@@ -41,7 +41,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        postTrackingSummaryVisualizationHandler = new PostTrackingSummaryVisualizationHandler(this);
+        checkoutAskForDescriptionDelegate = new CheckoutAskForDescriptionDelegate(this);
         backPressOnProjectDeletion = new BackPressOnProjectDeletion();
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
@@ -59,7 +59,7 @@ public class ProjectDetailsActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        postTrackingSummaryVisualizationHandler.stop();
+        checkoutAskForDescriptionDelegate.stop();
         backPressOnProjectDeletion.stop();
     }
 

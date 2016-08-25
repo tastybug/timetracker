@@ -20,7 +20,7 @@ import com.tastybug.timetracker.task.tracking.CheckOutEvent;
 import com.tastybug.timetracker.task.tracking.CheckOutTask;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
-import com.tastybug.timetracker.ui.shared.CheckInDelegate;
+import com.tastybug.timetracker.ui.delegate.CheckInPreconditionCheckDelegate;
 
 public class TrackingControlPanelFragment extends Fragment implements View.OnClickListener {
 
@@ -67,7 +67,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         if (ongoing.isPresent()) {
             CheckOutTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
         } else {
-            CheckInDelegate.aDelegate(getActivity()).startTracking(currentProjectOpt.get());
+            CheckInPreconditionCheckDelegate.aDelegate(getActivity()).startTracking(currentProjectOpt.get());
         }
     }
 

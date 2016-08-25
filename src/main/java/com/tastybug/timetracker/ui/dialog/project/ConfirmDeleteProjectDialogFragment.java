@@ -10,7 +10,7 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
-import com.tastybug.timetracker.ui.shared.DurationFormatter;
+import com.tastybug.timetracker.ui.util.DurationFormatter;
 
 import org.joda.time.Duration;
 

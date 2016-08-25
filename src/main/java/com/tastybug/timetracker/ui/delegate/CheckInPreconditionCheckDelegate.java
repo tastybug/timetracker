@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.ui.shared;
+package com.tastybug.timetracker.ui.delegate;
 
 import android.app.Activity;
 
@@ -22,15 +22,15 @@ import java.util.Date;
  * muessen und in der UI mittels Warnungsdialogen angezeigt werden muessen.
  * Da das CheckIn von mehreren Stellen aus gestartet werden kann, ist das hier zentralisiert.
  */
-public class CheckInDelegate {
+public class CheckInPreconditionCheckDelegate {
 
     private Activity activity;
 
-    public static CheckInDelegate aDelegate(Activity activity) {
-        return new CheckInDelegate(activity);
+    public static CheckInPreconditionCheckDelegate aDelegate(Activity activity) {
+        return new CheckInPreconditionCheckDelegate(activity);
     }
 
-    protected CheckInDelegate(Activity activity) {
+    protected CheckInPreconditionCheckDelegate(Activity activity) {
         this.activity = activity;
     }
 

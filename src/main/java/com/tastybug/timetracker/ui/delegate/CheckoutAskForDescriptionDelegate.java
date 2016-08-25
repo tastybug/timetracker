@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.ui.shared;
+package com.tastybug.timetracker.ui.delegate;
 
 import android.app.Activity;
 import android.support.design.widget.Snackbar;
@@ -13,12 +13,13 @@ import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.task.tracking.CheckOutEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
+import com.tastybug.timetracker.ui.util.DurationFormatter;
 
-public class PostTrackingSummaryVisualizationHandler extends AbstractOttoEventHandler {
+public class CheckoutAskForDescriptionDelegate extends AbstractOttoEventHandler {
 
     private Activity activity;
 
-    public PostTrackingSummaryVisualizationHandler(Activity activity) {
+    public CheckoutAskForDescriptionDelegate(Activity activity) {
         this.activity = activity;
     }
 

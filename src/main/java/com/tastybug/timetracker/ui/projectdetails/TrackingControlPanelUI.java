@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.ui.shared.DurationFormatter;
+import com.tastybug.timetracker.ui.util.DurationFormatter;
 import com.tastybug.timetracker.util.Formatter;
 
 import org.joda.time.LocalDate;

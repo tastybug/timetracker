@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.ui.shared.DurationFormatter;
+import com.tastybug.timetracker.ui.util.DurationFormatter;
 import com.tastybug.timetracker.util.Formatter;
 
 import org.joda.time.LocalDate;

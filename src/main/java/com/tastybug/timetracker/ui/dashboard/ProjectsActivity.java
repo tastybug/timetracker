@@ -5,11 +5,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.ui.shared.PostTrackingSummaryVisualizationHandler;
+import com.tastybug.timetracker.ui.delegate.CheckoutAskForDescriptionDelegate;
 
 public class ProjectsActivity extends AppCompatActivity {
 
-    private PostTrackingSummaryVisualizationHandler postTrackingSummaryVisualizationHandler;
+    private CheckoutAskForDescriptionDelegate checkoutAskForDescriptionDelegate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +31,12 @@ public class ProjectsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        postTrackingSummaryVisualizationHandler = new PostTrackingSummaryVisualizationHandler(this);
+        checkoutAskForDescriptionDelegate = new CheckoutAskForDescriptionDelegate(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        postTrackingSummaryVisualizationHandler.stop();
+        checkoutAskForDescriptionDelegate.stop();
     }
 }

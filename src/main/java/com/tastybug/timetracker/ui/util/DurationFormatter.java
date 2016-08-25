@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.ui.shared;
+package com.tastybug.timetracker.ui.util;
 
 import android.content.Context;
 
