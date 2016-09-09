@@ -19,45 +19,49 @@ import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModi
 
 public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment {
 
-    private static String TRACKING_RECORD = "TRACKING_RECORD";
+    private static String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
+    private static String TRACKING_RECORD_DESCRIPTION = "TRACKING_RECORD_DESCRIPTION";
 
     private EditText descriptionEditText;
 
-    private TrackingRecord trackingRecord;
-
+    private String trackingRecordUuid;
+    private Optional<String> descriptionOptional;
 
     public static EditTrackingRecordDescriptionDialogFragment aDialog() {
         return new EditTrackingRecordDescriptionDialogFragment();
     }
 
     public EditTrackingRecordDescriptionDialogFragment forTrackingRecord(TrackingRecord trackingRecord) {
-        this.trackingRecord = trackingRecord;
+        this.trackingRecordUuid = trackingRecord.getUuid();
+        this.descriptionOptional = trackingRecord.getDescription();
         return this;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(TRACKING_RECORD, trackingRecord);
+        outState.putString(TRACKING_RECORD_UUID, trackingRecordUuid);
+        outState.putSerializable(TRACKING_RECORD_DESCRIPTION, getDescriptionFromWidget());
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            this.trackingRecord = (TrackingRecord) savedInstanceState.getSerializable(TRACKING_RECORD);
+            this.trackingRecordUuid = savedInstanceState.getString(TRACKING_RECORD_UUID);
+            this.descriptionOptional = (Optional<String>) savedInstanceState.getSerializable(TRACKING_RECORD_DESCRIPTION);
         }
 
-        if (trackingRecord == null) {
-            throw new IllegalStateException("No tracking record given for modification.");
+        if (trackingRecordUuid == null) {
+            throw new IllegalStateException("No tracking record data given for modification.");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(prepareView())
+        builder.setView(prepareView(descriptionOptional))
                 .setPositiveButton(R.string.common_save, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         ModifyTrackingRecordTask
                                 .aTask(getActivity())
-                                .withTrackingRecordUuid(trackingRecord.getUuid())
+                                .withTrackingRecordUuid(trackingRecordUuid)
                                 .withDescription(getDescriptionFromWidget())
                                 .execute();
                         dismiss();
@@ -65,7 +69,7 @@ public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment 
                 })
                 .setNeutralButton(R.string.button_show_tracking_record_editing_activity, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        showTrackingRecordEditingActivity(trackingRecord);
+                        showTrackingRecordEditingActivity(trackingRecordUuid);
                         dismiss();
                     }
                 })
@@ -77,25 +81,25 @@ public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment 
         return builder.create();
     }
 
-    private void showTrackingRecordEditingActivity(TrackingRecord trackingRecord) {
+    private void showTrackingRecordEditingActivity(String trackingRecordUuid) {
         Intent intent = new Intent(getActivity(), TrackingRecordModificationActivity.class);
-        intent.putExtra(TrackingRecordModificationActivity.TRACKING_RECORD_UUID, trackingRecord.getUuid());
+        intent.putExtra(TrackingRecordModificationActivity.TRACKING_RECORD_UUID, trackingRecordUuid);
         startActivity(intent);
     }
 
-    private View prepareView() {
+    private View prepareView(Optional<String> descriptionOptional) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View rootView = inflater.inflate(R.layout.dialog_tracking_record_description_editing, null);
         descriptionEditText = (EditText) rootView.findViewById(R.id.tracking_record_description);
 
-        renderExistingDescription(trackingRecord);
+        renderExistingDescription(descriptionOptional);
 
         return rootView;
     }
 
-    private void renderExistingDescription(TrackingRecord record) {
-        if (record.getDescription().isPresent()) {
-            descriptionEditText.setText(record.getDescription().get());
+    private void renderExistingDescription(Optional<String> descriptionOptional) {
+        if (descriptionOptional.isPresent()) {
+            descriptionEditText.setText(descriptionOptional.get());
         }
     }
 
