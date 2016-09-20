@@ -65,8 +65,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
                 : R.string.duration_label_X_no_max);
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {
-                projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
-                        "<1",
+                projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour_of_X,
                         configuration.getHourLimit().get()));
             } else {
                 projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
@@ -78,8 +77,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
                 projectDurationStatisticValue.setText(R.string.duration_zero);
             } else {
                 if (duration.getStandardHours() < 1) {
-                    projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
-                            "<1"));
+                    projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour));
                 } else {
                     projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
                             duration.getStandardHours()));

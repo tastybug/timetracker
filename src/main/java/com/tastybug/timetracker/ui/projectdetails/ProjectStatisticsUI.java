@@ -58,8 +58,7 @@ public class ProjectStatisticsUI {
 
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {
-                projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,
-                        "<1",
+                projectDurationTextView.setText(context.getString(R.string.less_than_one_hour_recorded_from_a_total_of_Y,
                         configuration.getHourLimit().get()));
             } else {
                 projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far_from_a_total_of_Y,
@@ -71,8 +70,7 @@ public class ProjectStatisticsUI {
                 projectDurationTextView.setText(R.string.nothing_recorded_yet);
             } else {
                 if (duration.getStandardHours() < 1) {
-                    projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far,
-                            "<1"));
+                    projectDurationTextView.setText(R.string.less_than_one_hour_recorded_so_far);
                 } else {
                     projectDurationTextView.setText(context.getString(R.string.X_recorded_hours_so_far,
                             duration.getStandardHours()));

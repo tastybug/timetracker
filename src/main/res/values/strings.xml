@@ -32,9 +32,11 @@
 
     <!-- project statistics -->
     <string name="project_ended_on_X">The project ended on %1$s.</string>
-    <string name="project_remaining_days_X_until_Y">Remaining days %1$s (until %2$s)</string>
-    <string name="X_recorded_hours_so_far">Recorded %1$sh</string>
-    <string name="X_recorded_hours_so_far_from_a_total_of_Y">Recorded %1$sh/%2$sh</string>
+    <string name="project_remaining_days_X_until_Y">Remaining days %1$d (until %2$s)</string>
+    <string name="less_than_one_hour_recorded_so_far">Recorded &lt;1h</string>
+    <string name="X_recorded_hours_so_far">Recorded %1$dh</string>
+    <string name="less_than_one_hour_recorded_from_a_total_of_Y">Recorded &lt;1h/%1$dh</string>
+    <string name="X_recorded_hours_so_far_from_a_total_of_Y">Recorded %1$dh/%2$dh</string>
     <string name="nothing_recorded_yet">Nothing recorded yet ..</string>
 
     <!-- tracking record editing -->
@@ -89,19 +91,21 @@
     <string name="warning_tracking_after_project_time_frame_which_ended_on_X">This project ended on %1$s!\nDo you still want to check in now?</string>
 
     <!-- warning dialog tracking beyond project amount -->
-    <string name="warning_tracking_exceeds_project_amount_of_X_hours">Project hour limit (%1$s) reached.\nStill keep tracking?</string>
+    <string name="warning_tracking_exceeds_project_amount_of_X_hours">Project hour limit (%1$d) reached.\nStill keep tracking?</string>
 
     <!-- project view -->
     <string name="current_record_started_at_X">Tracking since %1$s</string>
     <string name="last_record_ended_at_X">Last record ended %1$s</string>
     <string name="duration_label_X_no_max">Recorded hours:</string>
-    <string name="duration_X_no_max">%1$sh</string>
+    <string name="less_than_one_hour">&lt;1h</string>
+    <string name="duration_X_no_max">%1$dh</string>
     <string name="duration_label_X_of_Y">Recorded hours (/max):</string>
-    <string name="duration_X_of_Y">%1$sh/%2$sh</string>
+    <string name="less_than_one_hour_of_X">&lt;1h/%1$dh</string>
+    <string name="duration_X_of_Y">%1$dh/%2$dh</string>
     <string name="duration_zero">..none yet</string>
     <string name="label_remaining_days_until_date_Y">Remaining days (end date):</string>
     <string name="label_remaining_days_over">Remaining days:</string>
-    <string name="remaining_days_X_until_date_Y">%1$s (%2$s)</string>
+    <string name="remaining_days_X_until_date_Y">%1$d (%2$s)</string>
     <string name="remaining_days_over_since_X">project closed since %1$s</string>
 
     <!-- tracking stopped summary snackbar -->
@@ -143,7 +147,7 @@
     <string name="tracking_configuration_hour_limit_preference_summary_none">No Hour Limit</string>
     <string name="warning_invalid_hour_limit_was_reverted">Invalid hour limit has been reverted</string>
     <string name="no_hour_limit">No hour limit set</string>
-    <string name="hour_limit_of_X_hours">Project limited to %1$s hours</string>
+    <string name="hour_limit_of_X_hours">Project limited to %1$d hours</string>
     <string name="tracking_configuration_start_date_preference_key">tracking_configuration_start_date_preference_key</string>
     <string name="tracking_configuration_start_date_preference_title">First Day</string>
     <string name="tracking_configuration_start_date_preference_summary_none">The project starts at no specific date</string>
