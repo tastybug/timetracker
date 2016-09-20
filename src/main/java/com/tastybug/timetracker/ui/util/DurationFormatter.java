@@ -1,11 +1,7 @@
 package com.tastybug.timetracker.ui.util;
 
-import android.content.Context;
-
-import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 
 import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
@@ -13,42 +9,49 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 public class DurationFormatter {
 
-    public DurationFormatter() {
+    private String hoursAbbreviation,
+            minutesAbbreviation,
+            secondsAbbreviation;
+
+    DurationFormatter() {
+        this("h", "m", "s");
+    }
+
+    DurationFormatter(String hoursAbbreviation, String minutesAbbreviation, String secondsAbbreviation) {
+        this.hoursAbbreviation = hoursAbbreviation;
+        this.minutesAbbreviation = minutesAbbreviation;
+        this.secondsAbbreviation = secondsAbbreviation;
     }
 
     public static DurationFormatter a() {
         return new DurationFormatter();
     }
 
-    public String formatEffectiveDuration(Context context, TrackingRecord trackingRecord) {
-        Duration effectiveDuration = trackingRecord.toEffectiveDuration(getTrackingConfiguration(context, trackingRecord)).get();
-        return formatDuration(context, effectiveDuration);
+    public String formatEffectiveDuration(TrackingConfiguration trackingConfiguration, TrackingRecord trackingRecord) {
+        Duration effectiveDuration = trackingRecord.toEffectiveDuration(trackingConfiguration).get();
+        return formatDuration(effectiveDuration);
     }
 
-    public String formatMeasuredDuration(Context context, TrackingRecord trackingRecord) {
+    public String formatMeasuredDuration(TrackingRecord trackingRecord) {
         Duration measuredDuration = trackingRecord.toDuration().get();
-        return formatDuration(context, measuredDuration);
+        return formatDuration(measuredDuration);
     }
 
-    public String formatDuration(Context context, Duration duration) {
-        return getFormatter(context, duration).print(duration.toPeriod());
+    public String formatDuration(Duration duration) {
+        return getFormatter(duration).print(duration.toPeriod());
     }
 
-    private TrackingConfiguration getTrackingConfiguration(Context context, TrackingRecord trackingRecord) {
-        return new TrackingConfigurationDAO(context).getByProjectUuid(trackingRecord.getProjectUuid()).get();
-    }
-
-    private PeriodFormatter getFormatter(Context context, Duration duration) {
+    private PeriodFormatter getFormatter(Duration duration) {
         if (duration.getStandardHours() > 0) {
-            return getFormatterForHoursMinutesSeconds(context);
+            return getFormatterForHoursMinutesSeconds();
         } else if (duration.getStandardMinutes() > 0) {
-            return getFormatterForMinutesSeconds(context);
+            return getFormatterForMinutesSeconds();
         } else {
-            return getFormatterForSeconds(context);
+            return getFormatterForSeconds();
         }
     }
 
-    private PeriodFormatter getFormatterForHoursMinutesSeconds(Context context) {
+    private PeriodFormatter getFormatterForHoursMinutesSeconds() {
         return new PeriodFormatterBuilder()
                 .printZeroIfSupported()
                 .appendHours()
@@ -59,11 +62,11 @@ public class DurationFormatter {
                 .appendSeparator(":")
                 .printZeroIfSupported()
                 .appendSeconds()
-                .appendSuffix(" " + context.getString(R.string.hours_short))
+                .appendSuffix(hoursAbbreviation)
                 .toFormatter();
     }
 
-    private PeriodFormatter getFormatterForMinutesSeconds(Context context) {
+    private PeriodFormatter getFormatterForMinutesSeconds() {
         return new PeriodFormatterBuilder()
                 .printZeroIfSupported()
                 .appendMinutes()
@@ -71,16 +74,16 @@ public class DurationFormatter {
                 .minimumPrintedDigits(2)
                 .printZeroIfSupported()
                 .appendSeconds()
-                .appendSuffix(" " + context.getString(R.string.minutes_short))
+                .appendSuffix(minutesAbbreviation)
                 .toFormatter();
 
     }
 
-    private PeriodFormatter getFormatterForSeconds(Context context) {
+    protected PeriodFormatter getFormatterForSeconds() {
         return new PeriodFormatterBuilder()
                 .printZeroIfSupported()
                 .appendSeconds()
-                .appendSuffix(" " + context.getString(R.string.seconds_short))
+                .appendSuffix(secondsAbbreviation)
                 .toFormatter();
     }
 }

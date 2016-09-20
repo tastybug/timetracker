@@ -16,7 +16,7 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.statistics.StatisticProjectCompletion;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.model.statistics.StatisticProjectExpiration;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.joda.time.Duration;
 
@@ -117,7 +117,7 @@ public class ProjectStatisticsUI {
     private void renderProjectTimeFrameTextualDescription(StatisticProjectExpiration statistic, TrackingConfiguration trackingConfiguration) {
         Optional<Integer> expirationPercent = statistic.getExpirationPercent();
         if (expirationPercent.isPresent()) { // <- theres an end date that limits the time frame
-            String endDateString = Formatter.date().format(trackingConfiguration.getEndDateAsInclusive().get());
+            String endDateString = DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEndDateAsInclusive().get());
             if (statistic.isExpired()) {
                 projectTimeFrameTextView.setText(context.getString(R.string.project_ended_on_X, endDateString));
             } else {

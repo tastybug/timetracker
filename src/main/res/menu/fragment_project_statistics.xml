@@ -3,15 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@id/menu_item_generate_report"
+        android:icon="@drawable/ic_confirm"
+        android:orderInCategory="0"
+        android:title="@string/menu_generate_report"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/menu_configure_project"
-        android:orderInCategory="1"
         android:icon="@drawable/ic_modify"
+        android:orderInCategory="1"
         android:title="@string/menu_edit_project"
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_delete_project"
-        android:orderInCategory="2"
         android:icon="@drawable/ic_delete"
+        android:orderInCategory="2"
         android:title="@string/menu_delete_project"
         app:showAsAction="never" />
 

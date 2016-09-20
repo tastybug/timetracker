@@ -2,7 +2,7 @@ package com.tastybug.timetracker.model.json;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,10 +22,10 @@ public class TrackingRecordJSON extends JSONObject {
         put(ID_COLUMN, trackingRecord.getUuid());
         put(PROJECT_UUID_COLUMN, trackingRecord.getProjectUuid());
         if (trackingRecord.getStart().isPresent()) {
-            put(START_DATE_COLUMN, Formatter.iso8601().format(trackingRecord.getStart().get()));
+            put(START_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(trackingRecord.getStart().get()));
         }
         if (trackingRecord.getEnd().isPresent()) {
-            put(END_DATE_COLUMN, Formatter.iso8601().format(trackingRecord.getEnd().get()));
+            put(END_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(trackingRecord.getEnd().get()));
         }
         if (trackingRecord.getDescription().isPresent()) {
             put(DESCRIPTION_COLUMN, trackingRecord.getDescription().get());
@@ -44,8 +44,8 @@ public class TrackingRecordJSON extends JSONObject {
         return new TrackingRecord(
                 getString(ID_COLUMN),
                 getString(PROJECT_UUID_COLUMN),
-                isNull(START_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(START_DATE_COLUMN))),
-                isNull(END_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(END_DATE_COLUMN))),
+                isNull(START_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(DefaultLocaleDateFormatter.iso8601().parse(getString(START_DATE_COLUMN))),
+                isNull(END_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(DefaultLocaleDateFormatter.iso8601().parse(getString(END_DATE_COLUMN))),
                 Optional.fromNullable(optString(DESCRIPTION_COLUMN, null))
         );
     }

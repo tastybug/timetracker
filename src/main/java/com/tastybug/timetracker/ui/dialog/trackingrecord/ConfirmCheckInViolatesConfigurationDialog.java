@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.task.tracking.CheckInTask;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
 
@@ -90,10 +90,10 @@ public class ConfirmCheckInViolatesConfigurationDialog extends DialogFragment {
     private String getMessage() {
         if (startDateOpt.isPresent()) {
             return getString(R.string.warning_tracking_before_project_time_frame_which_starts_at_X,
-                    Formatter.date().format(startDateOpt.get()));
+                    DefaultLocaleDateFormatter.date().format(startDateOpt.get()));
         } else if (endDateOpt.isPresent()) {
             return getString(R.string.warning_tracking_after_project_time_frame_which_ended_on_X,
-                    Formatter.date().format(endDateOpt.get()));
+                    DefaultLocaleDateFormatter.date().format(endDateOpt.get()));
         } else if (maxHoursOpt.isPresent()) {
             return getString(R.string.warning_tracking_exceeds_project_amount_of_X_hours,
                     maxHoursOpt.get());

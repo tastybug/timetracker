@@ -14,7 +14,7 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.ui.dialog.picker.DatePickerDialogFragment;
 import com.tastybug.timetracker.ui.dialog.picker.TimePickerDialogFragment;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -24,10 +24,10 @@ import java.util.Date;
 
 public class TrackingRecordModificationUI {
 
-    public static final String START_DATE_TOPIC = "START_DATE_TOPIC";
-    public static final String START_TIME_TOPIC = "START_TIME_TOPIC";
-    public static final String END_DATE_TOPIC = "END_DATE_TOPIC";
-    public static final String END_TIME_TOPIC = "END_TIME_TOPIC";
+    private static final String START_DATE_TOPIC = "START_DATE_TOPIC";
+    private static final String START_TIME_TOPIC = "START_TIME_TOPIC";
+    private static final String END_DATE_TOPIC = "END_DATE_TOPIC";
+    private static final String END_TIME_TOPIC = "END_TIME_TOPIC";
 
     private EditText startDateEditText;
     private EditText startTimeEditText;
@@ -37,12 +37,12 @@ public class TrackingRecordModificationUI {
 
     private Context context;
 
-    public TrackingRecordModificationUI(Context context) {
+    TrackingRecordModificationUI(Context context) {
         this.context = context;
         new OttoProvider().getSharedBus().register(this);
     }
 
-    public View inflateWidgets(LayoutInflater inflater, ViewGroup container, final FragmentManager fragmentManager) {
+    View inflateWidgets(LayoutInflater inflater, ViewGroup container, final FragmentManager fragmentManager) {
         View rootView = inflater.inflate(R.layout.fragment_tracking_record_editing, container);
 
         startDateEditText = (EditText) rootView.findViewById(R.id.start_date);
@@ -107,13 +107,13 @@ public class TrackingRecordModificationUI {
         return rootView;
     }
 
-    public void destroy() {
+    void destroy() {
         new OttoProvider().getSharedBus().unregister(this);
     }
 
-    public void renderStartDate(Optional<Date> dateOptional) {
+    void renderStartDate(Optional<Date> dateOptional) {
         if (dateOptional.isPresent()) {
-            startDateEditText.setText(context.getString(R.string.from_X, Formatter.date().format(dateOptional.get())));
+            startDateEditText.setText(context.getString(R.string.from_X, DefaultLocaleDateFormatter.date().format(dateOptional.get())));
             startDateEditText.setTag(dateOptional.get());
         } else {
             startDateEditText.setText("");
@@ -121,9 +121,9 @@ public class TrackingRecordModificationUI {
         }
     }
 
-    public void renderStartTime(Optional<Date> dateOptional) {
+    void renderStartTime(Optional<Date> dateOptional) {
         if (dateOptional.isPresent()) {
-            startTimeEditText.setText(Formatter.time().format(dateOptional.get()));
+            startTimeEditText.setText(DefaultLocaleDateFormatter.time().format(dateOptional.get()));
             startTimeEditText.setTag(dateOptional.get());
         } else {
             startTimeEditText.setText("");
@@ -131,9 +131,9 @@ public class TrackingRecordModificationUI {
         }
     }
 
-    public void renderEndDate(Optional<Date> dateOptional) {
+    void renderEndDate(Optional<Date> dateOptional) {
         if (dateOptional.isPresent()) {
-            endDateEditText.setText(context.getString(R.string.until_X, Formatter.date().format(dateOptional.get())));
+            endDateEditText.setText(context.getString(R.string.until_X, DefaultLocaleDateFormatter.date().format(dateOptional.get())));
             endDateEditText.setTag(dateOptional.get());
         } else {
             endDateEditText.setText("");
@@ -141,9 +141,9 @@ public class TrackingRecordModificationUI {
         }
     }
 
-    public void renderEndTime(Optional<Date> dateOptional) {
+    void renderEndTime(Optional<Date> dateOptional) {
         if (dateOptional.isPresent()) {
-            endTimeEditText.setText(Formatter.time().format(dateOptional.get()));
+            endTimeEditText.setText(DefaultLocaleDateFormatter.time().format(dateOptional.get()));
             endTimeEditText.setTag(dateOptional.get());
         } else {
             endTimeEditText.setText("");
@@ -151,13 +151,13 @@ public class TrackingRecordModificationUI {
         }
     }
 
-    public void renderDescription(Optional<String> description) {
+    void renderDescription(Optional<String> description) {
         descriptionEditText.setText(description.isPresent()
                 ? description.get()
                 : "");
     }
 
-    public Optional<Date> getStartDateFromWidget(boolean blame) {
+    Optional<Date> getStartDateFromWidget(boolean blame) {
         Optional<Date> dateOptional = Optional.fromNullable((Date) startDateEditText.getTag());
         if (blame) {
             startDateEditText.setError(dateOptional.isPresent()
@@ -167,7 +167,7 @@ public class TrackingRecordModificationUI {
         return dateOptional;
     }
 
-    public Optional<Date> getStartTimeFromWidget(boolean blame) {
+    Optional<Date> getStartTimeFromWidget(boolean blame) {
         Optional<Date> dateOptional = Optional.fromNullable((Date) startTimeEditText.getTag());
         if (blame) {
             startTimeEditText.setError(dateOptional.isPresent()
@@ -177,7 +177,7 @@ public class TrackingRecordModificationUI {
         return dateOptional;
     }
 
-    public Optional<Date> getEndDateFromWidget(boolean blame) {
+    Optional<Date> getEndDateFromWidget(boolean blame) {
         Optional<Date> dateOptional = Optional.fromNullable((Date) endDateEditText.getTag());
         if (blame) {
             endDateEditText.setError(dateOptional.isPresent()
@@ -187,7 +187,7 @@ public class TrackingRecordModificationUI {
         return dateOptional;
     }
 
-    public Optional<Date> getEndTimeFromWidget(boolean blame) {
+    Optional<Date> getEndTimeFromWidget(boolean blame) {
         Optional<Date> dateOptional = Optional.fromNullable((Date) endTimeEditText.getTag());
         if (blame) {
             endTimeEditText.setError(dateOptional.isPresent()
@@ -197,13 +197,13 @@ public class TrackingRecordModificationUI {
         return dateOptional;
     }
 
-    public Optional<String> getDescriptionFromWidget() {
+    Optional<String> getDescriptionFromWidget() {
         return TextUtils.isEmpty(descriptionEditText.getText())
                 ? Optional.<String>absent()
                 : Optional.of(descriptionEditText.getText().toString());
     }
 
-    public void blameEndDateBeforeStartDate(boolean isErroneous) {
+    void blameEndDateBeforeStartDate(boolean isErroneous) {
         endDateEditText.setError(!isErroneous
                 ? null
                 : context.getString(R.string.error_end_before_start));
@@ -213,7 +213,7 @@ public class TrackingRecordModificationUI {
 
     }
 
-    public Optional<Date> getAggregatedStartDate(boolean blame) {
+    Optional<Date> getAggregatedStartDate(boolean blame) {
         Optional<Date> startDateOpt = getStartDateFromWidget(blame);
         Optional<Date> startTimeOpt = getStartTimeFromWidget(blame);
 
@@ -224,7 +224,7 @@ public class TrackingRecordModificationUI {
         return Optional.of(getAggregatedDate(startDateOpt, startTimeOpt).toDate());
     }
 
-    public Optional<Date> getAggregatedEndDate(boolean blame) {
+    Optional<Date> getAggregatedEndDate(boolean blame) {
         Optional<Date> endDateOpt = getEndDateFromWidget(blame);
         Optional<Date> endTimeOpt = getEndTimeFromWidget(blame);
 

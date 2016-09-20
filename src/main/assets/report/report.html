@@ -1,0 +1,82 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><!-- ${title} --></title>
+    <style>
+            * {
+             font-size: 90%;
+            }
+
+            .title_bar {
+                background-color: lightblue;
+                font-weight: bold;
+                padding: 5px;
+                margin-bottom: 20px;
+            }
+
+            .row {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                width: 95%;
+                margin: 5px;
+            }
+
+            .header {
+                background-color: #FFEEDB;
+                font-weight: bold;
+            }
+
+            .data {
+                flex-grow: 0;
+                padding: 5px;
+            }
+
+            .twenty {
+                width: 20%;
+            }
+
+            .fifty {
+                width: 50%;
+            }
+
+            .seventy {
+                width: 70%;
+            }
+
+            .separator_meta_from_table {
+                padding-top: 30px;
+            }
+
+
+    </style>
+</head>
+
+<body>
+
+<div class="title_bar"><!-- ${title} --></div>
+
+<div class="row">
+    <div class="data header twenty"><!-- ${project_title_label} --></div>
+    <div class="data seventy"><!-- ${project_title} --></div>
+</div>
+
+<div class="row">
+    <div class="data header twenty"><!-- ${project_description_label} --></div>
+    <div class="data seventy"><!-- ${project_description} --></div>
+</div>
+
+<div class="separator_meta_from_table"></div>
+
+<div class="row header">
+    <div class="data twenty"><!-- ${date_header} --></div>
+    <div class="data twenty"><!-- ${amount_header} --></div>
+    <div class="data fifty"><!-- ${description_header} --></div>
+</div>
+
+<!-- ${reportables_list} -->
+
+</body>
+
+</html>

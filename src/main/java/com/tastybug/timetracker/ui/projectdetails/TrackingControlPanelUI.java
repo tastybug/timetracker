@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.ui.util.DurationFormatter;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.ui.util.LocalizedDurationFormatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.joda.time.LocalDate;
 
@@ -27,6 +27,14 @@ public class TrackingControlPanelUI {
     private Context context;
 
     private Optional<TrackingRecord> ongoingTrackingRecordOpt = Optional.absent();
+    private Runnable updateUITask = new Runnable() {
+        public void run() {
+            if (TrackingControlPanelUI.this.ongoingTrackingRecordOpt.isPresent()) {
+                visualizeOngoingTracking(TrackingControlPanelUI.this.ongoingTrackingRecordOpt);
+            }
+            uiUpdateHandler.postDelayed(updateUITask, 1000);
+        }
+    };
 
     public TrackingControlPanelUI(Context context) {
         this.context = context;
@@ -53,7 +61,7 @@ public class TrackingControlPanelUI {
         lineOne.setText(context.getString(R.string.msg_tracking_since_X,
                 getStartDateAsString(ongoingTrackingRecord.get().getStart().get())));
         lineTwo.setText(context.getString(R.string.msg_tracking_duration_X,
-                DurationFormatter.a().formatMeasuredDuration(context, ongoingTrackingRecordOpt.get())));
+                LocalizedDurationFormatter.a().formatMeasuredDuration(ongoingTrackingRecordOpt.get())));
     }
 
     public void visualizeNoOngoingTracking() {
@@ -74,16 +82,7 @@ public class TrackingControlPanelUI {
 
     private String getStartDateAsString(Date startDate) {
         return new LocalDate().isEqual(new LocalDate(startDate))
-                ? Formatter.time().format(startDate) // today
-                : Formatter.dateTime().format(startDate); // yesterday or even farther away
+                ? DefaultLocaleDateFormatter.time().format(startDate) // today
+                : DefaultLocaleDateFormatter.dateTime().format(startDate); // yesterday or even farther away
     }
-
-    private Runnable updateUITask = new Runnable() {
-        public void run() {
-            if (TrackingControlPanelUI.this.ongoingTrackingRecordOpt.isPresent()) {
-                visualizeOngoingTracking(TrackingControlPanelUI.this.ongoingTrackingRecordOpt);
-            }
-            uiUpdateHandler.postDelayed(updateUITask, 1000);
-        }
-    };
 }

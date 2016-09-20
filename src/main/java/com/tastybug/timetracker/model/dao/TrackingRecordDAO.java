@@ -7,7 +7,7 @@ import android.database.Cursor;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -55,7 +55,25 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
         Preconditions.checkNotNull(uuid, "Cannot get tracking records by project uuid, null given!");
 
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), PROJECT_UUID_COLUMN + "=?", new String[]{uuid}, null);
-        ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
+        ArrayList<TrackingRecord> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            list.add(createEntityFromCursor(context, cursor));
+        }
+        cursor.close();
+        return list;
+    }
+
+    public ArrayList<TrackingRecord> getByTimeFrame(String projectUuid, Date startDate, Date endDateExclusive) {
+        Preconditions.checkNotNull(projectUuid, "Project UUID must not be null!");
+        Preconditions.checkNotNull(startDate, "Start date must not be null!");
+        Preconditions.checkNotNull(endDateExclusive, "EndDateExclusive date must not be null!");
+
+        Cursor cursor = context.getContentResolver().query(getQueryUri(),
+                getColumns(),
+                PROJECT_UUID_COLUMN + "=? AND " + START_DATE_COLUMN + ">? AND " + END_DATE_COLUMN + "<?",
+                new String[]{projectUuid, DefaultLocaleDateFormatter.iso8601().format(startDate), DefaultLocaleDateFormatter.iso8601().format(endDateExclusive)},
+                null);
+        ArrayList<TrackingRecord> list = new ArrayList<>();
         while (cursor.moveToNext()) {
             list.add(createEntityFromCursor(context, cursor));
         }
@@ -86,7 +104,7 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
                 null,
                 null);
 
-        ArrayList<TrackingRecord> list = new ArrayList<TrackingRecord>();
+        ArrayList<TrackingRecord> list = new ArrayList<>();
         while (cursor.moveToNext()) {
             list.add(createEntityFromCursor(context, cursor));
         }
@@ -121,8 +139,8 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
             return new TrackingRecord(
                     uuid,
                     projectUuid,
-                    startAsString != null ? Optional.of(Formatter.iso8601().parse(startAsString)) : Optional.<Date>absent(),
-                    endAsString != null ? Optional.of(Formatter.iso8601().parse(endAsString)) : Optional.<Date>absent(),
+                    startAsString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(startAsString)) : Optional.<Date>absent(),
+                    endAsString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(endAsString)) : Optional.<Date>absent(),
                     Optional.fromNullable(description)
             );
         } catch (ParseException pe) {
@@ -144,7 +162,7 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
 
     private String formatDate(Optional<Date> date) {
         if (date.isPresent()) {
-            return Formatter.iso8601().format(date.get());
+            return DefaultLocaleDateFormatter.iso8601().format(date.get());
         }
         return null;
     }

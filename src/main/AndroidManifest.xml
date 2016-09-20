@@ -4,11 +4,11 @@
 
     <application
         android:name=".infrastructure.runtime.Application"
-        android:theme="@style/Theme.AppCompat.DayNight"
         android:allowBackup="true"
         android:backupAgent=".infrastructure.backup.BackupAgentFacade"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/Theme.AppCompat.DayNight">
         <activity
             android:name=".ui.dashboard.ProjectsActivity"
             android:launchMode="singleTop"
@@ -42,11 +42,20 @@
         </activity>
 
         <provider
+            android:name=".infrastructure.db.DatabaseContentProvider"
             android:authorities="com.tastybug.timetracker"
             android:exported="false"
-            android:multiprocess="true"
-            android:name=".infrastructure.db.DatabaseContentProvider"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:multiprocess="true" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.tastybug.timetracker.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
 
         <service
             android:name=".ui.trackingplayer.LifecycleService"

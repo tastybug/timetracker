@@ -17,7 +17,7 @@ import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
 
@@ -76,13 +76,13 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         }
         if (trackingConfiguration.getStart().isPresent()) {
             findPreference(getString(R.string.tracking_configuration_start_date_preference_key))
-                    .setSummary(getString(R.string.starts_at_X, Formatter.date().format(trackingConfiguration.getStart().get())));
+                    .setSummary(getString(R.string.starts_at_X, DefaultLocaleDateFormatter.date().format(trackingConfiguration.getStart().get())));
         } else {
             findPreference(getString(R.string.tracking_configuration_start_date_preference_key)).setSummary(R.string.tracking_configuration_start_date_preference_summary_none);
         }
         if (trackingConfiguration.getEnd().isPresent()) {
             findPreference(getString(R.string.tracking_configuration_end_date_inclusive_preference_key))
-                    .setSummary(getString(R.string.ends_at_inclusive_X, Formatter.date().format(trackingConfiguration.getEndDateAsInclusive().get())));
+                    .setSummary(getString(R.string.ends_at_inclusive_X, DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEndDateAsInclusive().get())));
         } else {
             findPreference(getString(R.string.tracking_configuration_end_date_inclusive_preference_key)).setSummary(R.string.tracking_configuration_end_date_inclusive_preference_summary_none);
         }

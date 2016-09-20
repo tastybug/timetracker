@@ -15,11 +15,14 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
+import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.dialog.project.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.ui.projectconfiguration.ProjectConfigurationActivity;
+import com.tastybug.timetracker.ui.report.CreateReportDialogFragment;
 
 public class ProjectStatisticsFragment extends Fragment {
 
@@ -69,10 +72,23 @@ public class ProjectStatisticsFragment extends Fragment {
             case R.id.menu_configure_project:
                 showProjectConfigurationActivity();
                 return true;
+            case R.id.menu_item_generate_report:
+                showReportDialog();
+                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return false;
         }
+    }
+
+    private void showReportDialog() {
+        CreateReportDialogFragment
+                .aDialog(getTrackingConfigurationForCurrentProject())
+                .show(getFragmentManager(), getClass().getSimpleName());
+    }
+
+    private TrackingConfiguration getTrackingConfigurationForCurrentProject() {
+        return new TrackingConfigurationDAO(getActivity()).getByProjectUuid(currentProjectOpt.get().getUuid()).get();
     }
 
     private void showProjectConfigurationActivity() {

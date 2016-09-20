@@ -8,7 +8,7 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import static com.tastybug.timetracker.ui.trackingplayer.internal.CallbackIntentFactory.createCycleProjectIntent;
 import static com.tastybug.timetracker.ui.trackingplayer.internal.CallbackIntentFactory.createDismissPausedIntent;
@@ -48,7 +48,7 @@ public class NotificationBuilder {
     public NotificationBuilder forRunningProject(Project project, TrackingRecord trackingRecord) {
         notificationBuilder
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
-                        Formatter.dateTime().format(trackingRecord.getStart().get())))
+                        DefaultLocaleDateFormatter.dateTime().format(trackingRecord.getStart().get())))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_check_out_button),
@@ -64,7 +64,7 @@ public class NotificationBuilder {
 
         notificationBuilder
                 .setContentText(context.getString(R.string.tracking_player_paused_since_X,
-                        Formatter.dateTime().format(latestRecord.getEnd().get())))
+                        DefaultLocaleDateFormatter.dateTime().format(latestRecord.getEnd().get())))
                 .setSmallIcon(R.drawable.ic_notification_paused)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),

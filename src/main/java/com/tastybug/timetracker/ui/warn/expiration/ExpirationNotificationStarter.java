@@ -10,7 +10,7 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
 
@@ -39,7 +39,7 @@ public class ExpirationNotificationStarter {
         Date endDate = trackingConfigurationDAO.getByProjectUuid(uuid).get().getEndDateAsInclusive().get();
 
         Notification notification = notificationBuilder.setContentTitle(context.getString(R.string.project_X_expiration_warning, project.getTitle()))
-                .setContentText(context.getString(R.string.project_ends_on_X, Formatter.date().format(endDate)))
+                .setContentText(context.getString(R.string.project_ends_on_X, DefaultLocaleDateFormatter.date().format(endDate)))
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setSmallIcon(R.drawable.ic_notification_warning)
                 .setContentIntent(createOpenProjectDetailsActivityIntent(context, project))

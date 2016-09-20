@@ -4,7 +4,8 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DateProvider;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class BackupLogTest {
 
     SharedPreferences preferences = mock(SharedPreferences.class);
     SharedPreferences.Editor editor = mock(SharedPreferences.Editor.class);
-    BackupLog.DateProvider dateProvider = mock(BackupLog.DateProvider.class);
+    DateProvider dateProvider = mock(DateProvider.class);
 
     BackupLog subject = new BackupLog(preferences, editor, dateProvider);
 
@@ -68,7 +69,7 @@ public class BackupLogTest {
         subject.logBackupSuccess(Optional.of(date));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(Formatter.iso8601().format(date)));
+        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
     }
 
     @Test
@@ -86,7 +87,7 @@ public class BackupLogTest {
         subject.logBackupSuccess(Optional.of(new Date()));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_SUCCESSFUL_DATE), eq(Formatter.iso8601().format(currentDate)));
+        verify(editor, times(1)).putString(eq(BACKUP_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -98,7 +99,7 @@ public class BackupLogTest {
         subject.logBackupUnnecessary(Optional.of(date));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(Formatter.iso8601().format(date)));
+        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
     }
 
     @Test
@@ -116,7 +117,7 @@ public class BackupLogTest {
         subject.logBackupUnnecessary(Optional.of(new Date()));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_UNNECESSARY_DATE), eq(Formatter.iso8601().format(currentDate)));
+        verify(editor, times(1)).putString(eq(BACKUP_UNNECESSARY_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -128,7 +129,7 @@ public class BackupLogTest {
         subject.logBackupUnnecessary(Optional.of(date));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(Formatter.iso8601().format(date)));
+        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
     }
 
     @Test
@@ -146,7 +147,7 @@ public class BackupLogTest {
         subject.logBackupFail(Optional.of(new Date()), "asd");
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_FAILED_DATE), eq(Formatter.iso8601().format(currentDate)));
+        verify(editor, times(1)).putString(eq(BACKUP_FAILED_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -164,7 +165,7 @@ public class BackupLogTest {
         subject.logRestoreSuccess(123);
 
         // then
-        verify(editor, times(1)).putString(eq(RESTORE_SUCCESSFUL_DATE), eq(Formatter.iso8601().format(currentDate)));
+        verify(editor, times(1)).putString(eq(RESTORE_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -182,7 +183,7 @@ public class BackupLogTest {
         subject.logRestoreFail(123, "asd");
 
         // then
-        verify(editor, times(1)).putString(eq(RESTORE_FAILED_DATE), eq(Formatter.iso8601().format(currentDate)));
+        verify(editor, times(1)).putString(eq(RESTORE_FAILED_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -207,7 +208,7 @@ public class BackupLogTest {
     public void getPreviousSuccessBackupDate_returns_date_if_available() throws Exception {
         // given
         Date storedDate = new Date(123456);
-        when(preferences.getString(eq(BACKUP_LAST_SUCCESSFUL_DATE), (String) isNull())).thenReturn(Formatter.iso8601().format(storedDate));
+        when(preferences.getString(eq(BACKUP_LAST_SUCCESSFUL_DATE), (String) isNull())).thenReturn(DefaultLocaleDateFormatter.iso8601().format(storedDate));
 
         // when
         Optional<Date> dateOptional = subject.getPreviousSuccessBackupDate();
@@ -232,7 +233,7 @@ public class BackupLogTest {
     public void getSuccessBackupDate_returns_date_if_available() throws Exception {
         // given
         Date storedDate = new Date(123456);
-        when(preferences.getString(eq(BACKUP_SUCCESSFUL_DATE), (String) isNull())).thenReturn(Formatter.iso8601().format(storedDate));
+        when(preferences.getString(eq(BACKUP_SUCCESSFUL_DATE), (String) isNull())).thenReturn(DefaultLocaleDateFormatter.iso8601().format(storedDate));
 
         // when
         Optional<Date> dateOptional = subject.getSuccessBackupDate();
@@ -257,7 +258,7 @@ public class BackupLogTest {
     public void getFailedBackupDate_returns_date_if_available() throws Exception {
         // given
         Date storedDate = new Date(123456);
-        when(preferences.getString(eq(BACKUP_FAILED_DATE), (String) isNull())).thenReturn(Formatter.iso8601().format(storedDate));
+        when(preferences.getString(eq(BACKUP_FAILED_DATE), (String) isNull())).thenReturn(DefaultLocaleDateFormatter.iso8601().format(storedDate));
 
         // when
         Optional<Date> dateOptional = subject.getFailedBackupDate();
@@ -307,7 +308,7 @@ public class BackupLogTest {
     public void getSuccessRestoreDate_returns_date_if_available() throws Exception {
         // given
         Date storedDate = new Date(123456);
-        when(preferences.getString(eq(RESTORE_SUCCESSFUL_DATE), (String) isNull())).thenReturn(Formatter.iso8601().format(storedDate));
+        when(preferences.getString(eq(RESTORE_SUCCESSFUL_DATE), (String) isNull())).thenReturn(DefaultLocaleDateFormatter.iso8601().format(storedDate));
 
         // when
         Optional<Date> dateOptional = subject.getSuccessRestoreDate();
@@ -358,7 +359,7 @@ public class BackupLogTest {
     public void getFailedRestoreDate_returns_date_if_available() throws Exception {
         // given
         Date storedDate = new Date(123456);
-        when(preferences.getString(eq(RESTORE_FAILED_DATE), (String) isNull())).thenReturn(Formatter.iso8601().format(storedDate));
+        when(preferences.getString(eq(RESTORE_FAILED_DATE), (String) isNull())).thenReturn(DefaultLocaleDateFormatter.iso8601().format(storedDate));
 
         // when
         Optional<Date> dateOptional = subject.getFailedRestoreDate();

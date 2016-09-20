@@ -8,7 +8,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -84,8 +84,8 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
                     cursor.getString(colsList.indexOf(UUID_COLUMN)),
                     cursor.getString(colsList.indexOf(PROJECT_UUID_COLUMN)),
                     Optional.fromNullable(hourLimit),
-                    startDateString != null ? Optional.of(Formatter.iso8601().parse(startDateString)) : Optional.<Date>absent(),
-                    endDateString != null ? Optional.of(Formatter.iso8601().parse(endDateString)) : Optional.<Date>absent(),
+                    startDateString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(startDateString)) : Optional.<Date>absent(),
+                    endDateString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(endDateString)) : Optional.<Date>absent(),
                     promptForDescription,
                     RoundingFactory.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
             );
@@ -110,7 +110,7 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
 
     private String formatDate(Optional<Date> date) {
         if (date.isPresent()) {
-            return Formatter.iso8601().format(date.get());
+            return DefaultLocaleDateFormatter.iso8601().format(date.get());
         }
         return null;
     }

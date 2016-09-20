@@ -11,8 +11,8 @@ import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.ui.util.DurationFormatter;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.ui.util.LocalizedDurationFormatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.joda.time.LocalDate;
 
@@ -46,11 +46,11 @@ public class TrackingRecordView extends LinearLayout {
         String timeFrameText;
 
         if (trackingRecord.isRunning()) {
-            DateFormat ongoingFormatter = Formatter.dateTime();
+            DateFormat ongoingFormatter = DefaultLocaleDateFormatter.dateTime();
             timeFrameText = getContext().getString(R.string.running_since_X,
                     ongoingFormatter.format(trackingRecord.getStart().get()));
         } else {
-            DateFormat finishedFormatter = Formatter.date();
+            DateFormat finishedFormatter = DefaultLocaleDateFormatter.date();
             if (isCompletedOnSameDay(trackingRecord)) {
                 timeFrameText = finishedFormatter.format(trackingRecord.getStart().get());
             } else {
@@ -70,9 +70,9 @@ public class TrackingRecordView extends LinearLayout {
 
         if (trackingRecord.isFinished()
                 && trackingConfiguration.hasAlteringRoundingStrategy()) {
-            durationTextView.setText(DurationFormatter.a().formatEffectiveDuration(getContext(), trackingRecord));
+            durationTextView.setText(LocalizedDurationFormatter.a().formatEffectiveDuration(trackingConfiguration, trackingRecord));
         } else {
-            durationTextView.setText(DurationFormatter.a().formatMeasuredDuration(getContext(), trackingRecord));
+            durationTextView.setText(LocalizedDurationFormatter.a().formatMeasuredDuration(trackingRecord));
         }
     }
 

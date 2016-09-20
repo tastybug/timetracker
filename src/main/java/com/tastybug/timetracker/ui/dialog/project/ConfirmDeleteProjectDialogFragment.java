@@ -10,7 +10,7 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
-import com.tastybug.timetracker.ui.util.DurationFormatter;
+import com.tastybug.timetracker.ui.util.LocalizedDurationFormatter;
 
 import org.joda.time.Duration;
 
@@ -36,7 +36,7 @@ public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
                     project.getTrackingRecords(getActivity()),
                     true
             ).getDuration();
-            return getString(R.string.msg_you_lose_X, DurationFormatter.a().formatDuration(getActivity(), effectiveProjectDuration));
+            return getString(R.string.msg_you_lose_X, LocalizedDurationFormatter.a(getActivity()).formatDuration(effectiveProjectDuration));
         }
     }
 

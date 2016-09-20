@@ -2,9 +2,13 @@ package com.tastybug.timetracker.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
-public class Formatter {
+public class DefaultLocaleDateFormatter {
+
+    public DefaultLocaleDateFormatter() {
+    }
 
     public static DateFormat iso8601() {
         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
@@ -20,6 +24,18 @@ public class Formatter {
 
     public static DateFormat dateTime() {
         return SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT);
+    }
+
+    public String dateFormat(Date date) {
+        return date().format(date);
+    }
+
+    public String timeFormat(Date date) {
+        return time().format(date);
+    }
+
+    public String dateTimeFormat(Date date) {
+        return dateTime().format(date);
     }
 
 }

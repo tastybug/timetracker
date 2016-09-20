@@ -11,5 +11,6 @@
 
     <!-- action bar entries -->
     <item name="menu_item_generate_testdata" type="id" />
+    <item name="menu_item_generate_report" type="id" />
 
 </resources>

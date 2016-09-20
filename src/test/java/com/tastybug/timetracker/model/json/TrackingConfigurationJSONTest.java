@@ -5,7 +5,7 @@ import android.os.Build;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,7 +93,7 @@ public class TrackingConfigurationJSONTest {
         TrackingConfigurationJSON json = new TrackingConfigurationJSON(trackingConfiguration);
 
         // then
-        assertEquals(date, Formatter.iso8601().parse(json.getString(TrackingConfigurationJSON.START_DATE_COLUMN)));
+        assertEquals(date, DefaultLocaleDateFormatter.iso8601().parse(json.getString(TrackingConfigurationJSON.START_DATE_COLUMN)));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class TrackingConfigurationJSONTest {
         TrackingConfigurationJSON json = new TrackingConfigurationJSON(trackingConfiguration);
 
         // then
-        assertEquals(date, Formatter.iso8601().parse(json.getString(TrackingConfigurationJSON.END_DATE_COLUMN)));
+        assertEquals(date, DefaultLocaleDateFormatter.iso8601().parse(json.getString(TrackingConfigurationJSON.END_DATE_COLUMN)));
     }
 
     @Test
@@ -234,8 +234,8 @@ public class TrackingConfigurationJSONTest {
         assertEquals(toImportFrom.get(UUID_COLUMN), trackingConfiguration.getUuid());
         assertEquals(toImportFrom.get(PROJECT_UUID_COLUMN), trackingConfiguration.getProjectUuid());
         assertEquals(toImportFrom.getInt(HOUR_LIMIT_COLUMN), trackingConfiguration.getHourLimit().get().intValue());
-        assertEquals(toImportFrom.getString(START_DATE_COLUMN), Formatter.iso8601().format(trackingConfiguration.getStart().get()));
-        assertEquals(toImportFrom.getString(END_DATE_COLUMN), Formatter.iso8601().format(trackingConfiguration.getEnd().get()));
+        assertEquals(toImportFrom.getString(START_DATE_COLUMN), DefaultLocaleDateFormatter.iso8601().format(trackingConfiguration.getStart().get()));
+        assertEquals(toImportFrom.getString(END_DATE_COLUMN), DefaultLocaleDateFormatter.iso8601().format(trackingConfiguration.getEnd().get()));
         assertEquals(toImportFrom.getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN), trackingConfiguration.isPromptForDescription());
         assertEquals(toImportFrom.getString(ROUNDING_STRATEGY_COLUMN), trackingConfiguration.getRoundingStrategy().name());
     }
@@ -299,8 +299,8 @@ public class TrackingConfigurationJSONTest {
         toImportFrom.put(UUID_COLUMN, "1234");
         toImportFrom.put(PROJECT_UUID_COLUMN, "1234");
         toImportFrom.put(HOUR_LIMIT_COLUMN, 1);
-        toImportFrom.put(START_DATE_COLUMN, Formatter.iso8601().format(new Date()));
-        toImportFrom.put(END_DATE_COLUMN, Formatter.iso8601().format(new Date()));
+        toImportFrom.put(START_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(new Date()));
+        toImportFrom.put(END_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(new Date()));
         toImportFrom.put(PROMPT_FOR_DESCRIPTION_COLUMN, false);
         toImportFrom.put(ROUNDING_STRATEGY_COLUMN, RoundingFactory.Strategy.NO_ROUNDING.name());
 

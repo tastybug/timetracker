@@ -8,6 +8,7 @@
     <string name="common_cancel">Cancel</string>
     <string name="common_discard">Discard</string>
     <string name="common_save">Save</string>
+    <string name="common_create">Create</string>
 
     <!-- project activity -->
     <string name="activity_project_title">Projects</string>
@@ -128,6 +129,8 @@
     <string name="sample_remaining_days_X_until_date_Y">7 (24.12.2016)</string>
     <string name="sample_tracking_since_X">tracking since 24.12.2016 13:00</string>
     <string name="sample_tracking_duration_X">Duration 20:10:05hrs</string>
+    <string name="sample_from_date_X">From 24/12/2016</string>
+    <string name="sample_until_date_X">Until 24/12/2016</string>
 
     <!-- Development stuff -->
     <string name="menu_item_generate_testdata">Generate Testdata</string>
@@ -206,5 +209,32 @@
     <string name="more_than_90_percent_completion_reached">More than 90&#37; of allotted hours used.</string>
     <string name="project_X_expiration_warning">%1$s expiration warning</string>
     <string name="project_ends_on_X">Project ends on %1$s.</string>
+
+    <!-- html report viewer dialog-->
+    <string name="menu_generate_report">Generate Report</string>
+    <string name="share_report_via">Share Report</string>
+
+    <!-- html report -->
+    <string name="report_title_for_project_X_from_Y_to_Z">%1$s, %2$s-%3$s</string>
+    <string name="report_project_title_label">Project Title</string>
+    <string name="report_project_description_label">Project Description</string>
+    <string name="report_date_header">Date</string>
+    <string name="report_amount_header">Amount</string>
+    <string name="report_description_header">Log</string>
+    <string name="report_project_no_description_placeholder" />
+    <string name="report_reportable_item_no_description_placeholder" />
+    <string name="dialog_create_report_title">Create Report</string>
+    <string name="dialog_create_report_time_frame">Report Time Frame</string>
+    <string name="dialog_create_report_first_day_X">From %1$s</string>
+    <string name="dialog_create_report_last_day_X">Until %1$s</string>
+    <string name="dialog_create_report_error_end_before_start">Time frame ends before it starts</string>
+    <string name="dialog_create_report_options">Report Options</string>
+    <string name="dialog_create_report_aggregate_days_option">Aggregate day wise</string>
+
+    <!-- report sharing -->
+    <string name="chooser_title_share_report_via">Share Via ..</string>
+    <string name="report_for_project_X_with_time_frame_Y_to_Z">Time Sheet \"%1$s\": %2$s &#8212; %3$s.</string>
+    <string name="report_for_project_X_with_time_frame_Y_to_Z_message_text">This message contains a comprehensive time sheet for project \"%1$s\", ranging from %2$s until %3$s.\n\nPlease note the attached file.</string>
+
 
 </resources>

@@ -4,7 +4,7 @@ import android.os.Build;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,7 +80,7 @@ public class TrackingRecordJSONTest {
         TrackingRecordJSON trackingRecordJSON = new TrackingRecordJSON(trackingRecord);
 
         // then
-        assertEquals(date, Formatter.iso8601().parse(trackingRecordJSON.getString(TrackingRecordJSON.START_DATE_COLUMN)));
+        assertEquals(date, DefaultLocaleDateFormatter.iso8601().parse(trackingRecordJSON.getString(TrackingRecordJSON.START_DATE_COLUMN)));
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TrackingRecordJSONTest {
         TrackingRecordJSON trackingRecordJSON = new TrackingRecordJSON(trackingRecord);
 
         // then
-        assertEquals(date, Formatter.iso8601().parse(trackingRecordJSON.getString(TrackingRecordJSON.END_DATE_COLUMN)));
+        assertEquals(date, DefaultLocaleDateFormatter.iso8601().parse(trackingRecordJSON.getString(TrackingRecordJSON.END_DATE_COLUMN)));
     }
 
     @Test
@@ -193,8 +193,8 @@ public class TrackingRecordJSONTest {
         // then
         assertEquals(toImportFrom.get(ID_COLUMN), trackingRecord.getUuid());
         assertEquals(toImportFrom.get(PROJECT_UUID_COLUMN), trackingRecord.getProjectUuid());
-        assertEquals(toImportFrom.getString(START_DATE_COLUMN), Formatter.iso8601().format(trackingRecord.getStart().get()));
-        assertEquals(toImportFrom.getString(END_DATE_COLUMN), Formatter.iso8601().format(trackingRecord.getEnd().get()));
+        assertEquals(toImportFrom.getString(START_DATE_COLUMN), DefaultLocaleDateFormatter.iso8601().format(trackingRecord.getStart().get()));
+        assertEquals(toImportFrom.getString(END_DATE_COLUMN), DefaultLocaleDateFormatter.iso8601().format(trackingRecord.getEnd().get()));
         assertEquals(toImportFrom.getString(DESCRIPTION_COLUMN), trackingRecord.getDescription().get());
     }
 

@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DateProvider;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -48,32 +49,32 @@ public class BackupLog {
 
     public void logBackupSuccess(Optional<Date> lastBackupDate) {
         storeLastSuccessfulBackupDate(lastBackupDate);
-        editor.putString(BACKUP_SUCCESSFUL_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
+        editor.putString(BACKUP_SUCCESSFUL_DATE, DefaultLocaleDateFormatter.iso8601().format(dateProvider.getCurrentDate())).apply();
         logInfo(TAG, "Successfully completed backup.");
     }
 
     public void logBackupUnnecessary(Optional<Date> lastBackupDate) {
         storeLastSuccessfulBackupDate(lastBackupDate);
-        editor.putString(BACKUP_UNNECESSARY_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
+        editor.putString(BACKUP_UNNECESSARY_DATE, DefaultLocaleDateFormatter.iso8601().format(dateProvider.getCurrentDate())).apply();
         logInfo(TAG, "Skipped backup as not necessary.");
     }
 
     public void logBackupFail(Optional<Date> lastBackupDate, String message) {
         storeLastSuccessfulBackupDate(lastBackupDate);
-        editor.putString(BACKUP_FAILED_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
+        editor.putString(BACKUP_FAILED_DATE, DefaultLocaleDateFormatter.iso8601().format(dateProvider.getCurrentDate())).apply();
         editor.putString(BACKUP_FAILED_MSG, message).apply();
         logInfo(TAG, "Failed backup, msg was: " + message);
     }
 
     public void logRestoreSuccess(int versionCode) {
         editor.putInt(RESTORE_SUCCESSFUL_APP_CODE, versionCode)
-                .putString(RESTORE_SUCCESSFUL_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate())).apply();
+                .putString(RESTORE_SUCCESSFUL_DATE, DefaultLocaleDateFormatter.iso8601().format(dateProvider.getCurrentDate())).apply();
         logInfo(TAG, "Successfully restored backup!");
     }
 
     public void logRestoreFail(int versionCode, String message) {
         editor.putInt(RESTORE_FAILED_APP_CODE, versionCode)
-                .putString(RESTORE_FAILED_DATE, Formatter.iso8601().format(dateProvider.getCurrentDate()))
+                .putString(RESTORE_FAILED_DATE, DefaultLocaleDateFormatter.iso8601().format(dateProvider.getCurrentDate()))
                 .putString(RESTORE_FAILED_MSG, message).apply();
         logInfo(TAG, "Failed backup restoration, msg was: " + message);
     }
@@ -120,7 +121,7 @@ public class BackupLog {
 
     private Optional<Date> getDateOptFromNullable(String dateString) throws ParseException {
         if (dateString != null) {
-            return Optional.of(Formatter.iso8601().parse(dateString));
+            return Optional.of(DefaultLocaleDateFormatter.iso8601().parse(dateString));
         } else {
             return Optional.absent();
         }
@@ -128,18 +129,8 @@ public class BackupLog {
 
     private void storeLastSuccessfulBackupDate(Optional<Date> lastDateOpt) {
         if (lastDateOpt.isPresent()) {
-            editor.putString(BACKUP_LAST_SUCCESSFUL_DATE, Formatter.iso8601().format(lastDateOpt.get())).apply();
+            editor.putString(BACKUP_LAST_SUCCESSFUL_DATE, DefaultLocaleDateFormatter.iso8601().format(lastDateOpt.get())).apply();
         }
     }
 
-    class DateProvider {
-
-        public DateProvider() {
-        }
-
-        public Date getCurrentDate() {
-            return new Date();
-        }
-
-    }
 }

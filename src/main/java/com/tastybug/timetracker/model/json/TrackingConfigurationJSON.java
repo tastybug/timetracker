@@ -3,7 +3,7 @@ package com.tastybug.timetracker.model.json;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
-import com.tastybug.timetracker.util.Formatter;
+import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,10 +28,10 @@ public class TrackingConfigurationJSON extends JSONObject {
             put(HOUR_LIMIT_COLUMN, trackingConfiguration.getHourLimit().get());
         }
         if (trackingConfiguration.getStart().isPresent()) {
-            put(START_DATE_COLUMN, Formatter.iso8601().format(trackingConfiguration.getStart().get()));
+            put(START_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(trackingConfiguration.getStart().get()));
         }
         if (trackingConfiguration.getEnd().isPresent()) {
-            put(END_DATE_COLUMN, Formatter.iso8601().format(trackingConfiguration.getEnd().get()));
+            put(END_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(trackingConfiguration.getEnd().get()));
         }
         put(PROMPT_FOR_DESCRIPTION_COLUMN, trackingConfiguration.isPromptForDescription());
         put(ROUNDING_STRATEGY_COLUMN, trackingConfiguration.getRoundingStrategy().name());
@@ -52,8 +52,8 @@ public class TrackingConfigurationJSON extends JSONObject {
                 getString(UUID_COLUMN),
                 getString(PROJECT_UUID_COLUMN),
                 isNull(HOUR_LIMIT_COLUMN) ? Optional.<Integer>absent() : Optional.of(getInt(HOUR_LIMIT_COLUMN)),
-                isNull(START_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(START_DATE_COLUMN))),
-                isNull(END_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(Formatter.iso8601().parse(getString(END_DATE_COLUMN))),
+                isNull(START_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(DefaultLocaleDateFormatter.iso8601().parse(getString(START_DATE_COLUMN))),
+                isNull(END_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(DefaultLocaleDateFormatter.iso8601().parse(getString(END_DATE_COLUMN))),
                 getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN),
                 RoundingFactory.Strategy.valueOf(getString(ROUNDING_STRATEGY_COLUMN))
         );
