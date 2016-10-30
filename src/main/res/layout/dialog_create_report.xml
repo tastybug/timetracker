@@ -26,7 +26,8 @@
             android:fontFamily="sans-serif"
             android:text="@string/sample_from_date_X"
             android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="?attr/editTextColor" />
 
         <TextView
             android:id="@+id/last_day_value"
@@ -34,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/sample_until_date_X"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="?attr/editTextColor" />
 
     </LinearLayout>
 
