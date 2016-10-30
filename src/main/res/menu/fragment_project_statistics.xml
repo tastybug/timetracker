@@ -4,10 +4,10 @@
 
     <item
         android:id="@id/menu_item_generate_report"
-        android:icon="@drawable/ic_confirm"
+        android:icon="@drawable/ic_create_report"
         android:orderInCategory="0"
         android:title="@string/menu_generate_report"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_configure_project"
         android:icon="@drawable/ic_modify"
