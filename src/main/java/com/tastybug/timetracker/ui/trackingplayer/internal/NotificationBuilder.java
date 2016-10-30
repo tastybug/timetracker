@@ -71,7 +71,8 @@ public class NotificationBuilder {
                         createDismissPausedIntent(context, project))
                 .addAction(R.drawable.ic_start_tracking,
                         context.getString(R.string.tracking_player_resume_button),
-                        createUnpauseTrackingIntent(context, project));
+                        createUnpauseTrackingIntent(context, project))
+                .setOngoing(false);
 
         return this;
     }
