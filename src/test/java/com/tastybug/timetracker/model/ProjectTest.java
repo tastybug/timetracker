@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.model;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Build;
 
@@ -33,16 +32,13 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class ProjectTest {
 
-    Context context = mock(Context.class);
-    DAOFactory daoFactory = mock(DAOFactory.class);
-    ProjectDAO projectDAO = mock(ProjectDAO.class);
-    TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
-    TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-    ContentResolver contentResolver = mock(ContentResolver.class);
+    private DAOFactory daoFactory = mock(DAOFactory.class);
+    private ProjectDAO projectDAO = mock(ProjectDAO.class);
+    private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
+    private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
 
     @Before
     public void setup() {
-        when(context.getContentResolver()).thenReturn(contentResolver);
         when(daoFactory.getDao(eq(Project.class), isA(Context.class))).thenReturn(projectDAO);
         when(daoFactory.getDao(eq(TrackingRecord.class), isA(Context.class))).thenReturn(trackingRecordDAO);
         when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
@@ -67,7 +63,7 @@ public class ProjectTest {
         project.setDescription(Optional.of("bla"));
 
         // then
-        assertEquals("bla", project.getDescription().get());
+        assertEquals("bla", project.getDescription().orNull());
 
         // when
         project.setDescription(Optional.<String>absent());
@@ -128,7 +124,7 @@ public class ProjectTest {
         project.setDAOFactory(daoFactory);
 
         // when
-        project.getTrackingRecords(context);
+        project.getTrackingRecords(mock(Context.class));
 
         // then
         verify(trackingRecordDAO, times(1)).getByProjectUuid(project.getUuid());
@@ -152,7 +148,7 @@ public class ProjectTest {
         when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
 
         // when
-        TrackingConfiguration trackingConfiguration = project.getTrackingConfiguration(context);
+        TrackingConfiguration trackingConfiguration = project.getTrackingConfiguration(mock(Context.class));
 
         // then
         assertEquals(expectedConfiguration, trackingConfiguration);
