@@ -1,20 +1,14 @@
 package com.tastybug.timetracker.model;
 
 import android.content.Context;
-import android.os.Build;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.dao.DAOFactory;
-import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.Date;
 
@@ -28,21 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class ProjectTest {
-
-    private DAOFactory daoFactory = mock(DAOFactory.class);
-    private ProjectDAO projectDAO = mock(ProjectDAO.class);
-    private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
-    private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-
-    @Before
-    public void setup() {
-        when(daoFactory.getDao(eq(Project.class), isA(Context.class))).thenReturn(projectDAO);
-        when(daoFactory.getDao(eq(TrackingRecord.class), isA(Context.class))).thenReturn(trackingRecordDAO);
-        when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
-    }
 
     @Test
     public void canCreateProjectWithTitle() {
@@ -120,6 +100,9 @@ public class ProjectTest {
     @Test
     public void canLazilyGetTrackingRecords() {
         // given
+        DAOFactory daoFactory = mock(DAOFactory.class);
+        TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
+        when(daoFactory.getDao(eq(TrackingRecord.class), isA(Context.class))).thenReturn(trackingRecordDAO);
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);
 
@@ -142,6 +125,9 @@ public class ProjectTest {
     @Test
     public void canLazilyGetTrackingConfiguration() {
         // given
+        DAOFactory daoFactory = mock(DAOFactory.class);
+        TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
+        when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);
         TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), Optional.<Integer>absent(), Optional.<Date>absent(), Optional.<Date>absent(), false, RoundingFactory.Strategy.NO_ROUNDING);

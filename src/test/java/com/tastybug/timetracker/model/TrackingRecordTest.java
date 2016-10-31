@@ -1,41 +1,18 @@
 package com.tastybug.timetracker.model;
 
 
-import android.content.Context;
-import android.os.Build;
-
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.model.dao.DAOFactory;
-import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
 import org.joda.time.LocalDateTime;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class TrackingRecordTest {
-
-    DAOFactory daoFactory = mock(DAOFactory.class);
-    TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
-
-    @Before
-    public void setup() {
-        when(daoFactory.getDao(eq(TrackingRecord.class), isA(Context.class))).thenReturn(trackingRecordDAO);
-    }
 
     @Test
     public void canStartATrackingRecordAndStopItLater() {
@@ -69,7 +46,7 @@ public class TrackingRecordTest {
         trackingRecord.setDescription(Optional.of("bla"));
 
         // then
-        assertEquals("bla", trackingRecord.getDescription().get());
+        assertEquals("bla", trackingRecord.getDescription().orNull());
     }
 
     @Test(expected = IllegalStateException.class)

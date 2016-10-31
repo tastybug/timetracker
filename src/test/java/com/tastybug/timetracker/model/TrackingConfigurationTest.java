@@ -1,15 +1,11 @@
 package com.tastybug.timetracker.model;
 
-import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.model.dao.DAOFactory;
-import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.RoundingFactory;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -20,22 +16,10 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class TrackingConfigurationTest {
-
-    DAOFactory daoFactory = mock(DAOFactory.class);
-    TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-
-    @Before
-    public void setup() {
-        when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
-    }
 
     @Test
     public void canCreateTrackingConfiguration() {
@@ -126,7 +110,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test
-    public void canGetEnddateAsAnInclusiveDate() {
+    public void canGetEndDateAsAnInclusiveDate() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -140,7 +124,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test
-    public void canSetEnddateAsInclusiveDate() {
+    public void canSetEndDateAsInclusiveDate() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
         DateTime lastInclusiveDate = new DateTime(2015, 12, 31, 0, 0);

@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.model;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -47,7 +46,7 @@ public class Project extends Entity implements Comparable<Project> {
     }
 
     public void setTitle(String title) {
-        Preconditions.checkArgument(!TextUtils.isEmpty(title), "Project has empty or null title!");
+        Preconditions.checkArgument(title != null && title.length() > 0, "Project has empty or null title!");
         this.title = title;
     }
 
@@ -64,6 +63,10 @@ public class Project extends Entity implements Comparable<Project> {
         return trackingRecords;
     }
 
+    public void setTrackingRecords(ArrayList<TrackingRecord> trackingRecords) {
+        this.trackingRecords = trackingRecords;
+    }
+
     public ArrayList<TrackingRecord> getTrackingRecords(Context context) {
         Preconditions.checkNotNull(context);
 
@@ -74,12 +77,12 @@ public class Project extends Entity implements Comparable<Project> {
         return trackingRecords;
     }
 
-    public void setTrackingRecords(ArrayList<TrackingRecord> trackingRecords) {
-        this.trackingRecords = trackingRecords;
-    }
-
     public TrackingConfiguration getTrackingConfiguration() {
         return trackingConfiguration;
+    }
+
+    public void setTrackingConfiguration(TrackingConfiguration trackingConfiguration) {
+        this.trackingConfiguration = trackingConfiguration;
     }
 
     public TrackingConfiguration getTrackingConfiguration(Context context) {
@@ -90,10 +93,6 @@ public class Project extends Entity implements Comparable<Project> {
                     .getByProjectUuid(getUuid()).orNull();
         }
         return trackingConfiguration;
-    }
-
-    public void setTrackingConfiguration(TrackingConfiguration trackingConfiguration) {
-        this.trackingConfiguration = trackingConfiguration;
     }
 
     public String toString() {
