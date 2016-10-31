@@ -17,4 +17,6 @@ public interface ReportableItem {
     Date getEndDate();
 
     boolean isSameDay();
+
+    boolean isWholeDay();
 }

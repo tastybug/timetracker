@@ -40,11 +40,15 @@ class ReportableItemRenderer {
         Date end = reportableItem.getEndDate();
 
         if (reportableItem.isSameDay()) {
-            return defaultLocaleDateFormatter.dateFormat(start)
-                    + ", "
-                    + defaultLocaleDateFormatter.timeFormat(start)
-                    + " - "
-                    + defaultLocaleDateFormatter.timeFormat(end);
+            if (reportableItem.isWholeDay()) {
+                return defaultLocaleDateFormatter.dateFormat(start);
+            } else {
+                return defaultLocaleDateFormatter.dateFormat(start)
+                        + ", "
+                        + defaultLocaleDateFormatter.timeFormat(start)
+                        + " - "
+                        + defaultLocaleDateFormatter.timeFormat(end);
+            }
         } else {
             return defaultLocaleDateFormatter.dateTimeFormat(reportableItem.getStartDate())
                     + " - "

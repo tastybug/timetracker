@@ -70,6 +70,10 @@ public class AggregatedDay implements ReportableItem {
         return true;
     }
 
+    public boolean isWholeDay() {
+        return true;
+    }
+
     public Duration getDuration() {
         return duration;
     }

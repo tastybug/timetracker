@@ -43,4 +43,7 @@ public class SimpleReportable implements ReportableItem {
         return new LocalDate(getStartDate()).isEqual(new LocalDate(getEndDate()));
     }
 
+    public boolean isWholeDay() {
+        return false;
+    }
 }

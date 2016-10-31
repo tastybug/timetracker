@@ -41,10 +41,11 @@ public class ReportableItemRendererTest {
     }
 
     @Test
-    public void render_returns_proper_day_html_for_same_day_item() {
+    public void render_returns_proper_day_html_for_same_day_not_covering_whole_day_length_item() {
         // given
         ReportableItem reportableItem = mock(ReportableItem.class);
         when(reportableItem.isSameDay()).thenReturn(true);
+        when(reportableItem.isWholeDay()).thenReturn(false);
         when(reportableItem.getDescription()).thenReturn(Optional.of("someDescription"));
         when(durationFormatter.formatDuration(any(Duration.class))).thenReturn("aDuration");
         when(defaultLocaleDateFormatter.dateFormat(any(Date.class))).thenReturn("aDate");
@@ -63,10 +64,34 @@ public class ReportableItemRendererTest {
     }
 
     @Test
+    public void render_returns_proper_day_html_for_same_day_whole_day_length_item() {
+        // given
+        ReportableItem reportableItem = mock(ReportableItem.class);
+        when(reportableItem.isSameDay()).thenReturn(true);
+        when(reportableItem.isWholeDay()).thenReturn(true);
+        when(reportableItem.getDescription()).thenReturn(Optional.of("someDescription"));
+        when(durationFormatter.formatDuration(any(Duration.class))).thenReturn("aDuration");
+        when(defaultLocaleDateFormatter.dateFormat(any(Date.class))).thenReturn("aDate");
+        when(defaultLocaleDateFormatter.timeFormat(any(Date.class))).thenReturn("aTime");
+        String expectedHtml = "<div class=\"row\">" +
+                "<div class=\"data twenty\">aDate</div>" +
+                "<div class=\"data twenty\">aDuration</div>" +
+                "<div class=\"data fifty\">someDescription</div>" +
+                "</div>";
+
+        // when
+        String factualHtml = renderer.render(reportableItem);
+
+        // then
+        assertEquals(expectedHtml, factualHtml);
+    }
+
+    @Test
     public void render_returns_proper_day_html_for_multiple_day_item() {
         // given
         ReportableItem reportableItem = mock(ReportableItem.class);
         when(reportableItem.isSameDay()).thenReturn(false);
+        when(reportableItem.isWholeDay()).thenReturn(false);
         when(reportableItem.getDescription()).thenReturn(Optional.of("someDescription"));
         when(durationFormatter.formatDuration(any(Duration.class))).thenReturn("aDuration");
         when(defaultLocaleDateFormatter.dateTimeFormat(any(Date.class))).thenReturn("aDateAndTime");
