@@ -1,8 +1,12 @@
 package com.tastybug.timetracker.report.internal.html;
 
 import android.content.res.AssetManager;
+import android.os.Build;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -14,11 +18,12 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class TemplateAssetProviderTest {
 
-    private AssetManager assetManager = mock(AssetManager.class);
-
     private final String assetLocation = "report/report.html";
+    private AssetManager assetManager = mock(AssetManager.class);
     private TemplateAssetProvider templateAssetProvider = new TemplateAssetProvider(assetManager);
 
     private String template = "Zeile 1\nZeile 2\nZeile 3\nZeile 4\n\n\nZeile5\n";

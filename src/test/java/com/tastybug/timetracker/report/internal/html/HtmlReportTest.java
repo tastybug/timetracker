@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.report.internal.html;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
@@ -8,6 +9,9 @@ import com.tastybug.timetracker.model.Project;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 
@@ -15,6 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class HtmlReportTest {
 
     private Context context = mock(Context.class);
