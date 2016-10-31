@@ -103,7 +103,7 @@ public class AggregatedDayTest {
         aggregatedDay.addRecord(afterDinnerBreak, sixtyMinUpConfiguration);
 
         // then
-        assertEquals(9, aggregatedDay.getDuration().getStandardHours());
+        assertEquals(9 * 60 * 60, aggregatedDay.getDuration().getStandardSeconds());
     }
 
     @Test
