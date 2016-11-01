@@ -59,9 +59,9 @@
     <string name="running_from_X_until_Y">%1$s - %2$s</string>
 
     <!-- duration printing -->
-    <string name="seconds_short">secs</string>
-    <string name="minutes_short">min</string>
-    <string name="hours_short">hrs</string>
+    <string name="seconds_short">s</string>
+    <string name="minutes_short">m</string>
+    <string name="hours_short">h</string>
 
     <!-- project deletion dialog -->
     <string name="title_delete_project_X">Delete %1$s?</string>
