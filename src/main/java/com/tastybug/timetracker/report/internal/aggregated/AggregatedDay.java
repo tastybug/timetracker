@@ -22,7 +22,7 @@ public class AggregatedDay implements ReportableItem {
 
     private String aggregatedDescription;
 
-    public AggregatedDay(Date startDate) {
+    AggregatedDay(Date startDate) {
         Preconditions.checkNotNull(startDate);
         this.dayStart = new DateTime(startDate);
         this.dayEnd = dayStart.plusDays(1);
@@ -34,28 +34,11 @@ public class AggregatedDay implements ReportableItem {
 
         if (isOutsideOfScope(trackingRecord)) {
             return;
-        }
-
-        Date startingFrom;
-        Date endingAt;
-        if (isRecordStartingBeforeToday(trackingRecord)) {
-            startingFrom = dayStart.toDate();
+        } else if (isContainedTrackingRecord(trackingRecord)) {
+            processContainedTrackingRecord(trackingRecord, configuration);
         } else {
-            startingFrom = trackingRecord.getStart().get();
+            processLeakingTrackingRecord(trackingRecord, configuration);
         }
-        if (isRecordEndingAfterToday(trackingRecord)) {
-            endingAt = dayEnd.toDate();
-        } else {
-            endingAt = trackingRecord.getEnd().get();
-        }
-        //
-        if (!isRecordEndingAfterToday(trackingRecord)
-                && configuration.hasAlteringRoundingStrategy()) {
-            duration = duration.plus(getRoundingDifferenceAsDuration(trackingRecord, configuration));
-        }
-        duration = duration.plus(getDurationForInterval(startingFrom, endingAt));
-
-        addAggregatedDescription(trackingRecord);
     }
 
     public Date getStartDate() {
@@ -86,6 +69,34 @@ public class AggregatedDay implements ReportableItem {
         return Optional.fromNullable(aggregatedDescription);
     }
 
+    private void processContainedTrackingRecord(TrackingRecord trackingRecord, TrackingConfiguration configuration) {
+        duration = duration.plus(trackingRecord.toEffectiveDuration(configuration).get());
+        addAggregatedDescription(trackingRecord);
+    }
+
+    private void processLeakingTrackingRecord(TrackingRecord trackingRecord, TrackingConfiguration configuration) {
+        Date startingFrom;
+        Date endingAt;
+        if (isRecordStartingBeforeToday(trackingRecord)) {
+            startingFrom = dayStart.toDate();
+        } else {
+            startingFrom = trackingRecord.getStart().get();
+        }
+        if (isRecordEndingAfterToday(trackingRecord)) {
+            endingAt = dayEnd.toDate();
+        } else {
+            endingAt = trackingRecord.getEnd().get();
+        }
+        //
+        if (!isRecordEndingAfterToday(trackingRecord)
+                && configuration.hasAlteringRoundingStrategy()) {
+            duration = duration.plus(getRoundingDifferenceAsDuration(trackingRecord, configuration));
+        }
+        duration = duration.plus(getDurationForInterval(startingFrom, endingAt));
+
+        addAggregatedDescription(trackingRecord);
+    }
+
     private void addAggregatedDescription(TrackingRecord trackingRecord) {
         String description = trackingRecord.getDescription().orNull();
         if (description == null) {
@@ -105,6 +116,11 @@ public class AggregatedDay implements ReportableItem {
 
     private Duration getDurationForInterval(Date from, Date until) {
         return new Interval(new DateTime(from), new DateTime(until)).toDuration();
+    }
+
+    private boolean isContainedTrackingRecord(TrackingRecord trackingRecord) {
+        return !isRecordStartingBeforeToday(trackingRecord)
+                && !isRecordEndingAfterToday(trackingRecord);
     }
 
     private boolean isRecordStartingBeforeToday(TrackingRecord trackingRecord) {
