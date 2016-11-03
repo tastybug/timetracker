@@ -46,6 +46,13 @@ public class HtmlReport {
         insertStringAtMarker(valueMarker, project.getDescription().or(context.getString(R.string.report_project_no_description_placeholder)));
     }
 
+    void insertTotalDuration(String totalDuration) {
+        String labelMarker = "<!-- ${total_duration_label} -->";
+        insertStringAtMarker(labelMarker, context.getString(R.string.report_total_duration_label));
+        String valueMarker = "<!-- ${total_duration} -->";
+        insertStringAtMarker(valueMarker, totalDuration);
+    }
+
     void localizeHeaders() {
         insertStringAtMarker("<!-- ${date_header} -->", context.getString(R.string.report_date_header));
         insertStringAtMarker("<!-- ${amount_header} -->", context.getString(R.string.report_amount_header));

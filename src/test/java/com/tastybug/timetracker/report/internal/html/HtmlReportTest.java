@@ -141,6 +141,28 @@ public class HtmlReportTest {
         htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent()));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void insertTotalDuration_throws_IllegalState_when_label_marker_is_not_found_in_template() throws IOException {
+        // given
+        when(context.getString(R.string.report_total_duration_label)).thenReturn("Laaaabel");
+        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${total_duration_labelXX} --> <!-- ${total_duration} -->");
+        htmlReport = new HtmlReport(context, templateAssetProvider);
+
+        // expect
+        htmlReport.insertTotalDuration("someValue");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void insertTotalDuration_throws_IllegalState_when_value_marker_is_not_found_in_template() throws IOException {
+        // given
+        when(context.getString(R.string.report_total_duration_label)).thenReturn("Laabel");
+        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${total_duration_label} --> <!-- ${total_durationXX} -->");
+        htmlReport = new HtmlReport(context, templateAssetProvider);
+
+        // expect
+        htmlReport.insertTotalDuration("someValue");
+    }
+
     @Test
     public void insertProjectTitle_sets_project_title_and_a_localized_label() throws IOException {
         // given
@@ -205,4 +227,16 @@ public class HtmlReportTest {
         assertEquals("ProjectDescLabel NoDescriptionPlaceholder", htmlReport.toHtml());
     }
 
+    public void insertTotalDuration_inserts_localized_label_and_total_duration_value() throws IOException {
+        // given
+        when(context.getString(R.string.report_total_duration_label)).thenReturn("TotalDurationLabel");
+        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${total_duration_label} --> <!-- ${total_duration} -->");
+        htmlReport = new HtmlReport(context, templateAssetProvider);
+
+        // when
+        htmlReport.insertTotalDuration("SomeDurationValue");
+
+        // then
+        assertEquals("TotalDurationLabel SomeDurationValue", htmlReport.toHtml());
+    }
 }

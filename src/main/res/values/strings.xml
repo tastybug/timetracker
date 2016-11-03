@@ -223,6 +223,7 @@
     <string name="report_description_header">Log</string>
     <string name="report_project_no_description_placeholder" />
     <string name="report_reportable_item_no_description_placeholder" />
+    <string name="report_total_duration_label">Total Duration</string>
     <string name="dialog_create_report_title">Create Report</string>
     <string name="dialog_create_report_time_frame">Report Time Frame</string>
     <string name="dialog_create_report_first_day_X">From %1$s</string>
