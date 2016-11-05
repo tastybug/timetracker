@@ -3,15 +3,17 @@ package com.tastybug.timetracker.report.internal.html;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.report.internal.ReportableItem;
+import com.tastybug.timetracker.ui.util.LocalizedDurationFormatter;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.Date;
 
 import static org.junit.Assert.assertSame;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -21,16 +23,18 @@ public class HtmlReportBuilderTest {
 
     private HtmlReport htmlReport = mock(HtmlReport.class);
     private TitleGenerator titleGenerator = mock(TitleGenerator.class);
+    private LocalizedDurationFormatter localizedDurationFormatter = mock(LocalizedDurationFormatter.class);
     private ReportableListRenderer reportableListRenderer = mock(ReportableListRenderer.class);
 
     private HtmlReportBuilder htmlReportBuilder = new HtmlReportBuilder(reportableListRenderer,
             titleGenerator,
+            localizedDurationFormatter,
             htmlReport);
 
     @Test
-    public void build_plumbs_aggregated_day_list_into_html_report() {
+    public void build_plumbs_reportables_list_into_html_report() {
         // given
-        when(reportableListRenderer.renderReportablesList(anyList())).thenReturn("THE_LIST");
+        when(reportableListRenderer.renderReportablesList(anyListOf(ReportableItem.class))).thenReturn("THE_LIST");
         htmlReportBuilder.withReportablesList(Collections.<ReportableItem>emptyList());
 
         // when
@@ -80,6 +84,19 @@ public class HtmlReportBuilderTest {
 
         // then
         verify(htmlReport, times(1)).insertProjectDescription(someProject);
+    }
+
+    @Test
+    public void build_plumbs_total_duration_into_html_report() {
+        // given
+        htmlReportBuilder = htmlReportBuilder.withTotalDuration(new Duration(123));
+        when(localizedDurationFormatter.formatDuration(new Duration(123))).thenReturn("someTotalDuration");
+
+        // when
+        htmlReportBuilder.build();
+
+        // then
+        verify(htmlReport, times(1)).insertTotalDuration("someTotalDuration");
     }
 
     @Test

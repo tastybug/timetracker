@@ -18,13 +18,13 @@ public class HtmlReport {
 
     HtmlReport(Context context,
                TemplateAssetProvider templateAssetProvider) throws IOException {
-        template = templateAssetProvider.getReportTemplate();
+        this.template = templateAssetProvider.getReportTemplate();
         this.context = context;
     }
 
     void insertReportablesList(String html) {
-        String aggregatedDaysListMarker = "<!-- ${reportables_list} -->";
-        insertStringAtMarker(aggregatedDaysListMarker, html);
+        String reportablesListMarker = "<!-- ${reportables_list} -->";
+        insertStringAtMarker(reportablesListMarker, html);
     }
 
     void insertReportTitle(String title) {

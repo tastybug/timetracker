@@ -75,7 +75,7 @@ public class HtmlReportTest {
     }
 
     @Test
-    public void insertAggregatedDays_alters_template_correctly() throws IOException {
+    public void insertReportables_alters_template_correctly() throws IOException {
         // given
         when(templateAssetProvider.getReportTemplate()).thenReturn("bla <!-- ${reportables_list} --> bla");
         htmlReport = new HtmlReport(context, templateAssetProvider);
@@ -88,7 +88,7 @@ public class HtmlReportTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void insertAggregatedDays_throws_IllegalState_when_marker_is_not_found_in_template() throws IOException {
+    public void insertReportablesList_throws_IllegalState_when_marker_is_not_found_in_template() throws IOException {
         // given
         when(templateAssetProvider.getReportTemplate()).thenReturn("nothing here");
         htmlReport = new HtmlReport(context, templateAssetProvider);

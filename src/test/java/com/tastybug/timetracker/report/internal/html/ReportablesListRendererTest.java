@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.report.internal.html;
 
 import com.tastybug.timetracker.report.internal.ReportableItem;
-import com.tastybug.timetracker.report.internal.aggregated.AggregatedDay;
 
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ public class ReportablesListRendererTest {
         // given
         ReportableItem day1 = mock(ReportableItem.class);
         ReportableItem day2 = mock(ReportableItem.class);
-        when(reportableItemRenderer.render(any(AggregatedDay.class))).thenReturn("A");
+        when(reportableItemRenderer.render(any(ReportableItem.class))).thenReturn("A");
         List<ReportableItem> itemList = new ArrayList<>(Arrays.asList(day1, day2));
 
         // when

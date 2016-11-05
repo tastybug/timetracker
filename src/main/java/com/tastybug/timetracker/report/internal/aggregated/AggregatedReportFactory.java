@@ -8,6 +8,7 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.report.Report;
 import com.tastybug.timetracker.report.internal.ReportFactory;
 import com.tastybug.timetracker.report.internal.ReportableItem;
+import com.tastybug.timetracker.report.internal.ReportableTotalDurationHelper;
 import com.tastybug.timetracker.report.internal.html.HtmlReport;
 import com.tastybug.timetracker.report.internal.html.HtmlReportBuilder;
 
@@ -20,6 +21,7 @@ public class AggregatedReportFactory implements ReportFactory {
 
     private DayListFactory dayListFactory = new DayListFactory();
     private TrackingRecordToAggregatedDayMapper trackingRecordToAggregatedDayMapper = new TrackingRecordToAggregatedDayMapper();
+    private ReportableTotalDurationHelper reportableTotalDurationHelper = new ReportableTotalDurationHelper();
     private HtmlReportBuilder htmlReportBuilder;
 
     public AggregatedReportFactory(Context context) throws IOException {
@@ -46,6 +48,7 @@ public class AggregatedReportFactory implements ReportFactory {
                 .withTimeFrame(firstDay, lastDay)
                 .withReportablesList(reportableItems)
                 .withEdgeCases(edgeTrackingRecords)
+                .withTotalDuration(reportableTotalDurationHelper.getTotalForList(reportableItems))
                 .build();
 
         return new Report(project, firstDay, lastDay, htmlReport);
