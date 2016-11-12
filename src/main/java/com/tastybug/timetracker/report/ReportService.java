@@ -29,18 +29,18 @@ public class ReportService {
         this.trackingConfigurationDAO = new TrackingConfigurationDAO(context);
     }
 
-    public Report createAggregatedReport(String projectUuid, Date from, Date until, boolean aggregateDays) throws IOException {
+    public Report createReport(String projectUuid, Date firstDay, Date lastDay, boolean aggregateDays) throws IOException {
         Project project = projectDAO.get(projectUuid).get();
         TrackingRecordTimeFrameFilter filter = new TrackingRecordTimeFrameFilter()
-                .withTimeFrameStartingAt(from)
-                .withTimeFrameEndingAt(until)
+                .withFirstDay(firstDay)
+                .withLastDayInclusive(lastDay)
                 .withTrackingRecordList(trackingRecordDAO.getByProjectUuid(projectUuid));
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
 
         if (!aggregateDays) {
-            return new NonAggregatedReportFactory(context).createModel(project, from, until, filter.build(), filter.buildEdges(), trackingConfiguration);
+            return new NonAggregatedReportFactory(context).createModel(project, firstDay, lastDay, filter.build(), filter.buildEdges(), trackingConfiguration);
         } else {
-            return new AggregatedReportFactory(context).createModel(project, from, until, filter.build(), filter.buildEdges(), trackingConfiguration);
+            return new AggregatedReportFactory(context).createModel(project, firstDay, lastDay, filter.build(), filter.buildEdges(), trackingConfiguration);
         }
     }
 }

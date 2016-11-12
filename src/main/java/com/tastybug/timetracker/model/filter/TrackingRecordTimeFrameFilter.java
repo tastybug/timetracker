@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingRecord;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -19,18 +21,23 @@ public class TrackingRecordTimeFrameFilter {
     public TrackingRecordTimeFrameFilter() {
     }
 
-    public TrackingRecordTimeFrameFilter withTimeFrameStartingAt(Date startingAt) {
+    public TrackingRecordTimeFrameFilter withFirstDay(Date startingAt) {
         Preconditions.checkNotNull(startingAt);
         Preconditions.checkArgument(!timeFrameEndingAt.isPresent() || timeFrameEndingAt.get().after(startingAt));
         timeFrameStartingAt = Optional.of(startingAt);
         return this;
     }
 
-    public TrackingRecordTimeFrameFilter withTimeFrameEndingAt(Date endingAt) {
-        Preconditions.checkNotNull(endingAt);
-        Preconditions.checkArgument(!timeFrameStartingAt.isPresent() || timeFrameStartingAt.get().before(endingAt));
-        timeFrameEndingAt = Optional.of(endingAt);
+    public TrackingRecordTimeFrameFilter withLastDayExclusive(Date lastDayExclusive) {
+        Preconditions.checkNotNull(lastDayExclusive);
+        Preconditions.checkArgument(!timeFrameStartingAt.isPresent() || timeFrameStartingAt.get().before(lastDayExclusive));
+        timeFrameEndingAt = Optional.of(lastDayExclusive);
         return this;
+    }
+
+    public TrackingRecordTimeFrameFilter withLastDayInclusive(Date lastDayInclusive) {
+        Preconditions.checkNotNull(lastDayInclusive);
+        return withLastDayExclusive(new DateTime(lastDayInclusive).plusDays(1).toDate());
     }
 
     public TrackingRecordTimeFrameFilter withTrackingRecordList(List<TrackingRecord> list) {

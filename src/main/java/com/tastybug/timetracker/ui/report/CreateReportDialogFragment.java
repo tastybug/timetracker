@@ -188,7 +188,7 @@ public class CreateReportDialogFragment extends DialogFragment {
         boolean aggregateDays = isAggregateDaysChecked();
 
         try {
-            Report report = new ReportService(getActivity()).createAggregatedReport(trackingConfiguration.getProjectUuid(), firstDay, lastDay, aggregateDays);
+            Report report = new ReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), firstDay, lastDay, aggregateDays);
             HtmlReportViewerDialogFragment
                     .aDialog(report)
                     .show(getFragmentManager(), HtmlReportViewerDialogFragment.class.getSimpleName());

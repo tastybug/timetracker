@@ -3,6 +3,7 @@ package com.tastybug.timetracker.model;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.filter.TrackingRecordTimeFrameFilter;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -17,38 +18,54 @@ public class TrackingRecordTimeFrameFilterTest {
     private TrackingRecordTimeFrameFilter filter = new TrackingRecordTimeFrameFilter();
 
     @Test(expected = NullPointerException.class)
-    public void withTimeFrameStartingAt_throws_NPE_on_null_date() {
-        filter.withTimeFrameStartingAt(null);
+    public void withFirstDay_throws_NPE_on_null_date() {
+        filter.withFirstDay(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void withTimeFrameStartingAt_throws_IAE_on_start_date_after_end_date() {
-        filter.withTimeFrameEndingAt(new Date(4)).withTimeFrameStartingAt(new Date(5));
+    public void withFirstDay_throws_IAE_on_start_date_after_end_date() {
+        filter.withLastDayExclusive(new Date(4)).withFirstDay(new Date(5));
     }
 
     @Test(expected = NullPointerException.class)
     public void withTimeFrameEndingAt_throws_NPE_on_null_date() {
-        filter.withTimeFrameEndingAt(null);
+        filter.withLastDayExclusive(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void withTimeFrameEndingAt_throws_IAE_on_start_date_after_end_date() {
-        filter.withTimeFrameStartingAt(new Date(5)).withTimeFrameEndingAt(new Date(4));
+    public void withLastDayExclusive_throws_IAE_on_start_date_after_end_date() {
+        filter.withFirstDay(new Date(5)).withLastDayExclusive(new Date(4));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void withTimeFrameStartingAt_throws_IAE_on_start_date_equals_end_date() {
-        filter.withTimeFrameStartingAt(new Date(5)).withTimeFrameEndingAt(new Date(5));
+    public void withFirstDay_throws_IAE_on_start_date_equals_end_date() {
+        filter.withFirstDay(new Date(5)).withLastDayExclusive(new Date(5));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void withTimeFrameEndingAt_throws_IAE_on_start_date_equals_end_date() {
-        filter.withTimeFrameEndingAt(new Date(5)).withTimeFrameStartingAt(new Date(5));
+    public void withLastDayExclusive_throws_IAE_on_start_date_equals_end_date() {
+        filter.withLastDayExclusive(new Date(5)).withFirstDay(new Date(5));
     }
 
     @Test(expected = NullPointerException.class)
     public void withTrackingRecordList_throws_NPE_on_null_list() {
         filter.withTrackingRecordList(null);
+    }
+
+    @Test
+    public void withLastDayInclusive_sets_last_day_correctly() {
+        // given
+        Date firstDay = new Date(1);
+        Date lastDayInclusive = new Date(5);
+        DateTime expectedLastDayExclusive = new DateTime(lastDayInclusive).plusDays(1);
+        filter.withFirstDay(firstDay);
+        filter.withTrackingRecordList(aListWithTR(new Date(1), expectedLastDayExclusive.minusSeconds(1).toDate()));
+
+        // when
+        filter.withLastDayInclusive(lastDayInclusive);
+
+        // then
+        assertEquals(filter.build().size(), 1);
     }
 
     @Test
@@ -66,8 +83,8 @@ public class TrackingRecordTimeFrameFilterTest {
     @Test
     public void build_returns_TR_ending_BEFORE_time_frame_end() {
         // given
-        filter.withTimeFrameStartingAt(new Date(1));
-        filter.withTimeFrameEndingAt(new Date(4));
+        filter.withFirstDay(new Date(1));
+        filter.withLastDayExclusive(new Date(4));
         filter.withTrackingRecordList(aListWithTRStartingAt2EndingAt3());
 
         // when
@@ -83,8 +100,8 @@ public class TrackingRecordTimeFrameFilterTest {
     @Test
     public void build_ignores_TR_ending_RIGHT_ON_time_frame_end() {
         // given
-        filter.withTimeFrameStartingAt(new Date(1));
-        filter.withTimeFrameEndingAt(new Date(3));
+        filter.withFirstDay(new Date(1));
+        filter.withLastDayExclusive(new Date(3));
         filter.withTrackingRecordList(aListWithTRStartingAt2EndingAt3());
 
         // when
@@ -97,8 +114,8 @@ public class TrackingRecordTimeFrameFilterTest {
     @Test
     public void build_ignores_TR_ending_AFTER_time_frame_end() {
         // given
-        filter.withTimeFrameStartingAt(new Date(1));
-        filter.withTimeFrameEndingAt(new Date(2));
+        filter.withFirstDay(new Date(1));
+        filter.withLastDayExclusive(new Date(2));
         filter.withTrackingRecordList(aListWithTRStartingAt2EndingAt3());
 
         // when
@@ -111,8 +128,8 @@ public class TrackingRecordTimeFrameFilterTest {
     @Test
     public void build_ignores_TR_ending_BEFORE_time_frame_start() {
         // given
-        filter.withTimeFrameStartingAt(new Date(4));
-        filter.withTimeFrameEndingAt(new Date(5));
+        filter.withFirstDay(new Date(4));
+        filter.withLastDayExclusive(new Date(5));
         filter.withTrackingRecordList(aListWithTRStartingAt2EndingAt3());
 
         // when
@@ -125,8 +142,8 @@ public class TrackingRecordTimeFrameFilterTest {
     @Test
     public void buildEdges_returns_TRs_ending_in_time_frame_but_starting_before_time_frame() {
         // given
-        filter.withTimeFrameStartingAt(new Date(3));
-        filter.withTimeFrameEndingAt(new Date(4));
+        filter.withFirstDay(new Date(3));
+        filter.withLastDayExclusive(new Date(4));
         filter.withTrackingRecordList(aListWithTRStartingAt2EndingAt3());
 
         // when
@@ -139,8 +156,8 @@ public class TrackingRecordTimeFrameFilterTest {
     @Test
     public void buildEdges_ignores_TRs_starting_and_ending_in_time_frame() {
         // given
-        filter.withTimeFrameStartingAt(new Date(2));
-        filter.withTimeFrameEndingAt(new Date(4));
+        filter.withFirstDay(new Date(2));
+        filter.withLastDayExclusive(new Date(4));
         filter.withTrackingRecordList(aListWithTRStartingAt2EndingAt3());
 
         // when
@@ -156,7 +173,11 @@ public class TrackingRecordTimeFrameFilterTest {
     }
 
     private List<TrackingRecord> aListWithTRStartingAt2EndingAt3() {
-        TrackingRecord trackingRecord = new TrackingRecord("uuid", "project-uuid", Optional.of(new Date(2)), Optional.of(new Date(3)), Optional.<String>absent());
+        return aListWithTR(new Date(2), new Date(3));
+    }
+
+    private List<TrackingRecord> aListWithTR(Date start, Date end) {
+        TrackingRecord trackingRecord = new TrackingRecord("uuid", "project-uuid", Optional.of(start), Optional.of(end), Optional.<String>absent());
         return Collections.singletonList(trackingRecord);
     }
 }
