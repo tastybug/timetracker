@@ -12,24 +12,24 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackupDataReader {
+class BackupDataReader {
 
-    protected static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
+    static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
 
     private JSONUnMarshallingBuilder jsonUnMarshallingBuilder;
     private BackupDataEntryReader payloadReader = new BackupDataEntryReader();
 
-    public BackupDataReader() {
+    BackupDataReader() {
         this.jsonUnMarshallingBuilder = new JSONUnMarshallingBuilder();
     }
 
-    public BackupDataReader(JSONUnMarshallingBuilder unMarshallingBuilder,
-                            BackupDataEntryReader payloadReader) {
+    BackupDataReader(JSONUnMarshallingBuilder unMarshallingBuilder,
+                     BackupDataEntryReader payloadReader) {
         this.jsonUnMarshallingBuilder = unMarshallingBuilder;
         this.payloadReader = payloadReader;
     }
 
-    public List<Project> readBackup(BackupDataInput data) throws IOException, JSONException, ParseException {
+    List<Project> readBackup(BackupDataInput data) throws IOException, JSONException, ParseException {
         while (data.readNextHeader()) {
             if (data.getKey().equals(JSON_ARRAY_KEY)) {
                 byte[] payload = payloadReader.getPayloadFromBackupData(data);

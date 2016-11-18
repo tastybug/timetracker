@@ -3,6 +3,7 @@ package com.tastybug.timetracker.infrastructure.backup;
 import android.os.ParcelFileDescriptor;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.util.ConditionalLog;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -36,6 +37,7 @@ public class BackupDateAccessor {
                     instream.close();
                 }
             } catch (IOException ioe2) {
+                ConditionalLog.logError(TAG, "Failed to close input stream.", ioe2);
             }
         }
     }
@@ -60,6 +62,7 @@ public class BackupDateAccessor {
                     outstream.close();
                 }
             } catch (IOException ioe2) {
+                ConditionalLog.logError(TAG, "Failed to close input stream.", ioe2);
             }
         }
     }

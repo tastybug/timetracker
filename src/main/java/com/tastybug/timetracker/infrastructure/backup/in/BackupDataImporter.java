@@ -14,29 +14,29 @@ import java.util.List;
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 import static com.tastybug.timetracker.util.ConditionalLog.logWarn;
 
-public class BackupDataImporter {
+class BackupDataImporter {
 
-    static final String TAG = BackupDataImporter.class.getSimpleName();
+    private static final String TAG = BackupDataImporter.class.getSimpleName();
 
     private ProjectDAO projectDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
     private TrackingRecordDAO trackingRecordDAO;
 
-    public BackupDataImporter(Context context) {
+    BackupDataImporter(Context context) {
         projectDAO = new ProjectDAO(context);
         trackingConfigurationDAO = new TrackingConfigurationDAO(context);
         trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    public BackupDataImporter(ProjectDAO projectDAO,
-                              TrackingConfigurationDAO trackingConfigurationDAO,
-                              TrackingRecordDAO trackingRecordDAO) {
+    BackupDataImporter(ProjectDAO projectDAO,
+                       TrackingConfigurationDAO trackingConfigurationDAO,
+                       TrackingRecordDAO trackingRecordDAO) {
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
         this.trackingRecordDAO = trackingRecordDAO;
     }
 
-    public void restoreProjectList(List<Project> projects) {
+    void restoreProjectList(List<Project> projects) {
         Preconditions.checkNotNull(projects);
         if (projects.size() == 0) {
             logWarn(TAG, "Skipping restoration, no projects given to restore!");

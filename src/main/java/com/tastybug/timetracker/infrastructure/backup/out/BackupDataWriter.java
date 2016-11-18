@@ -10,21 +10,21 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class BackupDataWriter {
+class BackupDataWriter {
 
-    protected static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
+    private static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
 
     private JsonMarshallingBuilder jsonMarshallingBuilder;
 
-    public BackupDataWriter(Context context) {
+    BackupDataWriter(Context context) {
         this.jsonMarshallingBuilder = new JsonMarshallingBuilder(context);
     }
 
-    public BackupDataWriter(JsonMarshallingBuilder marshallingBuilder) {
+    BackupDataWriter(JsonMarshallingBuilder marshallingBuilder) {
         this.jsonMarshallingBuilder = marshallingBuilder;
     }
 
-    public void writeBackup(BackupDataOutput data) throws IOException, JSONException {
+    void writeBackup(BackupDataOutput data) throws IOException, JSONException {
         JSONArray jsonArray = jsonMarshallingBuilder.build();
         byte[] payload = jsonArray.toString().getBytes("utf-8");
         data.writeEntityHeader(JSON_ARRAY_KEY, payload.length);

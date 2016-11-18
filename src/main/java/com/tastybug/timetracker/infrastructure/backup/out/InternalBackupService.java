@@ -29,10 +29,10 @@ public class InternalBackupService {
         this.backupLog = new BackupLog(context);
     }
 
-    public InternalBackupService(DataChangeIndicator dataChangeIndicator,
-                                 BackupDataWriter backupDataWriter,
-                                 BackupDateAccessor backupDateAccessor,
-                                 BackupLog backupLog) {
+    InternalBackupService(DataChangeIndicator dataChangeIndicator,
+                          BackupDataWriter backupDataWriter,
+                          BackupDateAccessor backupDateAccessor,
+                          BackupLog backupLog) {
         this.dataChangeIndicator = dataChangeIndicator;
         this.backupDataWriter = backupDataWriter;
         this.backupDateAccessor = backupDateAccessor;

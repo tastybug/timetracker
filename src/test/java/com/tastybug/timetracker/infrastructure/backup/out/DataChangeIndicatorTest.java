@@ -2,7 +2,7 @@ package com.tastybug.timetracker.infrastructure.backup.out;
 
 import android.content.Context;
 
-import com.tastybug.timetracker.infrastructure.db.DatabaseAppConfig;
+import com.tastybug.timetracker.infrastructure.db.DatabaseConfig;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -18,16 +18,16 @@ import static org.mockito.Mockito.when;
 
 public class DataChangeIndicatorTest {
 
-    DatabaseAppConfig databaseAppConfig = mock(DatabaseAppConfig.class);
+    DatabaseConfig databaseConfig = mock(DatabaseConfig.class);
     Context context = mock(Context.class);
     File databaseFile = mock(File.class);
 
-    DataChangeIndicator subject = new DataChangeIndicator(context, databaseAppConfig);
+    DataChangeIndicator subject = new DataChangeIndicator(context, databaseConfig);
 
     @Before
     public void setup() {
-        when(databaseAppConfig.getDatabaseFileName()).thenReturn("a-filename");
-        when(context.getDatabasePath(databaseAppConfig.getDatabaseFileName())).thenReturn(databaseFile);
+        when(databaseConfig.getDatabaseFileName()).thenReturn("a-filename");
+        when(context.getDatabasePath(databaseConfig.getDatabaseFileName())).thenReturn(databaseFile);
         when(databaseFile.exists()).thenReturn(true);
     }
 

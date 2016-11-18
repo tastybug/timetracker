@@ -17,24 +17,14 @@ import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
 import static com.tastybug.timetracker.util.ConditionalLog.logError;
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static DatabaseHelper sharedInstance;
-
-    private DatabaseAppConfig appConfig;
+    private DatabaseConfig appConfig;
     private int dbVersion;
     private Context context;
 
 
-    public static synchronized DatabaseHelper getInstance(Context context) {
-        if (sharedInstance == null) {
-            DatabaseAppConfig appConfig = new DatabaseAppConfig(context);
-            sharedInstance = new DatabaseHelper(context, appConfig);
-        }
-        return sharedInstance;
-    }
-
-    private DatabaseHelper(Context context, DatabaseAppConfig config) {
+    private DatabaseHelper(Context context, DatabaseConfig config) {
         super(context,
                 config.getDatabaseFileName(),
                 null,
@@ -42,6 +32,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.dbVersion = config.getCurrentSchemaVersion();
         this.context = context;
         this.appConfig = config;
+    }
+
+    static DatabaseHelper getInstance(Context context) {
+        DatabaseConfig appConfig = new DatabaseConfig(context);
+        return new DatabaseHelper(context, appConfig);
     }
 
     @Override

@@ -27,10 +27,10 @@ public class InternalRestoreService {
         this.backupDataImporter = new BackupDataImporter(context);
     }
 
-    public InternalRestoreService(BackupDateAccessor backupDateAccessor,
-                                  BackupDataReader backupDataReader,
-                                  BackupDataImporter backupDataImporter,
-                                  BackupLog backupLog) {
+    InternalRestoreService(BackupDateAccessor backupDateAccessor,
+                           BackupDataReader backupDataReader,
+                           BackupDataImporter backupDataImporter,
+                           BackupLog backupLog) {
         this.backupDateAccessor = backupDateAccessor;
         this.backupDataReader = backupDataReader;
         this.backupDataImporter = backupDataImporter;

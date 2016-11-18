@@ -41,7 +41,7 @@ public class BackupLog {
         editor = preferences.edit();
     }
 
-    public BackupLog(SharedPreferences preferences, SharedPreferences.Editor editor, DateProvider dateProvider) {
+    BackupLog(SharedPreferences preferences, SharedPreferences.Editor editor, DateProvider dateProvider) {
         this.preferences = preferences;
         this.editor = editor;
         this.dateProvider = dateProvider;
@@ -79,43 +79,43 @@ public class BackupLog {
         logInfo(TAG, "Failed backup restoration, msg was: " + message);
     }
 
-    public Optional<Date> getPreviousSuccessBackupDate() throws ParseException {
+    Optional<Date> getPreviousSuccessBackupDate() throws ParseException {
         return getDateOptFromNullable(preferences.getString(BACKUP_LAST_SUCCESSFUL_DATE, null));
     }
 
-    public Optional<Date> getSuccessBackupDate() throws ParseException {
+    Optional<Date> getSuccessBackupDate() throws ParseException {
         return getDateOptFromNullable(preferences.getString(BACKUP_SUCCESSFUL_DATE, null));
     }
 
-    public Optional<Date> getFailedBackupDate() throws ParseException {
+    Optional<Date> getFailedBackupDate() throws ParseException {
         return getDateOptFromNullable(preferences.getString(BACKUP_FAILED_DATE, null));
     }
 
-    public Optional<String> getFailedBackupMessage() {
+    Optional<String> getFailedBackupMessage() {
         return Optional.fromNullable(preferences.getString(BACKUP_FAILED_MSG, null));
     }
 
-    public Optional<Date> getSuccessRestoreDate() throws ParseException {
+    Optional<Date> getSuccessRestoreDate() throws ParseException {
         return getDateOptFromNullable(preferences.getString(RESTORE_SUCCESSFUL_DATE, null));
     }
 
-    public Optional<Integer> getSuccessRestoreAppCode() {
+    Optional<Integer> getSuccessRestoreAppCode() {
         return Optional.fromNullable(preferences.contains(RESTORE_SUCCESSFUL_APP_CODE)
                 ? preferences.getInt(RESTORE_SUCCESSFUL_APP_CODE, -1)
                 : null);
     }
 
-    public Optional<Date> getFailedRestoreDate() throws ParseException {
+    Optional<Date> getFailedRestoreDate() throws ParseException {
         return getDateOptFromNullable(preferences.getString(RESTORE_FAILED_DATE, null));
     }
 
-    public Optional<Integer> getFailedRestoreAppCode() {
+    Optional<Integer> getFailedRestoreAppCode() {
         return Optional.fromNullable(preferences.contains(RESTORE_FAILED_APP_CODE)
                 ? preferences.getInt(RESTORE_FAILED_APP_CODE, -1)
                 : null);
     }
 
-    public Optional<String> getFailedRestoreMessage() {
+    Optional<String> getFailedRestoreMessage() {
         return Optional.fromNullable(preferences.getString(RESTORE_FAILED_MSG, null));
     }
 

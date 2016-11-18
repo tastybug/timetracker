@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.tastybug.timetracker.infrastructure.runtime.AbstractAppConfig;
 
-public class DatabaseAppConfig extends AbstractAppConfig {
+public class DatabaseConfig extends AbstractAppConfig {
 
     private static final String DATABASE_SCHEMA_VERSION_CURRENT = "database.schema.version.current";
 
@@ -14,11 +14,11 @@ public class DatabaseAppConfig extends AbstractAppConfig {
     private static final String DATABASE_SCRIPTS_MODEL_PREFIX = "database.scripts.prefix.model";
     private static final String DATABASE_SCRIPTS_DATA_PREFIX = "database.scripts.prefix.data";
 
-    public DatabaseAppConfig(Context context) {
+    public DatabaseConfig(Context context) {
         super(context);
     }
 
-    public int getCurrentSchemaVersion() {
+    int getCurrentSchemaVersion() {
         return getIntValue(DATABASE_SCHEMA_VERSION_CURRENT);
     }
 
@@ -26,15 +26,15 @@ public class DatabaseAppConfig extends AbstractAppConfig {
         return getStringValue(DATABASE_FILE_NAME);
     }
 
-    public String getDatabaseScriptsFolder() {
+    String getDatabaseScriptsFolder() {
         return getStringValue(DATABASE_SCRIPTS_FOLDER);
     }
 
-    public String getDatabaseScriptsModelPrefix() {
+    String getDatabaseScriptsModelPrefix() {
         return getStringValue(DATABASE_SCRIPTS_MODEL_PREFIX);
     }
 
-    public String getDatabaseScriptsDataPrefix() {
+    String getDatabaseScriptsDataPrefix() {
         return getStringValue(DATABASE_SCRIPTS_DATA_PREFIX);
     }
 }
