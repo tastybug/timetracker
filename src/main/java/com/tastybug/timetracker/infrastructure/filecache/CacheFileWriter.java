@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.util.ConditionalLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,19 +25,18 @@ public class CacheFileWriter {
         this.cacheDirectoryProvider = cacheDirectoryProvider;
     }
 
-    public File writeToCache(String cacheSubDirName, String fileName, String extension, byte[] data) throws IOException {
-        Preconditions.checkArgument(cacheSubDirName != null && cacheSubDirName.length() > 0, "Given cache sub dir is null or empty.");
+    public File writeToCache(String fileName, String extension, byte[] data) throws IOException {
         Preconditions.checkArgument(data != null && data.length > 0, "Given data is null or empty.");
         Preconditions.checkArgument(fileName != null && fileName.length() > 0, "Given name is null or empty.");
         Preconditions.checkArgument(extension != null && extension.length() > 0, "Given extension is null or empty.");
 
-        File file = getNewTempFileInCacheFolder(cacheSubDirName, fileName, extension);
+        File file = getNewTempFileInCacheFolder(fileName, extension);
         return writeDataToFile(data, file);
     }
 
     @NonNull
-    private File getNewTempFileInCacheFolder(String cacheSubDirName, String name, String extension) {
-        return new File(cacheDirectoryProvider.getCacheSubdir(cacheSubDirName).getAbsolutePath(),
+    private File getNewTempFileInCacheFolder(String name, String extension) {
+        return new File(cacheDirectoryProvider.getCacheDirectory(),
                 name + "." + tempFileRandom.nextInt(100000) + "." + extension);
     }
 
@@ -49,6 +49,7 @@ public class CacheFileWriter {
             try {
                 outputStream.close();
             } catch (IOException ioe2) {
+                ConditionalLog.logError(CacheFileWriter.class.getSimpleName(), "Failed to close out stream for " + file.getAbsolutePath());
             }
         }
         return file;

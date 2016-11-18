@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.infrastructure.filecache;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -11,7 +10,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,57 +21,40 @@ public class CacheFileWriterTest {
     private CacheDirectoryProvider cacheDirectoryProvider = mock(CacheDirectoryProvider.class);
     private CacheFileWriter subject = new CacheFileWriter(cacheDirectoryProvider);
 
-    @Before
-    public void setup() throws IOException {
-        when(cacheDirectoryProvider.getCacheSubdir(anyString())).thenReturn(pseudoCacheDir.newFolder());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void writeToCache_throws_IllegalArgument_on_null_cache_subdir_name() throws IOException {
-        // expect
-        subject.writeToCache(null, "filename", "txt", new byte[]{1, 2, 3});
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void writeToCache_throws_IllegalArgument_on_empty_cache_subdir_name() throws IOException {
-        // expect
-        subject.writeToCache("", "filename", "txt", new byte[]{1, 2, 3});
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void writeToCache_throws_IllegalArgument_on_null_data() throws IOException {
         // expect
-        subject.writeToCache("reports", "filename", "txt", null);
+        subject.writeToCache("filename", "txt", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void writeToCache_throws_IllegalArgument_on_empty_data() throws IOException {
         // expect
-        subject.writeToCache("reports", "filename", "txt", new byte[0]);
+        subject.writeToCache("filename", "txt", new byte[0]);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void writeToCache_throws_IllegalArgument_on_null_filename() throws IOException {
         // expect
-        subject.writeToCache("reports", null, "txt", new byte[]{1, 2, 3});
+        subject.writeToCache(null, "txt", new byte[]{1, 2, 3});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void writeToCache_throws_IllegalArgument_on_empty_filename() throws IOException {
         // expect
-        subject.writeToCache("reports", "", "txt", new byte[]{1, 2, 3});
+        subject.writeToCache("", "txt", new byte[]{1, 2, 3});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void writeToCache_throws_IllegalArgument_on_null_extension() throws IOException {
         // expect
-        subject.writeToCache("reports", "filename", null, new byte[]{1, 2, 3});
+        subject.writeToCache("filename", null, new byte[]{1, 2, 3});
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void writeToCache_throws_IllegalArgument_on_empty_extension() throws IOException {
         // expect
-        subject.writeToCache("reports", "filename", "", new byte[]{1, 2, 3});
+        subject.writeToCache("filename", "", new byte[]{1, 2, 3});
     }
 
     @Test
@@ -82,7 +63,7 @@ public class CacheFileWriterTest {
         byte[] data = new byte[]{1, 2, 3};
 
         // when
-        File file = subject.writeToCache("reports", "filename", "txt", data);
+        File file = subject.writeToCache("filename", "txt", data);
 
         // then
         assertArrayEquals(IOUtils.toByteArray(file.toURI()), data);
@@ -93,10 +74,10 @@ public class CacheFileWriterTest {
         // given
         byte[] data = new byte[]{1, 2, 3};
         File tempFolder = pseudoCacheDir.newFolder();
-        when(cacheDirectoryProvider.getCacheSubdir("reports")).thenReturn(tempFolder);
+        when(cacheDirectoryProvider.getCacheDirectory()).thenReturn(tempFolder);
 
         // when
-        File tempFile = subject.writeToCache("reports", "filename", "txt", data);
+        File tempFile = subject.writeToCache("filename", "txt", data);
 
         // then
         assertEquals(tempFile.getParentFile(), tempFolder);

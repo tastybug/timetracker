@@ -8,9 +8,7 @@ import com.tastybug.timetracker.report.Report;
 import java.io.File;
 import java.io.IOException;
 
-public class ReportCacheFileWriter {
-
-    private static final String SHAREABLE_REPORT_DIR_NAME = "shareable_reports";
+class ReportCacheFileWriter {
 
     private CacheFileWriter cacheFileWriter;
 
@@ -25,7 +23,7 @@ public class ReportCacheFileWriter {
     File writeReportToCache(Report report) throws IOException {
         byte[] data = report.getHtml().getBytes("UTF-8");
 
-        return cacheFileWriter.writeToCache(SHAREABLE_REPORT_DIR_NAME, getSafeFileName(), getExtension(), data);
+        return cacheFileWriter.writeToCache(getSafeFileName(), getExtension(), data);
     }
 
     String getSafeFileName() {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.tastybug.timetracker.infrastructure.backup.DataChangeListenerBackgroundService;
+import com.tastybug.timetracker.infrastructure.filecache.CacheCleaner;
 import com.tastybug.timetracker.ui.trackingplayer.LifecycleService;
 import com.tastybug.timetracker.ui.warn.WarningEventListenerService;
 
@@ -20,6 +21,7 @@ public class Application extends android.app.Application {
 
         initializeJoda();
         initializeDayNightThemeMode();
+        cleanupCacheFolder();
         startTrackingPlayerLifecycleBackgroundService();
         startBackupDataChangeListenerBackgroundService();
         startWarningBackgroundService();
@@ -46,6 +48,10 @@ public class Application extends android.app.Application {
 
     private void initializeDayNightThemeMode() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+    }
+
+    private void cleanupCacheFolder() {
+        new CacheCleaner(this).cleanupCache();
     }
 
     private boolean isFirstRun() {

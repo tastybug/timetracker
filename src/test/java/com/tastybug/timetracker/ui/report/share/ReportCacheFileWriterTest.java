@@ -34,7 +34,7 @@ public class ReportCacheFileWriterTest {
         String htmlContent = "zeHtml";
         Report report = mock(Report.class);
         when(report.getHtml()).thenReturn(htmlContent);
-        when(cacheFileWriter.writeToCache(eq("shareable_reports"), eq(reportCacheFileWriter.getSafeFileName()), eq(reportCacheFileWriter.getExtension()), aryEq(htmlContent.getBytes("UTF-8"))))
+        when(cacheFileWriter.writeToCache(eq(reportCacheFileWriter.getSafeFileName()), eq(reportCacheFileWriter.getExtension()), aryEq(htmlContent.getBytes("UTF-8"))))
                 .thenReturn(expectedReportFile);
 
         // when

@@ -9,32 +9,31 @@ import java.io.File;
  * Encapsulates access to the application cache directory which is assigned by the OS.
  * Does some sanity check before handing it out.
  */
-public class CacheDirectoryProvider {
+class CacheDirectoryProvider {
 
+    private static final String APP_CACHE_FOLDER = "appCacheFolder";
     private Context context;
 
     CacheDirectoryProvider(Context context) {
         this.context = context;
     }
 
-    File getCacheDir() {
+    File getCacheDirectory() {
+        File rootCacheDirectory = getRootCacheDirectory();
+        File appCacheFolder = new File(rootCacheDirectory, APP_CACHE_FOLDER);
+        if (!appCacheFolder.exists()) {
+            if (!appCacheFolder.mkdir()) {
+                throw new IllegalStateException("Failed to create cache folder!");
+            }
+        }
+        return appCacheFolder;
+    }
+
+    private File getRootCacheDirectory() {
         File cache = context.getCacheDir();
         if (cache == null || !cache.exists()) {
             throw new IllegalStateException("Application cache dir does not exist!");
         }
         return cache;
-    }
-
-    File getCacheSubdir(String name) {
-        File cacheDir = getCacheDir();
-        File subdir = new File(cacheDir, name);
-        if (!subdir.exists()) {
-            if (!subdir.mkdir()) {
-                throw new IllegalStateException("Failed to created dir '" + name + "' in cache.");
-            }
-        } else if (subdir.isFile()) {
-            throw new IllegalStateException("Cache dir '" + name + "' exists, but is a file.");
-        }
-        return subdir;
     }
 }
