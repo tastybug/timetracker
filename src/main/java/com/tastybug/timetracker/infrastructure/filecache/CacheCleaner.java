@@ -22,8 +22,8 @@ public class CacheCleaner {
         this(new CacheDirectoryProvider(context), new DateProvider());
     }
 
-    public CacheCleaner(CacheDirectoryProvider cacheDirectoryProvider,
-                        DateProvider dateProvider) {
+    CacheCleaner(CacheDirectoryProvider cacheDirectoryProvider,
+                 DateProvider dateProvider) {
         this.cacheDirectoryProvider = cacheDirectoryProvider;
         this.dateProvider = dateProvider;
     }
