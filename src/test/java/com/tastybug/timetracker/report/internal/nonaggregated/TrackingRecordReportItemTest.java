@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SimpleReportableTest {
+public class TrackingRecordReportItemTest {
 
     private TrackingConfiguration trackingConfiguration = new TrackingConfiguration("");
 
@@ -23,7 +23,7 @@ public class SimpleReportableTest {
         TrackingRecord trackingRecord = new TrackingRecord("", "", Optional.<java.util.Date>absent(), Optional.of(new Date()), Optional.<String>absent());
 
         // expect
-        new SimpleReportable(trackingRecord, trackingConfiguration);
+        new TrackingRecordReportItem(trackingRecord, trackingConfiguration);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -32,7 +32,7 @@ public class SimpleReportableTest {
         TrackingRecord trackingRecord = new TrackingRecord("", "", Optional.of(new Date()), Optional.<java.util.Date>absent(), Optional.<String>absent());
 
         // expect
-        new SimpleReportable(trackingRecord, trackingConfiguration);
+        new TrackingRecordReportItem(trackingRecord, trackingConfiguration);
     }
 
     @Test
@@ -46,10 +46,10 @@ public class SimpleReportableTest {
         when(trackingRecord.getDescription()).thenReturn(Optional.of(""));
 
         // when
-        SimpleReportable simpleReportable = new SimpleReportable(trackingRecord, trackingConfiguration);
+        TrackingRecordReportItem trackingRecordReportItem = new TrackingRecordReportItem(trackingRecord, trackingConfiguration);
 
         // then
-        assertEquals(expectedDuration, simpleReportable.getDuration());
+        assertEquals(expectedDuration, trackingRecordReportItem.getDuration());
     }
 
     @Test
@@ -58,13 +58,13 @@ public class SimpleReportableTest {
         TrackingRecord trackingRecord = new TrackingRecord("", "", Optional.of(new Date(1)), Optional.of(new Date(5)), Optional.<String>absent());
 
         // when
-        SimpleReportable simpleReportable = new SimpleReportable(trackingRecord, trackingConfiguration);
+        TrackingRecordReportItem trackingRecordReportItem = new TrackingRecordReportItem(trackingRecord, trackingConfiguration);
 
         // then
-        assertEquals(trackingRecord.getDescription(), simpleReportable.getDescription());
-        assertEquals(trackingRecord.getStart().get(), simpleReportable.getStartDate());
-        assertEquals(trackingRecord.getEnd().get(), simpleReportable.getEndDate());
-        assertEquals(trackingRecord.toEffectiveDuration(trackingConfiguration).get(), simpleReportable.getDuration());
+        assertEquals(trackingRecord.getDescription(), trackingRecordReportItem.getDescription());
+        assertEquals(trackingRecord.getStart().get(), trackingRecordReportItem.getStartDate());
+        assertEquals(trackingRecord.getEnd().get(), trackingRecordReportItem.getEndDate());
+        assertEquals(trackingRecord.toEffectiveDuration(trackingConfiguration).get(), trackingRecordReportItem.getDuration());
 
     }
 

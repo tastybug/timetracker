@@ -1,7 +1,7 @@
 package com.tastybug.timetracker.ui.warn.internal.expiration;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.model.statistics.StatisticProjectExpiration;
+import com.tastybug.timetracker.model.statistics.Expiration;
 import com.tastybug.timetracker.ui.warn.expiration.ExpirationStatisticFactory;
 import com.tastybug.timetracker.ui.warn.expiration.ExpirationThresholdViolationIndicator;
 
@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 public class ExpirationThresholdViolationIndicatorTest {
 
     ExpirationStatisticFactory expirationStatisticFactory = mock(ExpirationStatisticFactory.class);
-    StatisticProjectExpiration expirationBefore = mock(StatisticProjectExpiration.class);
-    StatisticProjectExpiration expirationAfter = mock(StatisticProjectExpiration.class);
+    Expiration expirationBefore = mock(Expiration.class);
+    Expiration expirationAfter = mock(Expiration.class);
 
     ExpirationThresholdViolationIndicator expirationThresholdViolationIndicator = new ExpirationThresholdViolationIndicator(expirationStatisticFactory);
 

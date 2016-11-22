@@ -12,9 +12,9 @@ import java.util.Date;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
-public class BackupLog {
+public class BackupLogHelper {
 
-    private static final String TAG = BackupLog.class.getSimpleName();
+    private static final String TAG = BackupLogHelper.class.getSimpleName();
 
     private static final String FILE_NAME = "backup_log";
 
@@ -36,12 +36,12 @@ public class BackupLog {
     private SharedPreferences.Editor editor;
     private DateProvider dateProvider = new DateProvider();
 
-    public BackupLog(Context context) {
+    public BackupLogHelper(Context context) {
         preferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         editor = preferences.edit();
     }
 
-    BackupLog(SharedPreferences preferences, SharedPreferences.Editor editor, DateProvider dateProvider) {
+    BackupLogHelper(SharedPreferences preferences, SharedPreferences.Editor editor, DateProvider dateProvider) {
         this.preferences = preferences;
         this.editor = editor;
         this.dateProvider = dateProvider;

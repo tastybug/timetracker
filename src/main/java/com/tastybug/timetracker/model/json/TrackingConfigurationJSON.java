@@ -2,7 +2,7 @@ package com.tastybug.timetracker.model.json;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.json.JSONException;
@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.util.Date;
 
-public class TrackingConfigurationJSON extends JSONObject {
+class TrackingConfigurationJSON extends JSONObject {
 
     static String UUID_COLUMN = "uuid";
     static String PROJECT_UUID_COLUMN = "project_uuid";
@@ -21,7 +21,7 @@ public class TrackingConfigurationJSON extends JSONObject {
     static String PROMPT_FOR_DESCRIPTION_COLUMN = "prompt_for_description";
     static String ROUNDING_STRATEGY_COLUMN = "rounding_strategy";
 
-    protected TrackingConfigurationJSON(TrackingConfiguration trackingConfiguration) throws JSONException {
+    TrackingConfigurationJSON(TrackingConfiguration trackingConfiguration) throws JSONException {
         put(UUID_COLUMN, trackingConfiguration.getUuid());
         put(PROJECT_UUID_COLUMN, trackingConfiguration.getProjectUuid());
         if (trackingConfiguration.getHourLimit().isPresent()) {
@@ -37,7 +37,7 @@ public class TrackingConfigurationJSON extends JSONObject {
         put(ROUNDING_STRATEGY_COLUMN, trackingConfiguration.getRoundingStrategy().name());
     }
 
-    protected TrackingConfigurationJSON(JSONObject jsonObject) throws JSONException {
+    TrackingConfigurationJSON(JSONObject jsonObject) throws JSONException {
         put(UUID_COLUMN, jsonObject.getString(UUID_COLUMN));
         put(PROJECT_UUID_COLUMN, jsonObject.getString(PROJECT_UUID_COLUMN));
         put(HOUR_LIMIT_COLUMN, jsonObject.isNull(HOUR_LIMIT_COLUMN) ? null : jsonObject.getInt(HOUR_LIMIT_COLUMN));
@@ -47,7 +47,7 @@ public class TrackingConfigurationJSON extends JSONObject {
         put(ROUNDING_STRATEGY_COLUMN, jsonObject.getString(ROUNDING_STRATEGY_COLUMN));
     }
 
-    protected TrackingConfiguration toTrackingConfiguration() throws JSONException, ParseException {
+    TrackingConfiguration toTrackingConfiguration() throws JSONException, ParseException {
         return new TrackingConfiguration(
                 getString(UUID_COLUMN),
                 getString(PROJECT_UUID_COLUMN),
@@ -55,7 +55,7 @@ public class TrackingConfigurationJSON extends JSONObject {
                 isNull(START_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(DefaultLocaleDateFormatter.iso8601().parse(getString(START_DATE_COLUMN))),
                 isNull(END_DATE_COLUMN) ? Optional.<Date>absent() : Optional.of(DefaultLocaleDateFormatter.iso8601().parse(getString(END_DATE_COLUMN))),
                 getBoolean(PROMPT_FOR_DESCRIPTION_COLUMN),
-                RoundingFactory.Strategy.valueOf(getString(ROUNDING_STRATEGY_COLUMN))
+                Rounding.Strategy.valueOf(getString(ROUNDING_STRATEGY_COLUMN))
         );
     }
 }

@@ -9,12 +9,9 @@ import java.io.Serializable;
 
 public abstract class Entity implements Serializable {
 
-    protected DAOFactory daoFactory = new DAOFactory();
+    DAOFactory daoFactory = new DAOFactory();
 
-    public Entity() {
-    }
-
-    public void setDAOFactory(DAOFactory daoFactory) {
+    void setDAOFactory(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 

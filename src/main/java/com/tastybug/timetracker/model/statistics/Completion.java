@@ -4,19 +4,17 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 
-import org.joda.time.Duration;
-
 import java.util.List;
 
-public class StatisticProjectCompletion {
+public class Completion {
 
     private TrackingConfiguration trackingConfiguration;
-    private Duration currentDuration;
+    private org.joda.time.Duration currentDuration;
 
-    public StatisticProjectCompletion(TrackingConfiguration configuration,
-                                      List<TrackingRecord> trackingRecords,
-                                      boolean countRunning) {
-        this.currentDuration = new StatisticProjectDuration(configuration, trackingRecords, countRunning).getDuration();
+    public Completion(TrackingConfiguration configuration,
+                      List<TrackingRecord> trackingRecords,
+                      boolean countRunning) {
+        this.currentDuration = new Duration(configuration, trackingRecords, countRunning).getDuration();
         this.trackingConfiguration = configuration;
     }
 
@@ -31,17 +29,17 @@ public class StatisticProjectCompletion {
 
     public boolean isOverbooked() {
         return trackingConfiguration.getHourLimit().isPresent()
-                && Duration.standardHours(trackingConfiguration.getHourLimit().get()).isShorterThan(currentDuration);
+                && org.joda.time.Duration.standardHours(trackingConfiguration.getHourLimit().get()).isShorterThan(currentDuration);
     }
 
-    public Optional<Duration> getRemainingDuration() {
-        Optional<Duration> remainderOpt;
+    Optional<org.joda.time.Duration> getRemainingDuration() {
+        Optional<org.joda.time.Duration> remainderOpt;
         if (trackingConfiguration.getHourLimit().isPresent()) {
             if (isOverbooked()) {
                 // overbooked project
-                remainderOpt = Optional.of(Duration.millis(0));
+                remainderOpt = Optional.of(org.joda.time.Duration.millis(0));
             } else {
-                remainderOpt = Optional.of(Duration.standardHours(trackingConfiguration.getHourLimit().get()).minus(currentDuration));
+                remainderOpt = Optional.of(org.joda.time.Duration.standardHours(trackingConfiguration.getHourLimit().get()).minus(currentDuration));
             }
         } else {
             remainderOpt = Optional.absent();

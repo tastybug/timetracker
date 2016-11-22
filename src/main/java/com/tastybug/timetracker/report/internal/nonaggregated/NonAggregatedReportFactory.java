@@ -26,16 +26,16 @@ public class NonAggregatedReportFactory implements ReportFactory {
         this(new HtmlReportBuilder(context));
     }
 
-    NonAggregatedReportFactory(HtmlReportBuilder htmlReportBuilder) {
+    private NonAggregatedReportFactory(HtmlReportBuilder htmlReportBuilder) {
         this.htmlReportBuilder = htmlReportBuilder;
     }
 
-    public Report createModel(Project project,
-                              Date firstDay,
-                              Date lastDay,
-                              List<TrackingRecord> includedTrackingRecords,
-                              List<TrackingRecord> edgeTrackingRecords,
-                              TrackingConfiguration trackingConfiguration) {
+    public Report create(Project project,
+                         Date firstDay,
+                         Date lastDay,
+                         List<TrackingRecord> includedTrackingRecords,
+                         List<TrackingRecord> edgeTrackingRecords,
+                         TrackingConfiguration trackingConfiguration) {
         List<ReportableItem> reportables = trackingRecordToReportableMapper.mapRecords(includedTrackingRecords, trackingConfiguration);
         HtmlReport htmlReport = htmlReportBuilder.withProject(project)
                 .withTimeFrame(firstDay, lastDay)

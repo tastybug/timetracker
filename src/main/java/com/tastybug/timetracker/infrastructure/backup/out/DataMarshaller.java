@@ -10,17 +10,17 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-class BackupDataWriter {
+class DataMarshaller {
 
     private static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
 
     private JsonMarshallingBuilder jsonMarshallingBuilder;
 
-    BackupDataWriter(Context context) {
+    DataMarshaller(Context context) {
         this.jsonMarshallingBuilder = new JsonMarshallingBuilder(context);
     }
 
-    BackupDataWriter(JsonMarshallingBuilder marshallingBuilder) {
+    DataMarshaller(JsonMarshallingBuilder marshallingBuilder) {
         this.jsonMarshallingBuilder = marshallingBuilder;
     }
 

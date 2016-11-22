@@ -10,13 +10,13 @@ import org.joda.time.LocalDate;
 
 import java.util.Date;
 
-public class SimpleReportable implements ReportableItem {
+class TrackingRecordReportItem implements ReportableItem {
 
     public java.util.Date start, end;
     public Optional<String> description;
     public Duration duration;
 
-    public SimpleReportable(TrackingRecord trackingRecord, TrackingConfiguration trackingConfiguration) {
+    TrackingRecordReportItem(TrackingRecord trackingRecord, TrackingConfiguration trackingConfiguration) {
         this.start = trackingRecord.getStart().get();
         this.end = trackingRecord.getEnd().get();
         this.duration = trackingRecord.toEffectiveDuration(trackingConfiguration).get();

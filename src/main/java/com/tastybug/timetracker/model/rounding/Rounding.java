@@ -2,7 +2,10 @@ package com.tastybug.timetracker.model.rounding;
 
 import com.tastybug.timetracker.R;
 
-public class RoundingFactory {
+public class Rounding {
+
+    public Rounding() {
+    }
 
     public enum Strategy {
         NO_ROUNDING(new NoRounding(), R.string.rounding_no_rounding_label),
@@ -27,12 +30,5 @@ public class RoundingFactory {
         public int getDescriptionStringResource() {
             return descriptionStringResource;
         }
-    }
-
-    public RoundingFactory() {
-    }
-
-    public RoundingStrategy getStrategy(Strategy strategy) {
-        return strategy.getStrategy();
     }
 }

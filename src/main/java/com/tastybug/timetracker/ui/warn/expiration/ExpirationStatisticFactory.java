@@ -6,7 +6,7 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.model.statistics.StatisticProjectExpiration;
+import com.tastybug.timetracker.model.statistics.Expiration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,23 +28,23 @@ public class ExpirationStatisticFactory {
         this.trackingConfigurationDAO = trackingConfigurationDAO;
     }
 
-    public StatisticProjectExpiration getExpirationOnCheckOutOfPreviousSession(String projectUuid) {
+    public Expiration getExpirationOnCheckOutOfPreviousSession(String projectUuid) {
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
         ArrayList<TrackingRecord> trackingRecordArrayList = trackingRecordDAO.getByProjectUuid(projectUuid);
 
         Collections.sort(trackingRecordArrayList);
         if (trackingRecordArrayList.size() < 2) {
-            return new StatisticProjectExpiration(trackingConfiguration, new Date(0));
+            return new Expiration(trackingConfiguration, new Date(0));
         } else {
-            return new StatisticProjectExpiration(trackingConfiguration, trackingRecordArrayList.get(trackingRecordArrayList.size() - 2).getEnd().get());
+            return new Expiration(trackingConfiguration, trackingRecordArrayList.get(trackingRecordArrayList.size() - 2).getEnd().get());
         }
     }
 
-    public StatisticProjectExpiration getExpirationOnCheckoutOfLastSession(String projectUuid) {
+    public Expiration getExpirationOnCheckoutOfLastSession(String projectUuid) {
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
         ArrayList<TrackingRecord> trackingRecordArrayList = trackingRecordDAO.getByProjectUuid(projectUuid);
 
         Collections.sort(trackingRecordArrayList);
-        return new StatisticProjectExpiration(trackingConfiguration, trackingRecordArrayList.get(trackingRecordArrayList.size() - 1).getEnd().get());
+        return new Expiration(trackingConfiguration, trackingRecordArrayList.get(trackingRecordArrayList.size() - 1).getEnd().get());
     }
 }

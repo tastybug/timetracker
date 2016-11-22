@@ -8,11 +8,9 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
+import com.tastybug.timetracker.model.statistics.Duration;
 import com.tastybug.timetracker.task.tracking.CheckInTask;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.ConfirmCheckInViolatesConfigurationDialog;
-
-import org.joda.time.Duration;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,12 +24,12 @@ public class CheckInPreconditionCheckDelegate {
 
     private Activity activity;
 
-    public static CheckInPreconditionCheckDelegate aDelegate(Activity activity) {
-        return new CheckInPreconditionCheckDelegate(activity);
-    }
-
     protected CheckInPreconditionCheckDelegate(Activity activity) {
         this.activity = activity;
+    }
+
+    public static CheckInPreconditionCheckDelegate aDelegate(Activity activity) {
+        return new CheckInPreconditionCheckDelegate(activity);
     }
 
     public void startTracking(Project project) {
@@ -103,8 +101,8 @@ public class CheckInPreconditionCheckDelegate {
         if (configuration.getHourLimit().isPresent()) {
             ArrayList<TrackingRecord> trackingRecordList = new TrackingRecordDAO(activity).getByProjectUuid(project.getUuid());
 
-            Duration effectiveDuration = new StatisticProjectDuration(configuration, trackingRecordList).getDuration();
-            if (!effectiveDuration.isShorterThan(Duration.standardHours(configuration.getHourLimit().get()))) {
+            org.joda.time.Duration effectiveDuration = new Duration(configuration, trackingRecordList).getDuration();
+            if (!effectiveDuration.isShorterThan(org.joda.time.Duration.standardHours(configuration.getHourLimit().get()))) {
                 return configuration.getHourLimit();
             }
         }

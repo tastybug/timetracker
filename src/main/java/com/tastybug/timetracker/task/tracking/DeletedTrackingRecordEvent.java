@@ -6,7 +6,7 @@ public class DeletedTrackingRecordEvent implements OttoEvent {
 
     private String trackingRecordUuid;
 
-    public DeletedTrackingRecordEvent(String uuid) {
+    DeletedTrackingRecordEvent(String uuid) {
         this.trackingRecordUuid = uuid;
     }
 

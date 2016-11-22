@@ -3,7 +3,7 @@ package com.tastybug.timetracker.model;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class TrackingConfigurationTest {
         // when
         DateTime start = new DateTime();
         DateTime end = start.plusDays(5);
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", Optional.of(3), Optional.of(start.toDate()), Optional.of(end.toDate()), false, RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", Optional.of(3), Optional.of(start.toDate()), Optional.of(end.toDate()), false, Rounding.Strategy.NO_ROUNDING);
 
         // then
         assertNotNull(trackingConfiguration);
@@ -35,7 +35,7 @@ public class TrackingConfigurationTest {
         assertEquals(3, trackingConfiguration.getHourLimit().get().intValue());
         assertEquals(start.toDate(), trackingConfiguration.getStart().get());
         assertEquals(end.toDate(), trackingConfiguration.getEnd().get());
-        assertEquals(RoundingFactory.Strategy.NO_ROUNDING, trackingConfiguration.getRoundingStrategy());
+        assertEquals(Rounding.Strategy.NO_ROUNDING, trackingConfiguration.getRoundingStrategy());
     }
 
     @Test

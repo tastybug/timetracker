@@ -6,7 +6,7 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.model.statistics.StatisticProjectCompletion;
+import com.tastybug.timetracker.model.statistics.Completion;
 
 import java.util.ArrayList;
 
@@ -26,19 +26,19 @@ public class CompletionStatisticFactory {
         this.trackingConfigurationDAO = trackingConfigurationDAO;
     }
 
-    public StatisticProjectCompletion getCompletionBeforeLastRun(String projectUuid) {
+    public Completion getCompletionBeforeLastRun(String projectUuid) {
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
         ArrayList<TrackingRecord> trackingRecordArrayList = trackingRecordDAO.getByProjectUuid(projectUuid);
 
-        return new StatisticProjectCompletion(trackingConfiguration,
+        return new Completion(trackingConfiguration,
                 trackingRecordArrayList.isEmpty() ? trackingRecordArrayList : trackingRecordArrayList.subList(0, trackingRecordArrayList.size() - 1),
                 false);
     }
 
-    public StatisticProjectCompletion getCompletionCurrent(String projectUuid) {
+    public Completion getCompletionCurrent(String projectUuid) {
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
         ArrayList<TrackingRecord> trackingRecordArrayList = trackingRecordDAO.getByProjectUuid(projectUuid);
 
-        return new StatisticProjectCompletion(trackingConfiguration, trackingRecordArrayList, false);
+        return new Completion(trackingConfiguration, trackingRecordArrayList, false);
     }
 }

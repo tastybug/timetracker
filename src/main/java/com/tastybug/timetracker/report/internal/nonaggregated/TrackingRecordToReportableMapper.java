@@ -8,11 +8,11 @@ import com.tastybug.timetracker.report.internal.ReportableItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrackingRecordToReportableMapper {
+class TrackingRecordToReportableMapper {
 
 
-    public List<ReportableItem> mapRecords(List<TrackingRecord> trackingRecords,
-                                           TrackingConfiguration trackingConfiguration) {
+    List<ReportableItem> mapRecords(List<TrackingRecord> trackingRecords,
+                                    TrackingConfiguration trackingConfiguration) {
 
         Preconditions.checkNotNull(trackingRecords);
         Preconditions.checkNotNull(trackingConfiguration);
@@ -20,7 +20,7 @@ public class TrackingRecordToReportableMapper {
         List<ReportableItem> simpleReportableList = new ArrayList<>();
 
         for (TrackingRecord trackingRecord : trackingRecords) {
-            simpleReportableList.add(new SimpleReportable(trackingRecord, trackingConfiguration));
+            simpleReportableList.add(new TrackingRecordReportItem(trackingRecord, trackingConfiguration));
         }
 
         return simpleReportableList;

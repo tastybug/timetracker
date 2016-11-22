@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.tastybug.timetracker.model.TrackingConfiguration;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -41,11 +41,14 @@ public class TrackingConfigurationDAOTest {
     // test subject
     TrackingConfigurationDAO trackingConfigurationDAO = new TrackingConfigurationDAO(context);
 
+    private static SimpleDateFormat getIso8601DateFormatter() {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
+    }
+
     @Before
     public void setup() {
         when(context.getContentResolver()).thenReturn(resolver);
     }
-
 
     @Test
     public void canGetExistingEntityById() {
@@ -243,7 +246,7 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
         when(cursor.getInt(5)).thenReturn(1);
-        when(cursor.getString(6)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
+        when(cursor.getString(6)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -257,7 +260,7 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getString(3)).thenReturn(startDateString);
         when(cursor.getString(4)).thenReturn(endDateString);
         when(cursor.getInt(5)).thenReturn(1);
-        when(cursor.getString(6)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
+        when(cursor.getString(6)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -271,7 +274,7 @@ public class TrackingConfigurationDAOTest {
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(4)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
         when(cursor.getInt(5)).thenReturn(1);
-        when(cursor.getString(6)).thenReturn(RoundingFactory.Strategy.NO_ROUNDING.name());
+        when(cursor.getString(6)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;
@@ -283,9 +286,5 @@ public class TrackingConfigurationDAOTest {
         when(cursor.moveToNext()).thenReturn(false);
 
         return cursor;
-    }
-
-    private static SimpleDateFormat getIso8601DateFormatter() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     }
 }

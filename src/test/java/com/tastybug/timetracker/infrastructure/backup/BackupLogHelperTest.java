@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class BackupLogTest {
+public class BackupLogHelperTest {
 
     private static final String BACKUP_LAST_SUCCESSFUL_DATE = "BACKUP_LAST_SUCCESSFUL_DATE";
 
@@ -45,13 +45,13 @@ public class BackupLogTest {
     private static final String RESTORE_FAILED_DATE = "RESTORE_FAILED_DATE";
     private static final String RESTORE_FAILED_MSG = "RESTORE_FAILED_MSG";
 
-    SharedPreferences preferences = mock(SharedPreferences.class);
-    SharedPreferences.Editor editor = mock(SharedPreferences.Editor.class);
-    DateProvider dateProvider = mock(DateProvider.class);
+    private SharedPreferences preferences = mock(SharedPreferences.class);
+    private SharedPreferences.Editor editor = mock(SharedPreferences.Editor.class);
+    private DateProvider dateProvider = mock(DateProvider.class);
 
-    BackupLog subject = new BackupLog(preferences, editor, dateProvider);
+    private BackupLogHelper subject = new BackupLogHelper(preferences, editor, dateProvider);
 
-    Date currentDate = new Date(1);
+    private Date currentDate = new Date(1);
 
     @Before
     public void setup() {

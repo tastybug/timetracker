@@ -9,7 +9,7 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import java.util.Date;
@@ -28,12 +28,12 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private static final String PROMPT_FOR_DESCRIPTION = "PROMPT_FOR_DESCRIPTION";
     private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
-    public static ConfigureProjectTask aTask(Context context) {
-        return new ConfigureProjectTask(context);
+    private ConfigureProjectTask(Context context) {
+        super(context);
     }
 
-    protected ConfigureProjectTask(Context context) {
-        super(context);
+    public static ConfigureProjectTask aTask(Context context) {
+        return new ConfigureProjectTask(context);
     }
 
     public ConfigureProjectTask withProjectUuid(String uuid) {
@@ -71,7 +71,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         return this;
     }
 
-    public ConfigureProjectTask withRoundingStrategy(RoundingFactory.Strategy strategy) {
+    public ConfigureProjectTask withRoundingStrategy(Rounding.Strategy strategy) {
         arguments.putSerializable(ROUNDING_STRATEGY, strategy);
         return this;
     }
@@ -118,7 +118,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         }
 
         if (arguments.containsKey(ROUNDING_STRATEGY)) {
-            trackingConfiguration.setRoundingStrategy((RoundingFactory.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
+            trackingConfiguration.setRoundingStrategy((Rounding.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
         }
 
         storeBatchOperation(projectDAO.getBatchUpdate(project));

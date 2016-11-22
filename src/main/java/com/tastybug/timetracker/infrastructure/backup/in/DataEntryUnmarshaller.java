@@ -5,12 +5,9 @@ import android.app.backup.BackupDataInput;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-class BackupDataEntryReader {
+class DataEntryUnmarshaller {
 
-    BackupDataEntryReader() {
-    }
-
-    byte[] getPayloadFromBackupData(BackupDataInput data) throws IOException {
+    byte[] getByteArrayFromBackupDataInput(BackupDataInput data) throws IOException {
         byte[] payload = new byte[data.getDataSize()];
         data.readEntityData(payload, 0, data.getDataSize());
         ByteArrayInputStream baStream = new ByteArrayInputStream(payload);

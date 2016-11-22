@@ -14,7 +14,7 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.task.project.ConfigureProjectTask;
 import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
@@ -124,7 +124,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         Long endTimeStamp = sharedPreferences.getLong(getString(R.string.tracking_configuration_end_date_inclusive_preference_key), -1L);
         Optional<Date> endDateInclusiveOpt = endTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(endTimeStamp));
         Boolean promptForDescription = sharedPreferences.getBoolean(getString(R.string.tracking_configuration_prompt_for_description_preference_key), false);
-        RoundingFactory.Strategy strategy = RoundingFactory.Strategy.valueOf(sharedPreferences.getString(getString(R.string.tracking_configuration_rounding_strategy_preference_key), RoundingFactory.Strategy.NO_ROUNDING.name()));
+        Rounding.Strategy strategy = Rounding.Strategy.valueOf(sharedPreferences.getString(getString(R.string.tracking_configuration_rounding_strategy_preference_key), Rounding.Strategy.NO_ROUNDING.name()));
 
         if (key.equals(getString(R.string.project_title_preference_key))
                 && !isTitleValid(title)) {
@@ -226,7 +226,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
                 .execute();
     }
 
-    private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, Boolean promptForDescription, RoundingFactory.Strategy strategy) {
+    private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, Boolean promptForDescription, Rounding.Strategy strategy) {
         ConfigureProjectTask task = ConfigureProjectTask.aTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withHourLimit(hourLimit)

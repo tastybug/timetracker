@@ -2,28 +2,28 @@ package com.tastybug.timetracker.model.rounding;
 
 import org.joda.time.Duration;
 
-public class XMinutesUp extends RoundingStrategy {
+class XMinutesUp extends RoundingStrategy {
 
     private int xMinutes;
 
-    protected static XMinutesUp fullMinutesUp() {
+    private XMinutesUp(int xMinutes) {
+        this.xMinutes = xMinutes;
+    }
+
+    static XMinutesUp fullMinutesUp() {
         return new XMinutesUp(1);
     }
 
-    protected static XMinutesUp tenMinutesUp() {
+    static XMinutesUp tenMinutesUp() {
         return new XMinutesUp(10);
     }
 
-    protected static XMinutesUp thirtyMinutesUp() {
+    static XMinutesUp thirtyMinutesUp() {
         return new XMinutesUp(30);
     }
 
-    protected static XMinutesUp fullHoursUp() {
+    static XMinutesUp fullHoursUp() {
         return new XMinutesUp(60);
-    }
-
-    private XMinutesUp(int xMinutes) {
-        this.xMinutes = xMinutes;
     }
 
     @Override

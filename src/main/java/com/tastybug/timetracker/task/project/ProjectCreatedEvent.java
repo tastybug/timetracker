@@ -7,7 +7,7 @@ public class ProjectCreatedEvent implements OttoEvent {
 
     private Project project;
 
-    public ProjectCreatedEvent(Project project) {
+    ProjectCreatedEvent(Project project) {
         this.project = project;
     }
 

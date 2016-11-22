@@ -25,13 +25,13 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class BackupDataImporterTest {
+public class DatabaseRestorationManagerTest {
 
-    ProjectDAO projectDAO = mock(ProjectDAO.class);
-    TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-    TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
+    private ProjectDAO projectDAO = mock(ProjectDAO.class);
+    private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
+    private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
 
-    BackupDataImporter subject = new BackupDataImporter(
+    private DatabaseRestorationManager subject = new DatabaseRestorationManager(
             projectDAO,
             trackingConfigurationDAO,
             trackingRecordDAO);

@@ -12,16 +12,16 @@ import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class CheckOutTask extends AbstractAsyncTask {
 
-    static final String PROJECT_UUID = "PROJECT_UUID";
+    private static final String PROJECT_UUID = "PROJECT_UUID";
 
     protected TrackingRecord trackingRecord;
 
-    public static CheckOutTask aTask(Context context) {
-        return new CheckOutTask(context);
+    private CheckOutTask(Context context) {
+        super(context);
     }
 
-    protected CheckOutTask(Context context) {
-        super(context);
+    public static CheckOutTask aTask(Context context) {
+        return new CheckOutTask(context);
     }
 
     public CheckOutTask withProjectUuid(String projectUuid) {

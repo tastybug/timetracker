@@ -13,12 +13,10 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
-import com.tastybug.timetracker.model.statistics.StatisticProjectCompletion;
-import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
-import com.tastybug.timetracker.model.statistics.StatisticProjectExpiration;
+import com.tastybug.timetracker.model.statistics.Completion;
+import com.tastybug.timetracker.model.statistics.Duration;
+import com.tastybug.timetracker.model.statistics.Expiration;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
-
-import org.joda.time.Duration;
 
 public class ProjectStatisticsUI {
 
@@ -54,7 +52,7 @@ public class ProjectStatisticsUI {
             return;
         }
         TrackingConfiguration configuration = projectOpt.get().getTrackingConfiguration(context);
-        Duration duration = new StatisticProjectDuration(configuration, projectOpt.get().getTrackingRecords(context)).getDuration();
+        org.joda.time.Duration duration = new Duration(configuration, projectOpt.get().getTrackingRecords(context)).getDuration();
 
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {
@@ -85,17 +83,17 @@ public class ProjectStatisticsUI {
             return;
         }
         TrackingConfiguration configuration = projectOpt.get().getTrackingConfiguration(context);
-        StatisticProjectCompletion statisticProjectCompletion = new StatisticProjectCompletion(configuration, projectOpt.get().getTrackingRecords(context), true);
+        Completion completion = new Completion(configuration, projectOpt.get().getTrackingRecords(context), true);
 
         durationCompletionProgressBar.setVisibility(View.VISIBLE);
-        durationCompletionProgressBar.setProgress(statisticProjectCompletion.getCompletionPercent().or(0d).intValue());
-        renderProjectCompletionProgressColoring(statisticProjectCompletion);
+        durationCompletionProgressBar.setProgress(completion.getCompletionPercent().or(0d).intValue());
+        renderProjectCompletionProgressColoring(completion);
     }
 
-    private void renderProjectCompletionProgressColoring(StatisticProjectCompletion statisticProjectCompletion) {
-        if (statisticProjectCompletion.isOverbooked()) {
+    private void renderProjectCompletionProgressColoring(Completion completion) {
+        if (completion.isOverbooked()) {
             durationCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.RED));
-        } else if (statisticProjectCompletion.getCompletionPercent().or(0d).intValue() > 80) {
+        } else if (completion.getCompletionPercent().or(0d).intValue() > 80) {
             durationCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.YELLOW));
         } else {
             durationCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.GREEN));
@@ -105,16 +103,16 @@ public class ProjectStatisticsUI {
     public void renderProjectTimeFrame(Optional<Project> project) {
         if (project.isPresent()) {
             TrackingConfiguration trackingConfiguration = project.get().getTrackingConfiguration(context);
-            StatisticProjectExpiration statistic = new StatisticProjectExpiration(trackingConfiguration);
+            Expiration statistic = new Expiration(trackingConfiguration);
             renderProjectTimeFrameTextualDescription(statistic, trackingConfiguration);
             renderProjectTimeframeProgress(Optional.of(statistic));
         } else {
             renderNoProjectTimeFrameTextualDescription();
-            renderProjectTimeframeProgress(Optional.<StatisticProjectExpiration>absent());
+            renderProjectTimeframeProgress(Optional.<Expiration>absent());
         }
     }
 
-    private void renderProjectTimeFrameTextualDescription(StatisticProjectExpiration statistic, TrackingConfiguration trackingConfiguration) {
+    private void renderProjectTimeFrameTextualDescription(Expiration statistic, TrackingConfiguration trackingConfiguration) {
         Optional<Integer> expirationPercent = statistic.getExpirationPercent();
         if (expirationPercent.isPresent()) { // <- theres an end date that limits the time frame
             String endDateString = DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEndDateAsInclusive().get());
@@ -134,7 +132,7 @@ public class ProjectStatisticsUI {
         projectTimeFrameTextView.setVisibility(View.GONE);
     }
 
-    private void renderProjectTimeframeProgress(Optional<StatisticProjectExpiration> statistic) {
+    private void renderProjectTimeframeProgress(Optional<Expiration> statistic) {
         if (statistic.isPresent() && statistic.get().getExpirationPercent().isPresent()) {
             timeframeCompletionProgressBar.setProgress(statistic.get().getExpirationPercent().get());
             timeframeCompletionProgressBar.setVisibility(View.VISIBLE);
@@ -144,7 +142,7 @@ public class ProjectStatisticsUI {
         }
     }
 
-    private void renderProjectTimeFrameProgressColoring(StatisticProjectExpiration statistic) {
+    private void renderProjectTimeFrameProgressColoring(Expiration statistic) {
         if (statistic.getExpirationPercent().get() > 100) {
             timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.RED));
         } else if (statistic.getExpirationPercent().get() > 80) {

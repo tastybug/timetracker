@@ -14,23 +14,23 @@ import java.util.List;
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 import static com.tastybug.timetracker.util.ConditionalLog.logWarn;
 
-class BackupDataImporter {
+class DatabaseRestorationManager {
 
-    private static final String TAG = BackupDataImporter.class.getSimpleName();
+    private static final String TAG = DatabaseRestorationManager.class.getSimpleName();
 
     private ProjectDAO projectDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
     private TrackingRecordDAO trackingRecordDAO;
 
-    BackupDataImporter(Context context) {
+    DatabaseRestorationManager(Context context) {
         projectDAO = new ProjectDAO(context);
         trackingConfigurationDAO = new TrackingConfigurationDAO(context);
         trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    BackupDataImporter(ProjectDAO projectDAO,
-                       TrackingConfigurationDAO trackingConfigurationDAO,
-                       TrackingRecordDAO trackingRecordDAO) {
+    DatabaseRestorationManager(ProjectDAO projectDAO,
+                               TrackingConfigurationDAO trackingConfigurationDAO,
+                               TrackingRecordDAO trackingRecordDAO) {
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
         this.trackingRecordDAO = trackingRecordDAO;

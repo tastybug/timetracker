@@ -6,7 +6,7 @@ import android.os.ParcelFileDescriptor;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.infrastructure.backup.BackupDateAccessor;
-import com.tastybug.timetracker.infrastructure.backup.BackupLog;
+import com.tastybug.timetracker.infrastructure.backup.BackupLogHelper;
 
 import java.io.IOException;
 import java.util.Date;
@@ -14,29 +14,29 @@ import java.util.Date;
 import static com.tastybug.timetracker.util.ConditionalLog.logError;
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
-public class InternalBackupService {
+public class BackupCreationService {
 
-    private static final String TAG = InternalBackupService.class.getSimpleName();
+    private static final String TAG = BackupCreationService.class.getSimpleName();
 
-    private DataChangeIndicator dataChangeIndicator;
-    private BackupDataWriter backupDataWriter;
+    private BackupNecessityIndicator backupNecessityIndicator;
+    private DataMarshaller dataMarshaller;
     private BackupDateAccessor backupDateAccessor = new BackupDateAccessor();
-    private BackupLog backupLog;
+    private BackupLogHelper backupLogHelper;
 
-    public InternalBackupService(Context context) {
-        this.dataChangeIndicator = new DataChangeIndicator(context);
-        this.backupDataWriter = new BackupDataWriter(context);
-        this.backupLog = new BackupLog(context);
+    public BackupCreationService(Context context) {
+        this.backupNecessityIndicator = new BackupNecessityIndicator(context);
+        this.dataMarshaller = new DataMarshaller(context);
+        this.backupLogHelper = new BackupLogHelper(context);
     }
 
-    InternalBackupService(DataChangeIndicator dataChangeIndicator,
-                          BackupDataWriter backupDataWriter,
+    BackupCreationService(BackupNecessityIndicator backupNecessityIndicator,
+                          DataMarshaller dataMarshaller,
                           BackupDateAccessor backupDateAccessor,
-                          BackupLog backupLog) {
-        this.dataChangeIndicator = dataChangeIndicator;
-        this.backupDataWriter = backupDataWriter;
+                          BackupLogHelper backupLogHelper) {
+        this.backupNecessityIndicator = backupNecessityIndicator;
+        this.dataMarshaller = dataMarshaller;
         this.backupDateAccessor = backupDateAccessor;
-        this.backupLog = backupLog;
+        this.backupLogHelper = backupLogHelper;
     }
 
     public Optional<Date> getLastBackupDate(ParcelFileDescriptor oldState) throws IOException {
@@ -45,14 +45,14 @@ public class InternalBackupService {
 
     public boolean checkBackupNecessary(Optional<Date> lastBackupDate) throws IOException {
         boolean result = !lastBackupDate.isPresent() ||
-                dataChangeIndicator.hasDataChangesSince(lastBackupDate.get());
+                backupNecessityIndicator.hasDataChangesSince(lastBackupDate.get());
         if (lastBackupDate.isPresent()) {
-            logInfo(TAG, "Last backup was: " + lastBackupDate.get() + ", data " + (dataChangeIndicator.hasDataChangesSince(lastBackupDate.get()) ? "has changed" : "has not changed"));
+            logInfo(TAG, "Last backup was: " + lastBackupDate.get() + ", data " + (backupNecessityIndicator.hasDataChangesSince(lastBackupDate.get()) ? "has changed" : "has not changed"));
         } else {
             logInfo(TAG, "Very first backup commencing now..");
         }
         if (!result) {
-            backupLog.logBackupUnnecessary(lastBackupDate);
+            backupLogHelper.logBackupUnnecessary(lastBackupDate);
         }
         return result;
     }
@@ -62,16 +62,16 @@ public class InternalBackupService {
                               ParcelFileDescriptor newState) throws IOException {
         Optional<Date> lastBackupDate = backupDateAccessor.readLastBackupDate(oldState);
         try {
-            backupDataWriter.writeBackup(data);
+            dataMarshaller.writeBackup(data);
             backupDateAccessor.writeBackupDate(newState);
-            backupLog.logBackupSuccess(lastBackupDate);
+            backupLogHelper.logBackupSuccess(lastBackupDate);
         } catch (IOException ioe) {
             logError(TAG, "Error while generating backup: " + ioe.getMessage(), ioe);
-            backupLog.logBackupFail(lastBackupDate, ioe.getMessage());
+            backupLogHelper.logBackupFail(lastBackupDate, ioe.getMessage());
             throw ioe;
         } catch (Exception e) {
             logError(TAG, "Error while generating backup: " + e.getMessage(), e);
-            backupLog.logBackupFail(lastBackupDate, e.getMessage());
+            backupLogHelper.logBackupFail(lastBackupDate, e.getMessage());
         }
     }
 

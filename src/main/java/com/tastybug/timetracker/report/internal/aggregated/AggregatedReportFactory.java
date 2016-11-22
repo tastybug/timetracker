@@ -28,19 +28,11 @@ public class AggregatedReportFactory implements ReportFactory {
         htmlReportBuilder = new HtmlReportBuilder(context);
     }
 
-    public AggregatedReportFactory(DayListFactory dayListFactory,
-                                   TrackingRecordToAggregatedDayMapper trackingRecordToAggregatedDayMapper,
-                                   HtmlReportBuilder htmlReportBuilder) {
-        this.dayListFactory = dayListFactory;
-        this.trackingRecordToAggregatedDayMapper = trackingRecordToAggregatedDayMapper;
-        this.htmlReportBuilder = htmlReportBuilder;
-    }
-
-    public Report createModel(Project project, Date firstDay,
-                              Date lastDay,
-                              List<TrackingRecord> includedTrackingRecords,
-                              List<TrackingRecord> edgeTrackingRecords,
-                              TrackingConfiguration trackingConfiguration) {
+    public Report create(Project project, Date firstDay,
+                         Date lastDay,
+                         List<TrackingRecord> includedTrackingRecords,
+                         List<TrackingRecord> edgeTrackingRecords,
+                         TrackingConfiguration trackingConfiguration) {
         List<AggregatedDay> aggregatedDayList = dayListFactory.createList(firstDay, lastDay);
         aggregatedDayList = trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(aggregatedDayList, includedTrackingRecords, trackingConfiguration);
         List<ReportableItem> reportableItems = filterEmptyDays(aggregatedDayList);

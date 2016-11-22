@@ -6,12 +6,12 @@ import android.preference.PreferenceManager;
 
 import com.tastybug.timetracker.R;
 
-class BackupEnabledService {
+class BackupConfiguration {
 
     private final String BACKUP_PREF_KEY;
     private SharedPreferences sharedPreferences;
 
-    BackupEnabledService(Context context) {
+    BackupConfiguration(Context context) {
         BACKUP_PREF_KEY = context.getString(R.string.backup_enabled_preference_key);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }

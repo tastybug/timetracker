@@ -7,7 +7,7 @@ public class CreatedTrackingRecordEvent implements OttoEvent {
 
     private TrackingRecord trackingRecord;
 
-    public CreatedTrackingRecordEvent(TrackingRecord trackingRecord) {
+    CreatedTrackingRecordEvent(TrackingRecord trackingRecord) {
         this.trackingRecord = trackingRecord;
     }
 

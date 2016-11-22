@@ -6,7 +6,7 @@ public class ProjectDeletedEvent implements OttoEvent {
 
     private String projectUuid;
 
-    public ProjectDeletedEvent(String projectUuid) {
+    ProjectDeletedEvent(String projectUuid) {
         this.projectUuid = projectUuid;
     }
 

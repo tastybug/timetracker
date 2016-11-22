@@ -8,11 +8,9 @@ import android.os.Bundle;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.model.statistics.StatisticProjectDuration;
+import com.tastybug.timetracker.model.statistics.Duration;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
 import com.tastybug.timetracker.ui.util.LocalizedDurationFormatter;
-
-import org.joda.time.Duration;
 
 public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
 
@@ -31,7 +29,7 @@ public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
         if (project.getTrackingRecords(getActivity()).isEmpty()) {
             return getString(R.string.msg_you_lose_no_tracking_records);
         } else {
-            Duration effectiveProjectDuration = new StatisticProjectDuration(
+            org.joda.time.Duration effectiveProjectDuration = new Duration(
                     project.getTrackingConfiguration(getActivity()),
                     project.getTrackingRecords(getActivity()),
                     true

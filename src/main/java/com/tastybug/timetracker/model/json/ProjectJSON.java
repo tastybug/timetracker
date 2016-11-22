@@ -30,7 +30,7 @@ public class ProjectJSON extends JSONObject {
      * @throws NullPointerException if the caller didn't properly assemble the project by leaving
      *                              out the TrackingConfiguration and/or TrackingRecord list
      */
-    protected ProjectJSON(Project project) throws JSONException {
+    ProjectJSON(Project project) throws JSONException {
         Preconditions.checkNotNull(project.getTrackingConfiguration());
         Preconditions.checkNotNull(project.getTrackingRecords());
 
@@ -43,7 +43,7 @@ public class ProjectJSON extends JSONObject {
         setTrackingRecords(project.getTrackingRecords());
     }
 
-    protected ProjectJSON(JSONObject toImport) throws JSONException {
+    ProjectJSON(JSONObject toImport) throws JSONException {
         put(UUID, toImport.get(UUID));
         put(TITLE, toImport.get(TITLE));
         put(DESCRIPTION, toImport.opt(DESCRIPTION));
@@ -51,20 +51,12 @@ public class ProjectJSON extends JSONObject {
         put(TRACKING_RECORDS, toImport.get(TRACKING_RECORDS));
     }
 
-    protected void setTrackingConfiguration(TrackingConfiguration trackingConfiguration) throws JSONException {
-        put(TRACKING_CONFIGURATION, new TrackingConfigurationJSON(trackingConfiguration));
-    }
-
     protected TrackingConfiguration getTrackingConfiguration() throws JSONException, ParseException {
         return new TrackingConfigurationJSON(getJSONObject(TRACKING_CONFIGURATION)).toTrackingConfiguration();
     }
 
-    protected void setTrackingRecords(List<TrackingRecord> trackingRecords) throws JSONException {
-        JSONArray array = new JSONArray();
-        for (TrackingRecord trackingRecord : trackingRecords) {
-            array.put(new TrackingRecordJSON(trackingRecord));
-        }
-        put(TRACKING_RECORDS, array);
+    protected void setTrackingConfiguration(TrackingConfiguration trackingConfiguration) throws JSONException {
+        put(TRACKING_CONFIGURATION, new TrackingConfigurationJSON(trackingConfiguration));
     }
 
     protected ArrayList<TrackingRecord> getTrackingRecords() throws JSONException, ParseException {
@@ -77,7 +69,15 @@ public class ProjectJSON extends JSONObject {
         return trackingRecords;
     }
 
-    protected Project toProject() throws JSONException, ParseException {
+    protected void setTrackingRecords(List<TrackingRecord> trackingRecords) throws JSONException {
+        JSONArray array = new JSONArray();
+        for (TrackingRecord trackingRecord : trackingRecords) {
+            array.put(new TrackingRecordJSON(trackingRecord));
+        }
+        put(TRACKING_RECORDS, array);
+    }
+
+    Project toProject() throws JSONException, ParseException {
         Project project = new Project(
                 getString(UUID),
                 getString(TITLE),

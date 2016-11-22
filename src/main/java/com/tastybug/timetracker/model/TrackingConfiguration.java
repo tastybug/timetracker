@@ -3,7 +3,7 @@ package com.tastybug.timetracker.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.joda.time.DateTime;
 
@@ -17,14 +17,14 @@ public class TrackingConfiguration extends Entity {
     private Optional<Integer> hourLimit = Optional.absent();
     private Optional<Date> start = Optional.absent(), end = Optional.absent();
     private boolean promptForDescription = false;
-    private RoundingFactory.Strategy roundingStrategy;
+    private Rounding.Strategy roundingStrategy;
 
 
     public TrackingConfiguration(String projectUuid) {
-        this(projectUuid, RoundingFactory.Strategy.NO_ROUNDING);
+        this(projectUuid, Rounding.Strategy.NO_ROUNDING);
     }
 
-    public TrackingConfiguration(String projectUuid, RoundingFactory.Strategy strategy) {
+    public TrackingConfiguration(String projectUuid, Rounding.Strategy strategy) {
         this.projectUuid = projectUuid;
         this.roundingStrategy = strategy;
     }
@@ -35,7 +35,7 @@ public class TrackingConfiguration extends Entity {
                                  Optional<Date> start,
                                  Optional<Date> end,
                                  Boolean promptForDescription,
-                                 RoundingFactory.Strategy roundingStrategy) {
+                                 Rounding.Strategy roundingStrategy) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.hourLimit = hourLimit;
@@ -66,17 +66,17 @@ public class TrackingConfiguration extends Entity {
         this.projectUuid = projectUuid;
     }
 
-    public RoundingFactory.Strategy getRoundingStrategy() {
+    public Rounding.Strategy getRoundingStrategy() {
         return roundingStrategy;
     }
 
-    public void setRoundingStrategy(RoundingFactory.Strategy roundingStrategy) {
+    public void setRoundingStrategy(Rounding.Strategy roundingStrategy) {
         Preconditions.checkNotNull(roundingStrategy);
         this.roundingStrategy = roundingStrategy;
     }
 
     public boolean hasAlteringRoundingStrategy() {
-        return roundingStrategy != RoundingFactory.Strategy.NO_ROUNDING;
+        return roundingStrategy != Rounding.Strategy.NO_ROUNDING;
     }
 
     public Optional<Integer> getHourLimit() {
@@ -113,6 +113,14 @@ public class TrackingConfiguration extends Entity {
         return end;
     }
 
+    public void setEnd(Optional<Date> end) {
+        Preconditions.checkNotNull(end);
+        if (getStart().isPresent() && end.isPresent()) {
+            Preconditions.checkArgument(end.get().after(getStart().get()), "End date cannot be before start date!");
+        }
+        this.end = end;
+    }
+
     public Optional<Date> getEndDateAsInclusive() {
         if (getEnd().isPresent()) {
             DateTime inclusiveDate = new DateTime(end.get()).minusDays(1);
@@ -120,14 +128,6 @@ public class TrackingConfiguration extends Entity {
         } else {
             return Optional.absent();
         }
-    }
-
-    public void setEnd(Optional<Date> end) {
-        Preconditions.checkNotNull(end);
-        if (getStart().isPresent() && end.isPresent()) {
-            Preconditions.checkArgument(end.get().after(getStart().get()), "End date cannot be before start date!");
-        }
-        this.end = end;
     }
 
     public void setEndAsInclusive(Optional<Date> endAsInclusive) {

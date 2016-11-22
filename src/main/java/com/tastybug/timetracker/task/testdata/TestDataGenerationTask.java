@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import org.joda.time.LocalDate;
@@ -45,7 +45,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
     private void createProjectWithLoooongTitle() {
         Project project = new Project("Donaudampfschifffahrtsgesellschaftskapitaen Heinz Kaluppke");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));
         storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
@@ -53,7 +53,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
     private void createProjectWithTimeFrame() {
         Project project = new Project("With Timeframe");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 30).toDate()));
 
@@ -63,7 +63,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
     private void createProjectWithTimeFrameAndLimit() {
         Project project = new Project("Timeframe+Limit");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 30).toDate()));
         trackingConfiguration.setHourLimit(Optional.of(100));
@@ -75,7 +75,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
     private void createProjectWith200Records(boolean overbooked) {
         String title = overbooked ? "200 Records, Limit 100h overbooked" : "200 Records, Limit 500h";
         Project project = new Project(title);
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setHourLimit(Optional.of(overbooked ? 100 : 500));
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));
         storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
@@ -96,7 +96,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
     private void createProjectWithRecordsWithOverlongDescriptions() {
         Project project = new Project("Overlong Record Descriptions");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));
         storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
@@ -121,7 +121,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
     private void createProjectWithLongRunningRecord() {
         Project project = new Project("Ongoing Overlong Record");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));
         storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
@@ -134,7 +134,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
     private void createProjectWithEarlyRecord() {
         Project project = new Project("Early Record");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
 
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));
@@ -149,7 +149,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
 
     private void createProjectWithLateRecord() {
         Project project = new Project("Late Record");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 24).toDate()));
 
         storeBatchOperation(project.getDAO(context).getBatchCreate(project));

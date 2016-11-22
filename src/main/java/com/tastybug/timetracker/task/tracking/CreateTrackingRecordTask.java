@@ -21,12 +21,12 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
 
     private TrackingRecord trackingRecord;
 
-    public static CreateTrackingRecordTask aTask(Context context) {
-        return new CreateTrackingRecordTask(context);
+    private CreateTrackingRecordTask(Context context) {
+        super(context);
     }
 
-    protected CreateTrackingRecordTask(Context context) {
-        super(context);
+    public static CreateTrackingRecordTask aTask(Context context) {
+        return new CreateTrackingRecordTask(context);
     }
 
     public CreateTrackingRecordTask withProjectUuid(String projectUuid) {

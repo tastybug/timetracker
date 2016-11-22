@@ -2,7 +2,7 @@ package com.tastybug.timetracker.model.rounding;
 
 import org.joda.time.Duration;
 
-public class FullMinuteDown extends RoundingStrategy {
+class FullMinuteDown extends RoundingStrategy {
 
     @Override
     long getDurationInSeconds(Duration duration) {

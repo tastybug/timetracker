@@ -1,7 +1,7 @@
 package com.tastybug.timetracker.ui.warn.internal.completion;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.model.statistics.StatisticProjectCompletion;
+import com.tastybug.timetracker.model.statistics.Completion;
 import com.tastybug.timetracker.ui.warn.completion.CompletionStatisticFactory;
 import com.tastybug.timetracker.ui.warn.completion.CompletionThresholdViolationIndicator;
 
@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 public class CompletionThresholdViolationIndicatorTest {
 
     CompletionStatisticFactory completionStatisticFactory = mock(CompletionStatisticFactory.class);
-    StatisticProjectCompletion completionBefore = mock(StatisticProjectCompletion.class);
-    StatisticProjectCompletion completionAfter = mock(StatisticProjectCompletion.class);
+    Completion completionBefore = mock(Completion.class);
+    Completion completionAfter = mock(Completion.class);
 
     CompletionThresholdViolationIndicator completionThresholdViolationIndicator = new CompletionThresholdViolationIndicator(completionStatisticFactory);
 

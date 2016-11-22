@@ -6,7 +6,7 @@ import android.os.ParcelFileDescriptor;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.infrastructure.backup.BackupDateAccessor;
-import com.tastybug.timetracker.infrastructure.backup.BackupLog;
+import com.tastybug.timetracker.infrastructure.backup.BackupLogHelper;
 import com.tastybug.timetracker.model.Project;
 
 import org.junit.Before;
@@ -31,17 +31,17 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class InternalRestoreServiceTest {
+public class BackupRestorationServiceTest {
 
-    BackupDateAccessor backupDateAccessor = mock(BackupDateAccessor.class);
-    BackupDataReader backupDataReader = mock(BackupDataReader.class);
-    BackupDataImporter backupDataImporter = mock(BackupDataImporter.class);
-    BackupLog backupLog = mock(BackupLog.class);
+    private BackupDateAccessor backupDateAccessor = mock(BackupDateAccessor.class);
+    private DataUnmarshaller dataUnmarshaller = mock(DataUnmarshaller.class);
+    private DatabaseRestorationManager databaseRestorationManager = mock(DatabaseRestorationManager.class);
+    private BackupLogHelper backupLogHelper = mock(BackupLogHelper.class);
 
-    InternalRestoreService subject = new InternalRestoreService(backupDateAccessor,
-            backupDataReader,
-            backupDataImporter,
-            backupLog);
+    private BackupRestorationService subject = new BackupRestorationService(backupDateAccessor,
+            dataUnmarshaller,
+            databaseRestorationManager,
+            backupLogHelper);
 
     @Before
     public void setup() {
@@ -57,7 +57,7 @@ public class InternalRestoreServiceTest {
         subject.performRestore(data, 1, null);
 
         // then
-        verify(backupDataReader, times(1)).readBackup(data);
+        verify(dataUnmarshaller, times(1)).unmarshallBackupData(data);
     }
 
     @Test
@@ -76,13 +76,13 @@ public class InternalRestoreServiceTest {
     public void onRestore_calls_BackupDataImporter_to_import_projects_from_backup() throws Exception {
         // given
         List<Project> projectsToImport = Collections.singletonList(new Project("123"));
-        when(backupDataReader.readBackup((BackupDataInput) any())).thenReturn(projectsToImport);
+        when(dataUnmarshaller.unmarshallBackupData((BackupDataInput) any())).thenReturn(projectsToImport);
 
         // when
         subject.performRestore(null, 1, null);
 
         // then
-        verify(backupDataImporter, times(1)).restoreProjectList(projectsToImport);
+        verify(databaseRestorationManager, times(1)).restoreProjectList(projectsToImport);
     }
 
     @Test
@@ -94,14 +94,14 @@ public class InternalRestoreServiceTest {
         subject.performRestore(data, 1234, null);
 
         // then
-        verify(backupLog, times(1)).logRestoreSuccess(1234);
+        verify(backupLogHelper, times(1)).logRestoreSuccess(1234);
     }
 
     @Test(expected = IOException.class)
     public void onRestore_correctly_logs_on_restores_that_fail_due_to_exception() throws Exception {
         try {
             // given
-            doThrow(new IOException("this breaks the backup")).when(backupDataReader).readBackup((BackupDataInput) any());
+            doThrow(new IOException("this breaks the backup")).when(dataUnmarshaller).unmarshallBackupData((BackupDataInput) any());
 
             // when
             subject.performRestore(null, 1234, null);
@@ -109,7 +109,7 @@ public class InternalRestoreServiceTest {
             fail();
         } catch (IOException ioe) {
             // then
-            verify(backupLog, times(1)).logRestoreFail(eq(1234), eq("this breaks the backup"));
+            verify(backupLogHelper, times(1)).logRestoreFail(eq(1234), eq("this breaks the backup"));
             throw ioe;
         }
     }

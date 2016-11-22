@@ -12,27 +12,27 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-class BackupDataReader {
+class DataUnmarshaller {
 
-    static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
+    private static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
 
     private JSONUnMarshallingBuilder jsonUnMarshallingBuilder;
-    private BackupDataEntryReader payloadReader = new BackupDataEntryReader();
+    private DataEntryUnmarshaller dataEntryUnmarshaller = new DataEntryUnmarshaller();
 
-    BackupDataReader() {
+    DataUnmarshaller() {
         this.jsonUnMarshallingBuilder = new JSONUnMarshallingBuilder();
     }
 
-    BackupDataReader(JSONUnMarshallingBuilder unMarshallingBuilder,
-                     BackupDataEntryReader payloadReader) {
+    DataUnmarshaller(JSONUnMarshallingBuilder unMarshallingBuilder,
+                     DataEntryUnmarshaller dataEntryUnmarshaller) {
         this.jsonUnMarshallingBuilder = unMarshallingBuilder;
-        this.payloadReader = payloadReader;
+        this.dataEntryUnmarshaller = dataEntryUnmarshaller;
     }
 
-    List<Project> readBackup(BackupDataInput data) throws IOException, JSONException, ParseException {
+    List<Project> unmarshallBackupData(BackupDataInput data) throws IOException, JSONException, ParseException {
         while (data.readNextHeader()) {
             if (data.getKey().equals(JSON_ARRAY_KEY)) {
-                byte[] payload = payloadReader.getPayloadFromBackupData(data);
+                byte[] payload = dataEntryUnmarshaller.getByteArrayFromBackupDataInput(data);
                 return getProjectsFromPayload(payload);
             } else {
                 data.skipEntityData();
@@ -41,7 +41,6 @@ class BackupDataReader {
         return new ArrayList<>();
     }
 
-    // TODO das hier in die Serviceklasse hochziehen. Diese klasse sollte sich nur um den datazugriff kuemmern
     private List<Project> getProjectsFromPayload(byte[] payload) throws JSONException, IOException, ParseException {
         return jsonUnMarshallingBuilder.withByteArray(payload).build();
     }

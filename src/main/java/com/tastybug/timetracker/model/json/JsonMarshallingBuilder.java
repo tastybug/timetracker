@@ -25,9 +25,9 @@ public class JsonMarshallingBuilder {
         this.trackingRecordDAO = new TrackingRecordDAO(context);
     }
 
-    public JsonMarshallingBuilder(ProjectDAO projectDAO,
-                                  TrackingConfigurationDAO trackingConfigurationDAO,
-                                  TrackingRecordDAO trackingRecordDAO) {
+    JsonMarshallingBuilder(ProjectDAO projectDAO,
+                           TrackingConfigurationDAO trackingConfigurationDAO,
+                           TrackingRecordDAO trackingRecordDAO) {
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
         this.trackingRecordDAO = trackingRecordDAO;

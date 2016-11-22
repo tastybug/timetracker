@@ -10,7 +10,7 @@ import org.joda.time.Hours;
 
 import java.util.Date;
 
-public class StatisticProjectExpiration {
+public class Expiration {
 
     private TrackingConfiguration trackingConfiguration;
     private Date now;
@@ -18,13 +18,13 @@ public class StatisticProjectExpiration {
     private Optional<Integer> expirationPercent;
 
 
-    public StatisticProjectExpiration(TrackingConfiguration trackingConfiguration) {
+    public Expiration(TrackingConfiguration trackingConfiguration) {
         this(trackingConfiguration, new Date());
     }
 
 
-    public StatisticProjectExpiration(TrackingConfiguration trackingConfiguration,
-                                      Date now) {
+    public Expiration(TrackingConfiguration trackingConfiguration,
+                      Date now) {
         Preconditions.checkNotNull(trackingConfiguration);
         Preconditions.checkNotNull(now);
 

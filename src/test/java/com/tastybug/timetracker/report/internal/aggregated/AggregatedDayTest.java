@@ -3,7 +3,7 @@ package com.tastybug.timetracker.report.internal.aggregated;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class AggregatedDayTest {
 
     private DateTime today = new DateTime(2016, 12, 24, 0, 0);
-    private TrackingConfiguration sixtyMinUpConfiguration = new TrackingConfiguration("some uuid", RoundingFactory.Strategy.SIXTY_MINUTES_UP);
+    private TrackingConfiguration sixtyMinUpConfiguration = new TrackingConfiguration("some uuid", Rounding.Strategy.SIXTY_MINUTES_UP);
 
     private AggregatedDay aggregatedDay = new AggregatedDay(today.toDate());
 

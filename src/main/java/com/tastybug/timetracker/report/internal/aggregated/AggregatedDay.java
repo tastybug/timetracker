@@ -14,7 +14,7 @@ import org.joda.time.Interval;
 
 import java.util.Date;
 
-public class AggregatedDay implements ReportableItem {
+class AggregatedDay implements ReportableItem {
 
     private DateTime dayStart, dayEnd;
 
@@ -32,12 +32,12 @@ public class AggregatedDay implements ReportableItem {
         Preconditions.checkArgument(trackingRecord.getStart().isPresent());
         Preconditions.checkArgument(trackingRecord.getEnd().isPresent());
 
-        if (isOutsideOfScope(trackingRecord)) {
-            return;
-        } else if (isContainedTrackingRecord(trackingRecord)) {
-            processContainedTrackingRecord(trackingRecord, configuration);
-        } else {
-            processLeakingTrackingRecord(trackingRecord, configuration);
+        if (!isOutsideOfScope(trackingRecord)) {
+            if (isContainedTrackingRecord(trackingRecord)) {
+                processContainedTrackingRecord(trackingRecord, configuration);
+            } else {
+                processLeakingTrackingRecord(trackingRecord, configuration);
+            }
         }
     }
 

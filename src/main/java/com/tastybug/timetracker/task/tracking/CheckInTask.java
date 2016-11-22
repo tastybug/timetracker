@@ -16,12 +16,12 @@ public class CheckInTask extends AbstractAsyncTask {
 
     private TrackingRecord trackingRecord;
 
-    public static CheckInTask aTask(Context context) {
-        return new CheckInTask(context);
+    private CheckInTask(Context context) {
+        super(context);
     }
 
-    protected CheckInTask(Context context) {
-        super(context);
+    public static CheckInTask aTask(Context context) {
+        return new CheckInTask(context);
     }
 
     public CheckInTask withProjectUuid(String projectUuid) {

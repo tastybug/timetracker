@@ -22,7 +22,7 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
     protected OttoProvider ottoProvider = new OttoProvider();
     protected Bundle arguments = new Bundle();
     protected Context context;
-    protected ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+    private ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
     protected AbstractAsyncTask(Context context) {
         this.context = context;
@@ -54,17 +54,14 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
         operations.add(operation);
     }
 
-    protected ContentProviderResult[] executeBatchOperations() {
+    private ContentProviderResult[] executeBatchOperations() {
         try {
             if (operations.isEmpty()) {
                 return new ContentProviderResult[0];
             }
 
             return context.getContentResolver().applyBatch(EntityDAO.AUTHORITY, operations);
-        } catch (RemoteException e) {
-            logError(getClass().getSimpleName(), "Problem executing sql batch operation.", e);
-            throw new RuntimeException("Problem executing sql batch operation.", e);
-        } catch (OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             logError(getClass().getSimpleName(), "Problem executing sql batch operation.", e);
             throw new RuntimeException("Problem executing sql batch operation.", e);
         }

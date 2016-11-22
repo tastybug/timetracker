@@ -6,7 +6,7 @@ public class ProjectConfiguredEvent implements OttoEvent {
 
     private String projectUuid;
 
-    public ProjectConfiguredEvent(String projectUuid) {
+    ProjectConfiguredEvent(String projectUuid) {
         this.projectUuid = projectUuid;
     }
 

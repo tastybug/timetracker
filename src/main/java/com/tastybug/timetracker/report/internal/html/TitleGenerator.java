@@ -9,7 +9,7 @@ import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
 
-public class TitleGenerator {
+class TitleGenerator {
 
     private DefaultLocaleDateFormatter dateFormatter;
     private Context context;

@@ -6,7 +6,7 @@ import android.os.ParcelFileDescriptor;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.infrastructure.backup.BackupDateAccessor;
-import com.tastybug.timetracker.infrastructure.backup.BackupLog;
+import com.tastybug.timetracker.infrastructure.backup.BackupLogHelper;
 
 import org.json.JSONException;
 import org.junit.Test;
@@ -30,22 +30,22 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class InternalBackupServiceTest {
+public class BackupCreationServiceTest {
 
-    DataChangeIndicator dataChangeIndicator = mock(DataChangeIndicator.class);
-    BackupDateAccessor backupDateAccessor = mock(BackupDateAccessor.class);
-    BackupDataWriter backupDataWriter = mock(BackupDataWriter.class);
-    BackupLog backupLog = mock(BackupLog.class);
+    private BackupNecessityIndicator backupNecessityIndicator = mock(BackupNecessityIndicator.class);
+    private BackupDateAccessor backupDateAccessor = mock(BackupDateAccessor.class);
+    private DataMarshaller dataMarshaller = mock(DataMarshaller.class);
+    private BackupLogHelper backupLogHelper = mock(BackupLogHelper.class);
 
-    InternalBackupService subject = new InternalBackupService(dataChangeIndicator,
-            backupDataWriter,
+    private BackupCreationService subject = new BackupCreationService(backupNecessityIndicator,
+            dataMarshaller,
             backupDateAccessor,
-            backupLog);
+            backupLogHelper);
 
     @Test
     public void checkBackupNecessary_returns_true_on_first_backup() throws IOException {
         // given
-        when(dataChangeIndicator.hasDataChangesSince((Date) any())).thenReturn(false);
+        when(backupNecessityIndicator.hasDataChangesSince((Date) any())).thenReturn(false);
         when(backupDateAccessor.readLastBackupDate((ParcelFileDescriptor) any())).thenReturn(Optional.<Date>absent());
 
         // when
@@ -58,7 +58,7 @@ public class InternalBackupServiceTest {
     @Test
     public void checkBackupNecessary_returns_true_if_data_has_changed_since_last_backup() throws IOException {
         // given
-        when(dataChangeIndicator.hasDataChangesSince((Date) any())).thenReturn(true);
+        when(backupNecessityIndicator.hasDataChangesSince((Date) any())).thenReturn(true);
         when(backupDateAccessor.readLastBackupDate((ParcelFileDescriptor) any())).thenReturn(Optional.of(new Date()));
 
         // when
@@ -71,14 +71,14 @@ public class InternalBackupServiceTest {
     @Test
     public void checkBackupNecessary_logs_skipped_backups() throws IOException, JSONException {
         // given
-        when(dataChangeIndicator.hasDataChangesSince((Date) any())).thenReturn(false);
+        when(backupNecessityIndicator.hasDataChangesSince((Date) any())).thenReturn(false);
         when(backupDateAccessor.readLastBackupDate((ParcelFileDescriptor) any())).thenReturn(Optional.of(new Date()));
 
         // when
         subject.checkBackupNecessary(Optional.of(new Date()));
 
         // then
-        verify(backupLog, times(1)).logBackupUnnecessary(any(Optional.class));
+        verify(backupLogHelper, times(1)).logBackupUnnecessary(any(Optional.class));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class InternalBackupServiceTest {
         subject.performBackup(null, null, null);
 
         // then
-        verify(backupDataWriter, times(1)).writeBackup(any(BackupDataOutput.class));
+        verify(dataMarshaller, times(1)).writeBackup(any(BackupDataOutput.class));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class InternalBackupServiceTest {
     @Test
     public void performBackup_wont_store_backup_date_after_json_exception() throws IOException, JSONException {
         // given
-        doThrow(new JSONException("this breaks the backup")).when(backupDataWriter).writeBackup((BackupDataOutput) any());
+        doThrow(new JSONException("this breaks the backup")).when(dataMarshaller).writeBackup((BackupDataOutput) any());
 
         // when
         subject.performBackup(null, null, null);
@@ -117,14 +117,14 @@ public class InternalBackupServiceTest {
         subject.performBackup(null, null, null);
 
         // then
-        verify(backupLog, times(1)).logBackupSuccess(any(Optional.class));
+        verify(backupLogHelper, times(1)).logBackupSuccess(any(Optional.class));
     }
 
     @Test(expected = IOException.class)
     public void performBackup_logs_failed_backups_after_io_exception() throws IOException, JSONException {
         try {
             // given
-            doThrow(new IOException("this breaks the backup")).when(backupDataWriter).writeBackup((BackupDataOutput) any());
+            doThrow(new IOException("this breaks the backup")).when(dataMarshaller).writeBackup((BackupDataOutput) any());
 
             // when
             subject.performBackup(null, null, null);
@@ -132,7 +132,7 @@ public class InternalBackupServiceTest {
             fail();
         } catch (IOException ioe) {
             // then
-            verify(backupLog, times(1)).logBackupFail(any(Optional.class), eq("this breaks the backup"));
+            verify(backupLogHelper, times(1)).logBackupFail(any(Optional.class), eq("this breaks the backup"));
             throw ioe;
         }
     }
@@ -140,13 +140,13 @@ public class InternalBackupServiceTest {
     @Test
     public void performBackup_logs_failed_backups_after_unexpected_exception() throws Exception {
         // given
-        doThrow(new IllegalArgumentException("this breaks the backup")).when(backupDataWriter).writeBackup((BackupDataOutput) any());
+        doThrow(new IllegalArgumentException("this breaks the backup")).when(dataMarshaller).writeBackup((BackupDataOutput) any());
 
         // when
         subject.performBackup(null, null, null);
 
         // then
-        verify(backupLog, times(1)).logBackupFail(any(Optional.class), eq("this breaks the backup"));
+        verify(backupLogHelper, times(1)).logBackupFail(any(Optional.class), eq("this breaks the backup"));
     }
 
     @Test

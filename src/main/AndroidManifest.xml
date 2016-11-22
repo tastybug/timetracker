@@ -5,7 +5,7 @@
     <application
         android:name=".infrastructure.runtime.Application"
         android:allowBackup="true"
-        android:backupAgent=".infrastructure.backup.BackupAgentFacade"
+        android:backupAgent=".infrastructure.backup.OSFacingBackupAgentHandler"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.DayNight">

@@ -13,12 +13,12 @@ public class DeleteTrackingRecordTask extends AbstractAsyncTask {
 
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
 
-    public static DeleteTrackingRecordTask aTask(Context context) {
-        return new DeleteTrackingRecordTask(context);
+    private DeleteTrackingRecordTask(Context context) {
+        super(context);
     }
 
-    protected DeleteTrackingRecordTask(Context context) {
-        super(context);
+    public static DeleteTrackingRecordTask aTask(Context context) {
+        return new DeleteTrackingRecordTask(context);
     }
 
     public DeleteTrackingRecordTask withTrackingRecordUuid(String uuid) {

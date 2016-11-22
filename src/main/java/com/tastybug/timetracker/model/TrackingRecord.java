@@ -1,5 +1,7 @@
 package com.tastybug.timetracker.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -12,7 +14,7 @@ import java.util.UUID;
 
 public class TrackingRecord extends Entity implements Comparable<TrackingRecord> {
 
-    protected static final int MINUTES_LIMIT_FOR_TINY_RECORDS = 2;
+    static final int MINUTES_LIMIT_FOR_TINY_RECORDS = 2;
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
@@ -102,16 +104,16 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         return getStart().isPresent() && getEnd().isPresent();
     }
 
+    public Optional<String> getDescription() {
+        return description;
+    }
+
     public void setDescription(Optional<String> description) {
         if (description.isPresent() && description.get().length() == 0) {
             this.description = Optional.absent();
         } else {
             this.description = description;
         }
-    }
-
-    public Optional<String> getDescription() {
-        return description;
     }
 
     public Optional<Duration> toDuration() {
@@ -126,7 +128,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         }
     }
 
-    public boolean isVeryShort() {
+    boolean isVeryShort() {
         return toDuration().isPresent() && toDuration().get().getStandardMinutes() <= MINUTES_LIMIT_FOR_TINY_RECORDS;
     }
 
@@ -141,10 +143,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof TrackingRecord)) {
-            return false;
-        }
-        return getUuid().equals(((TrackingRecord) o).getUuid());
+        return o instanceof TrackingRecord && getUuid().equals(((TrackingRecord) o).getUuid());
     }
 
     public String toString() {
@@ -157,7 +156,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
                 .toString();
     }
 
-    public int compareTo(TrackingRecord another) {
+    public int compareTo(@NonNull TrackingRecord another) {
         Preconditions.checkState(another.getStart().isPresent());
         Preconditions.checkState(this.getStart().isPresent());
         return another.getStart().get().compareTo(getStart().get());

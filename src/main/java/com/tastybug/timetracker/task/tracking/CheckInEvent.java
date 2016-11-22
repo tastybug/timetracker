@@ -4,7 +4,7 @@ import com.tastybug.timetracker.model.TrackingRecord;
 
 public class CheckInEvent extends CreatedTrackingRecordEvent {
 
-    public CheckInEvent(TrackingRecord trackingRecord) {
+    CheckInEvent(TrackingRecord trackingRecord) {
         super(trackingRecord);
     }
 }

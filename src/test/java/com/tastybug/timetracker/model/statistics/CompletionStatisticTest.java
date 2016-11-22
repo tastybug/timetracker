@@ -3,7 +3,7 @@ package com.tastybug.timetracker.model.statistics;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -12,19 +12,20 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-public class StatisticProjectCompletionTest {
+public class CompletionStatisticTest {
 
     @Test
     public void handlesProjectWithoutRecordsCorrectly() {
         // given
-        ArrayList<TrackingRecord> trackingRecords = new ArrayList<TrackingRecord>();
-        StatisticProjectCompletion subject = new StatisticProjectCompletion(aTrackingConfigurationWithLimit(),
+        ArrayList<TrackingRecord> trackingRecords = new ArrayList<>();
+        Completion subject = new Completion(aTrackingConfigurationWithLimit(),
                 trackingRecords,
                 true);
 
@@ -50,8 +51,8 @@ public class StatisticProjectCompletionTest {
     @Test
     public void handlesProjectWithoutHourLimitCorrectly() {
         // given
-        ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10MinDuration());
-        StatisticProjectCompletion subject = new StatisticProjectCompletion(aTrackingConfigurationWithoutLimit(),
+        List<TrackingRecord> trackingRecords = aTrackingRecordsList(aTrackingRecordWith10MinDuration());
+        Completion subject = new Completion(aTrackingConfigurationWithoutLimit(),
                 trackingRecords,
                 true);
 
@@ -73,11 +74,11 @@ public class StatisticProjectCompletionTest {
     @Test
     public void handlesProjectWithLimitAndExistingTrackingRecordsCorrectly() {
         // given
-        ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(
+        List<TrackingRecord> trackingRecords = aTrackingRecordsList(
                 aTrackingRecordWith10MinDuration(),
                 aTrackingRecordWith10MinDuration()
         );
-        StatisticProjectCompletion subject = new StatisticProjectCompletion(
+        Completion subject = new Completion(
                 aTrackingConfigurationWithLimit(),
                 trackingRecords,
                 true);
@@ -103,7 +104,7 @@ public class StatisticProjectCompletionTest {
     @Test
     public void handlesOverbookedProjectCorrectly() {
         // given
-        ArrayList<TrackingRecord> trackingRecords = aTrackingRecordsList(
+        List<TrackingRecord> trackingRecords = aTrackingRecordsList(
                 aTrackingRecordWith10MinDuration(),
                 aTrackingRecordWith10MinDuration(),
                 aTrackingRecordWith10MinDuration(),
@@ -115,7 +116,7 @@ public class StatisticProjectCompletionTest {
                 aTrackingRecordWith10MinDuration()
         );
         TrackingConfiguration configuration = aTrackingConfigurationWithLimit();
-        StatisticProjectCompletion subject = new StatisticProjectCompletion(configuration,
+        Completion subject = new Completion(configuration,
                 trackingRecords,
                 true);
 
@@ -144,7 +145,7 @@ public class StatisticProjectCompletionTest {
                 Optional.<Date>absent(),
                 Optional.<Date>absent(),
                 true,
-                RoundingFactory.Strategy.NO_ROUNDING);
+                Rounding.Strategy.NO_ROUNDING);
     }
 
     private TrackingConfiguration aTrackingConfigurationWithoutLimit() {
@@ -154,13 +155,12 @@ public class StatisticProjectCompletionTest {
                 Optional.<Date>absent(),
                 Optional.<Date>absent(),
                 true,
-                RoundingFactory.Strategy.NO_ROUNDING);
+                Rounding.Strategy.NO_ROUNDING);
     }
 
 
-    private ArrayList<TrackingRecord> aTrackingRecordsList(TrackingRecord... trackingRecords) {
-
-        return new ArrayList<TrackingRecord>(Arrays.asList(trackingRecords));
+    private List<TrackingRecord> aTrackingRecordsList(TrackingRecord... trackingRecords) {
+        return Arrays.asList(trackingRecords);
     }
 
     private TrackingRecord aTrackingRecordWith10MinDuration() {

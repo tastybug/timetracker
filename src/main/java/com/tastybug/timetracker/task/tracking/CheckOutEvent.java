@@ -4,7 +4,7 @@ import com.tastybug.timetracker.model.TrackingRecord;
 
 public class CheckOutEvent extends ModifiedTrackingRecordEvent {
 
-    public CheckOutEvent(TrackingRecord trackingRecord) {
+    CheckOutEvent(TrackingRecord trackingRecord) {
         super(trackingRecord, true);
     }
 }

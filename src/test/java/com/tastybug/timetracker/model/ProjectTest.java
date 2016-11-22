@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.dao.DAOFactory;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.junit.Test;
 
@@ -130,7 +130,7 @@ public class ProjectTest {
         when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
         Project project = new Project("project title");
         project.setDAOFactory(daoFactory);
-        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), Optional.<Integer>absent(), Optional.<Date>absent(), Optional.<Date>absent(), false, RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), Optional.<Integer>absent(), Optional.<Date>absent(), Optional.<Date>absent(), false, Rounding.Strategy.NO_ROUNDING);
         when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
 
         // when

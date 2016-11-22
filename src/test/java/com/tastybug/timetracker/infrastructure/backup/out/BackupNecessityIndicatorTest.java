@@ -16,13 +16,13 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DataChangeIndicatorTest {
+public class BackupNecessityIndicatorTest {
 
-    DatabaseConfig databaseConfig = mock(DatabaseConfig.class);
-    Context context = mock(Context.class);
-    File databaseFile = mock(File.class);
+    private DatabaseConfig databaseConfig = mock(DatabaseConfig.class);
+    private Context context = mock(Context.class);
+    private File databaseFile = mock(File.class);
 
-    DataChangeIndicator subject = new DataChangeIndicator(context, databaseConfig);
+    private BackupNecessityIndicator subject = new BackupNecessityIndicator(context, databaseConfig);
 
     @Before
     public void setup() {

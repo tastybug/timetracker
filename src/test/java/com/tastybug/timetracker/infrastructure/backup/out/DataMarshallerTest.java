@@ -19,24 +19,24 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class BackupDataWriterTest {
+public class DataMarshallerTest {
 
-    protected static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
+    private static final String JSON_ARRAY_KEY = "JSON_ARRAY_KEY";
 
-    JsonMarshallingBuilder marshaller = mock(JsonMarshallingBuilder.class);
+    private JsonMarshallingBuilder jsonMarshaller = mock(JsonMarshallingBuilder.class);
 
-    JSONArray jsonArray = mock(JSONArray.class);
-    String jsonAsString = "{}";
-    byte[] bytesPayload;
-    BackupDataInput data = mock(BackupDataInput.class);
+    private JSONArray jsonArray = mock(JSONArray.class);
+    private byte[] bytesPayload;
+    private BackupDataInput data = mock(BackupDataInput.class);
 
-    BackupDataWriter subject = new BackupDataWriter(marshaller);
+    private DataMarshaller subject = new DataMarshaller(jsonMarshaller);
 
     @Before
     public void setup() throws Exception {
+        String jsonAsString = "{}";
         bytesPayload = jsonAsString.getBytes("utf-8");
 
-        when(marshaller.build()).thenReturn(jsonArray);
+        when(jsonMarshaller.build()).thenReturn(jsonArray);
         when(jsonArray.toString()).thenReturn(jsonAsString);
 
         when(data.readNextHeader()).thenReturn(true, false);
@@ -49,8 +49,8 @@ public class BackupDataWriterTest {
         subject.writeBackup(mock(BackupDataOutput.class));
 
         // then
-        verify(marshaller, times(1)).build();
-        verify(marshaller, never()).withProjectUuid(anyString());
+        verify(jsonMarshaller, times(1)).build();
+        verify(jsonMarshaller, never()).withProjectUuid(anyString());
     }
 
     @Test

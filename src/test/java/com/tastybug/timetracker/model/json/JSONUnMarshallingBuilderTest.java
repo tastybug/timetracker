@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.json.JSONArray;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public class JSONUnMarshallingBuilderTest {
 
     private Project aProjectWith2RecordsAndAConfiguration() {
         Project project = new Project("uuid", "title", Optional.<String>absent());
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", RoundingFactory.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", Rounding.Strategy.NO_ROUNDING);
         ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<>();
         trackingRecordArrayList.add(new TrackingRecord("uuid"));
         trackingRecordArrayList.add(new TrackingRecord("uuid"));

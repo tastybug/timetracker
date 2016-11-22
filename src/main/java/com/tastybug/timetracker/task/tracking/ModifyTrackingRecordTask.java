@@ -24,14 +24,13 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
     private TrackingRecord trackingRecord;
     private boolean wasStopped = false;
 
-    public static ModifyTrackingRecordTask aTask(Context context) {
-        return new ModifyTrackingRecordTask(context);
-    }
-
-    protected ModifyTrackingRecordTask(Context context) {
+    private ModifyTrackingRecordTask(Context context) {
         super(context);
     }
 
+    public static ModifyTrackingRecordTask aTask(Context context) {
+        return new ModifyTrackingRecordTask(context);
+    }
 
     public ModifyTrackingRecordTask withTrackingRecordUuid(String trackingRecordUuid) {
         arguments.putString(TRACKING_RECORD_UUID, trackingRecordUuid);

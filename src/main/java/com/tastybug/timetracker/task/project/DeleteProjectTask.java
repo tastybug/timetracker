@@ -14,12 +14,12 @@ public class DeleteProjectTask extends AbstractAsyncTask {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
-    public static DeleteProjectTask aTask(Context context) {
-        return new DeleteProjectTask(context);
+    private DeleteProjectTask(Context context) {
+        super(context);
     }
 
-    protected DeleteProjectTask(Context context) {
-        super(context);
+    public static DeleteProjectTask aTask(Context context) {
+        return new DeleteProjectTask(context);
     }
 
     public DeleteProjectTask withProjectUuid(String uuid) {

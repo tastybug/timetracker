@@ -4,7 +4,7 @@ import android.os.Build;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingConfiguration;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import org.json.JSONException;
@@ -152,7 +152,7 @@ public class TrackingConfigurationJSONTest {
 
     @Test
     public void can_marshal_all_rounding_strategies() throws Exception {
-        for (RoundingFactory.Strategy strategy : RoundingFactory.Strategy.values()) {
+        for (Rounding.Strategy strategy : Rounding.Strategy.values()) {
             // given
             TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
             trackingConfiguration.setRoundingStrategy(strategy);
@@ -161,7 +161,7 @@ public class TrackingConfigurationJSONTest {
             TrackingConfigurationJSON json = new TrackingConfigurationJSON(trackingConfiguration);
 
             // then
-            assertEquals(strategy, RoundingFactory.Strategy.valueOf(json.getString(TrackingConfigurationJSON.ROUNDING_STRATEGY_COLUMN)));
+            assertEquals(strategy, Rounding.Strategy.valueOf(json.getString(TrackingConfigurationJSON.ROUNDING_STRATEGY_COLUMN)));
         }
     }
 
@@ -281,7 +281,7 @@ public class TrackingConfigurationJSONTest {
 
     @Test
     public void to_tracking_configuration_can_deal_with_any_type_of_rounding_strategy() throws Exception {
-        for (RoundingFactory.Strategy strategy : RoundingFactory.Strategy.values()) {
+        for (Rounding.Strategy strategy : Rounding.Strategy.values()) {
             // given
             JSONObject toImportFrom = aTrackingConfigurationJSONToImport();
             toImportFrom.put(ROUNDING_STRATEGY_COLUMN, strategy.name());
@@ -302,7 +302,7 @@ public class TrackingConfigurationJSONTest {
         toImportFrom.put(START_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(new Date()));
         toImportFrom.put(END_DATE_COLUMN, DefaultLocaleDateFormatter.iso8601().format(new Date()));
         toImportFrom.put(PROMPT_FOR_DESCRIPTION_COLUMN, false);
-        toImportFrom.put(ROUNDING_STRATEGY_COLUMN, RoundingFactory.Strategy.NO_ROUNDING.name());
+        toImportFrom.put(ROUNDING_STRATEGY_COLUMN, Rounding.Strategy.NO_ROUNDING.name());
 
         return toImportFrom;
     }

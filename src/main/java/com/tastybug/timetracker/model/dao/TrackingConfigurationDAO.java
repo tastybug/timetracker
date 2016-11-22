@@ -7,7 +7,7 @@ import android.database.Cursor;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
-import com.tastybug.timetracker.model.rounding.RoundingFactory;
+import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.text.ParseException;
@@ -87,7 +87,7 @@ public class TrackingConfigurationDAO extends EntityDAO<TrackingConfiguration> {
                     startDateString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(startDateString)) : Optional.<Date>absent(),
                     endDateString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(endDateString)) : Optional.<Date>absent(),
                     promptForDescription,
-                    RoundingFactory.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
+                    Rounding.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
             );
         } catch (ParseException pe) {
             throw new IllegalArgumentException("Problem parsing date.", pe);

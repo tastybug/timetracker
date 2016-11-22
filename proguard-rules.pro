@@ -3,7 +3,7 @@
 -dontwarn sun.misc.Unsafe
 
 # this class contains testibility constructors that break due to obfuscation, which is fine
--dontnote com.tastybug.timetracker.infrastructure.backup.BackupAgentFacade
+-dontnote com.tastybug.timetracker.infrastructure.backup.OSFacingBackupAgentHandler
 
 -keep class com.tastybug.timetracker.infrastructure.runtime.Application
 

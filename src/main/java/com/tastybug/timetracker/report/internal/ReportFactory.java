@@ -10,9 +10,10 @@ import java.util.List;
 
 public interface ReportFactory {
 
-    Report createModel(Project project, Date firstDay,
-                       Date lastDay,
-                       List<TrackingRecord> includedTrackingRecords,
-                       List<TrackingRecord> edgeTrackingRecords,
-                       TrackingConfiguration trackingConfiguration);
+    Report create(Project project,
+                  Date firstDay,
+                  Date lastDay,
+                  List<TrackingRecord> includedTrackingRecords,
+                  List<TrackingRecord> edgeTrackingRecords,
+                  TrackingConfiguration trackingConfiguration);
 }

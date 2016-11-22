@@ -13,9 +13,6 @@ import java.util.List;
  */
 class DayListFactory {
 
-    DayListFactory() {
-    }
-
     List<AggregatedDay> createList(Date firstDay, Date lastDay) {
         Preconditions.checkNotNull(firstDay);
         Preconditions.checkNotNull(lastDay);

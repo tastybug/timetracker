@@ -13,18 +13,18 @@ import java.util.Date;
  * This class tells whether a data change has happened since a given date.
  * Based on this indication backups will happen or be omitted.
  */
-class DataChangeIndicator {
+class BackupNecessityIndicator {
 
     private DatabaseConfig databaseConfig;
     private Context context;
 
-    DataChangeIndicator(Context context) {
+    BackupNecessityIndicator(Context context) {
         this.context = context;
         this.databaseConfig = new DatabaseConfig(context);
     }
 
-    DataChangeIndicator(Context context,
-                        DatabaseConfig databaseConfig) {
+    BackupNecessityIndicator(Context context,
+                             DatabaseConfig databaseConfig) {
         this.context = context;
         this.databaseConfig = databaseConfig;
     }

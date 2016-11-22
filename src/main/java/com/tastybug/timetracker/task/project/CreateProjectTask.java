@@ -20,12 +20,12 @@ public class CreateProjectTask extends AbstractAsyncTask {
 
     private Project project;
 
-    public static CreateProjectTask aTask(Context context) {
-        return new CreateProjectTask(context);
+    private CreateProjectTask(Context context) {
+        super(context);
     }
 
-    protected CreateProjectTask(Context context) {
-        super(context);
+    public static CreateProjectTask aTask(Context context) {
+        return new CreateProjectTask(context);
     }
 
     public CreateProjectTask withProjectTitle(String title) {
@@ -33,7 +33,7 @@ public class CreateProjectTask extends AbstractAsyncTask {
         return this;
     }
 
-    public CreateProjectTask withProjectDescription(String description) {
+    CreateProjectTask withProjectDescription(String description) {
         arguments.putString(PROJECT_DESCRIPTION, description);
         return this;
     }

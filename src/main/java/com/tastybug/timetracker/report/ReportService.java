@@ -38,9 +38,9 @@ public class ReportService {
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
 
         if (!aggregateDays) {
-            return new NonAggregatedReportFactory(context).createModel(project, firstDay, lastDay, filter.build(), filter.buildEdges(), trackingConfiguration);
+            return new NonAggregatedReportFactory(context).create(project, firstDay, lastDay, filter.build(), filter.buildEdges(), trackingConfiguration);
         } else {
-            return new AggregatedReportFactory(context).createModel(project, firstDay, lastDay, filter.build(), filter.buildEdges(), trackingConfiguration);
+            return new AggregatedReportFactory(context).create(project, firstDay, lastDay, filter.build(), filter.buildEdges(), trackingConfiguration);
         }
     }
 }
