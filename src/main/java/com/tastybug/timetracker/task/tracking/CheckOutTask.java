@@ -41,7 +41,7 @@ public class CheckOutTask extends AbstractAsyncTask {
         trackingRecord = new TrackingRecordDAO(context).getRunning(stoppableProjectUuid).get();
         trackingRecord.stop();
 
-        storeBatchOperation(trackingRecord.getDAO(context).getBatchUpdate(trackingRecord));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchUpdate(trackingRecord));
     }
 
     protected void onPostExecute(Long result) {

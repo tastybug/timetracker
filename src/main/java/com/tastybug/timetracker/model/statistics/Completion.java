@@ -14,7 +14,7 @@ public class Completion {
     public Completion(TrackingConfiguration configuration,
                       List<TrackingRecord> trackingRecords,
                       boolean countRunning) {
-        this.currentDuration = new Duration(configuration, trackingRecords, countRunning).getDuration();
+        this.currentDuration = new ProjectDuration(configuration, trackingRecords, countRunning).getDuration();
         this.trackingConfiguration = configuration;
     }
 

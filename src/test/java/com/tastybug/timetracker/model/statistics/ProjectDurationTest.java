@@ -14,16 +14,16 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
-public class DurationTest {
+public class ProjectDurationTest {
 
     @Test(expected = NullPointerException.class)
     public void creatingStatisticsForNullTrackingConfigurationYieldsException() {
-        new Duration(null, new ArrayList<TrackingRecord>());
+        new ProjectDuration(null, new ArrayList<TrackingRecord>());
     }
 
     @Test(expected = NullPointerException.class)
     public void creatingStatisticsForNullTrackingRecordArrayYieldsException() {
-        new Duration(new TrackingConfiguration("some project uuid"), null);
+        new ProjectDuration(new TrackingConfiguration("some project uuid"), null);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class DurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        org.joda.time.Duration duration = new Duration(configuration, list).getDuration();
+        org.joda.time.Duration duration = new ProjectDuration(configuration, list).getDuration();
 
         // then
         assertEquals(0, duration.getStandardSeconds());
@@ -46,7 +46,7 @@ public class DurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        org.joda.time.Duration duration = new Duration(configuration, list).getDuration();
+        org.joda.time.Duration duration = new ProjectDuration(configuration, list).getDuration();
 
         // then
         assertEquals(0, duration.getStandardSeconds());
@@ -59,7 +59,7 @@ public class DurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        org.joda.time.Duration duration = new Duration(configuration, trackingRecords).getDuration();
+        org.joda.time.Duration duration = new ProjectDuration(configuration, trackingRecords).getDuration();
 
         // then: 2 * 10:10min
         assertEquals(2 * (10 * 60 + 10), duration.getStandardSeconds());
@@ -72,7 +72,7 @@ public class DurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWith10erRounding();
 
         // when
-        org.joda.time.Duration duration = new Duration(configuration, trackingRecords).getDuration();
+        org.joda.time.Duration duration = new ProjectDuration(configuration, trackingRecords).getDuration();
 
         // then: 2 * 20 minutes
         assertEquals(2 * 20 * 60, duration.getStandardSeconds());
@@ -85,7 +85,7 @@ public class DurationTest {
         TrackingConfiguration configuration = aTrackingConfigurationWithNoRounding();
 
         // when
-        org.joda.time.Duration duration = new Duration(configuration, trackingRecords, false).getDuration();
+        org.joda.time.Duration duration = new ProjectDuration(configuration, trackingRecords, false).getDuration();
 
         // then
         assertEquals(2 * (10 * 60 + 10), duration.getStandardSeconds());

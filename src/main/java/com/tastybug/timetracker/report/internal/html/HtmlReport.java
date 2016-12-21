@@ -6,10 +6,11 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class HtmlReport {
+public class HtmlReport implements Serializable {
 
-    private Context context;
+    private transient Context context;
     private String template = "";
 
     HtmlReport(Context context) throws IOException {

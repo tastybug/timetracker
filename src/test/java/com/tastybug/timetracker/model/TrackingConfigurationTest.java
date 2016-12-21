@@ -5,6 +5,7 @@ import android.os.Build;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.rounding.Rounding;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -230,6 +231,15 @@ public class TrackingConfigurationTest {
 
         // when
         trackingConfiguration.setProjectUuid(null);
+    }
+
+    @Test
+    public void can_serialize() {
+        // given
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("proj", Rounding.Strategy.NO_ROUNDING);
+
+        // when: this is supposed to cause no exception
+        SerializationUtils.serialize(trackingConfiguration);
     }
 
     private TrackingConfiguration anInstance() {

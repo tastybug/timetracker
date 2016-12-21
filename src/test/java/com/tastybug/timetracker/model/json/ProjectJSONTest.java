@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.model.json;
 
-import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
@@ -26,7 +25,6 @@ import static com.tastybug.timetracker.model.json.ProjectJSON.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
@@ -155,9 +153,9 @@ public class ProjectJSONTest {
 
         // when
         assertEquals(projectIn.getUuid(), projectOut.getUuid());
-        assertEquals(projectIn.getTrackingConfiguration(mock(Context.class)).getUuid(),
-                projectOut.getTrackingConfiguration(mock(Context.class)).getUuid());
-        assertEquals(2, projectOut.getTrackingRecords(mock(Context.class)).size());
+        assertEquals(projectIn.getTrackingConfiguration().getUuid(),
+                projectOut.getTrackingConfiguration().getUuid());
+        assertEquals(2, projectOut.getTrackingRecords().size());
     }
 
     private JSONObject aProjectJSON() throws JSONException {

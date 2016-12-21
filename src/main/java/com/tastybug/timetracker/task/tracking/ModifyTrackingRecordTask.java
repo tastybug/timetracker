@@ -73,7 +73,7 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
 
-        storeBatchOperation(trackingRecord.getDAO(context).getBatchUpdate(trackingRecord));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchUpdate(trackingRecord));
     }
 
     protected void onPostExecute(Long result) {

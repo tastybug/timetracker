@@ -14,8 +14,8 @@ public class TrackingConfiguration extends Entity {
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
-    private Optional<Integer> hourLimit = Optional.absent();
-    private Optional<Date> start = Optional.absent(), end = Optional.absent();
+    private Integer hourLimit;
+    private Date start, end;
     private boolean promptForDescription = false;
     private Rounding.Strategy roundingStrategy;
 
@@ -38,9 +38,9 @@ public class TrackingConfiguration extends Entity {
                                  Rounding.Strategy roundingStrategy) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
-        this.hourLimit = hourLimit;
-        this.start = start;
-        this.end = end;
+        this.hourLimit = hourLimit.orNull();
+        this.start = start.orNull();
+        this.end = end.orNull();
         this.promptForDescription = promptForDescription;
         this.roundingStrategy = roundingStrategy;
     }
@@ -80,13 +80,13 @@ public class TrackingConfiguration extends Entity {
     }
 
     public Optional<Integer> getHourLimit() {
-        return hourLimit;
+        return Optional.fromNullable(hourLimit);
     }
 
     public void setHourLimit(Optional<Integer> hourLimit) {
         Preconditions.checkNotNull(hourLimit);
         Preconditions.checkArgument(!(hourLimit.isPresent() && hourLimit.get() < 0));
-        this.hourLimit = (hourLimit.isPresent() && hourLimit.get() == 0) ? Optional.<Integer>absent() : hourLimit;
+        this.hourLimit = (hourLimit.isPresent() && hourLimit.get() == 0) ? null : hourLimit.orNull();
     }
 
     public boolean isPromptForDescription() {
@@ -98,7 +98,7 @@ public class TrackingConfiguration extends Entity {
     }
 
     public Optional<Date> getStart() {
-        return start;
+        return Optional.fromNullable(start);
     }
 
     public void setStart(Optional<Date> start) {
@@ -106,11 +106,11 @@ public class TrackingConfiguration extends Entity {
         if (getEnd().isPresent() && start.isPresent()) {
             Preconditions.checkArgument(start.get().before(getEnd().get()), "Start date cannot be after end date!");
         }
-        this.start = start;
+        this.start = start.orNull();
     }
 
     public Optional<Date> getEnd() {
-        return end;
+        return Optional.fromNullable(end);
     }
 
     public void setEnd(Optional<Date> end) {
@@ -118,12 +118,12 @@ public class TrackingConfiguration extends Entity {
         if (getStart().isPresent() && end.isPresent()) {
             Preconditions.checkArgument(end.get().after(getStart().get()), "End date cannot be before start date!");
         }
-        this.end = end;
+        this.end = end.orNull();
     }
 
     public Optional<Date> getEndDateAsInclusive() {
         if (getEnd().isPresent()) {
-            DateTime inclusiveDate = new DateTime(end.get()).minusDays(1);
+            DateTime inclusiveDate = new DateTime(end).minusDays(1);
             return Optional.of(inclusiveDate.toDate());
         } else {
             return Optional.absent();

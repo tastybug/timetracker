@@ -7,6 +7,9 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
+import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
@@ -47,8 +50,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         Project project = new Project("Donaudampfschifffahrtsgesellschaftskapitaen Heinz Kaluppke");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
     }
 
     private void createProjectWithTimeFrame() {
@@ -57,8 +60,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 30).toDate()));
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
     }
 
     private void createProjectWithTimeFrameAndLimit() {
@@ -68,8 +71,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 30).toDate()));
         trackingConfiguration.setHourLimit(Optional.of(100));
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
     }
 
     private void createProjectWith200Records(boolean overbooked) {
@@ -77,8 +80,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         Project project = new Project(title);
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setHourLimit(Optional.of(overbooked ? 100 : 500));
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record;
         LocalDateTime time = new LocalDateTime(2016, 11, 24, 9, 0);
@@ -90,7 +93,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
             time = time.plusHours(1);
             record.setDescription(Optional.of("Eintrag #" + i));
 
-            storeBatchOperation(record.getDAO(context).getBatchCreate(record));
+            storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
         }
     }
 
@@ -98,15 +101,15 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         Project project = new Project("Overlong Record Descriptions");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(Optional.of(new LocalDateTime(2016, 11, 24, 9, 0).toDate()));
         record.setEnd(Optional.of(new LocalDateTime(2016, 11, 24, 10, 0).toDate()));
         record.setDescription(Optional.of(aVeryLongRecordDescription()));
 
-        storeBatchOperation(record.getDAO(context).getBatchCreate(record));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
     }
 
     private String aVeryLongRecordDescription() {
@@ -123,13 +126,13 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         Project project = new Project("Ongoing Overlong Record");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(Optional.of(new LocalDateTime().minusDays(2).toDate()));
 
-        storeBatchOperation(record.getDAO(context).getBatchCreate(record));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
     }
 
     private void createProjectWithEarlyRecord() {
@@ -137,14 +140,14 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(Optional.of(new LocalDate(2016, 12, 24).minusDays(2).toDate()));
         record.setEnd(Optional.of(new LocalDate(2016, 12, 24).minusDays(1).toDate()));
 
-        storeBatchOperation(record.getDAO(context).getBatchCreate(record));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
     }
 
     private void createProjectWithLateRecord() {
@@ -152,13 +155,13 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 24).toDate()));
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(Optional.of(new LocalDate(2016, 12, 24).plusDays(1).toDate()));
         record.setEnd(Optional.of(new LocalDate(2016, 12, 24).plusDays(2).toDate()));
 
-        storeBatchOperation(record.getDAO(context).getBatchCreate(record));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
     }
 }

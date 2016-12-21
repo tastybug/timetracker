@@ -13,10 +13,15 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.statistics.Completion;
-import com.tastybug.timetracker.model.statistics.Duration;
 import com.tastybug.timetracker.model.statistics.Expiration;
+import com.tastybug.timetracker.model.statistics.ProjectDuration;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
+
+import java.util.List;
 
 public class ProjectStatisticsUI {
 
@@ -51,8 +56,8 @@ public class ProjectStatisticsUI {
             projectDurationTextView.setText("");
             return;
         }
-        TrackingConfiguration configuration = projectOpt.get().getTrackingConfiguration(context);
-        org.joda.time.Duration duration = new Duration(configuration, projectOpt.get().getTrackingRecords(context)).getDuration();
+        TrackingConfiguration configuration = getTrackingConfigurationForProject(projectOpt.get());
+        org.joda.time.Duration duration = new ProjectDuration(configuration, getTrackingRecordsByProject(projectOpt.get())).getDuration();
 
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {
@@ -82,12 +87,20 @@ public class ProjectStatisticsUI {
 //            durationCompletionProgressBar.setVisibility(View.GONE);
             return;
         }
-        TrackingConfiguration configuration = projectOpt.get().getTrackingConfiguration(context);
-        Completion completion = new Completion(configuration, projectOpt.get().getTrackingRecords(context), true);
+        TrackingConfiguration configuration = getTrackingConfigurationForProject(projectOpt.get());
+        Completion completion = new Completion(configuration, getTrackingRecordsByProject(projectOpt.get()), true);
 
         durationCompletionProgressBar.setVisibility(View.VISIBLE);
         durationCompletionProgressBar.setProgress(completion.getCompletionPercent().or(0d).intValue());
         renderProjectCompletionProgressColoring(completion);
+    }
+
+    private TrackingConfiguration getTrackingConfigurationForProject(Project project) {
+        return new TrackingConfigurationDAO(context).getByProjectUuid(project.getUuid()).get();
+    }
+
+    private List<TrackingRecord> getTrackingRecordsByProject(Project project) {
+        return new TrackingRecordDAO(context).getByProjectUuid(project.getUuid());
     }
 
     private void renderProjectCompletionProgressColoring(Completion completion) {
@@ -100,9 +113,9 @@ public class ProjectStatisticsUI {
         }
     }
 
-    public void renderProjectTimeFrame(Optional<Project> project) {
-        if (project.isPresent()) {
-            TrackingConfiguration trackingConfiguration = project.get().getTrackingConfiguration(context);
+    public void renderProjectTimeFrame(Optional<Project> projectOpt) {
+        if (projectOpt.isPresent()) {
+            TrackingConfiguration trackingConfiguration = getTrackingConfigurationForProject(projectOpt.get());
             Expiration statistic = new Expiration(trackingConfiguration);
             renderProjectTimeFrameTextualDescription(statistic, trackingConfiguration);
             renderProjectTimeframeProgress(Optional.of(statistic));

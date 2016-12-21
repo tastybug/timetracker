@@ -43,7 +43,7 @@ public class CheckInTask extends AbstractAsyncTask {
 
         trackingRecord = new TrackingRecord(projectUuid);
         trackingRecord.start();
-        storeBatchOperation(trackingRecord.getDAO(context).getBatchCreate(trackingRecord));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
     }
 
     protected void onPostExecute(Long result) {

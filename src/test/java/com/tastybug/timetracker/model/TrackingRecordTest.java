@@ -3,6 +3,7 @@ package com.tastybug.timetracker.model;
 
 import com.google.common.base.Optional;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
@@ -181,5 +182,14 @@ public class TrackingRecordTest {
 
         // expect
         assertFalse(record.isVeryShort());
+    }
+
+    @Test
+    public void can_serialize() {
+        // given
+        TrackingRecord trackingRecord = new TrackingRecord("proj", "uuid", Optional.of(new Date(1)), Optional.of(new Date(2)), Optional.of(""));
+
+        // when: this is supposed to cause no exception
+        SerializationUtils.serialize(trackingRecord);
     }
 }

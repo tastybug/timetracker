@@ -58,10 +58,6 @@ public class HtmlReportViewerDialogFragment extends DialogFragment {
         WebView webview = (WebView) rootView.findViewById(R.id.webView);
         webview.requestFocus(View.FOCUS_DOWN);
         webview.getSettings().setJavaScriptEnabled(false);
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
-//            webview.getSettings().setAllowUniversalAccessFromFileURLs(true); API16
-//            webview.getSettings().setAllowFileAccessFromFileURLs(true);  API16
-//        }
         webview.loadDataWithBaseURL("", report.getHtml(), "text/html", "UTF-8", "");
 
         return builder.create();

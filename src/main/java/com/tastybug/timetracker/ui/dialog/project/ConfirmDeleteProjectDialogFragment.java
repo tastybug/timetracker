@@ -8,9 +8,17 @@ import android.os.Bundle;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.model.statistics.Duration;
+import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.model.statistics.ProjectDuration;
 import com.tastybug.timetracker.task.project.DeleteProjectTask;
 import com.tastybug.timetracker.ui.util.LocalizedDurationFormatter;
+
+import org.joda.time.Duration;
+
+import java.util.List;
 
 public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
 
@@ -26,16 +34,24 @@ public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
     }
 
     private String getDialogMessage(Project project) {
-        if (project.getTrackingRecords(getActivity()).isEmpty()) {
+        if (getTrackingRecordsByProject(project).isEmpty()) {
             return getString(R.string.msg_you_lose_no_tracking_records);
         } else {
-            org.joda.time.Duration effectiveProjectDuration = new Duration(
-                    project.getTrackingConfiguration(getActivity()),
-                    project.getTrackingRecords(getActivity()),
+            Duration effectiveProjectDuration = new ProjectDuration(
+                    getTrackingConfigurationForProject(project),
+                    getTrackingRecordsByProject(project),
                     true
             ).getDuration();
             return getString(R.string.msg_you_lose_X, LocalizedDurationFormatter.a(getActivity()).formatDuration(effectiveProjectDuration));
         }
+    }
+
+    private TrackingConfiguration getTrackingConfigurationForProject(Project project) {
+        return new TrackingConfigurationDAO(getActivity()).getByProjectUuid(project.getUuid()).get();
+    }
+
+    private List<TrackingRecord> getTrackingRecordsByProject(Project project) {
+        return new TrackingRecordDAO(getActivity()).getByProjectUuid(project.getUuid());
     }
 
     @Override

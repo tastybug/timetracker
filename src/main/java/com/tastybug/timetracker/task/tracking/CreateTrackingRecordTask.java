@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import java.util.Date;
@@ -57,7 +58,7 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
         if (arguments.containsKey(DESCRIPTION_OPT)) {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
-        storeBatchOperation(trackingRecord.getDAO(context).getBatchCreate(trackingRecord));
+        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
     }
 
     @Override

@@ -4,14 +4,13 @@ import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Duration {
+public class ProjectDuration {
 
     private org.joda.time.Duration duration = new org.joda.time.Duration(0);
 
-    public Duration(TrackingConfiguration configuration, List<TrackingRecord> trackingRecords, boolean countRunning) {
+    public ProjectDuration(TrackingConfiguration configuration, List<TrackingRecord> trackingRecords, boolean countRunning) {
         Preconditions.checkNotNull(configuration);
         Preconditions.checkNotNull(trackingRecords);
 
@@ -19,7 +18,7 @@ public class Duration {
 
     }
 
-    public Duration(TrackingConfiguration configuration, ArrayList<TrackingRecord> trackingRecords) {
+    public ProjectDuration(TrackingConfiguration configuration, List<TrackingRecord> trackingRecords) {
         this(configuration, trackingRecords, true);
     }
 

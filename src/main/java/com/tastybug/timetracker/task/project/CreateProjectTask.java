@@ -7,6 +7,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
+import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
@@ -50,8 +52,8 @@ public class CreateProjectTask extends AbstractAsyncTask {
 
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid());
 
-        storeBatchOperation(project.getDAO(context).getBatchCreate(project));
-        storeBatchOperation(trackingConfiguration.getDAO(context).getBatchCreate(trackingConfiguration));
+        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
+        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
     }
 
     protected void onPostExecute(Long result) {

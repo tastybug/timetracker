@@ -1,41 +1,17 @@
 package com.tastybug.timetracker.model;
 
-import android.content.Context;
-
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.model.dao.DAOFactory;
-import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.model.rounding.Rounding;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class ProjectTest {
 
     @Test
-    public void canCreateProjectWithTitle() {
-        // when
-        Project project = new Project("project title");
-
-        // then
-        assertNotNull(project);
-        assertEquals("project title", project.getTitle());
-    }
-
-    @Test
-    public void noProjectDescriptionIsHandledWell() {
+    public void can_set_and_remove_description() {
         // given
         Project project = new Project("project title");
 
@@ -53,7 +29,7 @@ public class ProjectTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullUuid() {
+    public void setting_null_UUID_yields_NPE() {
         // given
         Project project = new Project("project title");
 
@@ -62,7 +38,7 @@ public class ProjectTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void canNotSetNullProjectTitle() {
+    public void setting_null_title_yields_IAE() {
         // given
         Project project = new Project("project title");
 
@@ -71,7 +47,7 @@ public class ProjectTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void canNotSetEmptyProjectTitle() {
+    public void setting_empty_title_yields_IAE() {
         // given
         Project project = new Project("project title");
 
@@ -79,67 +55,12 @@ public class ProjectTest {
         project.setTitle("");
     }
 
-    @Test(expected = NullPointerException.class)
-    public void canNotSetNullDescription() {
-        // given
-        Project project = new Project("project title");
-
-        // when
-        project.setDescription(null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void lazilyGettingTrackingRecordsWithoutContextYieldsException() {
-        // given
-        Project project = new Project("project title");
-
-        // when
-        project.getTrackingRecords(null);
-    }
-
     @Test
-    public void canLazilyGetTrackingRecords() {
+    public void can_serialize() {
         // given
-        DAOFactory daoFactory = mock(DAOFactory.class);
-        TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
-        when(daoFactory.getDao(eq(TrackingRecord.class), isA(Context.class))).thenReturn(trackingRecordDAO);
-        Project project = new Project("project title");
-        project.setDAOFactory(daoFactory);
+        Project project = new Project("1234", "some title", Optional.of("a desc"));
 
-        // when
-        project.getTrackingRecords(mock(Context.class));
-
-        // then
-        verify(trackingRecordDAO, times(1)).getByProjectUuid(project.getUuid());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void lazilyGettingTrackingConfigurationWithoutContextYieldsException() {
-        // given
-        Project project = new Project("project title");
-
-        // when
-        project.getTrackingConfiguration(null);
-    }
-
-    @Test
-    public void canLazilyGetTrackingConfiguration() {
-        // given
-        DAOFactory daoFactory = mock(DAOFactory.class);
-        TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-        when(daoFactory.getDao(eq(TrackingConfiguration.class), isA(Context.class))).thenReturn(trackingConfigurationDAO);
-        Project project = new Project("project title");
-        project.setDAOFactory(daoFactory);
-        TrackingConfiguration expectedConfiguration = new TrackingConfiguration("1", project.getUuid(), Optional.<Integer>absent(), Optional.<Date>absent(), Optional.<Date>absent(), false, Rounding.Strategy.NO_ROUNDING);
-        when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(expectedConfiguration));
-
-        // when
-        TrackingConfiguration trackingConfiguration = project.getTrackingConfiguration(mock(Context.class));
-
-        // then
-        assertEquals(expectedConfiguration, trackingConfiguration);
-
-        // and
-        verify(trackingConfigurationDAO, times(1)).getByProjectUuid(project.getUuid());
+        // when: this is supposed to cause no exception
+        SerializationUtils.serialize(project);
     }
 }

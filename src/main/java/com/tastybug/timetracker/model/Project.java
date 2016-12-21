@@ -1,21 +1,20 @@
 package com.tastybug.timetracker.model;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Project extends Entity implements Comparable<Project> {
 
     private String uuid = UUID.randomUUID().toString();
     private String title;
-    private Optional<String> description = Optional.absent();
+    private String description;
     private TrackingConfiguration trackingConfiguration;
     private ArrayList<TrackingRecord> trackingRecords;
 
@@ -23,7 +22,7 @@ public class Project extends Entity implements Comparable<Project> {
     public Project(String uuid, String title, Optional<String> description) {
         this.uuid = uuid;
         this.title = title;
-        this.description = description;
+        this.description = description.orNull();
     }
 
     public Project(String title) {
@@ -51,12 +50,12 @@ public class Project extends Entity implements Comparable<Project> {
     }
 
     public Optional<String> getDescription() {
-        return description;
+        return Optional.fromNullable(description);
     }
 
-    public void setDescription(Optional<String> description) {
-        Preconditions.checkNotNull(description);
-        this.description = description;
+    public void setDescription(Optional<String> descriptionOptional) {
+        Preconditions.checkNotNull(descriptionOptional);
+        this.description = descriptionOptional.orNull();
     }
 
     public ArrayList<TrackingRecord> getTrackingRecords() {
@@ -67,32 +66,12 @@ public class Project extends Entity implements Comparable<Project> {
         this.trackingRecords = trackingRecords;
     }
 
-    public ArrayList<TrackingRecord> getTrackingRecords(Context context) {
-        Preconditions.checkNotNull(context);
-
-        if (trackingRecords == null) {
-            trackingRecords = ((TrackingRecordDAO) daoFactory.getDao(TrackingRecord.class, context))
-                    .getByProjectUuid(getUuid());
-        }
-        return trackingRecords;
-    }
-
     public TrackingConfiguration getTrackingConfiguration() {
         return trackingConfiguration;
     }
 
     public void setTrackingConfiguration(TrackingConfiguration trackingConfiguration) {
         this.trackingConfiguration = trackingConfiguration;
-    }
-
-    public TrackingConfiguration getTrackingConfiguration(Context context) {
-        Preconditions.checkNotNull(context);
-
-        if (trackingConfiguration == null) {
-            trackingConfiguration = ((TrackingConfigurationDAO) daoFactory.getDao(TrackingConfiguration.class, context))
-                    .getByProjectUuid(getUuid()).orNull();
-        }
-        return trackingConfiguration;
     }
 
     public String toString() {
@@ -105,11 +84,23 @@ public class Project extends Entity implements Comparable<Project> {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Project) && ((Project) o).getUuid().equals(getUuid());
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (o instanceof Project) {
+            Project other = (Project) o;
+            return Objects.equals(getUuid(), other.getUuid())
+                    && Objects.equals(title, other.getTitle())
+                    && Objects.equals(description, other.getDescription().orNull());
+        }
+        return false;
     }
 
     @Override
-    public int compareTo(Project another) {
+    public int compareTo(@NonNull Project another) {
         return getTitle().compareTo(another.getTitle());
     }
 }

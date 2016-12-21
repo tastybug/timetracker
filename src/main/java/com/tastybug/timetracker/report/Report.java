@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class Report implements Serializable {
 
-    private Project project;
+    private String projectTitle;
     private Date firstDay, lastDay;
     private HtmlReport htmlReport;
 
@@ -19,14 +19,14 @@ public class Report implements Serializable {
         Preconditions.checkNotNull(lastDay);
         Preconditions.checkNotNull(htmlReport);
 
-        this.project = project;
+        this.projectTitle = project.getTitle();
         this.firstDay = firstDay;
         this.lastDay = lastDay;
         this.htmlReport = htmlReport;
     }
 
     public String getProjectTitle() {
-        return project.getTitle();
+        return projectTitle;
     }
 
     public String getHtml() {
