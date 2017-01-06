@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 
+import java.util.List;
+
 import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
 
 
@@ -18,13 +20,10 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
     private BatchOperationExecutor batchOperationExecutor;
 
     protected AbstractAsyncTask(Context context) {
-        this(context, new BatchOperationExecutor(context.getContentResolver()));
+        this.context = context;
+        this.batchOperationExecutor = new BatchOperationExecutor(context.getContentResolver());
     }
 
-    protected AbstractAsyncTask(Context context, BatchOperationExecutor batchOperationExecutor) {
-        this.context = context;
-        this.batchOperationExecutor = batchOperationExecutor;
-    }
     protected abstract void validateArguments() throws NullPointerException;
 
     public void setOttoProvider(OttoProvider ottoProvider) {
@@ -38,16 +37,12 @@ public abstract class AbstractAsyncTask extends AsyncTask<Bundle, Integer, Long>
 
     protected Long doInBackground(Bundle... params) {
         logDebug(getClass().getSimpleName(), "Performing background stuff..");
-        performBackgroundStuff(params[0]);
+        List<ContentProviderOperation> batchOperations = performBackgroundStuff(params[0]);
         logDebug(getClass().getSimpleName(), "Persisting to database..");
-        batchOperationExecutor.executeBatch();
+        batchOperationExecutor.executeBatch(batchOperations);
 
         return 0L;
     }
 
-    protected abstract void performBackgroundStuff(Bundle args);
-
-    protected void storeBatchOperation(ContentProviderOperation operation) {
-        batchOperationExecutor.addOperation(operation);
-    }
+    protected abstract List<ContentProviderOperation> performBackgroundStuff(Bundle args);
 }

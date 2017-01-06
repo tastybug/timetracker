@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.testdata;
 
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -16,6 +17,10 @@ import com.tastybug.timetracker.task.AbstractAsyncTask;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 public class TestDataGenerationTask extends AbstractAsyncTask {
@@ -25,16 +30,20 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void performBackgroundStuff(Bundle args) {
-        createProjectWithLoooongTitle();
-        createProjectWithTimeFrame();
-        createProjectWithTimeFrameAndLimit();
-        createProjectWith200Records(false);
-        createProjectWith200Records(true);
-        createProjectWithRecordsWithOverlongDescriptions();
-        createProjectWithLongRunningRecord();
-        createProjectWithEarlyRecord();
-        createProjectWithLateRecord();
+    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+
+        operations.addAll(createProjectWithLoooongTitle());
+        operations.addAll(createProjectWithTimeFrame());
+        operations.addAll(createProjectWithTimeFrameAndLimit());
+        operations.addAll(createProjectWith200Records(false));
+        operations.addAll(createProjectWith200Records(true));
+        operations.addAll(createProjectWithRecordsWithOverlongDescriptions());
+        operations.addAll(createProjectWithLongRunningRecord());
+        operations.addAll(createProjectWithEarlyRecord());
+        operations.addAll(createProjectWithLateRecord());
+
+        return operations;
     }
 
     protected void onPostExecute(Long result) {
@@ -46,42 +55,44 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
     protected void validateArguments() throws NullPointerException {
     }
 
-    private void createProjectWithLoooongTitle() {
+    private List<ContentProviderOperation> createProjectWithLoooongTitle() {
         Project project = new Project("Donaudampfschifffahrtsgesellschaftskapitaen Heinz Kaluppke");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
+        return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
+                new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
     }
 
-    private void createProjectWithTimeFrame() {
+    private List<ContentProviderOperation> createProjectWithTimeFrame() {
         Project project = new Project("With Timeframe");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 30).toDate()));
 
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
+        return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
+                new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
     }
 
-    private void createProjectWithTimeFrameAndLimit() {
+    private List<ContentProviderOperation> createProjectWithTimeFrameAndLimit() {
         Project project = new Project("Timeframe+Limit");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 30).toDate()));
         trackingConfiguration.setHourLimit(Optional.of(100));
 
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
+        return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
+                new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
     }
 
-    private void createProjectWith200Records(boolean overbooked) {
+    private List<ContentProviderOperation> createProjectWith200Records(boolean overbooked) {
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+
         String title = overbooked ? "200 Records, Limit 100h overbooked" : "200 Records, Limit 500h";
         Project project = new Project(title);
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setHourLimit(Optional.of(overbooked ? 100 : 500));
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
+        operations.add(new ProjectDAO(context).getBatchCreate(project));
+        operations.add(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record;
         LocalDateTime time = new LocalDateTime(2016, 11, 24, 9, 0);
@@ -93,23 +104,23 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
             time = time.plusHours(1);
             record.setDescription(Optional.of("Eintrag #" + i));
 
-            storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
+            operations.add(new TrackingRecordDAO(context).getBatchCreate(record));
         }
+        return operations;
     }
 
-    private void createProjectWithRecordsWithOverlongDescriptions() {
+    private List<ContentProviderOperation> createProjectWithRecordsWithOverlongDescriptions() {
         Project project = new Project("Overlong Record Descriptions");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
-
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(new LocalDateTime(2016, 11, 24, 9, 0).toDate());
         record.setEnd(new LocalDateTime(2016, 11, 24, 10, 0).toDate());
         record.setDescription(Optional.of(aVeryLongRecordDescription()));
 
-        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
+        return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
+                new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration),
+                new TrackingRecordDAO(context).getBatchCreate(record));
     }
 
     private String aVeryLongRecordDescription() {
@@ -122,46 +133,43 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
                 "* drei";
     }
 
-    private void createProjectWithLongRunningRecord() {
+    private List<ContentProviderOperation> createProjectWithLongRunningRecord() {
         Project project = new Project("Ongoing Overlong Record");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
-
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(new LocalDateTime().minusDays(2).toDate());
 
-        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
+        return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
+                new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration),
+                new TrackingRecordDAO(context).getBatchCreate(record));
     }
 
-    private void createProjectWithEarlyRecord() {
+    private List<ContentProviderOperation> createProjectWithEarlyRecord() {
         Project project = new Project("Early Record");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
-
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(new LocalDate(2016, 12, 24).minusDays(2).toDate());
         record.setEnd(new LocalDate(2016, 12, 24).minusDays(1).toDate());
 
-        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
+        return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
+                new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration),
+                new TrackingRecordDAO(context).getBatchCreate(record));
     }
 
-    private void createProjectWithLateRecord() {
+    private List<ContentProviderOperation> createProjectWithLateRecord() {
         Project project = new Project("Late Record");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 24).toDate()));
-
-        storeBatchOperation(new ProjectDAO(context).getBatchCreate(project));
-        storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
         record.setStart(new LocalDate(2016, 12, 24).plusDays(1).toDate());
         record.setEnd(new LocalDate(2016, 12, 24).plusDays(2).toDate());
 
-        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
+        return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
+                new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration),
+                new TrackingRecordDAO(context).getBatchCreate(record));
     }
 }

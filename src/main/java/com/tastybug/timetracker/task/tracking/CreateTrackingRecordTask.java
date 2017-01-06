@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.tracking;
 
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -9,7 +10,9 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
@@ -51,14 +54,15 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void performBackgroundStuff(Bundle args) {
+    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
         trackingRecord = new TrackingRecord(arguments.getString(PROJECT_UUID));
         trackingRecord.setStart((Date) arguments.getSerializable(START_DATE));
         trackingRecord.setEnd((Date) arguments.getSerializable(END_DATE));
         if (arguments.containsKey(DESCRIPTION_OPT)) {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
-        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
+
+        return Arrays.asList(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
     }
 
     @Override

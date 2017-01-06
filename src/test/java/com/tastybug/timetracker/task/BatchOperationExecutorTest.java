@@ -12,6 +12,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -31,11 +32,8 @@ public class BatchOperationExecutorTest {
 
     @Test
     public void executeBatch_hands_over_operation_list_to_contentresolver() throws Exception {
-        // given
-        subject.addOperation(mock(ContentProviderOperation.class));
-
         // when
-        subject.executeBatch();
+        subject.executeBatch(Arrays.asList(mock(ContentProviderOperation.class)));
 
         // then
         verify(contentResolver).applyBatch(eq(AUTHORITY), isA(ArrayList.class));
@@ -47,7 +45,7 @@ public class BatchOperationExecutorTest {
         when(contentResolver.applyBatch(eq(AUTHORITY), any(ArrayList.class))).thenThrow(new RemoteException());
 
         // when
-        subject.executeBatch();
+        subject.executeBatch(Arrays.asList(mock(ContentProviderOperation.class)));
     }
 
     @Test(expected = RuntimeException.class)
@@ -56,6 +54,6 @@ public class BatchOperationExecutorTest {
         when(contentResolver.applyBatch(eq(AUTHORITY), any(ArrayList.class))).thenThrow(new OperationApplicationException());
 
         // when
-        subject.executeBatch();
+        subject.executeBatch(Arrays.asList(mock(ContentProviderOperation.class)));
     }
 }

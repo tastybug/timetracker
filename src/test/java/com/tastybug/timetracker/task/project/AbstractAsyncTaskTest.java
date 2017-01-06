@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.project;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.OperationApplicationException;
@@ -12,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -59,8 +62,8 @@ public class AbstractAsyncTaskTest {
         }
 
         @Override
-        protected void performBackgroundStuff(Bundle args) {
-
+        protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
+            return Collections.emptyList();
         }
     }
 }

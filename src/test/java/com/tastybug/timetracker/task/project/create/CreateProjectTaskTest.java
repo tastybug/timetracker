@@ -12,7 +12,6 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.task.BatchOperationExecutor;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +35,6 @@ public class CreateProjectTaskTest {
     private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
     private ProjectFactory projectFactory = mock(ProjectFactory.class);
     private TrackingConfigurationFactory trackingConfigurationFactory = mock(TrackingConfigurationFactory.class);
-    private BatchOperationExecutor batchOperationExecutor = mock(BatchOperationExecutor.class);
 
     @Before
     public void setup() {
@@ -54,10 +52,6 @@ public class CreateProjectTaskTest {
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid());
         when(projectFactory.aProject("a title")).thenReturn(project);
         when(trackingConfigurationFactory.aTrackingConfiguration(project.getUuid())).thenReturn(trackingConfiguration);
-        ContentProviderOperation projectCreationOperation = mock(ContentProviderOperation.class);
-        ContentProviderOperation trackingConfigurationCreationOperation = mock(ContentProviderOperation.class);
-        when(projectDAO.getBatchCreate(any(Project.class))).thenReturn(projectCreationOperation);
-        when(trackingConfigurationDAO.getBatchCreate(any(TrackingConfiguration.class))).thenReturn(trackingConfigurationCreationOperation);
 
         CreateProjectTask task = aTask().withProjectTitle("a title");
 
@@ -67,8 +61,6 @@ public class CreateProjectTaskTest {
         // then: objects by factory are mapped to operations which in turn are run later on
         verify(projectDAO).getBatchCreate(project);
         verify(trackingConfigurationDAO).getBatchCreate(trackingConfiguration);
-        verify(batchOperationExecutor).addOperation(projectCreationOperation);
-        verify(batchOperationExecutor).addOperation(trackingConfigurationCreationOperation);
     }
 
     @Test
@@ -99,7 +91,6 @@ public class CreateProjectTaskTest {
                 projectDAO,
                 trackingConfigurationDAO,
                 projectFactory,
-                trackingConfigurationFactory,
-                batchOperationExecutor);
+                trackingConfigurationFactory);
     }
 }

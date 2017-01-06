@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.project;
 
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -12,7 +13,9 @@ import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.Rounding;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
@@ -81,7 +84,7 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void performBackgroundStuff(Bundle args) {
+    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
         ProjectDAO projectDAO = new ProjectDAO(context);
         TrackingConfigurationDAO trackingConfigurationDAO = new TrackingConfigurationDAO(context);
         Project project = projectDAO.get(args.getString(PROJECT_UUID)).get();
@@ -120,8 +123,8 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
             trackingConfiguration.setRoundingStrategy((Rounding.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
         }
 
-        storeBatchOperation(projectDAO.getBatchUpdate(project));
-        storeBatchOperation(trackingConfigurationDAO.getBatchUpdate(trackingConfiguration));
+        return Arrays.asList(projectDAO.getBatchUpdate(project),
+                trackingConfigurationDAO.getBatchUpdate(trackingConfiguration));
     }
 
     protected void onPostExecute(Long result) {

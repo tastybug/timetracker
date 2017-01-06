@@ -10,12 +10,11 @@ import android.os.RemoteException;
 import com.tastybug.timetracker.model.dao.EntityDAO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logError;
 
 public class BatchOperationExecutor {
-
-    private ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
     private ContentResolver contentResolver;
 
@@ -23,13 +22,9 @@ public class BatchOperationExecutor {
         this.contentResolver = contentResolver;
     }
 
-    public void addOperation(ContentProviderOperation operation) {
-        operations.add(operation);
-    }
-
-    ContentProviderResult[] executeBatch() {
+    ContentProviderResult[] executeBatch(List<ContentProviderOperation> batchOperations) {
         try {
-            return contentResolver.applyBatch(EntityDAO.AUTHORITY, operations);
+            return contentResolver.applyBatch(EntityDAO.AUTHORITY, new ArrayList<>(batchOperations));
         } catch (RemoteException | OperationApplicationException e) {
             logError(getClass().getSimpleName(), "Problem executing sql batch operation.", e);
             throw new RuntimeException("Problem executing sql batch operation.", e);

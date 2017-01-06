@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.project.create;
 
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -9,7 +10,9 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
-import com.tastybug.timetracker.task.BatchOperationExecutor;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
@@ -29,17 +32,15 @@ public class CreateProjectTask extends AbstractAsyncTask {
                 new ProjectDAO(context),
                 new TrackingConfigurationDAO(context),
                 new ProjectFactory(),
-                new TrackingConfigurationFactory(),
-                new BatchOperationExecutor(context.getContentResolver()));
+                new TrackingConfigurationFactory());
     }
 
     CreateProjectTask(Context context,
                       ProjectDAO projectDAO,
                       TrackingConfigurationDAO trackingConfigurationDAO,
                       ProjectFactory projectFactory,
-                      TrackingConfigurationFactory trackingConfigurationFactory,
-                      BatchOperationExecutor batchOperationExecutor) {
-        super(context, batchOperationExecutor);
+                      TrackingConfigurationFactory trackingConfigurationFactory) {
+        super(context);
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
         this.projectFactory = projectFactory;
@@ -57,12 +58,12 @@ public class CreateProjectTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void performBackgroundStuff(Bundle args) {
+    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
         project = projectFactory.aProject(args.getString(PROJECT_TITLE));
         TrackingConfiguration trackingConfiguration = trackingConfigurationFactory.aTrackingConfiguration(project.getUuid());
 
-        storeBatchOperation(projectDAO.getBatchCreate(project));
-        storeBatchOperation(trackingConfigurationDAO.getBatchCreate(trackingConfiguration));
+        return Arrays.asList(projectDAO.getBatchCreate(project),
+                trackingConfigurationDAO.getBatchCreate(trackingConfiguration));
     }
 
     protected void onPostExecute(Long result) {

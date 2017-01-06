@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.tracking;
 
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -7,6 +8,9 @@ import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.AbstractAsyncTask;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
@@ -35,7 +39,7 @@ public class CheckInTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void performBackgroundStuff(Bundle args) {
+    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
         String projectUuid = arguments.getString(PROJECT_UUID);
         if (new TrackingRecordDAO(context).getRunning(projectUuid).isPresent()) {
             throw new IllegalArgumentException("Project is already tracking!");
@@ -43,7 +47,7 @@ public class CheckInTask extends AbstractAsyncTask {
 
         trackingRecord = new TrackingRecord(projectUuid);
         trackingRecord.start();
-        storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
+        return Arrays.asList(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
     }
 
     protected void onPostExecute(Long result) {
