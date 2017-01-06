@@ -16,7 +16,6 @@ import java.util.Date;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
-// TODO hier withoutX methoden anbieten, sonst muss man immer nachschauen, wie man einen Wert loswird!
 public class ConfigureProjectTask extends AbstractAsyncTask {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
