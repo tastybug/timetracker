@@ -18,7 +18,6 @@ import org.robolectric.annotation.Config;
 import java.util.Date;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -67,7 +66,7 @@ public class TitleGeneratorTest {
         titleGenerator.getTitle(project, firstDay, lastDay);
 
         // then
-        verify(context, times(1))
+        verify(context)
                 .getString(R.string.report_title_for_project_X_from_Y_to_Z,
                         "projectTitle",
                         "24.12.2016",

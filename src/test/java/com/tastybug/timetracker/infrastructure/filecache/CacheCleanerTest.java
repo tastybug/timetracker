@@ -16,7 +16,6 @@ import java.util.Date;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +48,7 @@ public class CacheCleanerTest {
 
         // then
         verify(nonPurgeableFile, never()).delete();
-        verify(purgeableFile, times(1)).delete();
+        verify(purgeableFile).delete();
     }
 
     private File aNonPurgeableFile() {

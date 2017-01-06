@@ -23,7 +23,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,7 +68,7 @@ public class BackupLogHelperTest {
         subject.logBackupSuccess(Optional.of(date));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
+        verify(editor).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
     }
 
     @Test
@@ -87,7 +86,7 @@ public class BackupLogHelperTest {
         subject.logBackupSuccess(Optional.of(new Date()));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
+        verify(editor).putString(eq(BACKUP_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -99,7 +98,7 @@ public class BackupLogHelperTest {
         subject.logBackupUnnecessary(Optional.of(date));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
+        verify(editor).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
     }
 
     @Test
@@ -117,7 +116,7 @@ public class BackupLogHelperTest {
         subject.logBackupUnnecessary(Optional.of(new Date()));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_UNNECESSARY_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
+        verify(editor).putString(eq(BACKUP_UNNECESSARY_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -129,7 +128,7 @@ public class BackupLogHelperTest {
         subject.logBackupUnnecessary(Optional.of(date));
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
+        verify(editor).putString(eq(BACKUP_LAST_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(date)));
     }
 
     @Test
@@ -147,7 +146,7 @@ public class BackupLogHelperTest {
         subject.logBackupFail(Optional.of(new Date()), "asd");
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_FAILED_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
+        verify(editor).putString(eq(BACKUP_FAILED_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -156,7 +155,7 @@ public class BackupLogHelperTest {
         subject.logBackupFail(Optional.of(new Date()), "error");
 
         // then
-        verify(editor, times(1)).putString(eq(BACKUP_FAILED_MSG), eq("error"));
+        verify(editor).putString(eq(BACKUP_FAILED_MSG), eq("error"));
     }
 
     @Test
@@ -165,7 +164,7 @@ public class BackupLogHelperTest {
         subject.logRestoreSuccess(123);
 
         // then
-        verify(editor, times(1)).putString(eq(RESTORE_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
+        verify(editor).putString(eq(RESTORE_SUCCESSFUL_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -174,7 +173,7 @@ public class BackupLogHelperTest {
         subject.logRestoreSuccess(123);
 
         // then
-        verify(editor, times(1)).putInt(eq(RESTORE_SUCCESSFUL_APP_CODE), eq(123));
+        verify(editor).putInt(eq(RESTORE_SUCCESSFUL_APP_CODE), eq(123));
     }
 
     @Test
@@ -183,7 +182,7 @@ public class BackupLogHelperTest {
         subject.logRestoreFail(123, "asd");
 
         // then
-        verify(editor, times(1)).putString(eq(RESTORE_FAILED_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
+        verify(editor).putString(eq(RESTORE_FAILED_DATE), eq(DefaultLocaleDateFormatter.iso8601().format(currentDate)));
     }
 
     @Test
@@ -192,7 +191,7 @@ public class BackupLogHelperTest {
         subject.logRestoreFail(456, "error");
 
         // then
-        verify(editor, times(1)).putInt(eq(RESTORE_FAILED_APP_CODE), eq(456));
+        verify(editor).putInt(eq(RESTORE_FAILED_APP_CODE), eq(456));
     }
 
     @Test
@@ -201,7 +200,7 @@ public class BackupLogHelperTest {
         subject.logRestoreFail(456, "error");
 
         // then
-        verify(editor, times(1)).putString(eq(RESTORE_FAILED_MSG), eq("error"));
+        verify(editor).putString(eq(RESTORE_FAILED_MSG), eq("error"));
     }
 
     @Test

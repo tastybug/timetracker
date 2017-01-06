@@ -15,7 +15,6 @@ import java.util.Date;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +40,7 @@ public class HtmlReportBuilderTest {
         htmlReportBuilder.build();
 
         // then
-        verify(htmlReport, times(1)).insertReportablesList("THE_LIST");
+        verify(htmlReport).insertReportablesList("THE_LIST");
     }
 
     @Test
@@ -57,7 +56,7 @@ public class HtmlReportBuilderTest {
         htmlReportBuilder.build();
 
         // then
-        verify(htmlReport, times(1)).insertReportTitle("SomeTitle");
+        verify(htmlReport).insertReportTitle("SomeTitle");
     }
 
     @Test
@@ -70,7 +69,7 @@ public class HtmlReportBuilderTest {
         htmlReportBuilder.build();
 
         // then
-        verify(htmlReport, times(1)).insertProjectTitle(someProject);
+        verify(htmlReport).insertProjectTitle(someProject);
     }
 
     @Test
@@ -83,7 +82,7 @@ public class HtmlReportBuilderTest {
         htmlReportBuilder.build();
 
         // then
-        verify(htmlReport, times(1)).insertProjectDescription(someProject);
+        verify(htmlReport).insertProjectDescription(someProject);
     }
 
     @Test
@@ -96,7 +95,7 @@ public class HtmlReportBuilderTest {
         htmlReportBuilder.build();
 
         // then
-        verify(htmlReport, times(1)).insertTotalDuration("someTotalDuration");
+        verify(htmlReport).insertTotalDuration("someTotalDuration");
     }
 
     @Test

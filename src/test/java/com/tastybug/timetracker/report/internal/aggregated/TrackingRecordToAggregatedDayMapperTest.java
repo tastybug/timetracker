@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
@@ -64,9 +63,9 @@ public class TrackingRecordToAggregatedDayMapperTest {
         trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(aggregatedDayList, trackingRecords, trackingConfiguration);
 
         // then
-        verify(aggregatedDay1, times(1)).addRecord(trackingRecord1, trackingConfiguration);
-        verify(aggregatedDay1, times(1)).addRecord(trackingRecord2, trackingConfiguration);
-        verify(aggregatedDay2, times(1)).addRecord(trackingRecord1, trackingConfiguration);
-        verify(aggregatedDay2, times(1)).addRecord(trackingRecord2, trackingConfiguration);
+        verify(aggregatedDay1).addRecord(trackingRecord1, trackingConfiguration);
+        verify(aggregatedDay1).addRecord(trackingRecord2, trackingConfiguration);
+        verify(aggregatedDay2).addRecord(trackingRecord1, trackingConfiguration);
+        verify(aggregatedDay2).addRecord(trackingRecord2, trackingConfiguration);
     }
 }

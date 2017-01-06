@@ -24,7 +24,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -85,7 +84,7 @@ public class CreateProjectTaskTest {
         task.execute();
 
         // then
-        verify(ottoBus, times(1)).post(isA(ProjectCreatedEvent.class));
+        verify(ottoBus).post(isA(ProjectCreatedEvent.class));
     }
 
     @Test(expected = NullPointerException.class)

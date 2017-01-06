@@ -54,7 +54,7 @@ public class OSFacingBackupAgentHandlerTest {
         verify(backupCreationService, times(0)).performBackup((ParcelFileDescriptor) any(),
                 (BackupDataOutput) any(),
                 (ParcelFileDescriptor) any());
-        verify(backupCreationService, times(1)).skipBackup(eq(lastBackupDate), (ParcelFileDescriptor) any());
+        verify(backupCreationService).skipBackup(eq(lastBackupDate), (ParcelFileDescriptor) any());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class OSFacingBackupAgentHandlerTest {
         subject.onBackup(null, null, null);
 
         // then
-        verify(backupCreationService, times(1)).performBackup((ParcelFileDescriptor) any(),
+        verify(backupCreationService).performBackup((ParcelFileDescriptor) any(),
                 (BackupDataOutput) any(),
                 (ParcelFileDescriptor) any());
     }
@@ -89,7 +89,7 @@ public class OSFacingBackupAgentHandlerTest {
         subject.onRestore(null, 1234, null);
 
         // then
-        verify(backupRestorationService, times(1)).performRestore((BackupDataInput) any(),
+        verify(backupRestorationService).performRestore((BackupDataInput) any(),
                 eq(1234),
                 (ParcelFileDescriptor) any());
     }

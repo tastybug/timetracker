@@ -25,7 +25,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +56,7 @@ public class BackupRestorationServiceTest {
         subject.performRestore(data, 1, null);
 
         // then
-        verify(dataUnmarshaller, times(1)).unmarshallBackupData(data);
+        verify(dataUnmarshaller).unmarshallBackupData(data);
     }
 
     @Test
@@ -69,7 +68,7 @@ public class BackupRestorationServiceTest {
         subject.performRestore(null, 1, newState);
 
         // then
-        verify(backupDateAccessor, times(1)).writeBackupDate(newState);
+        verify(backupDateAccessor).writeBackupDate(newState);
     }
 
     @Test
@@ -82,7 +81,7 @@ public class BackupRestorationServiceTest {
         subject.performRestore(null, 1, null);
 
         // then
-        verify(databaseRestorationManager, times(1)).restoreProjectList(projectsToImport);
+        verify(databaseRestorationManager).restoreProjectList(projectsToImport);
     }
 
     @Test
@@ -94,7 +93,7 @@ public class BackupRestorationServiceTest {
         subject.performRestore(data, 1234, null);
 
         // then
-        verify(backupLogHelper, times(1)).logRestoreSuccess(1234);
+        verify(backupLogHelper).logRestoreSuccess(1234);
     }
 
     @Test(expected = IOException.class)
@@ -109,7 +108,7 @@ public class BackupRestorationServiceTest {
             fail();
         } catch (IOException ioe) {
             // then
-            verify(backupLogHelper, times(1)).logRestoreFail(eq(1234), eq("this breaks the backup"));
+            verify(backupLogHelper).logRestoreFail(eq(1234), eq("this breaks the backup"));
             throw ioe;
         }
     }

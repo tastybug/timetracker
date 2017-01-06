@@ -24,7 +24,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,7 +77,7 @@ public class BackupCreationServiceTest {
         subject.checkBackupNecessary(Optional.of(new Date()));
 
         // then
-        verify(backupLogHelper, times(1)).logBackupUnnecessary(any(Optional.class));
+        verify(backupLogHelper).logBackupUnnecessary(any(Optional.class));
     }
 
     @Test
@@ -87,7 +86,7 @@ public class BackupCreationServiceTest {
         subject.performBackup(null, null, null);
 
         // then
-        verify(dataMarshaller, times(1)).writeBackup(any(BackupDataOutput.class));
+        verify(dataMarshaller).writeBackup(any(BackupDataOutput.class));
     }
 
     @Test
@@ -96,7 +95,7 @@ public class BackupCreationServiceTest {
         subject.performBackup(null, null, null);
 
         // then
-        verify(backupDateAccessor, times(1)).writeBackupDate(any(ParcelFileDescriptor.class));
+        verify(backupDateAccessor).writeBackupDate(any(ParcelFileDescriptor.class));
     }
 
     @Test
@@ -117,7 +116,7 @@ public class BackupCreationServiceTest {
         subject.performBackup(null, null, null);
 
         // then
-        verify(backupLogHelper, times(1)).logBackupSuccess(any(Optional.class));
+        verify(backupLogHelper).logBackupSuccess(any(Optional.class));
     }
 
     @Test(expected = IOException.class)
@@ -132,7 +131,7 @@ public class BackupCreationServiceTest {
             fail();
         } catch (IOException ioe) {
             // then
-            verify(backupLogHelper, times(1)).logBackupFail(any(Optional.class), eq("this breaks the backup"));
+            verify(backupLogHelper).logBackupFail(any(Optional.class), eq("this breaks the backup"));
             throw ioe;
         }
     }
@@ -146,7 +145,7 @@ public class BackupCreationServiceTest {
         subject.performBackup(null, null, null);
 
         // then
-        verify(backupLogHelper, times(1)).logBackupFail(any(Optional.class), eq("this breaks the backup"));
+        verify(backupLogHelper).logBackupFail(any(Optional.class), eq("this breaks the backup"));
     }
 
     @Test
@@ -158,7 +157,7 @@ public class BackupCreationServiceTest {
         subject.skipBackup(lastBackupDate, mock(ParcelFileDescriptor.class));
 
         // then
-        verify(backupDateAccessor, times(1)).writeBackupDate((ParcelFileDescriptor) any(),
+        verify(backupDateAccessor).writeBackupDate((ParcelFileDescriptor) any(),
                 eq(lastBackupDate.get()));
     }
 }

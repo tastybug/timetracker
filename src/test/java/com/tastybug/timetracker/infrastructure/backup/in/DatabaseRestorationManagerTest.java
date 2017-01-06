@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -63,8 +62,8 @@ public class DatabaseRestorationManagerTest {
         subject.restoreProjectList(aListOf2Projects());
 
         // then
-        verify(projectDAO, times(1)).delete(existingProjects.get(0));
-        verify(projectDAO, times(1)).delete(existingProjects.get(1));
+        verify(projectDAO).delete(existingProjects.get(0));
+        verify(projectDAO).delete(existingProjects.get(1));
     }
 
     @Test
@@ -76,16 +75,16 @@ public class DatabaseRestorationManagerTest {
         subject.restoreProjectList(projectsToImport);
 
         // then: all projects created
-        verify(projectDAO, times(1)).create(projectsToImport.get(0));
-        verify(projectDAO, times(1)).create(projectsToImport.get(1));
+        verify(projectDAO).create(projectsToImport.get(0));
+        verify(projectDAO).create(projectsToImport.get(1));
 
         // and: each tracking record in those projects is created
-        verify(trackingRecordDAO, times(1)).create(projectsToImport.get(0).getTrackingRecords().get(0));
-        verify(trackingRecordDAO, times(1)).create(projectsToImport.get(1).getTrackingRecords().get(0));
+        verify(trackingRecordDAO).create(projectsToImport.get(0).getTrackingRecords().get(0));
+        verify(trackingRecordDAO).create(projectsToImport.get(1).getTrackingRecords().get(0));
 
         // and: each tracking configuration in those projects is created
-        verify(trackingConfigurationDAO, times(1)).create(projectsToImport.get(0).getTrackingConfiguration());
-        verify(trackingConfigurationDAO, times(1)).create(projectsToImport.get(1).getTrackingConfiguration());
+        verify(trackingConfigurationDAO).create(projectsToImport.get(0).getTrackingConfiguration());
+        verify(trackingConfigurationDAO).create(projectsToImport.get(1).getTrackingConfiguration());
     }
 
     private ArrayList<Project> aListOf2Projects() {

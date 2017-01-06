@@ -15,7 +15,6 @@ import java.io.IOException;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +48,7 @@ public class DataMarshallerTest {
         subject.writeBackup(mock(BackupDataOutput.class));
 
         // then
-        verify(jsonMarshaller, times(1)).build();
+        verify(jsonMarshaller).build();
         verify(jsonMarshaller, never()).withProjectUuid(anyString());
     }
 
@@ -62,8 +61,8 @@ public class DataMarshallerTest {
         subject.writeBackup(output);
 
         // then
-        verify(output, times(1)).writeEntityHeader(JSON_ARRAY_KEY, bytesPayload.length);
-        verify(output, times(1)).writeEntityData(bytesPayload, bytesPayload.length);
+        verify(output).writeEntityHeader(JSON_ARRAY_KEY, bytesPayload.length);
+        verify(output).writeEntityData(bytesPayload, bytesPayload.length);
     }
 
 }

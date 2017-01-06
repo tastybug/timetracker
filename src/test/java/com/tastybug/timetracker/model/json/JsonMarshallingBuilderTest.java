@@ -52,9 +52,9 @@ public class JsonMarshallingBuilderTest {
         assertEquals(1, projectArray.length());
 
         // and
-        verify(projectDAO, times(1)).get(project.getUuid());
-        verify(trackingConfigurationDAO, times(1)).getByProjectUuid(project.getUuid());
-        verify(trackingRecordDAO, times(1)).getByProjectUuid(project.getUuid());
+        verify(projectDAO).get(project.getUuid());
+        verify(trackingConfigurationDAO).getByProjectUuid(project.getUuid());
+        verify(trackingRecordDAO).getByProjectUuid(project.getUuid());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class JsonMarshallingBuilderTest {
         assertEquals(2, projectArray.length());
 
         // and
-        verify(projectDAO, times(1)).getAll();
+        verify(projectDAO).getAll();
         verify(trackingConfigurationDAO, times(2)).getByProjectUuid(isA(String.class));
         verify(trackingRecordDAO, times(2)).getByProjectUuid(isA(String.class));
     }

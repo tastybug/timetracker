@@ -14,7 +14,6 @@ import org.robolectric.annotation.Config;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +35,7 @@ public class ExpirationWarningServiceTest {
         warningService.handleProjectStopped("project-uuid");
 
         // then
-        verify(expirationNotificationStarter, times(1)).showExpirationWarningForProject("project-uuid");
+        verify(expirationNotificationStarter).showExpirationWarningForProject("project-uuid");
     }
 
     @Test
