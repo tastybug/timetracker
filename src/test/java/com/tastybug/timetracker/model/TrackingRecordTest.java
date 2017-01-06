@@ -94,16 +94,16 @@ public class TrackingRecordTest {
         trackingRecord.setProjectUuid(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void canNotSetNullStartDate() {
         // expect
-        new TrackingRecord().setStart(Optional.<Date>absent());
+        new TrackingRecord().setStart(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void canNotSetNoEndDate() {
+    @Test(expected = NullPointerException.class)
+    public void canNotSetNullEndDate() {
         // expect
-        new TrackingRecord().setEnd(Optional.<Date>absent());
+        new TrackingRecord().setEnd(null);
     }
 
     @Test
@@ -169,10 +169,10 @@ public class TrackingRecordTest {
         when(dateProvider.getCurrentDate()).thenReturn(new LocalDateTime(2016, 12, 24, 12, 1, 0).toDate());
         TrackingRecord record = new TrackingRecord();
         record.setDateProvider(dateProvider);
-        record.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate()));
+        record.setStart(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate());
 
         // when
-        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, 5, 0).toDate()));
+        record.setEnd(new LocalDateTime(2016, 12, 24, 12, 5, 0).toDate());
 
         // expect
         assertFalse(record.isVeryShort());
@@ -190,10 +190,10 @@ public class TrackingRecordTest {
         assertFalse(record.isVeryShort());
 
         // when
-        record.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate()));
+        record.setStart(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate());
 
         // and
-        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERYSHORT_LIMIT_IN_MINUTES, 0).toDate()));
+        record.setEnd(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERYSHORT_LIMIT_IN_MINUTES, 0).toDate());
 
         // expect
         assertTrue(record.isVeryShort());
@@ -208,7 +208,7 @@ public class TrackingRecordTest {
         record.setDateProvider(dateProvider);
 
         // when
-        record.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate()));
+        record.setStart(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate());
 
         // expect: its not finished yet...
         assertTrue(record.isVeryShort());

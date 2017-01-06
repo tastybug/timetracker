@@ -87,9 +87,9 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         LocalDateTime time = new LocalDateTime(2016, 11, 24, 9, 0);
         for (int i = 0; i < 200; i++) {
             record = new TrackingRecord(project.getUuid());
-            record.setStart(Optional.of(time.toDate()));
+            record.setStart(time.toDate());
             time = time.plusHours(1);
-            record.setEnd(Optional.of(time.toDate()));
+            record.setEnd(time.toDate());
             time = time.plusHours(1);
             record.setDescription(Optional.of("Eintrag #" + i));
 
@@ -105,8 +105,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
-        record.setStart(Optional.of(new LocalDateTime(2016, 11, 24, 9, 0).toDate()));
-        record.setEnd(Optional.of(new LocalDateTime(2016, 11, 24, 10, 0).toDate()));
+        record.setStart(new LocalDateTime(2016, 11, 24, 9, 0).toDate());
+        record.setEnd(new LocalDateTime(2016, 11, 24, 10, 0).toDate());
         record.setDescription(Optional.of(aVeryLongRecordDescription()));
 
         storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
@@ -130,7 +130,7 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
-        record.setStart(Optional.of(new LocalDateTime().minusDays(2).toDate()));
+        record.setStart(new LocalDateTime().minusDays(2).toDate());
 
         storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
     }
@@ -144,8 +144,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
-        record.setStart(Optional.of(new LocalDate(2016, 12, 24).minusDays(2).toDate()));
-        record.setEnd(Optional.of(new LocalDate(2016, 12, 24).minusDays(1).toDate()));
+        record.setStart(new LocalDate(2016, 12, 24).minusDays(2).toDate());
+        record.setEnd(new LocalDate(2016, 12, 24).minusDays(1).toDate());
 
         storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
     }
@@ -159,8 +159,8 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         storeBatchOperation(new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration));
 
         TrackingRecord record = new TrackingRecord(project.getUuid());
-        record.setStart(Optional.of(new LocalDate(2016, 12, 24).plusDays(1).toDate()));
-        record.setEnd(Optional.of(new LocalDate(2016, 12, 24).plusDays(2).toDate()));
+        record.setStart(new LocalDate(2016, 12, 24).plusDays(1).toDate());
+        record.setEnd(new LocalDate(2016, 12, 24).plusDays(2).toDate());
 
         storeBatchOperation(new TrackingRecordDAO(context).getBatchCreate(record));
     }

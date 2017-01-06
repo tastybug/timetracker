@@ -74,7 +74,7 @@ public class TrackingRecordJSONTest {
         // given
         Date date = new Date();
         TrackingRecord trackingRecord = new TrackingRecord();
-        trackingRecord.setStart(Optional.of(date));
+        trackingRecord.setStart(date);
 
         // when
         TrackingRecordJSON trackingRecordJSON = new TrackingRecordJSON(trackingRecord);
@@ -103,7 +103,7 @@ public class TrackingRecordJSONTest {
         // given
         Date date = new Date();
         TrackingRecord trackingRecord = new TrackingRecord();
-        trackingRecord.setEnd(Optional.of(date));
+        trackingRecord.setEnd(date);
 
         // when
         TrackingRecordJSON trackingRecordJSON = new TrackingRecordJSON(trackingRecord);
@@ -241,8 +241,8 @@ public class TrackingRecordJSONTest {
         TrackingRecord trackingRecord = new TrackingRecord();
         trackingRecord.setUuid("uuid");
         trackingRecord.setProjectUuid("projectuuid");
-        trackingRecord.setStart(Optional.of(new Date()));
-        trackingRecord.setEnd(Optional.of(new Date()));
+        trackingRecord.setStart(new Date());
+        trackingRecord.setEnd(new Date());
         trackingRecord.setDescription(Optional.of("desc"));
 
 

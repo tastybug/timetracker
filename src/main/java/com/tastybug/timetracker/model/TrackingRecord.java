@@ -75,9 +75,9 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         return Optional.fromNullable(start);
     }
 
-    public void setStart(Optional<Date> start) {
-        Preconditions.checkArgument(start.isPresent());
-        this.start = start.get();
+    public void setStart(Date start) {
+        Preconditions.checkNotNull(start);
+        this.start = start;
     }
 
     public void stop() {
@@ -94,9 +94,9 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         return Optional.fromNullable(end);
     }
 
-    public void setEnd(Optional<Date> end) {
-        Preconditions.checkArgument(end.isPresent());
-        this.end = end.orNull();
+    public void setEnd(Date end) {
+        Preconditions.checkNotNull(end);
+        this.end = end;
     }
 
     public boolean isRunning() {
