@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.task.project;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Build;
 
@@ -14,10 +13,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,35 +23,60 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class DeleteProjectTaskTest {
 
-    Context context = mock(Context.class);
-    ContentResolver resolver = mock(ContentResolver.class);
-    OttoProvider ottoProvider = mock(OttoProvider.class);
-    Bus ottoBus = mock(Bus.class);
+    private Context context = mock(Context.class);
+    private ProjectDAO projectDAO = mock(ProjectDAO.class);
+
+    private DeleteProjectTask subject = new DeleteProjectTask(context, projectDAO);
 
     @Before
     public void setup() {
-        when(context.getContentResolver()).thenReturn(resolver);
-        when(ottoProvider.getSharedBus()).thenReturn(ottoBus);
+        when(projectDAO.delete(anyString())).thenReturn(true);
     }
 
     @Test
-    public void happyPath() throws Exception {
+    public void providing_existing_project_uuid_leads_to_deletion() throws Exception {
         // given
-        DeleteProjectTask task = DeleteProjectTask.aTask(context).withProjectUuid("123");
-        task.setOttoProvider(ottoProvider);
+        String projectUuid = "123";
+        subject.withProjectUuid(projectUuid);
 
         // when
-        task.execute();
+        subject.execute();
 
         // then
-        verify(resolver, times(1)).delete(eq(new ProjectDAO(context).getQueryUri()), isA(String.class), eq(new String[]{"123"}));
-        verify(ottoBus, times(1)).post(isA(ProjectDeletedEvent.class));
+        verify(projectDAO).delete(projectUuid);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void unsuccessful_deletion_yields_RuntimeException() throws Exception {
+        // given
+        String projectUuid = "this-does-not-exist";
+        when(projectDAO.delete(projectUuid)).thenReturn(false);
+        subject.withProjectUuid(projectUuid);
+
+        // when
+        subject.execute();
+    }
+
+    @Test
+    public void successful_deletion_is_announced_via_otto() throws Exception {
+        // given
+        Bus ottoBus = mock(Bus.class);
+        OttoProvider ottoProvider = mock(OttoProvider.class);
+        when(ottoProvider.getSharedBus()).thenReturn(ottoBus);
+        subject.withProjectUuid("123");
+        subject.setOttoProvider(ottoProvider);
+
+        // when
+        subject.execute();
+
+        // then
+        verify(ottoBus).post(isA(ProjectDeletedEvent.class));
     }
 
     @Test(expected = NullPointerException.class)
-    public void lackOfProjectTitleFailsTheTask() {
+    public void lack_of_project_uuid_to_delete_yields_NPE() {
         // expect
-        DeleteProjectTask.aTask(context).execute();
+        new DeleteProjectTask(context).execute();
     }
 
 }

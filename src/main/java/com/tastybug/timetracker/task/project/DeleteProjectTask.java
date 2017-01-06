@@ -14,8 +14,15 @@ public class DeleteProjectTask extends AbstractAsyncTask {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
-    private DeleteProjectTask(Context context) {
+    private ProjectDAO projectDAO;
+
+    public DeleteProjectTask(Context context) {
+        this(context, new ProjectDAO(context));
+    }
+
+    DeleteProjectTask(Context context, ProjectDAO projectDAO) {
         super(context);
+        this.projectDAO = projectDAO;
     }
 
     public static DeleteProjectTask aTask(Context context) {
@@ -34,7 +41,11 @@ public class DeleteProjectTask extends AbstractAsyncTask {
 
     @Override
     protected void performBackgroundStuff(Bundle args) {
-        new ProjectDAO(context).delete(args.getString(PROJECT_UUID));
+        String projectUuidToDelete = args.getString(PROJECT_UUID);
+        boolean success = projectDAO.delete(projectUuidToDelete);
+        if (!success) {
+            throw new RuntimeException("Failed to delete project " + projectUuidToDelete);
+        }
     }
 
     protected void onPostExecute(Long result) {
@@ -43,5 +54,3 @@ public class DeleteProjectTask extends AbstractAsyncTask {
     }
 
 }
-
-
