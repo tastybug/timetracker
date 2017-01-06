@@ -21,25 +21,36 @@ public class TrackingRecordTest {
     private static final int EXPECTED_VERYSHORT_LIMIT_IN_MINUTES = 2;
 
     @Test
-    public void can_start_and_stop() {
+    public void calling_start_will_set_current_date_as_start_date() {
         // given:
+        DateProvider dateProvider = mock(DateProvider.class);
+        when(dateProvider.getCurrentDate()).thenReturn(new Date(123));
         TrackingRecord trackingRecord = new TrackingRecord();
-        assertFalse(trackingRecord.getStart().isPresent());
-        assertFalse(trackingRecord.getEnd().isPresent());
+        trackingRecord.setDateProvider(dateProvider);
 
         // when
         trackingRecord.start();
 
         // then
-        assertTrue(trackingRecord.getStart().isPresent());
-        assertFalse(trackingRecord.getEnd().isPresent());
+        assertEquals(new Date(123), trackingRecord.getStart().get());
+    }
+
+    @Test
+    public void calling_stop_will_set_current_date_as_end_date() {
+        // given:
+        DateProvider dateProvider = mock(DateProvider.class);
+        when(dateProvider.getCurrentDate()).thenReturn(new Date(123), new Date(456));
+        TrackingRecord trackingRecord = new TrackingRecord();
+        trackingRecord.setDateProvider(dateProvider);
 
         // when
+        trackingRecord.start();
+
+        // and
         trackingRecord.stop();
 
         // then
-        assertTrue(trackingRecord.getStart().isPresent());
-        assertTrue(trackingRecord.getEnd().isPresent());
+        assertEquals(new Date(456), trackingRecord.getEnd().get());
     }
 
     @Test
@@ -124,6 +135,48 @@ public class TrackingRecordTest {
 
         // when
         trackingRecord.setEnd(new Date(1));
+    }
+
+    @Test
+    public void isRunning_returns_true_when_started_but_not_stopped() {
+        // given
+        TrackingRecord trackingRecord = new TrackingRecord();
+
+        // assure
+        assertFalse(trackingRecord.isRunning());
+
+        // when
+        trackingRecord.start();
+
+        // then
+        assertTrue(trackingRecord.isRunning());
+
+        // when
+        trackingRecord.stop();
+
+        // then
+        assertFalse(trackingRecord.isRunning());
+    }
+
+    @Test
+    public void isFinished_returns_true_when_start_and_end_date_is_set() {
+        // given
+        TrackingRecord trackingRecord = new TrackingRecord();
+
+        // assure
+        assertFalse(trackingRecord.isFinished());
+
+        // when
+        trackingRecord.start();
+
+        // then
+        assertFalse(trackingRecord.isFinished());
+
+        // when
+        trackingRecord.stop();
+
+        // then
+        assertTrue(trackingRecord.isFinished());
     }
 
     @Test
