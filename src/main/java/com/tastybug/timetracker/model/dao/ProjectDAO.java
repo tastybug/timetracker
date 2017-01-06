@@ -16,7 +16,7 @@ public class ProjectDAO extends EntityDAO<Project> {
     static String TITLE_COLUMN = "title";
     static String DESCRIPTION_COLUMN = "description";
 
-    static String[] COLUMNS = new String[]{
+    private static String[] COLUMNS = new String[]{
             UUID_COLUMN,
             TITLE_COLUMN,
             DESCRIPTION_COLUMN

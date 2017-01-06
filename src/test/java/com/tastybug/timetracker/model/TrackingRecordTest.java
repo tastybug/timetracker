@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 public class TrackingRecordTest {
 
-    private static final int EXPECTED_VERYSHORT_LIMIT_IN_MINUTES = 2;
+    private static final int EXPECTED_VERY_SHORT_LIMIT_IN_MINUTES = 2;
 
     @Test
     public void calling_start_will_set_current_date_as_start_date() {
@@ -180,33 +180,6 @@ public class TrackingRecordTest {
     }
 
     @Test
-    public void canTellIfIsRunningOrFinished() {
-        // given:
-        TrackingRecord trackingRecord;
-
-        // when
-        trackingRecord = new TrackingRecord();
-
-        // then
-        assertFalse(trackingRecord.isRunning());
-        assertFalse(trackingRecord.isFinished());
-
-        // when
-        trackingRecord.start();
-
-        // then
-        assertTrue(trackingRecord.isRunning());
-        assertFalse(trackingRecord.isFinished());
-
-        // when
-        trackingRecord.stop();
-
-        // then
-        assertFalse(trackingRecord.isRunning());
-        assertTrue(trackingRecord.isFinished());
-    }
-
-    @Test
     public void toDuration_returns_nothing_when_not_started() {
         // expect
         assertFalse(new TrackingRecord().toDuration().isPresent());
@@ -273,7 +246,7 @@ public class TrackingRecordTest {
     public void isVeryShort_returns_true_for_ongoing_when_current_duration_is_short_enough() {
         // given
         DateProvider dateProvider = mock(DateProvider.class);
-        when(dateProvider.getCurrentDate()).thenReturn(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERYSHORT_LIMIT_IN_MINUTES - 1, 0).toDate());
+        when(dateProvider.getCurrentDate()).thenReturn(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERY_SHORT_LIMIT_IN_MINUTES - 1, 0).toDate());
         TrackingRecord record = new TrackingRecord();
         record.setDateProvider(dateProvider);
 
@@ -284,7 +257,7 @@ public class TrackingRecordTest {
         record.setStart(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate());
 
         // and
-        record.setEnd(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERYSHORT_LIMIT_IN_MINUTES, 0).toDate());
+        record.setEnd(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERY_SHORT_LIMIT_IN_MINUTES, 0).toDate());
 
         // expect
         assertTrue(record.isVeryShort());

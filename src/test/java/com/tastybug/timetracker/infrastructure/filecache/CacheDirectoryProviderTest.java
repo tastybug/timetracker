@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 public class CacheDirectoryProviderTest {
 
-    static final String APP_CACHE_FOLDER_NAME = "appCacheFolder";
+    private static final String APP_CACHE_FOLDER_NAME = "appCacheFolder";
 
     @Rule
     public TemporaryFolder rootCacheFolder = new TemporaryFolder();
