@@ -77,6 +77,9 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
 
     public void setStart(Date start) {
         Preconditions.checkNotNull(start);
+        if (getEnd().isPresent()) {
+            Preconditions.checkArgument(start.before(getEnd().get()), "Start date must be before end date!");
+        }
         this.start = start;
     }
 
@@ -96,6 +99,9 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
 
     public void setEnd(Date end) {
         Preconditions.checkNotNull(end);
+        if (getStart().isPresent()) {
+            Preconditions.checkArgument(end.after(getStart().get()), "End date must be after start date!");
+        }
         this.end = end;
     }
 

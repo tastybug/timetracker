@@ -100,10 +100,30 @@ public class TrackingRecordTest {
         new TrackingRecord().setStart(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void setStart_yields_IllegalArgument_when_start_is_not_before_end() {
+        // given
+        TrackingRecord trackingRecord = new TrackingRecord();
+        trackingRecord.setEnd(new Date(1));
+
+        // when
+        trackingRecord.setStart(new Date(1));
+    }
+
     @Test(expected = NullPointerException.class)
     public void setEnd_with_null_argument_yields_NPE() {
         // expect
         new TrackingRecord().setEnd(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setEnd_yields_IllegalArgument_when_end_not_after_start() {
+        // given
+        TrackingRecord trackingRecord = new TrackingRecord();
+        trackingRecord.setStart(new Date(1));
+
+        // when
+        trackingRecord.setEnd(new Date(1));
     }
 
     @Test

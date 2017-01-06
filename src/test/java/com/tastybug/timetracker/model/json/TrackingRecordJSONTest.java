@@ -241,8 +241,8 @@ public class TrackingRecordJSONTest {
         TrackingRecord trackingRecord = new TrackingRecord();
         trackingRecord.setUuid("uuid");
         trackingRecord.setProjectUuid("projectuuid");
-        trackingRecord.setStart(new Date());
-        trackingRecord.setEnd(new Date());
+        trackingRecord.setStart(new Date(1));
+        trackingRecord.setEnd(new Date(2));
         trackingRecord.setDescription(Optional.of("desc"));
 
 
