@@ -15,8 +15,8 @@ import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
-import com.tastybug.timetracker.task.project.CreateProjectTask;
-import com.tastybug.timetracker.task.project.ProjectCreatedEvent;
+import com.tastybug.timetracker.task.project.create.CreateProjectTask;
+import com.tastybug.timetracker.task.project.create.ProjectCreatedEvent;
 import com.tastybug.timetracker.ui.projectconfiguration.ProjectConfigurationActivity;
 import com.tastybug.timetracker.ui.projectdetails.ProjectDetailsActivity;
 
@@ -86,8 +86,7 @@ public class ProjectCreationDialog extends DialogFragment {
     }
 
     private void startProjectCreation() {
-        CreateProjectTask
-                .aTask(getActivity())
+        new CreateProjectTask(getActivity())
                 .withProjectTitle(getTitleFromWidget(false).get())
                 .execute();
     }

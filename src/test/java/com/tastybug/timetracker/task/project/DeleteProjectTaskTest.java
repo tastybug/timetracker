@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.project;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Build;
 
@@ -26,18 +27,17 @@ public class DeleteProjectTaskTest {
     private Context context = mock(Context.class);
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
 
-    private DeleteProjectTask subject = new DeleteProjectTask(context, projectDAO);
-
     @Before
     public void setup() {
         when(projectDAO.delete(anyString())).thenReturn(true);
+        when(context.getContentResolver()).thenReturn(mock(ContentResolver.class));
     }
 
     @Test
     public void providing_existing_project_uuid_leads_to_deletion() throws Exception {
         // given
         String projectUuid = "123";
-        subject.withProjectUuid(projectUuid);
+        DeleteProjectTask subject = new DeleteProjectTask(context, projectDAO).withProjectUuid(projectUuid);
 
         // when
         subject.execute();
@@ -51,7 +51,7 @@ public class DeleteProjectTaskTest {
         // given
         String projectUuid = "this-does-not-exist";
         when(projectDAO.delete(projectUuid)).thenReturn(false);
-        subject.withProjectUuid(projectUuid);
+        DeleteProjectTask subject = new DeleteProjectTask(context, projectDAO).withProjectUuid(projectUuid);
 
         // when
         subject.execute();
@@ -63,7 +63,7 @@ public class DeleteProjectTaskTest {
         Bus ottoBus = mock(Bus.class);
         OttoProvider ottoProvider = mock(OttoProvider.class);
         when(ottoProvider.getSharedBus()).thenReturn(ottoBus);
-        subject.withProjectUuid("123");
+        DeleteProjectTask subject = new DeleteProjectTask(context, projectDAO).withProjectUuid("123");
         subject.setOttoProvider(ottoProvider);
 
         // when
