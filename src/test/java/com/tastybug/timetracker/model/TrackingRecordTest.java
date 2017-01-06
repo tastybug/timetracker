@@ -21,7 +21,7 @@ public class TrackingRecordTest {
     private static final int EXPECTED_VERYSHORT_LIMIT_IN_MINUTES = 2;
 
     @Test
-    public void canStartATrackingRecordAndStopItLater() {
+    public void can_start_and_stop() {
         // given:
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.getStart().isPresent());
@@ -43,7 +43,7 @@ public class TrackingRecordTest {
     }
 
     @Test
-    public void canSetDescriptionAtTrackingRecord() {
+    public void can_set_description() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         assertFalse(trackingRecord.getDescription().isPresent());
@@ -56,7 +56,7 @@ public class TrackingRecordTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void startingAnAlreadyStartedTrackingRecordYieldsException() {
+    public void starting_twice_yields_IllegalStateException() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         trackingRecord.start();
@@ -66,7 +66,7 @@ public class TrackingRecordTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void stoppingAnAlreadyStoppedTrackingRecordYieldsException() {
+    public void stopping_twice_yields_IllegalStateException() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
         trackingRecord.start();
@@ -77,7 +77,7 @@ public class TrackingRecordTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void canNotStopBeforeStarting() {
+    public void stopping_when_not_running_yields_IllegalStateException() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
 
@@ -86,7 +86,7 @@ public class TrackingRecordTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullProjectUuid() {
+    public void setProjectUuid_with_null_uuid_yields_NPE() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
 
@@ -95,13 +95,13 @@ public class TrackingRecordTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullStartDate() {
+    public void setStart_with_null_argument_yields_NPE() {
         // expect
         new TrackingRecord().setStart(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullEndDate() {
+    public void setEnd_with_null_argument_yields_NPE() {
         // expect
         new TrackingRecord().setEnd(null);
     }
@@ -134,26 +134,44 @@ public class TrackingRecordTest {
     }
 
     @Test
-    public void canJodaDurationWhenRunningOrFinished() {
+    public void toDuration_returns_nothing_when_not_started() {
+        // expect
+        assertFalse(new TrackingRecord().toDuration().isPresent());
+    }
+
+    @Test
+    public void toDuration_returns_correctly_when_running() {
         // given
+        DateProvider dateProvider = mock(DateProvider.class);
+        when(dateProvider.getCurrentDate()).thenReturn(new Date(1000), new Date(2000));
         TrackingRecord trackingRecord = new TrackingRecord();
-        assertFalse(trackingRecord.toDuration().isPresent());
+        trackingRecord.setDateProvider(dateProvider);
 
         // when
         trackingRecord.start();
 
         // then
-        assertTrue(trackingRecord.toDuration().isPresent());
-
-        // when
-        trackingRecord.stop();
-
-        // then
-        assertTrue(trackingRecord.toDuration().isPresent());
+        assertEquals(1000, trackingRecord.toDuration().get().getMillis());
     }
 
     @Test
-    public void anEmptyDescriptionIsLikeANullDescription() {
+    public void toDuration_returns_non_null_when_finished() {
+        // given
+        DateProvider dateProvider = mock(DateProvider.class);
+        when(dateProvider.getCurrentDate()).thenReturn(new Date(1000), new Date(2000));
+        TrackingRecord trackingRecord = new TrackingRecord();
+        trackingRecord.setDateProvider(dateProvider);
+
+        // when
+        trackingRecord.start();
+        trackingRecord.stop();
+
+        // then
+        assertEquals(1000, trackingRecord.toDuration().get().getMillis());
+    }
+
+    @Test
+    public void setDescription_stores_empty_strings_as_non_existent_descriptions() {
         // given
         TrackingRecord record = new TrackingRecord();
         record.setDescription(Optional.of(""));

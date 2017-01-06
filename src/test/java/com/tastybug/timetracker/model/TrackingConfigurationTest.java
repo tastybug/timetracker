@@ -1,64 +1,19 @@
 package com.tastybug.timetracker.model;
 
-import android.os.Build;
-
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.rounding.Rounding;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class TrackingConfigurationTest {
 
     @Test
-    public void canCreateTrackingConfiguration() {
-        // when
-        DateTime start = new DateTime();
-        DateTime end = start.plusDays(5);
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1", "2", Optional.of(3), Optional.of(start.toDate()), Optional.of(end.toDate()), false, Rounding.Strategy.NO_ROUNDING);
-
-        // then
-        assertNotNull(trackingConfiguration);
-        assertEquals("1", trackingConfiguration.getUuid());
-        assertEquals("2", trackingConfiguration.getProjectUuid());
-        assertEquals(3, trackingConfiguration.getHourLimit().get().intValue());
-        assertEquals(start.toDate(), trackingConfiguration.getStart().get());
-        assertEquals(end.toDate(), trackingConfiguration.getEnd().get());
-        assertEquals(Rounding.Strategy.NO_ROUNDING, trackingConfiguration.getRoundingStrategy());
-    }
-
-    @Test
-    public void noHourLimitIsHandledWell() {
-        // given
-        TrackingConfiguration trackingConfiguration = anInstance();
-
-        // when
-        trackingConfiguration.setHourLimit(Optional.of(5));
-
-        // then
-        assertEquals(5, trackingConfiguration.getHourLimit().get().intValue());
-
-        // when
-        trackingConfiguration.setHourLimit(Optional.<Integer>absent());
-
-        // then
-        assertFalse(trackingConfiguration.getHourLimit().isPresent());
-    }
-
-    @Test
-    public void zeroHourLimitEqualsNoHourLimit() {
+    public void setHourLimit_with_zero_argument_is_stored_as_no_hour_limit() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -70,48 +25,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test
-    public void noStartDateIsHandledWell() {
-        // given
-        TrackingConfiguration trackingConfiguration = anInstance();
-
-        // when
-        Date d = new Date();
-        trackingConfiguration.setStart(Optional.of(d));
-
-        // then
-        assertEquals(d, trackingConfiguration.getStart().get());
-
-        // when
-        trackingConfiguration.setStart(Optional.<Date>absent());
-
-        // then
-        assertFalse(trackingConfiguration.getStart().isPresent());
-    }
-
-    @Test
-    public void noEndDateIsHandledWell() {
-        // given
-        TrackingConfiguration trackingConfiguration = anInstance();
-
-        // when
-        Date d = new Date();
-        trackingConfiguration.setEnd(Optional.of(d));
-
-        // then
-        assertEquals(d, trackingConfiguration.getEnd().get());
-
-        // when
-        trackingConfiguration.setEnd(Optional.<Date>absent());
-
-        // then
-        assertFalse(trackingConfiguration.getEnd().isPresent());
-
-        // and
-        assertFalse(trackingConfiguration.getEndDateAsInclusive().isPresent());
-    }
-
-    @Test
-    public void canGetEndDateAsAnInclusiveDate() {
+    public void getEndDateAsInclusive_returns_end_date_minus_1_day() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -125,7 +39,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test
-    public void canSetEndDateAsInclusiveDate() {
+    public void setEndDateAsInclusive_sets_end_date_plus_1_day() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
         DateTime lastInclusiveDate = new DateTime(2015, 12, 31, 0, 0);
@@ -138,7 +52,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void canNotSetEndDateBeforeStartDate() {
+    public void setEnd_with_end_before_start_date_yields_IllegalArgument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
         DateTime startDate = new DateTime(2016, 1, 1, 0, 0);
@@ -150,7 +64,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void canNotSetStartDateAfterEndDate() {
+    public void setStart_with_start_after_end_date_yields_IllegalArgument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
         DateTime endDate = new DateTime(2016, 1, 1, 0, 0);
@@ -162,7 +76,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullRoundingStrategy() {
+    public void setRoundingStrategy_yields_NPE_for_null_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -171,7 +85,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullHourLimit() {
+    public void setHourLimit_yields_null_for_null_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -180,7 +94,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void canNotSetNegativeHourLimit() {
+    public void setHourLimit_yields_IllegalArgument_for_negative_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -189,7 +103,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullStartDateOptional() {
+    public void setStart_yields_NPE_for_null_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -198,7 +112,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullEndDateOptional() {
+    public void setEnd_yields_NPE_for_null_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -207,7 +121,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullEndDateInclusiveOptional() {
+    public void setEndAsInclusive_yields_NPE_for_null_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -216,7 +130,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullUuid() {
+    public void setUuid_yields_NPE_for_null_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 
@@ -225,7 +139,7 @@ public class TrackingConfigurationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void canNotSetNullProjectFk() {
+    public void setProjectUuid_yields_NPE_for_null_argument() {
         // given
         TrackingConfiguration trackingConfiguration = anInstance();
 

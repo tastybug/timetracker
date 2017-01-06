@@ -68,7 +68,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         if (getStart().isPresent()) {
             throw new IllegalStateException(toString() + " is already started!");
         }
-        this.start = new Date();
+        this.start = dateProvider.getCurrentDate();
     }
 
     public Optional<Date> getStart() {
@@ -87,7 +87,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         if (getEnd().isPresent()) {
             throw new IllegalStateException(toString() + " is already stopped!");
         }
-        this.end = new Date();
+        this.end = dateProvider.getCurrentDate();
     }
 
     public Optional<Date> getEnd() {
