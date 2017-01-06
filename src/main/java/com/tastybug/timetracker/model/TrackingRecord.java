@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.util.DateProvider;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -14,7 +15,9 @@ import java.util.UUID;
 
 public class TrackingRecord extends Entity implements Comparable<TrackingRecord> {
 
-    static final int MINUTES_LIMIT_FOR_TINY_RECORDS = 2;
+    private static final int MINUTES_LIMIT_FOR_TINY_RECORDS = 2;
+
+    private transient DateProvider dateProvider = new DateProvider();
 
     private String uuid = UUID.randomUUID().toString();
     private String projectUuid;
@@ -120,7 +123,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         // when creating the duration, shave off additional millis as it confuses the duration
         // calculation, resulting in e.g. a 5 minutes duration coming out as 4:59
         if (isRunning()) {
-            return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime().withMillisOfSecond(0)));
+            return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime(dateProvider.getCurrentDate()).withMillisOfSecond(0)));
         } else if (isFinished()) {
             return Optional.of(new Duration(new DateTime(start).withMillisOfSecond(0), new DateTime(end).withMillisOfSecond(0)));
         } else {
@@ -139,6 +142,10 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         } else {
             return Optional.of(new Duration(configuration.getRoundingStrategy().getStrategy().getEffectiveDurationInSeconds(durationOpt.get()) * 1000));
         }
+    }
+
+    void setDateProvider(DateProvider dateProvider) {
+        this.dateProvider = dateProvider;
     }
 
     @Override

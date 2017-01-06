@@ -2,6 +2,7 @@ package com.tastybug.timetracker.model;
 
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.util.DateProvider;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.joda.time.LocalDateTime;
@@ -12,8 +13,12 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TrackingRecordTest {
+
+    private static final int EXPECTED_VERYSHORT_LIMIT_IN_MINUTES = 2;
 
     @Test
     public void canStartATrackingRecordAndStopItLater() {
@@ -158,9 +163,28 @@ public class TrackingRecordTest {
     }
 
     @Test
-    public void canTellWhetherItsVeryShort() {
+    public void isVeryShort_returns_false_when_TR_is_finished_but_overly_long() {
         // given
+        DateProvider dateProvider = mock(DateProvider.class);
+        when(dateProvider.getCurrentDate()).thenReturn(new LocalDateTime(2016, 12, 24, 12, 1, 0).toDate());
         TrackingRecord record = new TrackingRecord();
+        record.setDateProvider(dateProvider);
+        record.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate()));
+
+        // when
+        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, 5, 0).toDate()));
+
+        // expect
+        assertFalse(record.isVeryShort());
+    }
+
+    @Test
+    public void isVeryShort_returns_true_for_ongoing_when_current_duration_is_short_enough() {
+        // given
+        DateProvider dateProvider = mock(DateProvider.class);
+        when(dateProvider.getCurrentDate()).thenReturn(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERYSHORT_LIMIT_IN_MINUTES - 1, 0).toDate());
+        TrackingRecord record = new TrackingRecord();
+        record.setDateProvider(dateProvider);
 
         // expect: not started yet, so no duration to check for
         assertFalse(record.isVeryShort());
@@ -168,20 +192,26 @@ public class TrackingRecordTest {
         // when
         record.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate()));
 
-        // expect: even when not finished yet, it counts as very short
-        assertTrue(record.isVeryShort());
-
-        // when: its very short
-        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS, 0).toDate()));
+        // and
+        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, EXPECTED_VERYSHORT_LIMIT_IN_MINUTES, 0).toDate()));
 
         // expect
         assertTrue(record.isVeryShort());
+    }
 
-        // when: its not very short
-        record.setEnd(Optional.of(new LocalDateTime(2016, 12, 24, 12, 1 + TrackingRecord.MINUTES_LIMIT_FOR_TINY_RECORDS, 0).toDate()));
+    @Test
+    public void isVeryShort_returns_true_when_TR_is_not_finished_but_current_date_would_count_as_short() {
+        // given
+        DateProvider dateProvider = mock(DateProvider.class);
+        when(dateProvider.getCurrentDate()).thenReturn(new LocalDateTime(2016, 12, 24, 12, 1, 0).toDate());
+        TrackingRecord record = new TrackingRecord();
+        record.setDateProvider(dateProvider);
 
-        // expect
-        assertFalse(record.isVeryShort());
+        // when
+        record.setStart(Optional.of(new LocalDateTime(2016, 12, 24, 12, 0, 0).toDate()));
+
+        // expect: its not finished yet...
+        assertTrue(record.isVeryShort());
     }
 
     @Test
