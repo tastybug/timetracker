@@ -39,7 +39,15 @@
             <intent-filter> <!-- this allows the tracking player notification to open this activity from 'outside' -->
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.manualbackupimport.ManualBackupImportLandingActivity"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/json" />
             </intent-filter>
         </activity>
 
@@ -101,4 +109,5 @@
             android:value="AEdPqrEAAAAI4NY7lBYy4bsP2CCmClPU0vxESyjDojQysxElAw" />
 
     </application>
+
 </manifest>

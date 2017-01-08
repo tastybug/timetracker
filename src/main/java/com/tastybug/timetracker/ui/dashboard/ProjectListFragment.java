@@ -15,6 +15,7 @@ import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.backup.in.BackupRestoredEvent;
 import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.task.dataexport.DataExportedEvent;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
 import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
 import com.tastybug.timetracker.task.tracking.CheckInEvent;
@@ -23,14 +24,19 @@ import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.dialog.project.ProjectCreationDialog;
+import com.tastybug.timetracker.ui.manualbackup.ConfirmManualBackupCreationFragment;
+import com.tastybug.timetracker.ui.manualbackup.share.ShareManualBackupIntentFactory;
 import com.tastybug.timetracker.ui.projectdetails.ProjectDetailsActivity;
 import com.tastybug.timetracker.ui.settings.SettingsActivity;
+
+import java.io.IOException;
 
 public class ProjectListFragment extends ListFragment {
 
     private UpdateProjectListOnTrackingEventsHandler updateProjectListOnTrackingEventsHandler;
     private TestDataCreationHandler testDataCreationHandler;
     private BackupRestoredHandler backupRestoredHandler;
+    private ManualBackupReadyHandler manualBackupReadyHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,7 @@ public class ProjectListFragment extends ListFragment {
         updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
         testDataCreationHandler = new TestDataCreationHandler();
         backupRestoredHandler = new BackupRestoredHandler();
+        manualBackupReadyHandler = new ManualBackupReadyHandler();
     }
 
     @Override
@@ -54,6 +61,7 @@ public class ProjectListFragment extends ListFragment {
         updateProjectListOnTrackingEventsHandler.stop();
         testDataCreationHandler.stop();
         backupRestoredHandler.stop();
+        manualBackupReadyHandler.stop();
     }
 
     @Override
@@ -79,10 +87,13 @@ public class ProjectListFragment extends ListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_create_project:
+            case R.id.menu_item_create_project:
                 showProjectCreationDialog();
                 return true;
-            case R.id.menu_application_settings:
+            case R.id.menu_item_backup:
+                showBackupDialog();
+                return true;
+            case R.id.menu_item_settings:
                 showSettingsActivity();
                 return true;
             case R.id.menu_item_generate_testdata:
@@ -102,6 +113,10 @@ public class ProjectListFragment extends ListFragment {
 
     private void generateTestdata() {
         new TestDataGenerationTask(getActivity()).execute();
+    }
+
+    private void showBackupDialog() {
+        ConfirmManualBackupCreationFragment.aDialog().show(getFragmentManager(), getClass().getSimpleName());
     }
 
     private void showSettingsActivity() {
@@ -146,6 +161,26 @@ public class ProjectListFragment extends ListFragment {
                 public void run() {
                     Toast.makeText(getActivity(), R.string.msg_backup_has_been_restored, Toast.LENGTH_LONG).show();
                     setListAdapter(new ProjectListAdapter(getActivity()));
+                }
+            });
+        }
+    }
+
+    class ManualBackupReadyHandler extends AbstractOttoEventHandler {
+
+        @SuppressWarnings("unused")
+        @Subscribe
+        public void handleDataExported(final DataExportedEvent event) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Intent intent = new ShareManualBackupIntentFactory(getActivity()).create(event.getData());
+                        startActivity(intent);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to share exported data.", e);
+                    }
+
                 }
             });
         }

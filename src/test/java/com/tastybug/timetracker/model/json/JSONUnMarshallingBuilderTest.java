@@ -19,13 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class JSONUnMarshallingBuilderTest {
 
     @Test
-    public void build_can_unmarshal_an_array_of_one_project() throws Exception {
+    public void build_can_unmarshall_an_array_of_one_project_including_configuration_and_records() throws Exception {
         // given
         Project project = aProjectWith2RecordsAndAConfiguration();
         ProjectJSON projectJSON = new ProjectJSON(project);
@@ -39,6 +40,12 @@ public class JSONUnMarshallingBuilderTest {
 
         // and
         assertEquals(project.getUuid(), projects.get(0).getUuid());
+
+        // and
+        assertNotNull(project.getTrackingConfiguration());
+
+        // and
+        assertEquals(2, project.getTrackingRecords().size());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -49,7 +56,7 @@ public class JSONUnMarshallingBuilderTest {
 
     private Project aProjectWith2RecordsAndAConfiguration() {
         Project project = new Project("uuid", "title", Optional.<String>absent());
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", Rounding.Strategy.NO_ROUNDING);
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", Rounding.Strategy.FULL_MINUTE_UP);
         ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<>();
         trackingRecordArrayList.add(new TrackingRecord("uuid"));
         trackingRecordArrayList.add(new TrackingRecord("uuid"));

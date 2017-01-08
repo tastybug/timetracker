@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.ui.report.share;
+package com.tastybug.timetracker.infrastructure.filecache;
 
 import android.content.Context;
 import android.net.Uri;
@@ -6,16 +6,15 @@ import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
-//TODO replace with ShareableFileUriProvider
-class ShareableReportUriProvider {
+public class ShareableFileUriProvider {
 
     private Context context;
 
-    ShareableReportUriProvider(Context context) {
+    public ShareableFileUriProvider(Context context) {
         this.context = context;
     }
 
-    Uri getShareableUri(File file) {
+    public Uri getShareableUri(File file) {
         return FileProvider.getUriForFile(context, "com.tastybug.timetracker.files", file);
     }
 }

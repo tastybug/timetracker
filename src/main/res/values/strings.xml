@@ -16,6 +16,7 @@
     <string name="menu_edit_project">Edit Project</string>
     <string name="menu_delete_project">Delete Project</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_backup">Backup</string>
 
     <!-- project creation -->
     <string name="hint_project_title">What is it called?</string>
@@ -237,5 +238,18 @@
     <string name="report_for_project_X_with_time_frame_Y_to_Z">Time Sheet \"%1$s\": %2$s &#8212; %3$s.</string>
     <string name="report_for_project_X_with_time_frame_Y_to_Z_message_text">This message contains a comprehensive time sheet for project \"%1$s\", ranging from %2$s until %3$s.\n\nPlease note the attached file.</string>
 
+    <!-- create manual backup dialog -->
+    <string name="manual_backup_creation_dialog_title">Manual Backup</string>
+    <string name="manual_backup_creation_description_text">This will export your data enabling you to save it in the cloud or transmit using an external application. \n\nTo re-import, simply open the file with this application.</string>
+    <string name="manual_backup_submit_button">Backup</string>
+    <string name="extra_text_for_app_X_on_date_Y">"%1$s" data backup from %2$s.</string>
+    <string name="extra_subject_for_app_X_on_date_Y">"%1$s" data backup from %2$s.</string>
+    <string name="title_landing_activity">Import Backup</string>
+
+    <!-- import manual backup dialog -->
+    <string name="import_data_dialog_title">Import Backup?</string>
+    <string name="import_data_dialog_message">Do you want to import the provided data, REPLACING any and all existing data?\n\nWarning: this will take a few moments to complete!</string>
+    <string name="data_import_starting">Starting now ..</string>
+    <string name="data_import_done">.. done!</string>
 
 </resources>
