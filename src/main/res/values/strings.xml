@@ -115,14 +115,11 @@
     <string name="snack_describe_tracking_record">Add comment</string>
 
     <!-- -->
-    <string name="app_start_welcome_app_name_X_at_version_Y">%1$s %2$s</string>
 
 
     <!-- placeholders -->
     <string name="sample_duration">11:45:00 hrs</string>
     <string name="sample_local_date">16. Maerz 2016</string>
-    <string name="sample_from_date_to_date">16. Maerz 2016 23:45:10 &#8212; 23.50:00</string>
-    <string name="sample_from_date_to_date_and_calculative_duration">(16. Maerz 2016 23:45:10 &#8212; 23.50:00, 20:10:05 hrs)</string>
     <string name="sample_tracking_record_log">This is a first line\nand this one a second</string>
     <string name="sample_project_title">A Project Title</string>
     <string name="sample_tracking_record_summary">last: 7:30 &#8212; 19:00 24.12.2016</string>
@@ -150,7 +147,6 @@
     <string name="tracking_configuration_hour_limit_preference_title">Hour Limit</string>
     <string name="tracking_configuration_hour_limit_preference_summary_none">No Hour Limit</string>
     <string name="warning_invalid_hour_limit_was_reverted">Invalid hour limit has been reverted</string>
-    <string name="no_hour_limit">No hour limit set</string>
     <string name="hour_limit_of_X_hours">Project limited to %1$d hours</string>
     <string name="tracking_configuration_start_date_preference_key">tracking_configuration_start_date_preference_key</string>
     <string name="tracking_configuration_start_date_preference_title">First Day</string>
@@ -177,7 +173,6 @@
 
     <!-- TrackingPlayer Notification -->
     <string name="tracking_player_check_out_button">Check Out</string>
-    <string name="tracking_player_check_in_button">Check In</string>
     <string name="tracking_player_resume_button">Resume</string>
     <string name="tracking_player_pause_button">Pause</string>
     <string name="tracking_player_dismiss_paused_button">Dismiss</string>
@@ -186,7 +181,6 @@
     <string name="tracking_player_paused_since_X">Paused since %1$s</string>
 
     <!-- backup stuff -->
-    <string name="msg_backup_has_been_restored">Backup has been restored!</string>
 
     <!-- settings -->
     <string name="application_settings_activity_title">Settings</string>
@@ -221,7 +215,6 @@
     <string name="report_project_no_description_placeholder" />
     <string name="report_reportable_item_no_description_placeholder" />
     <string name="report_total_duration_label">Total Duration</string>
-    <string name="dialog_create_report_title">Create Report</string>
     <string name="dialog_create_report_time_frame">Report Time Frame</string>
     <string name="dialog_create_report_first_day_X">From %1$s</string>
     <string name="dialog_create_report_last_day_X">Until %1$s</string>
@@ -239,7 +232,6 @@
     <string name="manual_backup_creation_description_text">This will export your data enabling you to save it in the cloud or transmit using an external application. \n\nTo re-import, simply open the file with this application.</string>
     <string name="manual_backup_submit_button">Backup</string>
     <string name="extra_text_for_app_X_on_date_Y">"%1$s" data backup from %2$s.</string>
-    <string name="extra_subject_for_app_X_on_date_Y">"%1$s" data backup from %2$s.</string>
     <string name="title_landing_activity">Import Backup</string>
 
     <!-- import manual backup dialog -->

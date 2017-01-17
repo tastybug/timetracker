@@ -9,9 +9,9 @@
         <!-- summary is set programmatically -->
 
         <EditTextPreference
+            android:dialogTitle="@string/project_description_preference_title"
             android:key="@string/project_description_preference_key"
-            android:title="@string/project_description_preference_title"
-            android:dialogTitle="@string/project_description_preference_title" />
+            android:title="@string/project_description_preference_title" />
         <!-- summary is set programmatically -->
 
     </PreferenceCategory>
@@ -19,7 +19,6 @@
     <PreferenceCategory android:title="@string/expiration_and_duration_limits_preference_group_title">
 
         <com.tastybug.timetracker.ui.projectconfiguration.HourLimitPickerDialog
-            android:id="@+id/hour_limit_picker"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:key="@string/tracking_configuration_hour_limit_preference_key"
@@ -42,10 +41,10 @@
     <PreferenceCategory android:title="@string/after_tracking_preference_group_title">
 
         <ListPreference
-            android:key="@string/tracking_configuration_rounding_strategy_preference_key"
-            android:title="@string/tracking_configuration_rounding_strategy_preference_title"
             android:entries="@array/rouding_strategy_labels"
-            android:entryValues="@array/rouding_strategy_values" />
+            android:entryValues="@array/rouding_strategy_values"
+            android:key="@string/tracking_configuration_rounding_strategy_preference_key"
+            android:title="@string/tracking_configuration_rounding_strategy_preference_title" />
 
         <CheckBoxPreference
             android:key="@string/tracking_configuration_prompt_for_description_preference_key"
