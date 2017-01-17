@@ -190,10 +190,6 @@
 
     <!-- settings -->
     <string name="application_settings_activity_title">Settings</string>
-    <string name="backup_preference_group_title">Backup</string>
-    <string name="backup_enabled_preference_key">backup_enabled_preference_key</string>
-    <string name="backup_enabled_preference_title">Use Android Backup Service</string>
-    <string name="backup_enabled_preference_description">Perform background backups using the Android Backup Service. Data is stored on Google servers.</string>
     <string name="libraries_and_trademarks_screen_title">Libraries &amp; Trademarks</string>
     <string name="libraries_group_title">Libraries used</string>
     <string name="guava_library_title">Guava (Apache License 2.0)</string>

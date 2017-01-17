@@ -3,7 +3,6 @@ package com.tastybug.timetracker.infrastructure.runtime;
 import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
 
-import com.tastybug.timetracker.infrastructure.backup.DataChangeListenerBackgroundService;
 import com.tastybug.timetracker.infrastructure.filecache.CacheCleaner;
 import com.tastybug.timetracker.ui.trackingplayer.LifecycleService;
 import com.tastybug.timetracker.ui.warn.WarningEventListenerService;
@@ -23,7 +22,6 @@ public class Application extends android.app.Application {
         initializeDayNightThemeMode();
         cleanupCacheFolder();
         startTrackingPlayerLifecycleBackgroundService();
-        startBackupDataChangeListenerBackgroundService();
         startWarningBackgroundService();
         if (isFirstRun()) {
             declareFirstRunConsumed();
@@ -36,10 +34,6 @@ public class Application extends android.app.Application {
 
     private void startTrackingPlayerLifecycleBackgroundService() {
         startService(new Intent(this, LifecycleService.class));
-    }
-
-    private void startBackupDataChangeListenerBackgroundService() {
-        startService(new Intent(this, DataChangeListenerBackgroundService.class));
     }
 
     private void startWarningBackgroundService() {

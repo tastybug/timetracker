@@ -7,7 +7,6 @@
     <application
         android:name=".infrastructure.runtime.Application"
         android:allowBackup="true"
-        android:backupAgent=".infrastructure.backup.OSFacingBackupAgentHandler"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.DayNight">
@@ -80,9 +79,6 @@
             android:name=".ui.trackingplayer.CallbackService"
             android:exported="false" />
         <service
-            android:name=".infrastructure.backup.DataChangeListenerBackgroundService"
-            android:exported="false" />
-        <service
             android:name=".ui.warn.WarningEventListenerService"
             android:exported="false" />
 
@@ -102,11 +98,6 @@
         <meta-data
             android:name="database.scripts.prefix.data"
             android:value="dml_" />
-
-        <!-- is bound to package name: com.tastybug.timetracker! -->
-        <meta-data
-            android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAI4NY7lBYy4bsP2CCmClPU0vxESyjDojQysxElAw" />
 
     </application>
 

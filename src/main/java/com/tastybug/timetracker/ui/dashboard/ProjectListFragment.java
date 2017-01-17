@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.infrastructure.backup.in.BackupRestoredEvent;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.dataexport.DataExportedEvent;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
@@ -35,7 +34,6 @@ public class ProjectListFragment extends ListFragment {
 
     private UpdateProjectListOnTrackingEventsHandler updateProjectListOnTrackingEventsHandler;
     private TestDataCreationHandler testDataCreationHandler;
-    private BackupRestoredHandler backupRestoredHandler;
     private ManualBackupReadyHandler manualBackupReadyHandler;
 
     @Override
@@ -51,7 +49,6 @@ public class ProjectListFragment extends ListFragment {
 
         updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
         testDataCreationHandler = new TestDataCreationHandler();
-        backupRestoredHandler = new BackupRestoredHandler();
         manualBackupReadyHandler = new ManualBackupReadyHandler();
     }
 
@@ -60,7 +57,6 @@ public class ProjectListFragment extends ListFragment {
         super.onPause();
         updateProjectListOnTrackingEventsHandler.stop();
         testDataCreationHandler.stop();
-        backupRestoredHandler.stop();
         manualBackupReadyHandler.stop();
     }
 
@@ -148,21 +144,6 @@ public class ProjectListFragment extends ListFragment {
         @Subscribe
         public void handleCheckOut(CheckOutEvent event) {
             ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
-        }
-    }
-
-    class BackupRestoredHandler extends AbstractOttoEventHandler {
-
-        @SuppressWarnings("unused")
-        @Subscribe
-        public void handleBackupRestored(BackupRestoredEvent event) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getActivity(), R.string.msg_backup_has_been_restored, Toast.LENGTH_LONG).show();
-                    setListAdapter(new ProjectListAdapter(getActivity()));
-                }
-            });
         }
     }
 
