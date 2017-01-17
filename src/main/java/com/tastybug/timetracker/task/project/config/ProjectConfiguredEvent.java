@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.task.project;
+package com.tastybug.timetracker.task.project.config;
 
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 

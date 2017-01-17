@@ -15,8 +15,8 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.Rounding;
-import com.tastybug.timetracker.task.project.ConfigureProjectTask;
-import com.tastybug.timetracker.task.project.ProjectConfiguredEvent;
+import com.tastybug.timetracker.task.project.config.ConfigureProjectTask;
+import com.tastybug.timetracker.task.project.config.ProjectConfiguredEvent;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
@@ -219,7 +219,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
     }
 
     private void saveChanges(String projectTitle, String description) {
-        ConfigureProjectTask.aTask(getActivity())
+        new ConfigureProjectTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withProjectTitle(projectTitle)
                 .withProjectDescription(description)
@@ -227,7 +227,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
     }
 
     private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, Boolean promptForDescription, Rounding.Strategy strategy) {
-        ConfigureProjectTask task = ConfigureProjectTask.aTask(getActivity())
+        ConfigureProjectTask task = new ConfigureProjectTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withHourLimit(hourLimit)
                 .withPromptForDescription(promptForDescription)

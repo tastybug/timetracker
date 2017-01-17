@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.task.project;
+package com.tastybug.timetracker.task.project.config;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -30,12 +30,17 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private static final String PROMPT_FOR_DESCRIPTION = "PROMPT_FOR_DESCRIPTION";
     private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
-    private ConfigureProjectTask(Context context) {
-        super(context);
+    private ProjectDAO projectDAO;
+    private TrackingConfigurationDAO trackingConfigurationDAO;
+
+    public ConfigureProjectTask(Context context) {
+        this(context, new ProjectDAO(context), new TrackingConfigurationDAO(context));
     }
 
-    public static ConfigureProjectTask aTask(Context context) {
-        return new ConfigureProjectTask(context);
+    ConfigureProjectTask(Context context, ProjectDAO projectDAO, TrackingConfigurationDAO trackingConfigurationDAO) {
+        super(context);
+        this.projectDAO = projectDAO;
+        this.trackingConfigurationDAO = trackingConfigurationDAO;
     }
 
     public ConfigureProjectTask withProjectUuid(String uuid) {
@@ -53,9 +58,17 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         return this;
     }
 
+    public ConfigureProjectTask withoutProjectDescription() {
+        return withProjectDescription(null);
+    }
+
     public ConfigureProjectTask withHourLimit(Integer hourLimit) {
         arguments.putSerializable(HOUR_LIMIT, hourLimit);
         return this;
+    }
+
+    public ConfigureProjectTask withoutHourLimit() {
+        return withHourLimit(null);
     }
 
     public ConfigureProjectTask withStartDate(Date date) {
@@ -85,8 +98,6 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
 
     @Override
     protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
-        ProjectDAO projectDAO = new ProjectDAO(context);
-        TrackingConfigurationDAO trackingConfigurationDAO = new TrackingConfigurationDAO(context);
         Project project = projectDAO.get(args.getString(PROJECT_UUID)).get();
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
 
@@ -131,7 +142,6 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
         logInfo(getClass().getSimpleName(), "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
         ottoProvider.getSharedBus().post(new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID)));
     }
-
 }
 
 
