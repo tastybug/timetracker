@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.task.dataexport.CreateDataExportTask;
+import com.tastybug.timetracker.task.dataexport.ExportDataTask;
 
 public class ConfirmManualBackupCreationFragment extends DialogFragment {
 
@@ -26,7 +26,7 @@ public class ConfirmManualBackupCreationFragment extends DialogFragment {
                 .setMessage(getDialogMessage())
                 .setPositiveButton(R.string.manual_backup_submit_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new CreateDataExportTask(getActivity()).execute();
+                        new ExportDataTask(getActivity()).run();
                         dismiss();
                     }
                 })

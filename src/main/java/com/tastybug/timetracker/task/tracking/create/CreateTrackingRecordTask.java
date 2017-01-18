@@ -1,22 +1,21 @@
-package com.tastybug.timetracker.task.tracking;
+package com.tastybug.timetracker.task.tracking.create;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
-
-public class CreateTrackingRecordTask extends AbstractAsyncTask {
+public class CreateTrackingRecordTask extends TaskPayload {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String START_DATE = "START_DATE";
@@ -25,12 +24,8 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
 
     private TrackingRecord trackingRecord;
 
-    private CreateTrackingRecordTask(Context context) {
-        super(context);
-    }
-
-    public static CreateTrackingRecordTask aTask(Context context) {
-        return new CreateTrackingRecordTask(context);
+    public CreateTrackingRecordTask(Context context) {
+        super(context, new OttoProvider());
     }
 
     public CreateTrackingRecordTask withProjectUuid(String projectUuid) {
@@ -54,7 +49,14 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
+    protected void validate() throws IllegalArgumentException, NullPointerException {
+        Preconditions.checkArgument(arguments.containsKey(PROJECT_UUID)
+                && arguments.containsKey(START_DATE)
+                && arguments.containsKey(END_DATE));
+    }
+
+    @Override
+    protected List<ContentProviderOperation> prepareBatchOperations() {
         trackingRecord = new TrackingRecord(arguments.getString(PROJECT_UUID));
         trackingRecord.setStart((Date) arguments.getSerializable(START_DATE));
         trackingRecord.setEnd((Date) arguments.getSerializable(END_DATE));
@@ -62,18 +64,11 @@ public class CreateTrackingRecordTask extends AbstractAsyncTask {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
 
-        return Arrays.asList(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
+        return Collections.singletonList(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
     }
 
     @Override
-    protected void validateArguments() throws NullPointerException {
-        Preconditions.checkArgument(arguments.containsKey(PROJECT_UUID)
-                && arguments.containsKey(START_DATE)
-                && arguments.containsKey(END_DATE));
-    }
-
-    protected void onPostExecute(Long result) {
-        logInfo(getClass().getSimpleName(), "Created tracking record " + trackingRecord);
-        ottoProvider.getSharedBus().post(new CreatedTrackingRecordEvent(trackingRecord));
+    protected OttoEvent preparePostEvent() {
+        return new CreatedTrackingRecordEvent(trackingRecord);
     }
 }

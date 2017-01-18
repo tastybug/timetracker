@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.task.tracking.DeleteTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.delete.DeleteTrackingRecordTask;
 
 public class ConfirmDeleteTrackingRecordDialogFragment extends DialogFragment {
 
@@ -43,9 +43,9 @@ public class ConfirmDeleteTrackingRecordDialogFragment extends DialogFragment {
                 .setMessage(R.string.msg_delete_tracking_record)
                 .setPositiveButton(R.string.button_delete_tracking_record, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        DeleteTrackingRecordTask.aTask(getActivity())
+                        new DeleteTrackingRecordTask(getActivity())
                                 .withTrackingRecordUuid(trackingRecordUuid)
-                                .execute();
+                                .run();
                     }
                 })
                 .setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {

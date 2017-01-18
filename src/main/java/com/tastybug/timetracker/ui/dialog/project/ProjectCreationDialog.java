@@ -88,7 +88,7 @@ public class ProjectCreationDialog extends DialogFragment {
     private void startProjectCreation() {
         new CreateProjectTask(getActivity())
                 .withProjectTitle(getTitleFromWidget(false).get())
-                .execute();
+                .run();
     }
 
     @SuppressWarnings("unused")

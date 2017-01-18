@@ -1,28 +1,23 @@
-package com.tastybug.timetracker.task.tracking;
+package com.tastybug.timetracker.task.tracking.delete;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 
 import java.util.Collections;
 import java.util.List;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
-
-public class DeleteTrackingRecordTask extends AbstractAsyncTask {
+public class DeleteTrackingRecordTask extends TaskPayload {
 
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
 
-    private DeleteTrackingRecordTask(Context context) {
-        super(context);
-    }
-
-    public static DeleteTrackingRecordTask aTask(Context context) {
-        return new DeleteTrackingRecordTask(context);
+    public DeleteTrackingRecordTask(Context context) {
+        super(context, new OttoProvider());
     }
 
     public DeleteTrackingRecordTask withTrackingRecordUuid(String uuid) {
@@ -31,21 +26,21 @@ public class DeleteTrackingRecordTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void validateArguments() throws NullPointerException {
+    protected void validate() throws IllegalArgumentException, NullPointerException {
         Preconditions.checkNotNull(arguments.getString(TRACKING_RECORD_UUID));
     }
 
     @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
+    protected List<ContentProviderOperation> prepareBatchOperations() {
         String uuid = arguments.getString(TRACKING_RECORD_UUID);
         new TrackingRecordDAO(context).delete(uuid);
 
         return Collections.emptyList();
     }
 
-    protected void onPostExecute(Long result) {
+    @Override
+    protected OttoEvent preparePostEvent() {
         String uuid = arguments.getString(TRACKING_RECORD_UUID);
-        logInfo(getClass().getSimpleName(), "Deleted tracking record " + uuid);
-        ottoProvider.getSharedBus().post(new DeletedTrackingRecordEvent(uuid));
+        return new DeletedTrackingRecordEvent(uuid);
     }
 }

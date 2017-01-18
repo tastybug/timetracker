@@ -7,10 +7,10 @@ import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
-import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
-import com.tastybug.timetracker.task.tracking.CheckInEvent;
-import com.tastybug.timetracker.task.tracking.CheckOutEvent;
-import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.project.delete.ProjectDeletedEvent;
+import com.tastybug.timetracker.task.tracking.checkin.CheckInEvent;
+import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
+import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.trackingplayer.internal.NotificationModel;
 
 /**

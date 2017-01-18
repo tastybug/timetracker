@@ -34,7 +34,7 @@ public class ManualBackupImportLandingActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplication(), R.string.data_import_starting, Toast.LENGTH_LONG).show();
-                        new ImportDataTask(getApplication()).withDataUri(getIntent().getData()).execute();
+                        new ImportDataTask(getApplication()).withDataUri(getIntent().getData()).run();
                     }
                 })
                 .setNegativeButton(R.string.common_discard, new DialogInterface.OnClickListener() {

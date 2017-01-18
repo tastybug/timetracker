@@ -9,7 +9,7 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.statistics.ProjectDuration;
-import com.tastybug.timetracker.task.tracking.CheckInTask;
+import com.tastybug.timetracker.task.tracking.checkin.CheckInTask;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.ConfirmCheckInViolatesConfigurationDialog;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class CheckInPreconditionCheckDelegate {
         } else if (blameProjectAmountViolation(project)) {
             return;
         } else {
-            CheckInTask.aTask(activity).withProjectUuid(project.getUuid()).execute();
+            new CheckInTask(activity).withProjectUuid(project.getUuid()).run();
         }
     }
 

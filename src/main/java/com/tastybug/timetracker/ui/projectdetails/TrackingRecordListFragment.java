@@ -15,9 +15,9 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.DeletedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.delete.DeletedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationActivity;
 
@@ -27,6 +27,14 @@ public class TrackingRecordListFragment extends ListFragment {
 
     private Handler uiUpdateHandler = new Handler();
     private Optional<String> projectUuidOpt;
+    private Runnable updateUITask = new Runnable() {
+        public void run() {
+            if (getListAdapter() != null) {
+                ((TrackingRecordListAdapter) getListAdapter()).notifyDataSetChanged();
+            }
+            uiUpdateHandler.postDelayed(updateUITask, 1000);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,13 +150,4 @@ public class TrackingRecordListFragment extends ListFragment {
         //
         new OttoProvider().getSharedBus().unregister(this);
     }
-
-    private Runnable updateUITask = new Runnable() {
-        public void run() {
-            if (getListAdapter() != null) {
-                ((TrackingRecordListAdapter) getListAdapter()).notifyDataSetChanged();
-            }
-            uiUpdateHandler.postDelayed(updateUITask, 1000);
-        }
-    };
 }

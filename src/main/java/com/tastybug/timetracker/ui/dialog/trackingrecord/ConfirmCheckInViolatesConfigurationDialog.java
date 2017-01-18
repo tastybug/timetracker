@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.task.tracking.CheckInTask;
+import com.tastybug.timetracker.task.tracking.checkin.CheckInTask;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
@@ -74,9 +74,9 @@ public class ConfirmCheckInViolatesConfigurationDialog extends DialogFragment {
         builder.setMessage(getMessage())
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        CheckInTask.aTask(getActivity())
+                        new CheckInTask(getActivity())
                                 .withProjectUuid(projectUuid)
-                                .execute();
+                                .run();
                     }
                 })
                 .setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {

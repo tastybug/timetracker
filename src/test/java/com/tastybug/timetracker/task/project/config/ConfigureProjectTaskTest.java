@@ -1,12 +1,10 @@
 package com.tastybug.timetracker.task.project.config;
 
 import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.squareup.otto.Bus;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
@@ -17,7 +15,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -35,16 +32,17 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class ConfigureProjectTaskTest {
 
-
-    private Context context = mock(Context.class);
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
     private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
+    ConfigureProjectTask subject = new ConfigureProjectTask(mock(Context.class),
+            mock(OttoProvider.class),
+            projectDAO,
+            trackingConfigurationDAO).withProjectUuid("1");
     private Project project = new Project("1", "title", Optional.<String>absent());
     private TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1");
 
     @Before
     public void setup() {
-        when(context.getContentResolver()).thenReturn(mock(ContentResolver.class));
         when(projectDAO.get(project.getUuid())).thenReturn(Optional.of(project));
         when(trackingConfigurationDAO.getByProjectUuid(project.getUuid())).thenReturn(Optional.of(trackingConfiguration));
         when(projectDAO.getBatchUpdate(any(Project.class))).thenReturn(mock(ContentProviderOperation.class));
@@ -54,20 +52,19 @@ public class ConfigureProjectTaskTest {
     @Test(expected = NullPointerException.class)
     public void validateArguments_yields_NPE_on_null_project_uuid() {
         // given
-        ConfigureProjectTask task = new ConfigureProjectTask(context);
+        ConfigureProjectTask task = new ConfigureProjectTask(mock(Context.class),
+                mock(OttoProvider.class),
+                projectDAO,
+                trackingConfigurationDAO);
 
         // expect
-        task.execute();
+        task.validate();
     }
 
     @Test
-    public void every_run_leads_to_update_of_project_and_tracking_configuration() {
-        // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        subject = subject.withProjectUuid("1");
-
+    public void prepareBatchOperations_leads_to_update_of_project_and_tracking_configuration() {
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         verify(projectDAO).getBatchUpdate(isA(Project.class));
@@ -75,33 +72,24 @@ public class ConfigureProjectTaskTest {
     }
 
     @Test
-    public void every_run_leads_is_announced_via_otto_event_that_points_to_affected_project() {
-        // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        OttoProvider ottoProvider = mock(OttoProvider.class);
-        Bus bus = mock(Bus.class);
-        when(ottoProvider.getSharedBus()).thenReturn(bus);
-        subject = subject.withProjectUuid("1");
-        subject.setOttoProvider(ottoProvider);
-
+    public void preparePostEvent_returns_event_containing_affected_project_uuid() {
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
+
+        // and
+        ProjectConfiguredEvent event = (ProjectConfiguredEvent) subject.preparePostEvent();
 
         // then
-        ArgumentCaptor<ProjectConfiguredEvent> savedCaptor = ArgumentCaptor.forClass(ProjectConfiguredEvent.class);
-        verify(bus).post(savedCaptor.capture());
-        assertEquals("1", savedCaptor.getValue().getProjectUuid());
+        assertEquals(project.getUuid(), event.getProjectUuid());
     }
 
     @Test
     public void can_change_project_title() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        subject = subject.withProjectUuid("1")
-                .withProjectTitle("some other title");
+        subject = subject.withProjectTitle("some other title");
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertEquals(project.getTitle(), "some other title");
@@ -110,12 +98,10 @@ public class ConfigureProjectTaskTest {
     @Test
     public void can_change_project_description() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        subject = subject.withProjectUuid("1")
-                .withProjectDescription("new description");
+        subject = subject.withProjectDescription("new description");
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertEquals(project.getDescription().get(), "new description");
@@ -124,12 +110,10 @@ public class ConfigureProjectTaskTest {
     @Test
     public void can_remove_project_description() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        subject = subject.withProjectUuid("1")
-                .withoutProjectDescription();
+        subject = subject.withoutProjectDescription();
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertFalse(project.getDescription().isPresent());
@@ -138,12 +122,10 @@ public class ConfigureProjectTaskTest {
     @Test
     public void can_alter_hour_limit() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        subject = subject.withProjectUuid("1")
-                .withHourLimit(133337);
+        subject = subject.withHourLimit(133337);
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertEquals(133337, (long) trackingConfiguration.getHourLimit().get());
@@ -152,12 +134,10 @@ public class ConfigureProjectTaskTest {
     @Test
     public void can_remove_hour_limit() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        subject = subject.withProjectUuid("1")
-                .withoutHourLimit();
+        subject = subject.withoutHourLimit();
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertFalse(trackingConfiguration.getHourLimit().isPresent());
@@ -166,12 +146,10 @@ public class ConfigureProjectTaskTest {
     @Test
     public void can_alter_start_date() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
-        subject = subject.withProjectUuid("1")
-                .withStartDate(new Date(5));
+        subject = subject.withStartDate(new Date(5));
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertEquals(new Date(5), trackingConfiguration.getStart().get());
@@ -180,13 +158,11 @@ public class ConfigureProjectTaskTest {
     @Test
     public void can_alter_end_date() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
         DateTime inclusiveEndDate = new DateTime(1000000);
-        subject = subject.withProjectUuid("1")
-                .withInclusiveEndDate(inclusiveEndDate.toDate());
+        subject = subject.withInclusiveEndDate(inclusiveEndDate.toDate());
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertEquals(inclusiveEndDate.plusDays(1).toDate(), trackingConfiguration.getEnd().get());
@@ -195,13 +171,11 @@ public class ConfigureProjectTaskTest {
     @Test
     public void can_alter_prompt_for_description() {
         // given
-        ConfigureProjectTask subject = new ConfigureProjectTask(context, projectDAO, trackingConfigurationDAO);
         boolean newState = !trackingConfiguration.isPromptForDescription();
-        subject = subject.withProjectUuid("1")
-                .withPromptForDescription(newState);
+        subject = subject.withPromptForDescription(newState);
 
         // when
-        subject.execute();
+        subject.prepareBatchOperations();
 
         // then
         assertEquals(newState, trackingConfiguration.isPromptForDescription());

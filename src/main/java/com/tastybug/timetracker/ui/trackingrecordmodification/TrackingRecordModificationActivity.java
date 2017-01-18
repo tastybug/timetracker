@@ -14,11 +14,11 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.DeletedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.create.CreateTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.delete.DeletedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.modify.ModifyTrackingRecordTask;
 import com.tastybug.timetracker.ui.core.BaseActivity;
 import com.tastybug.timetracker.ui.dialog.navigation.ConfirmBackpressDialogFragment;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.ConfirmDeleteTrackingRecordDialogFragment;
@@ -126,10 +126,10 @@ public class TrackingRecordModificationActivity extends BaseActivity {
         if (isConfigurationValid()) {
             if (trackingRecordUuidOpt.isPresent()) {
                 ModifyTrackingRecordTask task = buildTrackingRecordModificationTask();
-                task.execute();
+                task.run();
             } else {
                 CreateTrackingRecordTask task = buildTrackingRecordCreationTask();
-                task.execute();
+                task.run();
             }
         }
     }
@@ -149,7 +149,7 @@ public class TrackingRecordModificationActivity extends BaseActivity {
     private ModifyTrackingRecordTask buildTrackingRecordModificationTask() {
         TrackingRecordModificationFragment configurationFragment = getTrackingRecordModificationFragment();
 
-        ModifyTrackingRecordTask task = ModifyTrackingRecordTask.aTask(this).withTrackingRecordUuid(trackingRecordUuidOpt.get());
+        ModifyTrackingRecordTask task = new ModifyTrackingRecordTask(this).withTrackingRecordUuid(trackingRecordUuidOpt.get());
         task = configurationFragment.collectModificationsForEdit(task);
 
         return task;
@@ -158,7 +158,7 @@ public class TrackingRecordModificationActivity extends BaseActivity {
     private CreateTrackingRecordTask buildTrackingRecordCreationTask() {
         TrackingRecordModificationFragment configurationFragment = getTrackingRecordModificationFragment();
 
-        CreateTrackingRecordTask task = CreateTrackingRecordTask.aTask(this).withProjectUuid(projectUuidOpt.get());
+        CreateTrackingRecordTask task = new CreateTrackingRecordTask(this).withProjectUuid(projectUuidOpt.get());
         task = configurationFragment.collectModificationsForCreate(task);
         return task;
     }

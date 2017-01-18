@@ -2,24 +2,23 @@ package com.tastybug.timetracker.task.project.config;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.Rounding;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
-
-public class ConfigureProjectTask extends AbstractAsyncTask {
+public class ConfigureProjectTask extends TaskPayload {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
@@ -34,11 +33,11 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     private TrackingConfigurationDAO trackingConfigurationDAO;
 
     public ConfigureProjectTask(Context context) {
-        this(context, new ProjectDAO(context), new TrackingConfigurationDAO(context));
+        this(context, new OttoProvider(), new ProjectDAO(context), new TrackingConfigurationDAO(context));
     }
 
-    ConfigureProjectTask(Context context, ProjectDAO projectDAO, TrackingConfigurationDAO trackingConfigurationDAO) {
-        super(context);
+    ConfigureProjectTask(Context context, OttoProvider ottoProvider, ProjectDAO projectDAO, TrackingConfigurationDAO trackingConfigurationDAO) {
+        super(context, ottoProvider);
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
     }
@@ -92,13 +91,13 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void validateArguments() throws NullPointerException {
+    protected void validate() throws IllegalArgumentException, NullPointerException {
         Preconditions.checkNotNull(arguments.getString(PROJECT_UUID));
     }
 
     @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
-        Project project = projectDAO.get(args.getString(PROJECT_UUID)).get();
+    protected List<ContentProviderOperation> prepareBatchOperations() {
+        Project project = projectDAO.get(arguments.getString(PROJECT_UUID)).get();
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
 
         if (arguments.containsKey(PROJECT_TITLE)) {
@@ -138,9 +137,9 @@ public class ConfigureProjectTask extends AbstractAsyncTask {
                 trackingConfigurationDAO.getBatchUpdate(trackingConfiguration));
     }
 
-    protected void onPostExecute(Long result) {
-        logInfo(getClass().getSimpleName(), "Configured project with UUID " + arguments.getString(PROJECT_UUID) + " with arguments: " + arguments);
-        ottoProvider.getSharedBus().post(new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID)));
+    @Override
+    protected OttoEvent preparePostEvent() {
+        return new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID));
     }
 }
 

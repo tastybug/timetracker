@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
-import com.tastybug.timetracker.task.tracking.CheckOutEvent;
+import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
 import com.tastybug.timetracker.ui.warn.completion.CompletionWarningService;
 import com.tastybug.timetracker.ui.warn.expiration.ExpirationWarningService;
 

@@ -3,12 +3,13 @@ package com.tastybug.timetracker.task.dataimport;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Bundle;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.json.JSONUnMarshallingBuilder;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 import com.tastybug.timetracker.util.ConditionalLog;
 
 import org.json.JSONException;
@@ -19,10 +20,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
-
-public class ImportDataTask extends AbstractAsyncTask {
+public class ImportDataTask extends TaskPayload {
 
     private static final String DATA_URI = "DATA_URI";
 
@@ -33,6 +32,7 @@ public class ImportDataTask extends AbstractAsyncTask {
 
     public ImportDataTask(Context context) {
         this(context,
+                new OttoProvider(),
                 new DbWipeBatchOpsProvider(context),
                 new DbImportBatchOpsProvider(context),
                 new UriToByteArrayHelper(context.getContentResolver()),
@@ -40,11 +40,12 @@ public class ImportDataTask extends AbstractAsyncTask {
     }
 
     ImportDataTask(Context context,
+                   OttoProvider ottoProvider,
                    DbWipeBatchOpsProvider dbWipeBatchOpsProvider,
                    DbImportBatchOpsProvider dbImportBatchOpsProvider,
                    UriToByteArrayHelper uriToByteArrayHelper,
                    JSONUnMarshallingBuilder jsonUnMarshallingBuilder) {
-        super(context);
+        super(context, ottoProvider);
         this.dbWipeBatchOpsProvider = dbWipeBatchOpsProvider;
         this.dbImportBatchOpsProvider = dbImportBatchOpsProvider;
         this.uriToByteArrayHelper = uriToByteArrayHelper;
@@ -55,27 +56,6 @@ public class ImportDataTask extends AbstractAsyncTask {
         Preconditions.checkNotNull(dataUri);
         arguments.putParcelable(DATA_URI, dataUri);
         return this;
-    }
-
-    @Override
-    protected void validateArguments() throws NullPointerException {
-        Preconditions.checkNotNull(arguments.getParcelable(DATA_URI));
-    }
-
-    @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
-        byte[] data = getRawData();
-        List<Project> importableProjects = convertDataToImportableProjects(data);
-        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
-        operations.addAll(dbWipeBatchOpsProvider.getOperations());
-        operations.addAll(dbImportBatchOpsProvider.getOperations(importableProjects));
-
-        return operations;
-    }
-
-    protected void onPostExecute(Long result) {
-        logInfo(getClass().getSimpleName(), "Imported data from " + arguments.getSerializable(DATA_URI));
-        ottoProvider.getSharedBus().post(new ImportedDataEvent());
     }
 
     private byte[] getRawData() {
@@ -95,5 +75,26 @@ public class ImportDataTask extends AbstractAsyncTask {
             ConditionalLog.logError(getClass().getSimpleName(), "Failed to import data.", e);
             throw new RuntimeException("Failed to import data.", e);
         }
+    }
+
+    @Override
+    protected void validate() throws IllegalArgumentException, NullPointerException {
+        Preconditions.checkNotNull(arguments.getParcelable(DATA_URI));
+    }
+
+    @Override
+    protected List<ContentProviderOperation> prepareBatchOperations() {
+        byte[] data = getRawData();
+        List<Project> importableProjects = convertDataToImportableProjects(data);
+        ArrayList<ContentProviderOperation> operations = new ArrayList<>();
+        operations.addAll(dbWipeBatchOpsProvider.getOperations());
+        operations.addAll(dbImportBatchOpsProvider.getOperations(importableProjects));
+
+        return operations;
+    }
+
+    @Override
+    protected OttoEvent preparePostEvent() {
+        return new ImportedDataEvent();
     }
 }

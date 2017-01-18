@@ -2,9 +2,10 @@ package com.tastybug.timetracker.task.testdata;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
@@ -12,7 +13,7 @@ import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.rounding.Rounding;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -21,16 +22,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
-
-public class TestDataGenerationTask extends AbstractAsyncTask {
+public class TestDataGenerationTask extends TaskPayload {
 
     public TestDataGenerationTask(Context context) {
-        super(context);
+        super(context, new OttoProvider());
     }
 
     @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
+    protected void validate() throws IllegalArgumentException, NullPointerException {
+    }
+
+    @Override
+    protected List<ContentProviderOperation> prepareBatchOperations() {
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
 
         operations.addAll(createProjectWithLoooongTitle());
@@ -46,13 +49,9 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
         return operations;
     }
 
-    protected void onPostExecute(Long result) {
-        logInfo(getClass().getSimpleName(), "Created test data");
-        ottoProvider.getSharedBus().post(new TestdataGeneratedEvent());
-    }
-
     @Override
-    protected void validateArguments() throws NullPointerException {
+    protected OttoEvent preparePostEvent() {
+        return new TestDataGeneratedEvent();
     }
 
     private List<ContentProviderOperation> createProjectWithLoooongTitle() {
@@ -172,4 +171,5 @@ public class TestDataGenerationTask extends AbstractAsyncTask {
                 new TrackingConfigurationDAO(context).getBatchCreate(trackingConfiguration),
                 new TrackingRecordDAO(context).getBatchCreate(record));
     }
+
 }

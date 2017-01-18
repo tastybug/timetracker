@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.task.dataexport;
 
+import com.google.common.base.MoreObjects;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 
 public class DataExportedEvent implements OttoEvent {
@@ -12,5 +13,11 @@ public class DataExportedEvent implements OttoEvent {
 
     public byte[] getData() {
         return data;
+    }
+
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("dataLength", getData().length)
+                .toString();
     }
 }

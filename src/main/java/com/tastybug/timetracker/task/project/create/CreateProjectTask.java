@@ -2,22 +2,21 @@ package com.tastybug.timetracker.task.project.create;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
-
-public class CreateProjectTask extends AbstractAsyncTask {
+public class CreateProjectTask extends TaskPayload {
 
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
 
@@ -29,6 +28,7 @@ public class CreateProjectTask extends AbstractAsyncTask {
 
     public CreateProjectTask(Context context) {
         this(context,
+                new OttoProvider(),
                 new ProjectDAO(context),
                 new TrackingConfigurationDAO(context),
                 new ProjectFactory(),
@@ -36,11 +36,12 @@ public class CreateProjectTask extends AbstractAsyncTask {
     }
 
     CreateProjectTask(Context context,
+                      OttoProvider ottoProvider,
                       ProjectDAO projectDAO,
                       TrackingConfigurationDAO trackingConfigurationDAO,
                       ProjectFactory projectFactory,
                       TrackingConfigurationFactory trackingConfigurationFactory) {
-        super(context);
+        super(context, ottoProvider);
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
         this.projectFactory = projectFactory;
@@ -53,21 +54,21 @@ public class CreateProjectTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void validateArguments() throws NullPointerException {
+    protected void validate() throws IllegalArgumentException, NullPointerException {
         Preconditions.checkNotNull(arguments.getString(PROJECT_TITLE));
     }
 
     @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
-        project = projectFactory.aProject(args.getString(PROJECT_TITLE));
+    protected List<ContentProviderOperation> prepareBatchOperations() {
+        project = projectFactory.aProject(arguments.getString(PROJECT_TITLE));
         TrackingConfiguration trackingConfiguration = trackingConfigurationFactory.aTrackingConfiguration(project.getUuid());
 
         return Arrays.asList(projectDAO.getBatchCreate(project),
                 trackingConfigurationDAO.getBatchCreate(trackingConfiguration));
     }
 
-    protected void onPostExecute(Long result) {
-        logInfo(getClass().getSimpleName(), "Created project " + project);
-        ottoProvider.getSharedBus().post(new ProjectCreatedEvent(project));
+    @Override
+    protected OttoEvent preparePostEvent() {
+        return new ProjectCreatedEvent(project);
     }
 }

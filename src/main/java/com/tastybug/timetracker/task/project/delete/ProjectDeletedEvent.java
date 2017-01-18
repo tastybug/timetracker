@@ -1,5 +1,6 @@
-package com.tastybug.timetracker.task.project;
+package com.tastybug.timetracker.task.project.delete;
 
+import com.google.common.base.MoreObjects;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 
 public class ProjectDeletedEvent implements OttoEvent {
@@ -12,5 +13,11 @@ public class ProjectDeletedEvent implements OttoEvent {
 
     public String getProjectUuid() {
         return projectUuid;
+    }
+
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("projectUuid", getProjectUuid())
+                .toString();
     }
 }

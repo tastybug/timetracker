@@ -13,7 +13,7 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.statistics.ProjectDuration;
-import com.tastybug.timetracker.task.project.DeleteProjectTask;
+import com.tastybug.timetracker.task.project.delete.DeleteProjectTask;
 import com.tastybug.timetracker.ui.util.LocalizedDurationFormatter;
 
 import org.joda.time.Duration;
@@ -64,7 +64,7 @@ public class ConfirmDeleteProjectDialogFragment extends DialogFragment {
                 .setMessage(getDialogMessage(project))
                 .setPositiveButton(R.string.button_delete_project, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new DeleteProjectTask(getActivity()).withProjectUuid(project.getUuid()).execute();
+                        new DeleteProjectTask(getActivity()).withProjectUuid(project.getUuid()).run();
                     }
                 })
                 .setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {

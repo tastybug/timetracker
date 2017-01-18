@@ -15,11 +15,11 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.tracking.CheckInEvent;
-import com.tastybug.timetracker.task.tracking.CheckOutEvent;
-import com.tastybug.timetracker.task.tracking.CheckOutTask;
-import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.checkin.CheckInEvent;
+import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
+import com.tastybug.timetracker.task.tracking.checkout.CheckOutTask;
+import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.delegate.CheckInPreconditionCheckDelegate;
 
 public class TrackingControlPanelFragment extends Fragment implements View.OnClickListener {
@@ -65,7 +65,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         String projectUuid = currentProjectOpt.get().getUuid();
         Optional<TrackingRecord> ongoing = new TrackingRecordDAO(getActivity()).getRunning(projectUuid);
         if (ongoing.isPresent()) {
-            CheckOutTask.aTask(getActivity()).withProjectUuid(projectUuid).execute();
+            new CheckOutTask(getActivity()).withProjectUuid(projectUuid).run();
         } else {
             CheckInPreconditionCheckDelegate.aDelegate(getActivity()).startTracking(currentProjectOpt.get());
         }

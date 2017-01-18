@@ -1,23 +1,22 @@
-package com.tastybug.timetracker.task.tracking;
+package com.tastybug.timetracker.task.tracking.modify;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
-
-public class ModifyTrackingRecordTask extends AbstractAsyncTask {
+public class ModifyTrackingRecordTask extends TaskPayload {
 
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
     private static final String START_DATE = "START_DATE";
@@ -27,12 +26,8 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
     private TrackingRecord trackingRecord;
     private boolean wasStopped = false;
 
-    private ModifyTrackingRecordTask(Context context) {
-        super(context);
-    }
-
-    public static ModifyTrackingRecordTask aTask(Context context) {
-        return new ModifyTrackingRecordTask(context);
+    public ModifyTrackingRecordTask(Context context) {
+        super(context, new OttoProvider());
     }
 
     public ModifyTrackingRecordTask withTrackingRecordUuid(String trackingRecordUuid) {
@@ -56,12 +51,12 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
     }
 
     @Override
-    protected void validateArguments() throws NullPointerException {
+    protected void validate() throws IllegalArgumentException, NullPointerException {
         Preconditions.checkArgument(!TextUtils.isEmpty(arguments.getString(TRACKING_RECORD_UUID)));
     }
 
     @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
+    protected List<ContentProviderOperation> prepareBatchOperations() {
         String trackingRecordUuid = arguments.getString(TRACKING_RECORD_UUID);
         trackingRecord = new TrackingRecordDAO(context).get(trackingRecordUuid).get();
 
@@ -76,12 +71,11 @@ public class ModifyTrackingRecordTask extends AbstractAsyncTask {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
 
-        return Arrays.asList(new TrackingRecordDAO(context).getBatchUpdate(trackingRecord));
+        return Collections.singletonList(new TrackingRecordDAO(context).getBatchUpdate(trackingRecord));
     }
 
-    protected void onPostExecute(Long result) {
-        logInfo(getClass().getSimpleName(), "Modified tracking record " + trackingRecord);
-        ottoProvider.getSharedBus().post(new ModifiedTrackingRecordEvent(trackingRecord, wasStopped));
+    @Override
+    protected OttoEvent preparePostEvent() {
+        return new ModifiedTrackingRecordEvent(trackingRecord, wasStopped);
     }
-
 }

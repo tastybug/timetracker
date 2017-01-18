@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.task.project.ProjectDeletedEvent;
+import com.tastybug.timetracker.task.project.delete.ProjectDeletedEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.core.BaseActivity;
 import com.tastybug.timetracker.ui.dashboard.ProjectsActivity;

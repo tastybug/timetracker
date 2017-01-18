@@ -1,12 +1,10 @@
 package com.tastybug.timetracker.task.project.create;
 
 import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.squareup.otto.Bus;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
@@ -19,18 +17,18 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class CreateProjectTaskTest {
 
-    private Context context = mock(Context.class);
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
     private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
     private ProjectFactory projectFactory = mock(ProjectFactory.class);
@@ -38,7 +36,6 @@ public class CreateProjectTaskTest {
 
     @Before
     public void setup() {
-        when(context.getContentResolver()).thenReturn(mock(ContentResolver.class));
         when(projectFactory.aProject(anyString())).thenReturn(new Project(""));
         when(trackingConfigurationFactory.aTrackingConfiguration(anyString())).thenReturn(new TrackingConfiguration(""));
         when(projectDAO.getBatchCreate(any(Project.class))).thenReturn(mock(ContentProviderOperation.class));
@@ -46,48 +43,57 @@ public class CreateProjectTaskTest {
     }
 
     @Test
-    public void happyPath_creates_entities_and_prepares_batch_saves() {
+    public void prepareBatchOperations_returns_batch_saves_describing_created_entities() {
         // given
         Project project = new Project("a title");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid());
         when(projectFactory.aProject("a title")).thenReturn(project);
         when(trackingConfigurationFactory.aTrackingConfiguration(project.getUuid())).thenReturn(trackingConfiguration);
+        ContentProviderOperation operationForProject = mock(ContentProviderOperation.class);
+        when(projectDAO.getBatchCreate(any(Project.class))).thenReturn(operationForProject);
+        ContentProviderOperation operationForTrackingConfiguration = mock(ContentProviderOperation.class);
+        when(trackingConfigurationDAO.getBatchCreate(any(TrackingConfiguration.class))).thenReturn(operationForTrackingConfiguration);
 
         CreateProjectTask task = aTask().withProjectTitle("a title");
 
         // when
-        task.execute();
+        List<ContentProviderOperation> operationList = task.prepareBatchOperations();
 
-        // then: objects by factory are mapped to operations which in turn are run later on
-        verify(projectDAO).getBatchCreate(project);
-        verify(trackingConfigurationDAO).getBatchCreate(trackingConfiguration);
+        // then
+        assertEquals(2, operationList.size());
+
+        // and
+        assertEquals(operationList.get(0), (operationForProject));
+        assertEquals(operationList.get(1), operationForTrackingConfiguration);
     }
 
     @Test
-    public void happyPath_is_announced_via_otto() throws Exception {
+    public void preparePostEvent_returns_event_containing_created_project() throws Exception {
         // given
-        Bus ottoBus = mock(Bus.class);
-        OttoProvider ottoProvider = mock(OttoProvider.class);
-        when(ottoProvider.getSharedBus()).thenReturn(ottoBus);
+        Project createdProject = mock(Project.class);
         CreateProjectTask task = aTask().withProjectTitle("a title");
-        task.setOttoProvider(ottoProvider);
+        when(projectFactory.aProject("a title")).thenReturn(createdProject);
 
-        // when
-        task.execute();
+        // when: doing the actual work
+        task.prepareBatchOperations();
+
+        // and: preparing festivities
+        ProjectCreatedEvent event = (ProjectCreatedEvent) task.preparePostEvent();
 
         // then
-        verify(ottoBus).post(isA(ProjectCreatedEvent.class));
+        assertEquals(createdProject, event.getProject());
     }
 
     @Test(expected = NullPointerException.class)
-    public void lack_of_project_title_yields_NPE() {
+    public void validate_yields_NPE_on_missing_project_title() {
         // expect
-        aTask().execute();
+        aTask().validate();
     }
 
     @NonNull
     private CreateProjectTask aTask() {
-        return new CreateProjectTask(context,
+        return new CreateProjectTask(mock(Context.class),
+                mock(OttoProvider.class),
                 projectDAO,
                 trackingConfigurationDAO,
                 projectFactory,

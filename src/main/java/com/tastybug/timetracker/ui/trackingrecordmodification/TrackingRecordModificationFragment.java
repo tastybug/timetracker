@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.task.tracking.CreateTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.ModifyTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.create.CreateTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.modify.ModifyTrackingRecordTask;
 
 import java.util.Date;
 

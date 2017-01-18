@@ -1,12 +1,13 @@
-package com.tastybug.timetracker.task.project;
+package com.tastybug.timetracker.task.project.delete;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
-import com.tastybug.timetracker.task.AbstractAsyncTask;
+import com.tastybug.timetracker.task.TaskPayload;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,23 +15,19 @@ import java.util.List;
 import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 
-public class DeleteProjectTask extends AbstractAsyncTask {
+public class DeleteProjectTask extends TaskPayload {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
 
     private ProjectDAO projectDAO;
 
     public DeleteProjectTask(Context context) {
-        this(context, new ProjectDAO(context));
+        this(context, new OttoProvider(), new ProjectDAO(context));
     }
 
-    DeleteProjectTask(Context context, ProjectDAO projectDAO) {
-        super(context);
+    DeleteProjectTask(Context context, OttoProvider ottoProvider, ProjectDAO projectDAO) {
+        super(context, ottoProvider);
         this.projectDAO = projectDAO;
-    }
-
-    public static DeleteProjectTask aTask(Context context) {
-        return new DeleteProjectTask(context);
     }
 
     public DeleteProjectTask withProjectUuid(String uuid) {
@@ -38,14 +35,12 @@ public class DeleteProjectTask extends AbstractAsyncTask {
         return this;
     }
 
-    @Override
-    protected void validateArguments() throws NullPointerException {
+    protected void validate() throws IllegalArgumentException, NullPointerException {
         Preconditions.checkNotNull(arguments.getString(PROJECT_UUID));
     }
 
-    @Override
-    protected List<ContentProviderOperation> performBackgroundStuff(Bundle args) {
-        String projectUuidToDelete = args.getString(PROJECT_UUID);
+    protected List<ContentProviderOperation> prepareBatchOperations() {
+        String projectUuidToDelete = arguments.getString(PROJECT_UUID);
         boolean success = projectDAO.delete(projectUuidToDelete);
         if (!success) {
             throw new RuntimeException("Failed to delete project " + projectUuidToDelete);
@@ -54,9 +49,8 @@ public class DeleteProjectTask extends AbstractAsyncTask {
         return Collections.emptyList();
     }
 
-    protected void onPostExecute(Long result) {
+    protected OttoEvent preparePostEvent() {
         logInfo(getClass().getSimpleName(), "Deleted project " + arguments.getString(PROJECT_UUID));
-        ottoProvider.getSharedBus().post(new ProjectDeletedEvent(arguments.getString(PROJECT_UUID)));
+        return new ProjectDeletedEvent(arguments.getString(PROJECT_UUID));
     }
-
 }

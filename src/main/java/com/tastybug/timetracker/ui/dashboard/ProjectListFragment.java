@@ -15,12 +15,12 @@ import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.dataexport.DataExportedEvent;
+import com.tastybug.timetracker.task.testdata.TestDataGeneratedEvent;
 import com.tastybug.timetracker.task.testdata.TestDataGenerationTask;
-import com.tastybug.timetracker.task.testdata.TestdataGeneratedEvent;
-import com.tastybug.timetracker.task.tracking.CheckInEvent;
-import com.tastybug.timetracker.task.tracking.CheckOutEvent;
-import com.tastybug.timetracker.task.tracking.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.checkin.CheckInEvent;
+import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
+import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.ui.manualbackup.ConfirmManualBackupCreationFragment;
@@ -108,7 +108,7 @@ public class ProjectListFragment extends ListFragment {
     }
 
     private void generateTestdata() {
-        new TestDataGenerationTask(getActivity()).execute();
+        new TestDataGenerationTask(getActivity()).run();
     }
 
     private void showBackupDialog() {
@@ -171,7 +171,7 @@ public class ProjectListFragment extends ListFragment {
 
         @SuppressWarnings("unused")
         @Subscribe
-        public void handleTestdataGenerated(TestdataGeneratedEvent event) {
+        public void handleTestdataGenerated(TestDataGeneratedEvent event) {
             Toast.makeText(getActivity(), "DEBUG: Testdaten generiert!", Toast.LENGTH_LONG).show();
             setListAdapter(new ProjectListAdapter(getActivity()));
         }

@@ -223,18 +223,18 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
                 .withProjectUuid(projectUuid)
                 .withProjectTitle(projectTitle)
                 .withProjectDescription(description)
-                .execute();
+                .run();
     }
 
     private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, Boolean promptForDescription, Rounding.Strategy strategy) {
-        ConfigureProjectTask task = new ConfigureProjectTask(getActivity())
+        new ConfigureProjectTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withHourLimit(hourLimit)
                 .withPromptForDescription(promptForDescription)
-                .withRoundingStrategy(strategy);
-        task.withStartDate(startDateOpt.orNull());
-        task.withInclusiveEndDate(endDateInclusiveOpt.orNull());
-        task.execute();
+                .withRoundingStrategy(strategy)
+                .withStartDate(startDateOpt.orNull())
+                .withInclusiveEndDate(endDateInclusiveOpt.orNull())
+                .run();
     }
 
     @SuppressWarnings("unused")
