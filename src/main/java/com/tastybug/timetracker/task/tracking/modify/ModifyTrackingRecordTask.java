@@ -2,12 +2,10 @@ package com.tastybug.timetracker.task.tracking.modify;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.TaskPayload;
@@ -23,11 +21,17 @@ public class ModifyTrackingRecordTask extends TaskPayload {
     private static final String END_DATE = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
 
+    private TrackingRecordDAO trackingRecordDAO;
     private TrackingRecord trackingRecord;
     private boolean wasStopped = false;
 
     public ModifyTrackingRecordTask(Context context) {
-        super(context, new OttoProvider());
+        this(context, new TrackingRecordDAO(context));
+    }
+
+    ModifyTrackingRecordTask(Context context, TrackingRecordDAO trackingRecordDAO) {
+        super(context);
+        this.trackingRecordDAO = trackingRecordDAO;
     }
 
     public ModifyTrackingRecordTask withTrackingRecordUuid(String trackingRecordUuid) {
@@ -52,13 +56,13 @@ public class ModifyTrackingRecordTask extends TaskPayload {
 
     @Override
     protected void validate() throws IllegalArgumentException, NullPointerException {
-        Preconditions.checkArgument(!TextUtils.isEmpty(arguments.getString(TRACKING_RECORD_UUID)));
+        Preconditions.checkArgument(arguments.containsKey(TRACKING_RECORD_UUID));
     }
 
     @Override
     protected List<ContentProviderOperation> prepareBatchOperations() {
         String trackingRecordUuid = arguments.getString(TRACKING_RECORD_UUID);
-        trackingRecord = new TrackingRecordDAO(context).get(trackingRecordUuid).get();
+        trackingRecord = trackingRecordDAO.get(trackingRecordUuid).get();
 
         if (arguments.containsKey(START_DATE)) {
             trackingRecord.setStart((Date) arguments.getSerializable(START_DATE));
@@ -71,7 +75,7 @@ public class ModifyTrackingRecordTask extends TaskPayload {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
 
-        return Collections.singletonList(new TrackingRecordDAO(context).getBatchUpdate(trackingRecord));
+        return Collections.singletonList(trackingRecordDAO.getBatchUpdate(trackingRecord));
     }
 
     @Override

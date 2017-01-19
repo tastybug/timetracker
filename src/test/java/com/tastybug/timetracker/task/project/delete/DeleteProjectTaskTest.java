@@ -3,7 +3,6 @@ package com.tastybug.timetracker.task.project.delete;
 import android.content.Context;
 import android.os.Build;
 
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 
 import org.junit.Before;
@@ -30,7 +29,7 @@ public class DeleteProjectTaskTest {
     @Before
     public void setup() {
         when(projectDAO.delete(anyString())).thenReturn(true);
-        subject = new DeleteProjectTask(mock(Context.class), mock(OttoProvider.class), projectDAO).withProjectUuid(projectUuid);
+        subject = new DeleteProjectTask(mock(Context.class), projectDAO).withProjectUuid(projectUuid);
     }
 
     @Test
@@ -63,6 +62,6 @@ public class DeleteProjectTaskTest {
     @Test(expected = NullPointerException.class)
     public void validate_yields_NPE_without_given_project_uuid() {
         // expect
-        new DeleteProjectTask(mock(Context.class), mock(OttoProvider.class), projectDAO).validate();
+        new DeleteProjectTask(mock(Context.class), projectDAO).validate();
     }
 }

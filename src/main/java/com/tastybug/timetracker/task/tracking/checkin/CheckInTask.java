@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.TaskPayload;
@@ -21,11 +20,11 @@ public class CheckInTask extends TaskPayload {
     private TrackingRecord trackingRecord;
 
     public CheckInTask(Context context) {
-        this(context, new OttoProvider(), new TrackingRecordDAO(context));
+        this(context, new TrackingRecordDAO(context));
     }
 
-    CheckInTask(Context context, OttoProvider ottoProvider, TrackingRecordDAO trackingRecordDAO) {
-        super(context, ottoProvider);
+    CheckInTask(Context context, TrackingRecordDAO trackingRecordDAO) {
+        super(context);
         this.trackingRecordDAO = trackingRecordDAO;
     }
 

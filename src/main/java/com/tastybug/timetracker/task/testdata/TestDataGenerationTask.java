@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.TrackingRecord;
@@ -25,7 +24,7 @@ import java.util.List;
 public class TestDataGenerationTask extends TaskPayload {
 
     public TestDataGenerationTask(Context context) {
-        super(context, new OttoProvider());
+        super(context);
     }
 
     @Override

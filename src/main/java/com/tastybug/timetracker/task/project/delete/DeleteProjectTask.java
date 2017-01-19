@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.task.TaskPayload;
 
@@ -22,11 +21,11 @@ public class DeleteProjectTask extends TaskPayload {
     private ProjectDAO projectDAO;
 
     public DeleteProjectTask(Context context) {
-        this(context, new OttoProvider(), new ProjectDAO(context));
+        this(context, new ProjectDAO(context));
     }
 
-    DeleteProjectTask(Context context, OttoProvider ottoProvider, ProjectDAO projectDAO) {
-        super(context, ottoProvider);
+    DeleteProjectTask(Context context, ProjectDAO projectDAO) {
+        super(context);
         this.projectDAO = projectDAO;
     }
 

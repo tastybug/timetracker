@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
@@ -22,30 +21,20 @@ public class CreateProjectTask extends TaskPayload {
 
     private ProjectDAO projectDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
-    private ProjectFactory projectFactory;
-    private TrackingConfigurationFactory trackingConfigurationFactory;
     private Project project;
 
     public CreateProjectTask(Context context) {
         this(context,
-                new OttoProvider(),
                 new ProjectDAO(context),
-                new TrackingConfigurationDAO(context),
-                new ProjectFactory(),
-                new TrackingConfigurationFactory());
+                new TrackingConfigurationDAO(context));
     }
 
     CreateProjectTask(Context context,
-                      OttoProvider ottoProvider,
                       ProjectDAO projectDAO,
-                      TrackingConfigurationDAO trackingConfigurationDAO,
-                      ProjectFactory projectFactory,
-                      TrackingConfigurationFactory trackingConfigurationFactory) {
-        super(context, ottoProvider);
+                      TrackingConfigurationDAO trackingConfigurationDAO) {
+        super(context);
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
-        this.projectFactory = projectFactory;
-        this.trackingConfigurationFactory = trackingConfigurationFactory;
     }
 
     public CreateProjectTask withProjectTitle(String title) {
@@ -60,8 +49,8 @@ public class CreateProjectTask extends TaskPayload {
 
     @Override
     protected List<ContentProviderOperation> prepareBatchOperations() {
-        project = projectFactory.aProject(arguments.getString(PROJECT_TITLE));
-        TrackingConfiguration trackingConfiguration = trackingConfigurationFactory.aTrackingConfiguration(project.getUuid());
+        project = new Project(arguments.getString(PROJECT_TITLE));
+        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid());
 
         return Arrays.asList(projectDAO.getBatchCreate(project),
                 trackingConfigurationDAO.getBatchCreate(trackingConfiguration));

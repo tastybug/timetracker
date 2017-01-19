@@ -6,7 +6,6 @@ import android.content.Context;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
@@ -33,11 +32,11 @@ public class ConfigureProjectTask extends TaskPayload {
     private TrackingConfigurationDAO trackingConfigurationDAO;
 
     public ConfigureProjectTask(Context context) {
-        this(context, new OttoProvider(), new ProjectDAO(context), new TrackingConfigurationDAO(context));
+        this(context, new ProjectDAO(context), new TrackingConfigurationDAO(context));
     }
 
-    ConfigureProjectTask(Context context, OttoProvider ottoProvider, ProjectDAO projectDAO, TrackingConfigurationDAO trackingConfigurationDAO) {
-        super(context, ottoProvider);
+    ConfigureProjectTask(Context context, ProjectDAO projectDAO, TrackingConfigurationDAO trackingConfigurationDAO) {
+        super(context);
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
     }

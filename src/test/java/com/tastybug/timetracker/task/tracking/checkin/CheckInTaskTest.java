@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
@@ -30,10 +29,7 @@ import static org.mockito.Mockito.when;
 public class CheckInTaskTest {
 
     private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
-
-    private CheckInTask subject = new CheckInTask(mock(Context.class),
-            mock(OttoProvider.class),
-            trackingRecordDAO).withProjectUuid("1");
+    private CheckInTask subject = new CheckInTask(mock(Context.class), trackingRecordDAO).withProjectUuid("1");
 
     @Before
     public void setup() {
@@ -43,7 +39,7 @@ public class CheckInTaskTest {
     @Test(expected = IllegalArgumentException.class)
     public void validate_throws_IllegalArgumentException_on_missing_project_uuid() {
         // given
-        CheckInTask subject = new CheckInTask(mock(Context.class), mock(OttoProvider.class), trackingRecordDAO);
+        CheckInTask subject = new CheckInTask(mock(Context.class), trackingRecordDAO);
 
         // when
         subject.validate();

@@ -4,7 +4,6 @@ import android.content.ContentProviderOperation;
 import android.content.Context;
 
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.task.TaskPayload;
 
 import org.json.JSONException;
@@ -23,7 +22,7 @@ public class ExportDataTask extends TaskPayload {
     }
 
     ExportDataTask(Context context, DataExportCreator dataExportCreator) {
-        super(context, new OttoProvider());
+        super(context);
         this.dataExportCreator = dataExportCreator;
     }
 

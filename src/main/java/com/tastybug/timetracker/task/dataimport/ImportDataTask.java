@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.json.JSONUnMarshallingBuilder;
 import com.tastybug.timetracker.task.TaskPayload;
@@ -32,7 +31,6 @@ public class ImportDataTask extends TaskPayload {
 
     public ImportDataTask(Context context) {
         this(context,
-                new OttoProvider(),
                 new DbWipeBatchOpsProvider(context),
                 new DbImportBatchOpsProvider(context),
                 new UriToByteArrayHelper(context.getContentResolver()),
@@ -40,12 +38,11 @@ public class ImportDataTask extends TaskPayload {
     }
 
     ImportDataTask(Context context,
-                   OttoProvider ottoProvider,
                    DbWipeBatchOpsProvider dbWipeBatchOpsProvider,
                    DbImportBatchOpsProvider dbImportBatchOpsProvider,
                    UriToByteArrayHelper uriToByteArrayHelper,
                    JSONUnMarshallingBuilder jsonUnMarshallingBuilder) {
-        super(context, ottoProvider);
+        super(context);
         this.dbWipeBatchOpsProvider = dbWipeBatchOpsProvider;
         this.dbImportBatchOpsProvider = dbImportBatchOpsProvider;
         this.uriToByteArrayHelper = uriToByteArrayHelper;

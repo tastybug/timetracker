@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
@@ -14,6 +13,7 @@ import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -21,7 +21,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,29 +30,35 @@ public class CreateProjectTaskTest {
 
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
     private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-    private ProjectFactory projectFactory = mock(ProjectFactory.class);
-    private TrackingConfigurationFactory trackingConfigurationFactory = mock(TrackingConfigurationFactory.class);
 
     @Before
     public void setup() {
-        when(projectFactory.aProject(anyString())).thenReturn(new Project(""));
-        when(trackingConfigurationFactory.aTrackingConfiguration(anyString())).thenReturn(new TrackingConfiguration(""));
         when(projectDAO.getBatchCreate(any(Project.class))).thenReturn(mock(ContentProviderOperation.class));
         when(trackingConfigurationDAO.getBatchCreate(any(TrackingConfiguration.class))).thenReturn(mock(ContentProviderOperation.class));
     }
 
     @Test
-    public void prepareBatchOperations_returns_batch_saves_describing_created_entities() {
+    public void prepareBatchOperations_sets_title_at_the_created_project() {
         // given
-        Project project = new Project("a title");
-        TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid());
-        when(projectFactory.aProject("a title")).thenReturn(project);
-        when(trackingConfigurationFactory.aTrackingConfiguration(project.getUuid())).thenReturn(trackingConfiguration);
+        ArgumentCaptor<Project> argumentCaptorForProject = ArgumentCaptor.forClass(Project.class);
+        when(projectDAO.getBatchCreate(argumentCaptorForProject.capture())).thenReturn(mock(ContentProviderOperation.class));
+        String title = "a title";
+        CreateProjectTask task = aTask().withProjectTitle(title);
+
+        // when
+        task.prepareBatchOperations();
+
+        // then
+        assertEquals(title, argumentCaptorForProject.getValue().getTitle());
+    }
+
+    @Test
+    public void prepareBatchOperations_returns_create_operations_in_correct_order() {
+        // given
         ContentProviderOperation operationForProject = mock(ContentProviderOperation.class);
         when(projectDAO.getBatchCreate(any(Project.class))).thenReturn(operationForProject);
         ContentProviderOperation operationForTrackingConfiguration = mock(ContentProviderOperation.class);
         when(trackingConfigurationDAO.getBatchCreate(any(TrackingConfiguration.class))).thenReturn(operationForTrackingConfiguration);
-
         CreateProjectTask task = aTask().withProjectTitle("a title");
 
         // when
@@ -68,11 +73,11 @@ public class CreateProjectTaskTest {
     }
 
     @Test
-    public void preparePostEvent_returns_event_containing_created_project() throws Exception {
+    public void preparePostEvent_returns_ProjectCreatedEvent_containing_created_project() throws Exception {
         // given
-        Project createdProject = mock(Project.class);
+        ArgumentCaptor<Project> argumentCaptorForProject = ArgumentCaptor.forClass(Project.class);
+        when(projectDAO.getBatchCreate(argumentCaptorForProject.capture())).thenReturn(mock(ContentProviderOperation.class));
         CreateProjectTask task = aTask().withProjectTitle("a title");
-        when(projectFactory.aProject("a title")).thenReturn(createdProject);
 
         // when: doing the actual work
         task.prepareBatchOperations();
@@ -81,7 +86,7 @@ public class CreateProjectTaskTest {
         ProjectCreatedEvent event = (ProjectCreatedEvent) task.preparePostEvent();
 
         // then
-        assertEquals(createdProject, event.getProject());
+        assertEquals(argumentCaptorForProject.getValue(), event.getProject());
     }
 
     @Test(expected = NullPointerException.class)
@@ -93,10 +98,7 @@ public class CreateProjectTaskTest {
     @NonNull
     private CreateProjectTask aTask() {
         return new CreateProjectTask(mock(Context.class),
-                mock(OttoProvider.class),
                 projectDAO,
-                trackingConfigurationDAO,
-                projectFactory,
-                trackingConfigurationFactory);
+                trackingConfigurationDAO);
     }
 }

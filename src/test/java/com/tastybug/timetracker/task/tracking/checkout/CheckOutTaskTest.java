@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 
@@ -29,7 +28,7 @@ public class CheckOutTaskTest {
 
     private TrackingRecord trackingRecordToBeStopped = mock(TrackingRecord.class);
     private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
-    private CheckOutTask subject = new CheckOutTask(mock(Context.class), mock(OttoProvider.class), trackingRecordDAO)
+    private CheckOutTask subject = new CheckOutTask(mock(Context.class), trackingRecordDAO)
             .withProjectUuid("1");
 
     @Before
@@ -40,7 +39,7 @@ public class CheckOutTaskTest {
     @Test(expected = IllegalArgumentException.class)
     public void validate_throws_IllegalArgumentException_on_missing_project_uuid() {
         // given
-        CheckOutTask subject = new CheckOutTask(mock(Context.class), mock(OttoProvider.class), trackingRecordDAO);
+        CheckOutTask subject = new CheckOutTask(mock(Context.class), trackingRecordDAO);
 
         // when
         subject.validate();

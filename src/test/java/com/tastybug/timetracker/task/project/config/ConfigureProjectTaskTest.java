@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
@@ -35,7 +34,6 @@ public class ConfigureProjectTaskTest {
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
     private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
     ConfigureProjectTask subject = new ConfigureProjectTask(mock(Context.class),
-            mock(OttoProvider.class),
             projectDAO,
             trackingConfigurationDAO).withProjectUuid("1");
     private Project project = new Project("1", "title", Optional.<String>absent());
@@ -53,7 +51,6 @@ public class ConfigureProjectTaskTest {
     public void validateArguments_yields_NPE_on_null_project_uuid() {
         // given
         ConfigureProjectTask task = new ConfigureProjectTask(mock(Context.class),
-                mock(OttoProvider.class),
                 projectDAO,
                 trackingConfigurationDAO);
 

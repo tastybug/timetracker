@@ -6,7 +6,6 @@ import android.content.Context;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.TaskPayload;
@@ -22,10 +21,16 @@ public class CreateTrackingRecordTask extends TaskPayload {
     private static final String END_DATE = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
 
+    private TrackingRecordDAO trackingRecordDAO;
     private TrackingRecord trackingRecord;
 
     public CreateTrackingRecordTask(Context context) {
-        super(context, new OttoProvider());
+        this(context, new TrackingRecordDAO(context));
+    }
+
+    CreateTrackingRecordTask(Context context, TrackingRecordDAO trackingRecordDAO) {
+        super(context);
+        this.trackingRecordDAO = trackingRecordDAO;
     }
 
     public CreateTrackingRecordTask withProjectUuid(String projectUuid) {
@@ -64,7 +69,7 @@ public class CreateTrackingRecordTask extends TaskPayload {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
         }
 
-        return Collections.singletonList(new TrackingRecordDAO(context).getBatchCreate(trackingRecord));
+        return Collections.singletonList(trackingRecordDAO.getBatchCreate(trackingRecord));
     }
 
     @Override

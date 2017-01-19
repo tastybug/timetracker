@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.TaskPayload;
 
@@ -16,8 +15,15 @@ public class DeleteTrackingRecordTask extends TaskPayload {
 
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
 
+    private TrackingRecordDAO trackingRecordDAO;
+
     public DeleteTrackingRecordTask(Context context) {
-        super(context, new OttoProvider());
+        this(context, new TrackingRecordDAO(context));
+    }
+
+    DeleteTrackingRecordTask(Context context, TrackingRecordDAO trackingRecordDAO) {
+        super(context);
+        this.trackingRecordDAO = trackingRecordDAO;
     }
 
     public DeleteTrackingRecordTask withTrackingRecordUuid(String uuid) {
@@ -33,7 +39,7 @@ public class DeleteTrackingRecordTask extends TaskPayload {
     @Override
     protected List<ContentProviderOperation> prepareBatchOperations() {
         String uuid = arguments.getString(TRACKING_RECORD_UUID);
-        new TrackingRecordDAO(context).delete(uuid);
+        trackingRecordDAO.delete(uuid);
 
         return Collections.emptyList();
     }

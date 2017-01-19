@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 
-import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.json.JSONUnMarshallingBuilder;
 
@@ -35,7 +34,6 @@ public class ImportDataTaskTest {
     private UriToByteArrayHelper uriToByteArrayHelper = mock(UriToByteArrayHelper.class);
 
     private ImportDataTask subject = new ImportDataTask(mock(Context.class),
-            mock(OttoProvider.class),
             dbWipeBatchOpsProvider,
             dbImportBatchOpsProvider,
             uriToByteArrayHelper,
@@ -53,7 +51,7 @@ public class ImportDataTaskTest {
     @Test(expected = NullPointerException.class)
     public void validate_yields_NPE_if_no_data_uri_is_given() {
         // given
-        ImportDataTask subject = new ImportDataTask(mock(Context.class), mock(OttoProvider.class), dbWipeBatchOpsProvider, dbImportBatchOpsProvider, uriToByteArrayHelper, jsonUnMarshallingBuilder);
+        ImportDataTask subject = new ImportDataTask(mock(Context.class), dbWipeBatchOpsProvider, dbImportBatchOpsProvider, uriToByteArrayHelper, jsonUnMarshallingBuilder);
 
         // when
         subject.validate();

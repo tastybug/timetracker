@@ -5,23 +5,29 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
+
 import java.util.List;
 
 import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
+import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
 
 
 class NGAsyncTask extends AsyncTask<Bundle, Integer, Long> {
 
     private TaskPayload taskPayload;
+    private OttoProvider ottoProvider;
     private BatchOperationExecutor batchOperationExecutor;
 
     NGAsyncTask(Context context, TaskPayload payload) {
-        this(new BatchOperationExecutor(context.getContentResolver()), payload);
+        this(new OttoProvider(), new BatchOperationExecutor(context.getContentResolver()), payload);
     }
 
-    NGAsyncTask(BatchOperationExecutor batchOperationExecutor, TaskPayload payload) {
+    NGAsyncTask(OttoProvider ottoProvider, BatchOperationExecutor batchOperationExecutor, TaskPayload payload) {
         this.batchOperationExecutor = batchOperationExecutor;
         this.taskPayload = payload;
+        this.ottoProvider = ottoProvider;
     }
 
     void run() throws IllegalArgumentException, NullPointerException {
@@ -39,6 +45,8 @@ class NGAsyncTask extends AsyncTask<Bundle, Integer, Long> {
     }
 
     protected void onPostExecute(Long result) {
-        taskPayload.firePostEvent();
+        OttoEvent event = taskPayload.preparePostEvent();
+        logInfo(getClass().getSimpleName(), "Finished! Firing " + event);
+        ottoProvider.getSharedBus().post(event);
     }
 }
