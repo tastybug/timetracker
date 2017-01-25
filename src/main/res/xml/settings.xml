@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="@string/wifi_tracking_group_title">
+
+        <ListPreference
+            android:entries="@array/wifi_tracking_grace_period_labels"
+            android:entryValues="@array/wifi_tracking_grace_period_values"
+            android:key="@string/wifi_tracking_grace_period_in_minutes_key"
+            android:title="@string/wifi_tracking_grace_period_in_minutes_label" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/warnings_group_title">
 
         <CheckBoxPreference

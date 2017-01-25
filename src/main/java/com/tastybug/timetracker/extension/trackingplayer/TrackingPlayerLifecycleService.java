@@ -21,7 +21,7 @@ import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
  * * application startup: is the player to be displayed?
  * * otto events (starting and stopping of trackings)
  */
-public class LifecycleService extends Service {
+public class TrackingPlayerLifecycleService extends Service {
 
     @Override
     public void onCreate() {

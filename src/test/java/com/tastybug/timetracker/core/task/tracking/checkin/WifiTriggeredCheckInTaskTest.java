@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.Build;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 
 import org.junit.Before;
@@ -20,29 +22,45 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class CheckInTaskTest {
+public class WifiTriggeredCheckInTaskTest {
 
+    private ProjectDAO projectDAO = mock(ProjectDAO.class);
     private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
-    private CheckInTask subject = new CheckInTask(mock(Context.class), trackingRecordDAO).withProjectUuid("1");
+    private CheckInTask subject = new CheckInTask(mock(Context.class), projectDAO, trackingRecordDAO).withProjectUuid("1");
 
     @Before
     public void setup() {
+        Project project = mock(Project.class);
+        when(project.isClosed()).thenReturn(false);
+        when(projectDAO.get(anyString())).thenReturn(Optional.of(project));
         when(trackingRecordDAO.getRunning("1")).thenReturn(Optional.<TrackingRecord>absent());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void validate_throws_IllegalArgumentException_on_missing_project_uuid() {
         // given
-        CheckInTask subject = new CheckInTask(mock(Context.class), trackingRecordDAO);
+        CheckInTask subject = new CheckInTask(mock(Context.class), projectDAO, trackingRecordDAO);
 
         // when
         subject.validate();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void prepareBatchOperations_throws_IllegalArgument_on_project_that_is_closed() {
+        // given
+        Project project = mock(Project.class);
+        when(project.isClosed()).thenReturn(true);
+        when(projectDAO.get(anyString())).thenReturn(Optional.of(project));
+
+        // when
+        subject.prepareBatchOperations();
     }
 
     @Test(expected = IllegalArgumentException.class)

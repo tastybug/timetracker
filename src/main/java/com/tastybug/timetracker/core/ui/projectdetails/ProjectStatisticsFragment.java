@@ -25,6 +25,7 @@ import com.tastybug.timetracker.core.task.tracking.update.UpdateTrackingRecordEv
 import com.tastybug.timetracker.core.ui.dialog.project.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.core.ui.projectconfiguration.ProjectConfigurationActivity;
 import com.tastybug.timetracker.extension.reporting.ui.CreateReportDialogFragment;
+import com.tastybug.timetracker.extension.wifitracking.ui.ManageWifiTrackingDialogFragment;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 
 public class ProjectStatisticsFragment extends Fragment {
@@ -52,16 +53,19 @@ public class ProjectStatisticsFragment extends Fragment {
         MenuItem configureItem = menu.findItem(R.id.menu_configure_project);
         MenuItem closeItem = menu.findItem(R.id.menu_item_close_project);
         MenuItem reopenItem = menu.findItem(R.id.menu_item_reopen_project);
+        MenuItem wifiTrackingItem = menu.findItem(R.id.menu_wifi_tracking_configuration);
         if (currentProjectOpt.isPresent()) {
             generateReportItem.setVisible(true);
             configureItem.setVisible(!currentProjectOpt.get().isClosed());
             closeItem.setVisible(!currentProjectOpt.get().isClosed());
             reopenItem.setVisible(currentProjectOpt.get().isClosed());
+            wifiTrackingItem.setVisible(!currentProjectOpt.get().isClosed());
         } else {
-            generateReportItem.setVisible(true);
+            generateReportItem.setVisible(false);
             configureItem.setVisible(false);
             closeItem.setVisible(false);
             reopenItem.setVisible(false);
+            wifiTrackingItem.setVisible(false);
         }
     }
 
@@ -101,10 +105,18 @@ public class ProjectStatisticsFragment extends Fragment {
             case R.id.menu_item_reopen_project:
                 showProjectClosureToggleDialog(currentProjectOpt.get());
                 return true;
+            case R.id.menu_wifi_tracking_configuration:
+                showManageWifiTrackingSetupDialog();
+                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return false;
         }
+    }
+
+    private void showManageWifiTrackingSetupDialog() {
+        ManageWifiTrackingDialogFragment.aDialog(currentProjectOpt.get().getUuid())
+                .show(getFragmentManager(), ManageWifiTrackingDialogFragment.class.getSimpleName());
     }
 
     private void showReportDialog() {

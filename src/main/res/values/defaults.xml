@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="wifi_tracking_grace_period_in_minutes_default">5</integer>
+
+</resources>

@@ -29,15 +29,15 @@ public class CheckOutTaskTest {
     private TrackingRecord trackingRecordToBeStopped = mock(TrackingRecord.class);
     private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
     private CheckOutTask subject = new CheckOutTask(mock(Context.class), trackingRecordDAO)
-            .withProjectUuid("1");
+            .withTrackingRecordUuid("1");
 
     @Before
     public void setup() {
-        when(trackingRecordDAO.getRunning("1")).thenReturn(Optional.of(trackingRecordToBeStopped));
+        when(trackingRecordDAO.get("1")).thenReturn(Optional.of(trackingRecordToBeStopped));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void validate_throws_IllegalArgumentException_on_missing_project_uuid() {
+    public void validate_throws_IllegalArgumentException_on_missing_tracking_record_uuid() {
         // given
         CheckOutTask subject = new CheckOutTask(mock(Context.class), trackingRecordDAO);
 

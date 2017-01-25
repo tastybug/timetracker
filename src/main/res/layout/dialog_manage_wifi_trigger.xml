@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="@string/wifi_trigger_creation_dialog_intro" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ssid_pick_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pick_current_ssid"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/wifi_trigger_pick_current_ssid_image_description" />
+
+        <EditText
+            android:id="@+id/ssid"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart = "true"
+            android:layout_toStartOf="@id/ssid_pick_current"
+            android:layout_alignBottom="@id/ssid_pick_current"
+            android:hint="@string/wifi_trigger_ssid_hint" />
+
+    </RelativeLayout>
+
+</LinearLayout>

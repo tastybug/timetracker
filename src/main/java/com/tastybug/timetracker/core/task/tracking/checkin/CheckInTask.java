@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.core.task.TaskPayload;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
@@ -14,18 +15,20 @@ import java.util.List;
 
 public class CheckInTask extends TaskPayload {
 
-    private static final String PROJECT_UUID = "PROJECT_UUID";
+    protected static final String PROJECT_UUID = "PROJECT_UUID";
 
-    private TrackingRecordDAO trackingRecordDAO;
-    private TrackingRecord trackingRecord;
+    protected ProjectDAO projectDAO;
+    protected TrackingRecordDAO trackingRecordDAO;
+    protected TrackingRecord trackingRecord;
 
     public CheckInTask(Context context) {
-        this(context, new TrackingRecordDAO(context));
+        this(context, new ProjectDAO(context), new TrackingRecordDAO(context));
     }
 
-    CheckInTask(Context context, TrackingRecordDAO trackingRecordDAO) {
+    CheckInTask(Context context, ProjectDAO projectDAO, TrackingRecordDAO trackingRecordDAO) {
         super(context);
         this.trackingRecordDAO = trackingRecordDAO;
+        this.projectDAO = projectDAO;
     }
 
     public CheckInTask withProjectUuid(String projectUuid) {
@@ -41,6 +44,9 @@ public class CheckInTask extends TaskPayload {
     @Override
     protected List<ContentProviderOperation> prepareBatchOperations() {
         String projectUuid = arguments.getString(PROJECT_UUID);
+        if (projectDAO.get(projectUuid).get().isClosed()) {
+            throw new IllegalStateException("Project cannot be started, its closed!");
+        }
         if (trackingRecordDAO.getRunning(projectUuid).isPresent()) {
             throw new IllegalArgumentException("Project is already tracking!");
         }

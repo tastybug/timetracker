@@ -29,21 +29,26 @@ Statistiken
     * Projektfristerreichung (Project Expiration): prozentualer Wert der Fristerreichung eines Projekts. Messgenauigkeit in Stunden.
         * ein Projekt ohne Start- oder Enddatum hat kein Projektablauf
     
+Warnungen
+---------
+
+* Checkout Erinnerung / Checkout Reminder: Erinnerung bei überlangen Zeiterfassung, diese zu schließen
+
 Views
 -----
 
 * Zeiterfassungshistorie / TrackingLog: eine Liste aller TrackingRecords zu einem Projekt in chronologischer Reihenfolge
 
-Verben
+Begriffe
 ------
 
+* Zeiterfassung/Tracking: das Erfassen einer Zeiteinheit mit Projektbezug
 * CheckIn: Starten einer Zeiterfassung
 * CheckOut: Stoppen einer Zeiterfassung
 * Pausieren: alias eines Checkouts
 * Schliessen/Close: Beendigung eines Projekts
 * Wiedereröffnen/Re-open: Projektbeendigung rückgängig machen
-
-Warnungen
----------
-
-* Checkout Erinnerung / Checkout Reminder: Erinnerung bei überlangen Zeiterfassung, diese zu schließen
+* `WLAN Zeiterfassung`/`Wi-Fi Tracking`: Zeiterfassung mittels WLAN Zugang
+    * `WiFi-CheckIn`
+    * `WiFi-CheckOut`
+    * `Toleranzzeit` / `Grace Period`: Ruhezeitraum nach dem Verlassen eines WLAN Netzes, der vergehen muss, damit das WiFi-Checkout erfolgt. Verhindert erratische Zeiterfassung bei schlechter Netzqualität.

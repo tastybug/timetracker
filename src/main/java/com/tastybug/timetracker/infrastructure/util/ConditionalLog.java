@@ -15,12 +15,16 @@ public class ConditionalLog {
         }
     }
 
-    public static void logWarn(String tag, String message) {
-        log(Log.WARN, tag, message);
+    public static void logWarn(String tag, String message, String... arguments) {
+        log(Log.WARN, tag, String.format(message, arguments));
     }
 
     public static void logInfo(String tag, String message) {
         log(Log.INFO, tag, message);
+    }
+
+    public static void logInfo(String tag, String message, String... arguments) {
+        log(Log.INFO, tag, String.format(message, arguments));
     }
 
     public static void logDebug(String tag, String message) {

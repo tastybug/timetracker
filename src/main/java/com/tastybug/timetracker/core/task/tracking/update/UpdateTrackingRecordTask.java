@@ -17,7 +17,7 @@ import java.util.List;
 public class UpdateTrackingRecordTask extends TaskPayload {
 
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
-    private static final String START_DATE = "START_DATE";
+    private static final String START_DATE = "START_DATE_KEY";
     private static final String END_DATE = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
 

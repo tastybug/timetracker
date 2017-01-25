@@ -118,7 +118,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         String projectUuid = project.getUuid();
         Optional<TrackingRecord> ongoing = new TrackingRecordDAO(getContext()).getRunning(projectUuid);
         if (ongoing.isPresent()) {
-            new CheckOutTask(getContext()).withProjectUuid(projectUuid).run();
+            new CheckOutTask(getContext()).withTrackingRecordUuid(ongoing.get().getUuid()).run();
         } else {
             CheckInPreconditionCheckDelegate.aDelegate((Activity) getContext()).startTracking(project);
         }

@@ -67,7 +67,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
         String projectUuid = currentProjectOpt.get().getUuid();
         Optional<TrackingRecord> ongoing = new TrackingRecordDAO(getActivity()).getRunning(projectUuid);
         if (ongoing.isPresent()) {
-            new CheckOutTask(getActivity()).withProjectUuid(projectUuid).run();
+            new CheckOutTask(getActivity()).withTrackingRecordUuid(ongoing.get().getUuid()).run();
         } else {
             CheckInPreconditionCheckDelegate.aDelegate(getActivity()).startTracking(currentProjectOpt.get());
         }

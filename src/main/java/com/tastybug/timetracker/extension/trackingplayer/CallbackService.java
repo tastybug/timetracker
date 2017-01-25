@@ -63,7 +63,7 @@ public class CallbackService extends IntentService {
     private void handleStopTrackingRequested(String projectUuid) {
         logInfo(TAG, "Stopping tracking for project " + projectUuid);
         TrackingRecord runningTrackingRecord = new TrackingRecordDAO(this).getRunning(projectUuid).get();
-        new CheckOutTask(getApplicationContext()).withProjectUuid(projectUuid).run();
+        new CheckOutTask(getApplicationContext()).withTrackingRecordUuid(runningTrackingRecord.getUuid()).run();
 
         if (isProjectRequiringDescriptionPromptAfterTracking(projectUuid)) {
             showTrackingRecordEditingActivity(runningTrackingRecord);

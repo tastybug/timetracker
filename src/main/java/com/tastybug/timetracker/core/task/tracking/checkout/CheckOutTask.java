@@ -14,9 +14,9 @@ import java.util.List;
 
 public class CheckOutTask extends TaskPayload {
 
-    private static final String PROJECT_UUID = "PROJECT_UUID";
+    private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
     protected TrackingRecord trackingRecord;
-    private TrackingRecordDAO trackingRecordDAO;
+    protected TrackingRecordDAO trackingRecordDAO;
 
     public CheckOutTask(Context context) {
         this(context, new TrackingRecordDAO(context));
@@ -27,24 +27,32 @@ public class CheckOutTask extends TaskPayload {
         this.trackingRecordDAO = trackingRecordDAO;
     }
 
-    public CheckOutTask withProjectUuid(String projectUuid) {
-        arguments.putString(PROJECT_UUID, projectUuid);
+    public CheckOutTask withTrackingRecordUuid(String trackingRecordUuid) {
+        arguments.putString(TRACKING_RECORD_UUID, trackingRecordUuid);
         return this;
     }
 
     @Override
     protected void validate() throws IllegalArgumentException, NullPointerException {
-        Preconditions.checkArgument(arguments.containsKey(PROJECT_UUID));
+        Preconditions.checkArgument(arguments.containsKey(TRACKING_RECORD_UUID));
     }
 
     @Override
     protected List<ContentProviderOperation> prepareBatchOperations() {
-        String stoppableProjectUuid = arguments.getString(PROJECT_UUID);
+        String trackingRecordUuid = getTrackingRecordUuid();
 
-        trackingRecord = trackingRecordDAO.getRunning(stoppableProjectUuid).get();
-        trackingRecord.stop();
+        trackingRecord = trackingRecordDAO.get(trackingRecordUuid).get();
+        stopTrackingRecord(trackingRecord);
 
         return Collections.singletonList(trackingRecordDAO.getBatchUpdate(trackingRecord));
+    }
+
+    protected String getTrackingRecordUuid() {
+        return arguments.getString(TRACKING_RECORD_UUID);
+    }
+
+    protected void stopTrackingRecord(TrackingRecord trackingRecord) {
+        trackingRecord.stop();
     }
 
     @Override

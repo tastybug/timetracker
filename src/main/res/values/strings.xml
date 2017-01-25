@@ -17,6 +17,7 @@
     <string name="menu_delete_project">Delete Project</string>
     <string name="menu_close_project">Close Project</string>
     <string name="menu_reopen_project">Re-open Project</string>
+    <string name="menu_wifi_tracking_configuration">Wi-Fi Tracking</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_backup">Backup</string>
 
@@ -205,6 +206,13 @@
     <string name="expiration_warning_summary">For getting past the 90% time frame mark.</string>
     <string name="completion_warning_title">Project Completion Warning</string>
     <string name="completion_warning_summary">For getting past the 90% mark of allotted time.</string>
+    <string name="wifi_tracking_group_title">Wi-Fi Tracking</string>
+    <string name="wifi_tracking_grace_period_in_minutes_label">Grace Period Before Check Out</string>
+    <string name="wifi_tracking_grace_period_X_minutes_summary">Prevent erratic tracking in patchy Wi-Fi networks by only checking out after %1$s minute(s) of uninterrupted disconnection.</string>
+    <string name="wifi_tracking_grace_period_1_minute_label">1 Minute</string>
+    <string name="wifi_tracking_grace_period_5_minutes_label">5 Minutes (recommended)</string>
+    <string name="wifi_tracking_grace_period_10_minutes_label">10 Minutes</string>
+    <string name="wifi_tracking_grace_period_20_minutes_label">20 Minutes</string>
 
     <!-- warning notifications -->
     <string name="project_X_completion_warning">%1$s completion warning</string>
@@ -260,5 +268,15 @@
     <string name="checkout_reminder_notification_title">Checkout Reminder</string>
     <string name="project_X_is_tracking_since_Y">%1$s is being tracked since %2$s</string>
 
+    <!-- wifi trigger creation dialog -->
+    <string name="wifi_trigger_creation_dialog_title">Setup Wi-Fi Tracking</string>
+    <string name="wifi_trigger_creation_dialog_intro">Automate your tracking by checking in and out based on the connection to a specific Wi-Fi network.</string>
+    <string name="wifi_trigger_ssid_title">Name Or Pick Wi-Fi network</string>
+    <string name="wifi_trigger_ssid_hint">Manual Wi-Fi name</string>
+    <string name="wifi_trigger_pick_current_ssid_image_description">Use SSID of the current Wi-Fi network.</string>
+    <string name="toast_current_ssid_selected">Current Wi-Fi selected.</string>
+    <string name="toast_currently_not_connected_cannot_pick_ssid">Cannot pick current network, not connected!</string>
+    <string name="toast_removed_wifi_trigger">Removed Wi-Fi trigger for this project.</string>
+    <string name="error_no_ssid_specified">No Wi-Fi SSID given!</string>
 
 </resources>

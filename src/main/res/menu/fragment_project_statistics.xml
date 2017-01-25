@@ -27,10 +27,14 @@
         android:title="@string/menu_edit_project"
         app:showAsAction="never" />
     <item
+        android:id="@+id/menu_wifi_tracking_configuration"
+        android:orderInCategory="2"
+        android:title="@string/menu_wifi_tracking_configuration"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/menu_delete_project"
         android:icon="@drawable/ic_delete"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="@string/menu_delete_project"
         app:showAsAction="never" />
-
 </menu>
