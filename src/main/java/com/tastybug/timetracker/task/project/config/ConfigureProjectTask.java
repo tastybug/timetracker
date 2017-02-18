@@ -27,6 +27,7 @@ public class ConfigureProjectTask extends TaskPayload {
     private static final String END_DATE_INCLUSIVE = "END_DATE_INCLUSIVE";
     private static final String PROMPT_FOR_DESCRIPTION = "PROMPT_FOR_DESCRIPTION";
     private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
+    private static final String CLOSED = "CLOSED";
 
     private ProjectDAO projectDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
@@ -89,6 +90,11 @@ public class ConfigureProjectTask extends TaskPayload {
         return this;
     }
 
+    public ConfigureProjectTask withClosureState(boolean toBeClosed) {
+        arguments.putBoolean(CLOSED, toBeClosed);
+        return this;
+    }
+
     @Override
     protected void validate() throws IllegalArgumentException, NullPointerException {
         Preconditions.checkNotNull(arguments.getString(PROJECT_UUID));
@@ -105,6 +111,10 @@ public class ConfigureProjectTask extends TaskPayload {
 
         if (arguments.containsKey(PROJECT_DESCRIPTION)) {
             project.setDescription(Optional.fromNullable(arguments.getString(PROJECT_DESCRIPTION)));
+        }
+
+        if (arguments.containsKey(CLOSED)) {
+            project.setClosed(arguments.getBoolean(CLOSED));
         }
 
         if (arguments.containsKey(HOUR_LIMIT)) {

@@ -29,7 +29,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
     private ImageButton trackingStartStopButton;
     private TextView projectTitleView, lastRecordSummaryView;
     private TextView projectRemainingDaysLabel, projectRemainingDaysValue;
-    private View projectRemainingDaysContainer;
+    private View projectRemainingDaysContainer, projectDurationContainer;
     private TextView projectDurationStatisticLabel, projectDurationStatisticValue;
 
     public ProjectView(Context context, AttributeSet attrs) {
@@ -41,6 +41,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         projectTitleView = (TextView) findViewById(R.id.project_title);
         lastRecordSummaryView = (TextView) findViewById(R.id.project_last_tracking_record_summary);
         trackingStartStopButton = (ImageButton) findViewById(R.id.trackingStartStop);
+        projectDurationContainer = findViewById(R.id.project_duration_container);
         projectDurationStatisticLabel = (TextView) findViewById(R.id.project_duration_statistic_label);
         projectDurationStatisticValue = (TextView) findViewById(R.id.project_duration_statistic_value);
         projectRemainingDaysContainer = findViewById(R.id.project_remaining_days_container);
@@ -54,55 +55,62 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
                             Optional<TrackingRecord> lastTrackingRecordOpt) {
         this.project = project;
         renderProjectTitle(project);
-        renderLastTrackingRecord(lastTrackingRecordOpt);
+        renderProjectSummary(lastTrackingRecordOpt);
         renderTrackingControlButton();
     }
 
     public void renderProjectDurationStatistic(TrackingConfiguration configuration,
                                                Duration duration) {
-        projectDurationStatisticLabel.setText(configuration.getHourLimit().isPresent()
-                ? R.string.duration_label_X_of_Y
-                : R.string.duration_label_X_no_max);
-        if (configuration.getHourLimit().isPresent()) {
-            if (duration.getStandardHours() < 1) {
-                projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour_of_X,
-                        configuration.getHourLimit().get()));
-            } else {
-                projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
-                        duration.getStandardHours(),
-                        configuration.getHourLimit().get()));
-            }
-        } else {
-            if (duration.getMillis() == 0) {
-                projectDurationStatisticValue.setText(R.string.duration_zero);
-            } else {
+        projectDurationContainer.setVisibility(project.isClosed() ? View.GONE : View.VISIBLE);
+
+        if (!project.isClosed()) {
+            projectDurationStatisticLabel.setText(configuration.getHourLimit().isPresent()
+                    ? R.string.duration_label_X_of_Y
+                    : R.string.duration_label_X_no_max);
+            if (configuration.getHourLimit().isPresent()) {
                 if (duration.getStandardHours() < 1) {
-                    projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour));
+                    projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour_of_X,
+                            configuration.getHourLimit().get()));
                 } else {
-                    projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
-                            duration.getStandardHours()));
+                    projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
+                            duration.getStandardHours(),
+                            configuration.getHourLimit().get()));
+                }
+            } else {
+                if (duration.getMillis() == 0) {
+                    projectDurationStatisticValue.setText(R.string.duration_zero);
+                } else {
+                    if (duration.getStandardHours() < 1) {
+                        projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour));
+                    } else {
+                        projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
+                                duration.getStandardHours()));
+                    }
                 }
             }
         }
     }
 
     public void renderProjectRemainingTimeFrameInfo(TrackingConfiguration trackingConfiguration) {
-        if (trackingConfiguration.getEnd().isPresent()) {
-            long remainingDays = getEffectiveRemainingProjectDays(trackingConfiguration.getStart(),
-                    trackingConfiguration.getEnd().get());
-            if (remainingDays > 0) {
-                projectRemainingDaysLabel.setText(R.string.label_remaining_days_until_date_Y);
-                projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_X_until_date_Y,
-                        remainingDays,
-                        DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
+        projectRemainingDaysContainer.setVisibility(project.isClosed() ? View.GONE : View.VISIBLE);
+        if (!project.isClosed()) {
+            if (trackingConfiguration.getEnd().isPresent()) {
+                long remainingDays = getEffectiveRemainingProjectDays(trackingConfiguration.getStart(),
+                        trackingConfiguration.getEnd().get());
+                if (remainingDays > 0) {
+                    projectRemainingDaysLabel.setText(R.string.label_remaining_days_until_date_Y);
+                    projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_X_until_date_Y,
+                            remainingDays,
+                            DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
+                } else {
+                    projectRemainingDaysLabel.setText(R.string.label_remaining_days_over);
+                    projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_over_since_X,
+                            DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
+                }
+                projectRemainingDaysContainer.setVisibility(View.VISIBLE);
             } else {
-                projectRemainingDaysLabel.setText(R.string.label_remaining_days_over);
-                projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_over_since_X,
-                        DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
+                projectRemainingDaysContainer.setVisibility(View.GONE);
             }
-            projectRemainingDaysContainer.setVisibility(View.VISIBLE);
-        } else {
-            projectRemainingDaysContainer.setVisibility(View.GONE);
         }
     }
 
@@ -123,6 +131,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         } else {
             trackingStartStopButton.setImageResource(R.drawable.ic_start_tracking);
         }
+        trackingStartStopButton.setVisibility(project.isClosed() ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void renderProjectTitle(Project project) {
@@ -130,8 +139,10 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
 
     }
 
-    private void renderLastTrackingRecord(Optional<TrackingRecord> lastTrackingRecordOpt) {
-        if (lastTrackingRecordOpt.isPresent()) {
+    private void renderProjectSummary(Optional<TrackingRecord> lastTrackingRecordOpt) {
+        if (project.isClosed()) {
+            lastRecordSummaryView.setText(R.string.project_closed);
+        } else if (lastTrackingRecordOpt.isPresent()) {
             if (lastTrackingRecordOpt.get().isRunning()) {
                 lastRecordSummaryView.setText(getContext().getString(R.string.current_record_started_at_X,
                         DefaultLocaleDateFormatter.dateTime().format(lastTrackingRecordOpt.get().getStart().get())));

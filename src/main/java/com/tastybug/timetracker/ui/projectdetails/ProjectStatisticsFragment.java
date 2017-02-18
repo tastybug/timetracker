@@ -1,5 +1,6 @@
 package com.tastybug.timetracker.ui.projectdetails;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.task.project.config.ProjectConfiguredEvent;
 import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.dialog.project.ConfirmDeleteProjectDialogFragment;
@@ -43,8 +46,27 @@ public class ProjectStatisticsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem generateReportItem = menu.findItem(R.id.menu_item_generate_report);
+        MenuItem configureItem = menu.findItem(R.id.menu_configure_project);
+        MenuItem closeItem = menu.findItem(R.id.menu_item_close_project);
+        MenuItem reopenItem = menu.findItem(R.id.menu_item_reopen_project);
+        if (currentProjectOpt.isPresent()) {
+            generateReportItem.setVisible(true);
+            configureItem.setVisible(!currentProjectOpt.get().isClosed());
+            closeItem.setVisible(!currentProjectOpt.get().isClosed());
+            reopenItem.setVisible(currentProjectOpt.get().isClosed());
+        } else {
+            generateReportItem.setVisible(true);
+            configureItem.setVisible(false);
+            closeItem.setVisible(false);
+            reopenItem.setVisible(false);
+        }
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ui = new ProjectStatisticsUI(getActivity());
         return ui.inflateWidgets(inflater, container);
     }
@@ -75,6 +97,10 @@ public class ProjectStatisticsFragment extends Fragment {
             case R.id.menu_item_generate_report:
                 showReportDialog();
                 return true;
+            case R.id.menu_item_close_project:
+            case R.id.menu_item_reopen_project:
+                showProjectClosureToggleDialog(currentProjectOpt.get());
+                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return false;
@@ -87,8 +113,25 @@ public class ProjectStatisticsFragment extends Fragment {
                 .show(getFragmentManager(), getClass().getSimpleName());
     }
 
+    private void showProjectClosureToggleDialog(Project project) {
+        if (isCurrentProjectOngoing()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.stop_tracking_before_closing_project)
+                    .setPositiveButton(R.string.common_ok, null).create().show();
+        } else {
+            ConfirmProjectCloseToggleDialogFragment
+                    .aDialog()
+                    .forProject(project)
+                    .show(getFragmentManager(), getClass().getSimpleName());
+        }
+    }
+
     private TrackingConfiguration getTrackingConfigurationForCurrentProject() {
         return new TrackingConfigurationDAO(getActivity()).getByProjectUuid(currentProjectOpt.get().getUuid()).get();
+    }
+
+    private boolean isCurrentProjectOngoing() {
+        return new TrackingRecordDAO(getActivity()).getRunning(currentProjectOpt.get().getUuid()).isPresent();
     }
 
     private void showProjectConfigurationActivity() {
@@ -115,5 +158,11 @@ public class ProjectStatisticsFragment extends Fragment {
     public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         showProjectDetailsFor(project);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleProjectModified(ProjectConfiguredEvent event) {
+        getActivity().onBackPressed();
     }
 }

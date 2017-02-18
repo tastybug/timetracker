@@ -33,10 +33,10 @@ public class ConfigureProjectTaskTest {
 
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
     private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-    ConfigureProjectTask subject = new ConfigureProjectTask(mock(Context.class),
+    private ConfigureProjectTask subject = new ConfigureProjectTask(mock(Context.class),
             projectDAO,
             trackingConfigurationDAO).withProjectUuid("1");
-    private Project project = new Project("1", "title", Optional.<String>absent());
+    private Project project = new Project("1", "title", Optional.<String>absent(), false);
     private TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1");
 
     @Before
@@ -90,6 +90,19 @@ public class ConfigureProjectTaskTest {
 
         // then
         assertEquals(project.getTitle(), "some other title");
+    }
+
+    @Test
+    public void can_change_project_closed_state() {
+        // given
+        subject = subject.withClosureState(!project.isClosed());
+        boolean wasClosed = project.isClosed();
+
+        // when
+        subject.prepareBatchOperations();
+
+        // then
+        assertEquals(!wasClosed, project.isClosed());
     }
 
     @Test

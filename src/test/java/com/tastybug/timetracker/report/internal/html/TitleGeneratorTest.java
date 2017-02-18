@@ -42,7 +42,7 @@ public class TitleGeneratorTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void getTitle_throws_NPE_on_null_fristDay() {
+    public void getTitle_throws_NPE_on_null_firstDay() {
         // expect
         titleGenerator.getTitle(new Project(""), null, new Date());
     }
@@ -56,7 +56,7 @@ public class TitleGeneratorTest {
     @Test
     public void getTitle_returns_proper_title() {
         // given
-        Project project = new Project("uuid", "projectTitle", Optional.<String>absent());
+        Project project = new Project("uuid", "projectTitle", Optional.<String>absent(), false);
         Date firstDay = new DateTime(2016, 12, 24, 0, 0).toDate();
         Date lastDay = new DateTime(2016, 12, 26, 0, 0).toDate();
         when(defaultLocaleDateFormatter.dateFormat(firstDay)).thenReturn("24.12.2016");

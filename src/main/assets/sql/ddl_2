@@ -1,0 +1,1 @@
+ALTER TABLE project ADD closed INTEGER DEFAULT 0;

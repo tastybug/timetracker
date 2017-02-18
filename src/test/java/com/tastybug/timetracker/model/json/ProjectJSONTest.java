@@ -17,6 +17,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 
+import static com.tastybug.timetracker.model.json.ProjectJSON.CLOSED;
 import static com.tastybug.timetracker.model.json.ProjectJSON.DESCRIPTION;
 import static com.tastybug.timetracker.model.json.ProjectJSON.TITLE;
 import static com.tastybug.timetracker.model.json.ProjectJSON.TRACKING_CONFIGURATION;
@@ -52,6 +53,19 @@ public class ProjectJSONTest {
 
         // then
         assertEquals(project.getTitle(), json.getString(TITLE));
+    }
+
+    @Test
+    public void can_marshal_a_project_closed_state() throws Exception {
+        // given
+        Project project = aProjectWith2RecordsAndAConfiguration();
+        project.setClosed(true);
+
+        // when
+        ProjectJSON json = new ProjectJSON(project);
+
+        // then
+        assertEquals(project.isClosed(), json.getBoolean(CLOSED));
     }
 
     @Test
@@ -126,6 +140,7 @@ public class ProjectJSONTest {
         assertEquals(toImportFrom.get(UUID), subject.get(UUID));
         assertEquals(toImportFrom.getString(TITLE), subject.get(TITLE));
         assertEquals(toImportFrom.getString(DESCRIPTION), subject.getString(DESCRIPTION));
+        assertEquals(toImportFrom.getBoolean(CLOSED), subject.getBoolean(CLOSED));
         assertEquals(toImportFrom.getJSONObject(TRACKING_CONFIGURATION), subject.getJSONObject(TRACKING_CONFIGURATION));
         assertEquals(toImportFrom.getJSONObject(TRACKING_RECORDS), subject.getJSONObject(TRACKING_RECORDS));
     }
@@ -163,6 +178,7 @@ public class ProjectJSONTest {
         jsonObject.put(UUID, "uuid");
         jsonObject.put(TITLE, "title");
         jsonObject.put(DESCRIPTION, "desc");
+        jsonObject.put(CLOSED, false);
         jsonObject.put(TRACKING_CONFIGURATION, new JSONObject());
         jsonObject.put(TRACKING_RECORDS, new JSONObject());
 
@@ -170,7 +186,7 @@ public class ProjectJSONTest {
     }
 
     private Project aProjectWith2RecordsAndAConfiguration() {
-        Project project = new Project("uuid", "title", Optional.<String>absent());
+        Project project = new Project("uuid", "title", Optional.<String>absent(), false);
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", Rounding.Strategy.NO_ROUNDING);
         ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<>();
         trackingRecordArrayList.add(new TrackingRecord("uuid"));

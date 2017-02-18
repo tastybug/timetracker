@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.tastybug.timetracker.infrastructure.filecache.CacheCleaner;
+import com.tastybug.timetracker.ui.autoclosure.AutoClosureAlarmSetup;
 import com.tastybug.timetracker.ui.trackingplayer.LifecycleService;
 import com.tastybug.timetracker.ui.warn.WarningEventListenerService;
 
@@ -23,6 +24,7 @@ public class Application extends android.app.Application {
         cleanupCacheFolder();
         startTrackingPlayerLifecycleBackgroundService();
         startWarningBackgroundService();
+        startAutoClosureAlarmSetup();
         if (isFirstRun()) {
             declareFirstRunConsumed();
         }
@@ -34,6 +36,10 @@ public class Application extends android.app.Application {
 
     private void startTrackingPlayerLifecycleBackgroundService() {
         startService(new Intent(this, LifecycleService.class));
+    }
+
+    private void startAutoClosureAlarmSetup() {
+        new AutoClosureAlarmSetup().setAlarm(getApplicationContext());
     }
 
     private void startWarningBackgroundService() {

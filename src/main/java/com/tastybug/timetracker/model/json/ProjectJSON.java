@@ -19,6 +19,7 @@ public class ProjectJSON extends JSONObject {
     static String UUID = "uuid";
     static String TITLE = "title";
     static String DESCRIPTION = "description";
+    static String CLOSED = "closed";
     static String TRACKING_CONFIGURATION = "tracking_configuration";
     static String TRACKING_RECORDS = "tracking_records";
 
@@ -39,6 +40,7 @@ public class ProjectJSON extends JSONObject {
         if (project.getDescription().isPresent()) {
             put(DESCRIPTION, project.getDescription().get());
         }
+        put(CLOSED, project.isClosed());
         setTrackingConfiguration(project.getTrackingConfiguration());
         setTrackingRecords(project.getTrackingRecords());
     }
@@ -47,6 +49,7 @@ public class ProjectJSON extends JSONObject {
         put(UUID, toImport.get(UUID));
         put(TITLE, toImport.get(TITLE));
         put(DESCRIPTION, toImport.opt(DESCRIPTION));
+        put(CLOSED, toImport.get(CLOSED));
         put(TRACKING_CONFIGURATION, toImport.get(TRACKING_CONFIGURATION));
         put(TRACKING_RECORDS, toImport.get(TRACKING_RECORDS));
     }
@@ -81,7 +84,8 @@ public class ProjectJSON extends JSONObject {
         Project project = new Project(
                 getString(UUID),
                 getString(TITLE),
-                isNull(DESCRIPTION) ? Optional.<String>absent() : Optional.of(getString(DESCRIPTION)));
+                isNull(DESCRIPTION) ? Optional.<String>absent() : Optional.of(getString(DESCRIPTION)),
+                getBoolean(CLOSED));
         project.setTrackingConfiguration(getTrackingConfiguration());
         project.setTrackingRecords(getTrackingRecords());
 

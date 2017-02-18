@@ -1,9 +1,9 @@
-package com.tastybug.timetracker.ui.warn.internal.completion;
+package com.tastybug.timetracker.ui.warn.completion;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.statistics.Completion;
-import com.tastybug.timetracker.ui.warn.completion.CompletionStatisticFactory;
-import com.tastybug.timetracker.ui.warn.completion.CompletionThresholdViolationIndicator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,16 +16,21 @@ import static org.mockito.Mockito.when;
 
 public class CompletionThresholdViolationIndicatorTest {
 
-    CompletionStatisticFactory completionStatisticFactory = mock(CompletionStatisticFactory.class);
-    Completion completionBefore = mock(Completion.class);
-    Completion completionAfter = mock(Completion.class);
+    private ProjectDAO projectDAO = mock(ProjectDAO.class);
+    private Project project = mock(Project.class);
+    private CompletionStatisticFactory completionStatisticFactory = mock(CompletionStatisticFactory.class);
+    private Completion completionBefore = mock(Completion.class);
+    private Completion completionAfter = mock(Completion.class);
 
-    CompletionThresholdViolationIndicator completionThresholdViolationIndicator = new CompletionThresholdViolationIndicator(completionStatisticFactory);
+    private CompletionThresholdViolationIndicator completionThresholdViolationIndicator
+            = new CompletionThresholdViolationIndicator(completionStatisticFactory, projectDAO);
 
     @Before
     public void setup() {
         when(completionStatisticFactory.getCompletionBeforeLastRun(anyString())).thenReturn(completionBefore);
         when(completionStatisticFactory.getCompletionCurrent(anyString())).thenReturn(completionAfter);
+        when(projectDAO.get(anyString())).thenReturn(Optional.of(project));
+        when(project.isClosed()).thenReturn(false);
     }
 
     @Test
@@ -59,6 +64,19 @@ public class CompletionThresholdViolationIndicatorTest {
         // given
         when(completionBefore.getCompletionPercent()).thenReturn(Optional.<Double>absent());
         when(completionAfter.getCompletionPercent()).thenReturn(Optional.<Double>absent());
+
+        // when
+        boolean completionWarning = completionThresholdViolationIndicator.isWarning("some-uuid");
+
+        // then
+        assertFalse(completionWarning);
+    }
+
+    @Test
+    public void isWarning_returns_false_if_project_is_closed() {
+        when(completionBefore.getCompletionPercent()).thenReturn(Optional.of(89d));
+        when(completionAfter.getCompletionPercent()).thenReturn(Optional.of(96d));
+        when(project.isClosed()).thenReturn(true);
 
         // when
         boolean completionWarning = completionThresholdViolationIndicator.isWarning("some-uuid");

@@ -2,23 +2,28 @@ package com.tastybug.timetracker.ui.warn.expiration;
 
 import android.content.Context;
 
-public class ExpirationThresholdViolationIndicator {
+import com.tastybug.timetracker.model.dao.ProjectDAO;
+
+class ExpirationThresholdViolationIndicator {
 
     private static final int THRESHOLD = 90;
 
     private ExpirationStatisticFactory expirationStatisticFactory;
+    private ProjectDAO projectDAO;
 
-
-    public ExpirationThresholdViolationIndicator(Context context) {
-        this.expirationStatisticFactory = new ExpirationStatisticFactory(context);
+    ExpirationThresholdViolationIndicator(Context context) {
+        this(new ExpirationStatisticFactory(context),
+                new ProjectDAO(context));
     }
 
-    public ExpirationThresholdViolationIndicator(ExpirationStatisticFactory expirationStatisticFactory) {
+    ExpirationThresholdViolationIndicator(ExpirationStatisticFactory expirationStatisticFactory, ProjectDAO projectDAO) {
         this.expirationStatisticFactory = expirationStatisticFactory;
+        this.projectDAO = projectDAO;
     }
 
-    public boolean isWarning(String projectUuid) {
-        return isLastRunBelowThresholdWhenEnding(projectUuid)
+    boolean isWarning(String projectUuid) {
+        return !isProjectClosed(projectUuid)
+                && isLastRunBelowThresholdWhenEnding(projectUuid)
                 && isAboveThresholdWhenFinishing(projectUuid);
     }
 
@@ -28,5 +33,9 @@ public class ExpirationThresholdViolationIndicator {
 
     private boolean isAboveThresholdWhenFinishing(String projectUuid) {
         return expirationStatisticFactory.getExpirationOnCheckoutOfLastSession(projectUuid).getExpirationPercent().or(0) >= THRESHOLD;
+    }
+
+    private boolean isProjectClosed(String projectUuid) {
+        return projectDAO.get(projectUuid).get().isClosed();
     }
 }

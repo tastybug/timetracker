@@ -1,10 +1,6 @@
-package com.tastybug.timetracker.ui.warn.internal.expiration;
+package com.tastybug.timetracker.ui.warn.expiration;
 
 import android.os.Build;
-
-import com.tastybug.timetracker.ui.warn.expiration.ExpirationNotificationStarter;
-import com.tastybug.timetracker.ui.warn.expiration.ExpirationThresholdViolationIndicator;
-import com.tastybug.timetracker.ui.warn.expiration.ExpirationWarningService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +17,13 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class ExpirationWarningServiceTest {
 
-    ExpirationThresholdViolationIndicator expirationThresholdViolationIndicator = mock(ExpirationThresholdViolationIndicator.class);
-    ExpirationNotificationStarter expirationNotificationStarter = mock(ExpirationNotificationStarter.class);
+    private ExpirationThresholdViolationIndicator expirationThresholdViolationIndicator
+            = mock(ExpirationThresholdViolationIndicator.class);
+    private ExpirationNotificationStarter expirationNotificationStarter
+            = mock(ExpirationNotificationStarter.class);
 
-    ExpirationWarningService warningService = new ExpirationWarningService(expirationThresholdViolationIndicator, expirationNotificationStarter);
+    private ExpirationWarningService warningService
+            = new ExpirationWarningService(expirationThresholdViolationIndicator, expirationNotificationStarter);
 
     @Test
     public void handleProjectStopped_shows_expiration_warning_when_threshold_reached() {

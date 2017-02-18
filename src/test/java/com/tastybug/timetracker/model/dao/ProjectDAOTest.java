@@ -19,6 +19,10 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.tastybug.timetracker.model.dao.ProjectDAO.CLOSED_COLUMN;
+import static com.tastybug.timetracker.model.dao.ProjectDAO.DESCRIPTION_COLUMN;
+import static com.tastybug.timetracker.model.dao.ProjectDAO.TITLE_COLUMN;
+import static com.tastybug.timetracker.model.dao.ProjectDAO.UUID_COLUMN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -32,11 +36,11 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class ProjectDAOTest {
 
-    Context context = mock(Context.class);
-    ContentResolver resolver = mock(ContentResolver.class);
+    private Context context = mock(Context.class);
+    private ContentResolver resolver = mock(ContentResolver.class);
 
     // test subject
-    ProjectDAO projectDAO = new ProjectDAO(context);
+    private ProjectDAO projectDAO = new ProjectDAO(context);
 
     @Before
     public void setup() {
@@ -46,7 +50,7 @@ public class ProjectDAOTest {
     @Test
     public void canGetExistingProjectById() {
         // given
-        Cursor cursor = aProjectCursor("1", "title", "desc");
+        Cursor cursor = aProjectCursor("1", "title", "desc", true);
         when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
                 .thenReturn(cursor);
 
@@ -58,10 +62,11 @@ public class ProjectDAOTest {
         assertEquals("1", project.getUuid());
         assertEquals("title", project.getTitle());
         assertEquals("desc", project.getDescription().get());
+        assertEquals(true, project.isClosed());
     }
 
     @Test
-    public void gettingNonexistingProjectByIdYieldsNull() {
+    public void gettingNonExistingProjectByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
         when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
@@ -117,7 +122,7 @@ public class ProjectDAOTest {
     @Test
     public void canUpdateProject() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent());
+        Project project = new Project("1", "title", Optional.<String>absent(), false);
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -130,7 +135,7 @@ public class ProjectDAOTest {
     @Test
     public void canDeleteProject() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent());
+        Project project = new Project("1", "title", Optional.<String>absent(), false);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -143,7 +148,7 @@ public class ProjectDAOTest {
     @Test
     public void canDeleteProjectByUuid() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent());
+        Project project = new Project("1", "title", Optional.<String>absent(), false);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -156,7 +161,7 @@ public class ProjectDAOTest {
     @Test
     public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent());
+        Project project = new Project("1", "title", Optional.<String>absent(), false);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when
@@ -167,25 +172,45 @@ public class ProjectDAOTest {
     }
 
     @Test
+    public void getContentValues_returns_complete_map_with_correct_values() {
+        // given
+        Project project = new Project("1", "title", Optional.<String>absent(), true);
+
+        // when
+        ContentValues cv = projectDAO.getContentValues(project);
+
+        // then
+        assertEquals(project.getUuid(), cv.getAsString(UUID_COLUMN));
+        assertEquals(project.getTitle(), cv.getAsString(TITLE_COLUMN));
+        assertEquals(project.getDescription().orNull(), cv.getAsString(DESCRIPTION_COLUMN));
+        assertEquals(project.isClosed(), cv.getAsBoolean(CLOSED_COLUMN));
+
+        // and
+        assertEquals(4, cv.size());
+    }
+
+    @Test
     public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(ProjectDAO.UUID_COLUMN, projectDAO.getPKColumn());
+        assertEquals(UUID_COLUMN, projectDAO.getPKColumn());
     }
 
     @Test
     public void knowsAllColumns() {
         // expect
-        assertEquals(3, projectDAO.getColumns().length);
-        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.UUID_COLUMN));
+        assertEquals(4, projectDAO.getColumns().length);
+        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(UUID_COLUMN));
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.TITLE_COLUMN));
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.DESCRIPTION_COLUMN));
+        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.CLOSED_COLUMN));
     }
 
-    private Cursor aProjectCursor(String uuid, String title, String description) {
+    private Cursor aProjectCursor(String uuid, String title, String description, boolean closed) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getString(0)).thenReturn(uuid);
         when(cursor.getString(1)).thenReturn(title);
         when(cursor.getString(2)).thenReturn(description);
+        when(cursor.getInt(3)).thenReturn(closed ? 1 : 0);
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -203,6 +228,7 @@ public class ProjectDAOTest {
         when(cursor.getInt(0)).thenReturn(1);
         when(cursor.getString(1)).thenReturn("title");
         when(cursor.getString(2)).thenReturn("desc");
+        when(cursor.getInt(3)).thenReturn(0);
         when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;

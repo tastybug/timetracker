@@ -14,7 +14,9 @@ import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
+import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingRecord;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.delete.DeletedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
@@ -42,6 +44,7 @@ public class TrackingRecordListFragment extends ListFragment {
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
+            // TODO Optionals sind nicht serializable, das ist ein Fehler. Hier einfach direkt mit einem Project arbeiten
             projectUuidOpt = (Optional<String>) savedInstanceState.getSerializable(PROJECT_UUID_OPT);
         }
     }
@@ -64,8 +67,10 @@ public class TrackingRecordListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View v, int position, long id) {
-        TrackingRecord selectedTrackingRecord = (TrackingRecord) listView.getAdapter().getItem(position);
-        showTrackingRecordDescriptionEditingDialog(selectedTrackingRecord);
+        if (!getProject().isClosed()) {
+            TrackingRecord selectedTrackingRecord = (TrackingRecord) listView.getAdapter().getItem(position);
+            showTrackingRecordDescriptionEditingDialog(selectedTrackingRecord);
+        }
     }
 
     private void showTrackingRecordDescriptionEditingDialog(TrackingRecord trackingRecord) {
@@ -79,6 +84,10 @@ public class TrackingRecordListFragment extends ListFragment {
         Intent intent = new Intent(getActivity(), TrackingRecordModificationActivity.class);
         intent.putExtra(TrackingRecordModificationActivity.PROJECT_UUID, projectUuidOpt.get());
         startActivity(intent);
+    }
+
+    private Project getProject() {
+        return new ProjectDAO(getActivity()).get(projectUuidOpt.get()).get();
     }
 
     @SuppressWarnings("unused")
@@ -111,6 +120,18 @@ public class TrackingRecordListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_tracking_record_list, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem addRecordItem = menu.findItem(R.id.menu_create_custom_tracking_record);
+        if (projectUuidOpt.isPresent()) {
+            boolean isClosed = new ProjectDAO(getActivity()).get(projectUuidOpt.get()).get().isClosed();
+            addRecordItem.setVisible(!isClosed);
+        } else {
+            addRecordItem.setVisible(false);
+        }
     }
 
     @Override

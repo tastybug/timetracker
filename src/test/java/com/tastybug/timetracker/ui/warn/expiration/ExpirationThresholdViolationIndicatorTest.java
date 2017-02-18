@@ -1,9 +1,9 @@
-package com.tastybug.timetracker.ui.warn.internal.expiration;
+package com.tastybug.timetracker.ui.warn.expiration;
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.statistics.Expiration;
-import com.tastybug.timetracker.ui.warn.expiration.ExpirationStatisticFactory;
-import com.tastybug.timetracker.ui.warn.expiration.ExpirationThresholdViolationIndicator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,16 +16,21 @@ import static org.mockito.Mockito.when;
 
 public class ExpirationThresholdViolationIndicatorTest {
 
-    ExpirationStatisticFactory expirationStatisticFactory = mock(ExpirationStatisticFactory.class);
-    Expiration expirationBefore = mock(Expiration.class);
-    Expiration expirationAfter = mock(Expiration.class);
+    private ProjectDAO projectDAO = mock(ProjectDAO.class);
+    private Project project = mock(Project.class);
+    private ExpirationStatisticFactory expirationStatisticFactory = mock(ExpirationStatisticFactory.class);
+    private Expiration expirationBefore = mock(Expiration.class);
+    private Expiration expirationAfter = mock(Expiration.class);
 
-    ExpirationThresholdViolationIndicator expirationThresholdViolationIndicator = new ExpirationThresholdViolationIndicator(expirationStatisticFactory);
+    private ExpirationThresholdViolationIndicator expirationThresholdViolationIndicator
+            = new ExpirationThresholdViolationIndicator(expirationStatisticFactory, projectDAO);
 
     @Before
     public void setup() {
         when(expirationStatisticFactory.getExpirationOnCheckOutOfPreviousSession(anyString())).thenReturn(expirationBefore);
         when(expirationStatisticFactory.getExpirationOnCheckoutOfLastSession(anyString())).thenReturn(expirationAfter);
+        when(projectDAO.get(anyString())).thenReturn(Optional.of(project));
+        when(project.isClosed()).thenReturn(false);
     }
 
     @Test
@@ -59,6 +64,20 @@ public class ExpirationThresholdViolationIndicatorTest {
         // given
         when(expirationBefore.getExpirationPercent()).thenReturn(Optional.<Integer>absent());
         when(expirationAfter.getExpirationPercent()).thenReturn(Optional.<Integer>absent());
+
+        // when
+        boolean completionWarning = expirationThresholdViolationIndicator.isWarning("some-uuid");
+
+        // then
+        assertFalse(completionWarning);
+    }
+
+    @Test
+    public void isWarning_does_not_warn_if_project_is_closed() {
+        // given: the last tracking put the project above the threshold
+        when(expirationBefore.getExpirationPercent()).thenReturn(Optional.of(89));
+        when(expirationAfter.getExpirationPercent()).thenReturn(Optional.of(96));
+        when(project.isClosed()).thenReturn(true);
 
         // when
         boolean completionWarning = expirationThresholdViolationIndicator.isWarning("some-uuid");

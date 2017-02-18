@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
+import com.tastybug.timetracker.model.Project;
+import com.tastybug.timetracker.model.dao.ProjectDAO;
+import com.tastybug.timetracker.task.project.config.ProjectConfiguredEvent;
 import com.tastybug.timetracker.task.project.delete.ProjectDeletedEvent;
 import com.tastybug.timetracker.task.tracking.checkin.CheckInEvent;
 import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
@@ -80,7 +83,20 @@ public class LifecycleService extends Service {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleProjectDeleted(ProjectDeletedEvent event) {
-        new NotificationModel(this).removePausedProject(event.getProjectUuid());
+        removeProjectFromPlayer(event.getProjectUuid());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void handleProjectModified(ProjectConfiguredEvent event) {
+        Project project = new ProjectDAO(getApplicationContext()).get(event.getProjectUuid()).get();
+        if (project.isClosed()) {
+            removeProjectFromPlayer(event.getProjectUuid());
+        }
+    }
+
+    private void removeProjectFromPlayer(String projectUuid) {
+        new NotificationModel(this).removePausedProject(projectUuid);
         // we cannot be sure whether the deleted project is being displayed
         // so just to be in the clear we revalidate the TrackingPlayer
         new TrackingPlayer(this).showSomeProjectOrHide();

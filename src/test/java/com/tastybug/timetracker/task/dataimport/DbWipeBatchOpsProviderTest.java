@@ -41,8 +41,8 @@ public class DbWipeBatchOpsProviderTest {
     }
 
     private ArrayList<Project> aListOfTwoProjects() {
-        Project project1 = new Project("123", "proj1", Optional.<String>absent());
-        Project project2 = new Project("456", "proj2", Optional.<String>absent());
+        Project project1 = new Project("123", "proj1", Optional.<String>absent(), false);
+        Project project2 = new Project("456", "proj2", Optional.<String>absent(), false);
         ArrayList<Project> list = new ArrayList<>();
         list.add(project1);
         list.add(project2);

@@ -50,7 +50,9 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
     public void renderProject(Project project) {
         currentProjectOpt = Optional.of(project);
         Optional<TrackingRecord> ongoingTracking = new TrackingRecordDAO(getActivity()).getRunning(project.getUuid());
-        if (ongoingTracking.isPresent()) {
+        if (project.isClosed()) {
+            ui.visualizeProjectClosed();
+        } else if (ongoingTracking.isPresent()) {
             ui.visualizeOngoingTracking(ongoingTracking);
         } else {
             ui.visualizeNoOngoingTracking();

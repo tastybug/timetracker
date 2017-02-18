@@ -12,5 +12,7 @@
     <!-- action bar entries -->
     <item name="menu_item_generate_testdata" type="id" />
     <item name="menu_item_generate_report" type="id" />
+    <item name="menu_item_close_project" type="id" />
+    <item name="menu_item_reopen_project" type="id" />
 
 </resources>

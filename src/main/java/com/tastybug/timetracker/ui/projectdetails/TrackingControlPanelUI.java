@@ -20,7 +20,8 @@ import java.util.Date;
 
 public class TrackingControlPanelUI {
 
-    private TextView lineOne, lineTwo;
+    private View projectOngoingContainer;
+    private TextView lineOne, lineTwo, projectClosedMessage;
     private ImageButton trackingStartStopButton;
     private Handler uiUpdateHandler = new Handler();
 
@@ -36,15 +37,17 @@ public class TrackingControlPanelUI {
         }
     };
 
-    public TrackingControlPanelUI(Context context) {
+    TrackingControlPanelUI(Context context) {
         this.context = context;
     }
 
-    public View inflateWidgets(LayoutInflater inflater,
-                               ViewGroup container,
-                               View.OnClickListener toggleButtonListener) {
+    View inflateWidgets(LayoutInflater inflater,
+                        ViewGroup container,
+                        View.OnClickListener toggleButtonListener) {
         View rootView = inflater.inflate(R.layout.fragment_tracking_control_panel, container);
 
+        projectOngoingContainer = rootView.findViewById(R.id.ongoing_tracking_container);
+        projectClosedMessage = (TextView) rootView.findViewById(R.id.project_closed_message);
         lineOne = (TextView) rootView.findViewById(R.id.lineOne);
         lineTwo = (TextView) rootView.findViewById(R.id.lineTwo);
         trackingStartStopButton = (ImageButton) rootView.findViewById(R.id.trackingStartStop);
@@ -54,7 +57,7 @@ public class TrackingControlPanelUI {
         return rootView;
     }
 
-    public void visualizeOngoingTracking(Optional<TrackingRecord> ongoingTrackingRecord) {
+    void visualizeOngoingTracking(Optional<TrackingRecord> ongoingTrackingRecord) {
         this.ongoingTrackingRecordOpt = ongoingTrackingRecord;
         trackingStartStopButton.setImageResource(R.drawable.ic_stop_tracking);
 
@@ -62,21 +65,30 @@ public class TrackingControlPanelUI {
                 getStartDateAsString(ongoingTrackingRecord.get().getStart().get())));
         lineTwo.setText(context.getString(R.string.msg_tracking_duration_X,
                 LocalizedDurationFormatter.a().formatMeasuredDuration(ongoingTrackingRecordOpt.get())));
+        projectOngoingContainer.setVisibility(View.VISIBLE);
+        projectClosedMessage.setVisibility(View.GONE);
     }
 
-    public void visualizeNoOngoingTracking() {
+    void visualizeNoOngoingTracking() {
         this.ongoingTrackingRecordOpt = Optional.absent();
         trackingStartStopButton.setImageResource(R.drawable.ic_start_tracking);
         lineOne.setText(R.string.msg_no_ongoing_tracking);
         lineTwo.setText("");
+        projectOngoingContainer.setVisibility(View.VISIBLE);
+        projectClosedMessage.setVisibility(View.GONE);
     }
 
-    public void startUiUpdater() {
+    void visualizeProjectClosed() {
+        projectOngoingContainer.setVisibility(View.GONE);
+        projectClosedMessage.setVisibility(View.VISIBLE);
+    }
+
+    void startUiUpdater() {
         uiUpdateHandler.removeCallbacks(updateUITask);
         uiUpdateHandler.postDelayed(updateUITask, 1000);
     }
 
-    public void stopUiUpdater() {
+    void stopUiUpdater() {
         uiUpdateHandler.removeCallbacks(updateUITask);
     }
 

@@ -5,6 +5,8 @@ import com.google.common.base.Optional;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+
 public class ProjectTest {
 
     @Test(expected = NullPointerException.class)
@@ -35,9 +37,14 @@ public class ProjectTest {
     }
 
     @Test
+    public void projects_are_not_closed_initially() {
+        assertFalse(new Project("title").isClosed());
+    }
+
+    @Test
     public void can_serialize() {
         // given
-        Project project = new Project("1234", "some title", Optional.of("a desc"));
+        Project project = new Project("1234", "some title", Optional.of("a desc"), false);
 
         // when: this is supposed to cause no exception
         SerializationUtils.serialize(project);

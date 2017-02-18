@@ -13,17 +13,19 @@ import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.model.statistics.ProjectDuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class ProjectListAdapter extends BaseAdapter {
+class ProjectListAdapter extends BaseAdapter {
 
-    private ArrayList<Project> projectArrayList = new ArrayList<Project>();
+    private ArrayList<Project> projectArrayList = new ArrayList<>();
     private Activity activity;
 
     private TrackingRecordDAO trackingRecordDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
 
-    public ProjectListAdapter(Activity activity) {
+    ProjectListAdapter(Activity activity) {
         projectArrayList = new ProjectDAO(activity).getAll();
+        Collections.sort(projectArrayList, new ProjectComparator());
         this.activity = activity;
 
         this.trackingRecordDAO = new TrackingRecordDAO(activity);
@@ -60,22 +62,20 @@ public class ProjectListAdapter extends BaseAdapter {
         projectView.showProject(project,
                 trackingRecordDAO.getLatestByStartDateForProjectUuid(project.getUuid()));
 
-        projectView.renderProjectRemainingTimeFrameInfo(getTrackingConfigurationAt(position));
-        projectView.renderProjectDurationStatistic(getTrackingConfigurationAt(position),
-                getDurationStatisticAt(position).getDuration());
+        projectView.renderProjectRemainingTimeFrameInfo(getTrackingConfiguration(project));
+        projectView.renderProjectDurationStatistic(getTrackingConfiguration(project),
+                getDurationStatisticAt(project).getDuration());
+
 
         return projectView;
     }
 
-    private TrackingConfiguration getTrackingConfigurationAt(int position) {
-        Project project = getProjectAt(position);
-        return new TrackingConfigurationDAO(activity).getByProjectUuid(project.getUuid()).get();
+    private TrackingConfiguration getTrackingConfiguration(Project project) {
+        return trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
     }
 
-    private ProjectDuration getDurationStatisticAt(int position) {
-        Project project = getProjectAt(position);
-        return new ProjectDuration(getTrackingConfigurationAt(position),
-                new TrackingRecordDAO(activity).getByProjectUuid(project.getUuid()));
-
+    private ProjectDuration getDurationStatisticAt(Project project) {
+        return new ProjectDuration(getTrackingConfiguration(project),
+                trackingRecordDAO.getByProjectUuid(project.getUuid()));
     }
 }

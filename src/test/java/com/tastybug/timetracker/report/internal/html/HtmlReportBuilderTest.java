@@ -62,7 +62,7 @@ public class HtmlReportBuilderTest {
     @Test
     public void build_plumbs_project_title_into_html_report() {
         // given
-        Project someProject = new Project("", "title", Optional.of("desc"));
+        Project someProject = new Project("", "title", Optional.of("desc"), false);
         htmlReportBuilder = htmlReportBuilder.withProject(someProject).withTimeFrame(new Date(), new Date());
 
         // when
@@ -75,7 +75,7 @@ public class HtmlReportBuilderTest {
     @Test
     public void build_plumbs_project_description_into_html_report() {
         // given
-        Project someProject = new Project("", "title", Optional.of("desc"));
+        Project someProject = new Project("", "title", Optional.of("desc"), false);
         htmlReportBuilder = htmlReportBuilder.withProject(someProject).withTimeFrame(new Date(), new Date());
 
         // when

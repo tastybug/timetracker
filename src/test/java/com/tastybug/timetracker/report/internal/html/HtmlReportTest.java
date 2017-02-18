@@ -127,7 +127,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent()));
+        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), false));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -138,7 +138,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent()));
+        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), false));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -171,7 +171,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // when
-        htmlReport.insertProjectTitle(new Project("", "MyTitle", Optional.<String>absent()));
+        htmlReport.insertProjectTitle(new Project("", "MyTitle", Optional.<String>absent(), false));
 
         // then
         assertEquals("ProjectLabel MyTitle", htmlReport.toHtml());
@@ -184,7 +184,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc")));
+        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), false));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -195,7 +195,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc")));
+        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), false));
     }
 
     @Test
@@ -206,7 +206,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // when
-        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.of("desc")));
+        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.of("desc"), false));
 
         // then
         assertEquals("ProjectDescLabel desc", htmlReport.toHtml());
@@ -221,7 +221,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // when: reporting a project *without* a description
-        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.<String>absent()));
+        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.<String>absent(), false));
 
         // then
         assertEquals("ProjectDescLabel NoDescriptionPlaceholder", htmlReport.toHtml());

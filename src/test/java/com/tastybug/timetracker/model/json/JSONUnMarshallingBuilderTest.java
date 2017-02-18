@@ -15,7 +15,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +30,7 @@ public class JSONUnMarshallingBuilderTest {
         // given
         Project project = aProjectWith2RecordsAndAConfiguration();
         ProjectJSON projectJSON = new ProjectJSON(project);
-        JSONArray array = new JSONArray(Arrays.asList(projectJSON));
+        JSONArray array = new JSONArray(Collections.singletonList(projectJSON));
 
         // when
         List<Project> projects = new JSONUnMarshallingBuilder().withProjectArray(array).build();
@@ -55,7 +55,7 @@ public class JSONUnMarshallingBuilderTest {
     }
 
     private Project aProjectWith2RecordsAndAConfiguration() {
-        Project project = new Project("uuid", "title", Optional.<String>absent());
+        Project project = new Project("uuid", "title", Optional.<String>absent(), false);
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", Rounding.Strategy.FULL_MINUTE_UP);
         ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<>();
         trackingRecordArrayList.add(new TrackingRecord("uuid"));

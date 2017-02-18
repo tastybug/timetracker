@@ -1,10 +1,6 @@
-package com.tastybug.timetracker.ui.warn.internal.completion;
+package com.tastybug.timetracker.ui.warn.completion;
 
 import android.os.Build;
-
-import com.tastybug.timetracker.ui.warn.completion.CompletionNotificationStarter;
-import com.tastybug.timetracker.ui.warn.completion.CompletionThresholdViolationIndicator;
-import com.tastybug.timetracker.ui.warn.completion.CompletionWarningService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,10 +17,13 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class CompletionWarningServiceTest {
 
-    CompletionThresholdViolationIndicator completionThresholdViolationIndicator = mock(CompletionThresholdViolationIndicator.class);
-    CompletionNotificationStarter completionNotificationStarter = mock(CompletionNotificationStarter.class);
+    private CompletionThresholdViolationIndicator completionThresholdViolationIndicator
+            = mock(CompletionThresholdViolationIndicator.class);
+    private CompletionNotificationStarter completionNotificationStarter
+            = mock(CompletionNotificationStarter.class);
 
-    CompletionWarningService completionWarningService = new CompletionWarningService(completionThresholdViolationIndicator, completionNotificationStarter);
+    private CompletionWarningService completionWarningService
+            = new CompletionWarningService(completionThresholdViolationIndicator, completionNotificationStarter);
 
     @Test
     public void handleProjectStopped_shows_completion_warning_when_threshold_reached() {

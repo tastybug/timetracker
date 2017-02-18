@@ -10,23 +10,17 @@ import com.tastybug.timetracker.model.statistics.Completion;
 
 import java.util.ArrayList;
 
-public class CompletionStatisticFactory {
+class CompletionStatisticFactory {
 
     private TrackingRecordDAO trackingRecordDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
 
-    public CompletionStatisticFactory(Context context) {
+    CompletionStatisticFactory(Context context) {
         this.trackingRecordDAO = new TrackingRecordDAO(context);
         this.trackingConfigurationDAO = new TrackingConfigurationDAO(context);
     }
 
-    public CompletionStatisticFactory(TrackingRecordDAO trackingRecordDAO,
-                                      TrackingConfigurationDAO trackingConfigurationDAO) {
-        this.trackingRecordDAO = trackingRecordDAO;
-        this.trackingConfigurationDAO = trackingConfigurationDAO;
-    }
-
-    public Completion getCompletionBeforeLastRun(String projectUuid) {
+    Completion getCompletionBeforeLastRun(String projectUuid) {
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
         ArrayList<TrackingRecord> trackingRecordArrayList = trackingRecordDAO.getByProjectUuid(projectUuid);
 
@@ -35,7 +29,7 @@ public class CompletionStatisticFactory {
                 false);
     }
 
-    public Completion getCompletionCurrent(String projectUuid) {
+    Completion getCompletionCurrent(String projectUuid) {
         TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
         ArrayList<TrackingRecord> trackingRecordArrayList = trackingRecordDAO.getByProjectUuid(projectUuid);
 

@@ -15,14 +15,16 @@ public class Project extends Entity implements Comparable<Project> {
     private String uuid = UUID.randomUUID().toString();
     private String title;
     private String description;
+    private boolean closed = false;
     private TrackingConfiguration trackingConfiguration;
     private ArrayList<TrackingRecord> trackingRecords;
 
 
-    public Project(String uuid, String title, Optional<String> description) {
+    public Project(String uuid, String title, Optional<String> description, boolean closed) {
         this.uuid = uuid;
         this.title = title;
         this.description = description.orNull();
+        this.closed = closed;
     }
 
     public Project(String title) {
@@ -58,6 +60,14 @@ public class Project extends Entity implements Comparable<Project> {
         this.description = descriptionOptional.orNull();
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
     public ArrayList<TrackingRecord> getTrackingRecords() {
         return trackingRecords;
     }
@@ -79,6 +89,7 @@ public class Project extends Entity implements Comparable<Project> {
                 .add("uuid", getUuid())
                 .add("title", getTitle())
                 .add("description", getDescription().orNull())
+                .add("closed", isClosed())
                 .toString();
     }
 
@@ -94,7 +105,8 @@ public class Project extends Entity implements Comparable<Project> {
             Project other = (Project) o;
             return Objects.equals(getUuid(), other.getUuid())
                     && Objects.equals(title, other.getTitle())
-                    && Objects.equals(description, other.getDescription().orNull());
+                    && Objects.equals(description, other.getDescription().orNull())
+                    && Objects.equals(closed, other.isClosed());
         }
         return false;
     }
