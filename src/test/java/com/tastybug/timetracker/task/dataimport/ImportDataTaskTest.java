@@ -11,6 +11,7 @@ import com.tastybug.timetracker.model.json.JSONUnMarshallingBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -20,7 +21,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,7 +63,7 @@ public class ImportDataTaskTest {
         ContentProviderOperation wipeOperation = mock(ContentProviderOperation.class);
         when(dbWipeBatchOpsProvider.getOperations()).thenReturn(Arrays.asList(wipeOperation));
         ContentProviderOperation createOperation = mock(ContentProviderOperation.class);
-        when(dbImportBatchOpsProvider.getOperations(anyList())).thenReturn(Arrays.asList(createOperation));
+        when(dbImportBatchOpsProvider.getOperations(ArgumentMatchers.<Project>anyList())).thenReturn(Arrays.asList(createOperation));
 
         // when
         List<ContentProviderOperation> operationList = subject.prepareBatchOperations();

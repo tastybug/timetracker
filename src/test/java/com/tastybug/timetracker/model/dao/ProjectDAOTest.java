@@ -28,6 +28,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -51,7 +53,7 @@ public class ProjectDAOTest {
     public void canGetExistingProjectById() {
         // given
         Cursor cursor = aProjectCursor("1", "title", "desc", true);
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -63,13 +65,14 @@ public class ProjectDAOTest {
         assertEquals("title", project.getTitle());
         assertEquals("desc", project.getDescription().get());
         assertEquals(true, project.isClosed());
+
     }
 
     @Test
     public void gettingNonExistingProjectByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -83,7 +86,7 @@ public class ProjectDAOTest {
     public void getAllWorksForExistingProjects() {
         // given
         Cursor multipleProjects = aCursorWith2Projects();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
                 .thenReturn(multipleProjects);
 
         // when
@@ -97,7 +100,7 @@ public class ProjectDAOTest {
     public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
                 .thenReturn(noProjects);
 
         // when

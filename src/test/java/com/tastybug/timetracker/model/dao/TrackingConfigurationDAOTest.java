@@ -27,6 +27,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,7 +55,7 @@ public class TrackingConfigurationDAOTest {
     public void canGetExistingEntityById() {
         // given
         Cursor cursor = aProjectTimeContraintsCursor("1");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -73,7 +74,7 @@ public class TrackingConfigurationDAOTest {
     public void gettingNonexistingEntityByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -87,7 +88,7 @@ public class TrackingConfigurationDAOTest {
     public void malformedStartDateStringLeadsToException() {
         // given
         Cursor cursor = aProjectTimeContraintsCursor("1", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -98,7 +99,7 @@ public class TrackingConfigurationDAOTest {
     public void malformedEndDateStringLeadsToException() {
         // given
         Cursor cursor = aProjectTimeContraintsCursor("1", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -109,7 +110,7 @@ public class TrackingConfigurationDAOTest {
     public void getAllWorksForExistingTrackingRecords() {
         // given
         Cursor aCursorWith2TrackingRecords = aCursorWith2Entities();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), (String) isNull(), (String[]) isNull(), (String) isNull()))
                 .thenReturn(aCursorWith2TrackingRecords);
 
         // when
@@ -123,7 +124,7 @@ public class TrackingConfigurationDAOTest {
     public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), (String) isNull(), (String[]) isNull(), (String) isNull()))
                 .thenReturn(noProjects);
 
         // when
@@ -213,7 +214,7 @@ public class TrackingConfigurationDAOTest {
     public void gettingTrackingConfigurationByUnknownProjectUuidYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -227,7 +228,7 @@ public class TrackingConfigurationDAOTest {
     public void canGetTrackingConfigurationByProjectUuid() {
         // given
         Cursor cursor = aProjectTimeContraintsCursor("111");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when

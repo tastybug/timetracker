@@ -27,6 +27,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,11 +38,14 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class TrackingRecordDAOTest {
 
-    Context context = mock(Context.class);
-    ContentResolver resolver = mock(ContentResolver.class);
+    private Context context = mock(Context.class);
+    private ContentResolver resolver = mock(ContentResolver.class);
 
-    // test subject
-    TrackingRecordDAO trackingRecordDAO = new TrackingRecordDAO(context);
+    private TrackingRecordDAO trackingRecordDAO = new TrackingRecordDAO(context);
+
+    private static SimpleDateFormat getIso8601DateFormatter() {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
+    }
 
     @Before
     public void setup() {
@@ -50,7 +56,7 @@ public class TrackingRecordDAOTest {
     public void canGetExistingTrackingRecordById() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -68,7 +74,7 @@ public class TrackingRecordDAOTest {
     public void gettingNonexistingProjectByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -82,7 +88,7 @@ public class TrackingRecordDAOTest {
     public void malformedStartDateStringLeadsToException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -93,7 +99,7 @@ public class TrackingRecordDAOTest {
     public void malformedEndDateStringLeadsToException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -104,7 +110,7 @@ public class TrackingRecordDAOTest {
     public void getAllWorksForExistingTrackingRecords() {
         // given
         Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
                 .thenReturn(aCursorWith2TrackingRecords);
 
         // when
@@ -118,7 +124,7 @@ public class TrackingRecordDAOTest {
     public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
                 .thenReturn(noProjects);
 
         // when
@@ -132,7 +138,7 @@ public class TrackingRecordDAOTest {
     public void getLatestByStartDateReturnsFirstEntry() {
         // given
         Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), anyString(), any(String[].class), anyString()))
                 .thenReturn(aCursorWith2TrackingRecords);
 
         // when
@@ -146,7 +152,7 @@ public class TrackingRecordDAOTest {
     public void getLatestByStartDateReturnsEmptyOptionalOnNoTrackingRecords() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), eq("project_uuid=?"), any(String[].class), eq("start_date DESC")))
                 .thenReturn(noProjects);
 
         // when
@@ -240,7 +246,7 @@ public class TrackingRecordDAOTest {
     public void canGetTrackingRecordsByProjectUuid() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
         when(cursor.moveToNext()).thenReturn(true, false);
 
@@ -259,7 +265,7 @@ public class TrackingRecordDAOTest {
     public void gettingTrackingRecordsByUnknownProjectUuidYieldsEmptyList() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
@@ -308,9 +314,5 @@ public class TrackingRecordDAOTest {
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
-    }
-
-    private static SimpleDateFormat getIso8601DateFormatter() {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     }
 }
