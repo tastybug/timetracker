@@ -163,6 +163,8 @@ public class ProjectStatisticsFragment extends Fragment {
     @SuppressWarnings("unused")
     @Subscribe
     public void handleProjectModified(ProjectConfiguredEvent event) {
-        getActivity().onBackPressed();
+        if (event.isClosure()) {
+            getActivity().onBackPressed();
+        }
     }
 }

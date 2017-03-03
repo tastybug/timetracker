@@ -6,13 +6,19 @@ import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 public class ProjectConfiguredEvent implements OttoEvent {
 
     private String projectUuid;
+    private boolean closure = false;
 
-    ProjectConfiguredEvent(String projectUuid) {
+    ProjectConfiguredEvent(String projectUuid, boolean closure) {
         this.projectUuid = projectUuid;
+        this.closure = closure;
     }
 
     public String getProjectUuid() {
         return projectUuid;
+    }
+
+    public boolean isClosure() {
+        return closure;
     }
 
     public String toString() {

@@ -148,7 +148,8 @@ public class ConfigureProjectTask extends TaskPayload {
 
     @Override
     protected OttoEvent preparePostEvent() {
-        return new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID));
+        return new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID),
+                (arguments.containsKey(CLOSED) && arguments.getBoolean(CLOSED)));
     }
 }
 
