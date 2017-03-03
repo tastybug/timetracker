@@ -1,5 +1,7 @@
 <resources>
 
+    <item name="app_version_info" type="string" />
+
     <!-- fragments -->
     <item name="fragment_project_list" type="id" />
     <item name="fragment_project_statistics" type="id" />

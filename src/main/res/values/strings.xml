@@ -131,6 +131,7 @@
     <string name="sample_tracking_duration_X">Duration 20:10:05hrs</string>
     <string name="sample_from_date_X">From 24/12/2016</string>
     <string name="sample_until_date_X">Until 24/12/2016</string>
+    <string name="sample_app_version_info">More Time, 1.123-abcd1234</string>
 
     <!-- Development stuff -->
     <string name="menu_item_generate_testdata">Generate Testdata</string>
@@ -186,7 +187,7 @@
 
     <!-- settings -->
     <string name="application_settings_activity_title">Settings</string>
-    <string name="libraries_and_trademarks_screen_title">Libraries &amp; Trademarks</string>
+    <string name="libraries_and_trademarks_screen_title">Libraries, Licenses &amp; Trademarks</string>
     <string name="libraries_group_title">Libraries used</string>
     <string name="guava_library_title">Guava (Apache License 2.0)</string>
     <string name="otto_library_title">Otto (Apache License 2.0)</string>
@@ -196,6 +197,8 @@
     <string name="trademark_android_summary">Android, Google and Google Drive are trademarks of Google Corporation.</string>
     <string name="trademarks_other_title">Other Trademarks</string>
     <string name="trademarks_other_summary">All other trademarks belong to their respective owners.</string>
+    <string name="application_W_version_X_githash_Y_buildtype_Z">%1$s, %2$s-%3$s (%4$s)</string>
+    <string name="application_version_info_summary">Application name and version</string>
 
     <!-- warning notifications -->
     <string name="project_X_completion_warning">%1$s completion warning</string>

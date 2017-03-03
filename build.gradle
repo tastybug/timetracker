@@ -19,6 +19,15 @@ repositories {
     mavenCentral()
 }
 
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().substring(0, 8).trim()
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
@@ -47,7 +56,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
+        }
         release {
+            buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
             signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android.txt"),

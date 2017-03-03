@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Preference
+        android:key="@string/app_version_info"
+        android:summary="@string/application_version_info_summary"
+        android:title="@string/sample_app_version_info" />
+
     <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title">
 
         <PreferenceCategory android:title="@string/libraries_group_title">
