@@ -36,6 +36,7 @@ public class NGAsyncTaskTest {
     @Before
     public void setup() {
         when(ottoProvider.getSharedBus()).thenReturn(ottoBus);
+        when(payload.preparePostEvent()).thenReturn(mock(OttoEvent.class));
     }
 
     @Test

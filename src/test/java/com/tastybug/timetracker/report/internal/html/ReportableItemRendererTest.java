@@ -44,6 +44,9 @@ public class ReportableItemRendererTest {
     public void render_returns_proper_day_html_for_same_day_not_covering_whole_day_length_item() {
         // given
         ReportableItem reportableItem = mock(ReportableItem.class);
+        when(reportableItem.getStartDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getEndDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getDuration()).thenReturn(new Duration(0));
         when(reportableItem.isSameDay()).thenReturn(true);
         when(reportableItem.isWholeDay()).thenReturn(false);
         when(reportableItem.getDescription()).thenReturn(Optional.of("someDescription"));
@@ -67,6 +70,9 @@ public class ReportableItemRendererTest {
     public void render_returns_proper_day_html_for_same_day_whole_day_length_item() {
         // given
         ReportableItem reportableItem = mock(ReportableItem.class);
+        when(reportableItem.getStartDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getEndDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getDuration()).thenReturn(new Duration(0));
         when(reportableItem.isSameDay()).thenReturn(true);
         when(reportableItem.isWholeDay()).thenReturn(true);
         when(reportableItem.getDescription()).thenReturn(Optional.of("someDescription"));
@@ -90,6 +96,9 @@ public class ReportableItemRendererTest {
     public void render_returns_proper_day_html_for_multiple_day_item() {
         // given
         ReportableItem reportableItem = mock(ReportableItem.class);
+        when(reportableItem.getStartDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getEndDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getDuration()).thenReturn(new Duration(0));
         when(reportableItem.isSameDay()).thenReturn(false);
         when(reportableItem.isWholeDay()).thenReturn(false);
         when(reportableItem.getDescription()).thenReturn(Optional.of("someDescription"));
@@ -112,6 +121,9 @@ public class ReportableItemRendererTest {
     public void render_sets_placeholder_when_no_description_is_available() {
         // given
         ReportableItem reportableItem = mock(ReportableItem.class);
+        when(reportableItem.getStartDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getEndDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getDuration()).thenReturn(new Duration(0));
         when(reportableItem.isSameDay()).thenReturn(false);
         when(reportableItem.getDescription()).thenReturn(Optional.<String>absent());
         when(defaultLocaleDateFormatter.dateTimeFormat(any(Date.class))).thenReturn("aDateAndTime");
