@@ -1,7 +1,7 @@
-package com.tastybug.timetracker.model;
+package com.tastybug.timetracker.extensions.reporting.controller.internal;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.model.filter.TrackingRecordTimeFrameFilter;
+import com.tastybug.timetracker.model.TrackingRecord;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

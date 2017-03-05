@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.model.filter;
+package com.tastybug.timetracker.extensions.reporting.controller.internal;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;

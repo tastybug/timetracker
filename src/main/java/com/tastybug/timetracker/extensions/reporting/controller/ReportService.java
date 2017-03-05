@@ -3,6 +3,7 @@ package com.tastybug.timetracker.extensions.reporting.controller;
 
 import android.content.Context;
 
+import com.tastybug.timetracker.extensions.reporting.controller.internal.TrackingRecordTimeFrameFilter;
 import com.tastybug.timetracker.extensions.reporting.controller.internal.aggregated.AggregatedReportFactory;
 import com.tastybug.timetracker.extensions.reporting.controller.internal.nonaggregated.NonAggregatedReportFactory;
 import com.tastybug.timetracker.model.Project;
@@ -10,7 +11,6 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.model.filter.TrackingRecordTimeFrameFilter;
 
 import java.io.IOException;
 import java.util.Date;
