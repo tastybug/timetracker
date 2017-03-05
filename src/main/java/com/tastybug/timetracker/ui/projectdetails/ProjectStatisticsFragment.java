@@ -21,9 +21,9 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.task.project.config.ProjectConfiguredEvent;
+import com.tastybug.timetracker.task.project.update.UpdateProjectEvent;
 import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordEvent;
 import com.tastybug.timetracker.ui.dialog.project.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.ui.projectconfiguration.ProjectConfigurationActivity;
 
@@ -155,14 +155,14 @@ public class ProjectStatisticsFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
+    public void handleTrackingRecordUpdate(UpdateTrackingRecordEvent event) {
         Project project = new ProjectDAO(getActivity()).get(event.getTrackingRecord().getProjectUuid()).get();
         showProjectDetailsFor(project);
     }
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleProjectModified(ProjectConfiguredEvent event) {
+    public void handleProjectUpdate(UpdateProjectEvent event) {
         if (event.isClosure()) {
             getActivity().onBackPressed();
         }

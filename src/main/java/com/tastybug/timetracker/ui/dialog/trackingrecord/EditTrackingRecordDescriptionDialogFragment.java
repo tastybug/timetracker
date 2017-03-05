@@ -14,7 +14,7 @@ import android.widget.EditText;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.TrackingRecord;
-import com.tastybug.timetracker.task.tracking.modify.ModifyTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordTask;
 import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationActivity;
 
 public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment {
@@ -59,7 +59,7 @@ public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment 
         builder.setView(prepareView(descriptionOptional))
                 .setPositiveButton(R.string.common_save, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new ModifyTrackingRecordTask(getActivity())
+                        new UpdateTrackingRecordTask(getActivity())
                                 .withTrackingRecordUuid(trackingRecordUuid)
                                 .withDescription(getDescriptionFromWidget())
                                 .run();

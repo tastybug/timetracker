@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.task.project.config;
+package com.tastybug.timetracker.task.project.update;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -29,11 +29,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class ConfigureProjectTaskTest {
+public class UpdateProjectTaskTest {
 
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
     private TrackingConfigurationDAO trackingConfigurationDAO = mock(TrackingConfigurationDAO.class);
-    private ConfigureProjectTask subject = new ConfigureProjectTask(mock(Context.class),
+    private UpdateProjectTask subject = new UpdateProjectTask(mock(Context.class),
             projectDAO,
             trackingConfigurationDAO).withProjectUuid("1");
     private Project project = new Project("1", "title", Optional.<String>absent(), false);
@@ -50,7 +50,7 @@ public class ConfigureProjectTaskTest {
     @Test(expected = NullPointerException.class)
     public void validateArguments_yields_NPE_on_null_project_uuid() {
         // given
-        ConfigureProjectTask task = new ConfigureProjectTask(mock(Context.class),
+        UpdateProjectTask task = new UpdateProjectTask(mock(Context.class),
                 projectDAO,
                 trackingConfigurationDAO);
 
@@ -74,7 +74,7 @@ public class ConfigureProjectTaskTest {
         subject.prepareBatchOperations();
 
         // and
-        ProjectConfiguredEvent event = (ProjectConfiguredEvent) subject.preparePostEvent();
+        UpdateProjectEvent event = (UpdateProjectEvent) subject.preparePostEvent();
 
         // then
         assertEquals(project.getUuid(), event.getProjectUuid());

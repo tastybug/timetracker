@@ -17,8 +17,8 @@ import com.tastybug.timetracker.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.task.tracking.create.CreateTrackingRecordTask;
 import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.delete.DeletedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.modify.ModifyTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordTask;
 import com.tastybug.timetracker.ui.core.BaseActivity;
 import com.tastybug.timetracker.ui.dialog.navigation.ConfirmBackpressDialogFragment;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.ConfirmDeleteTrackingRecordDialogFragment;
@@ -125,7 +125,7 @@ public class TrackingRecordModificationActivity extends BaseActivity {
     private void performSaveModifications() {
         if (isConfigurationValid()) {
             if (trackingRecordUuidOpt.isPresent()) {
-                ModifyTrackingRecordTask task = buildTrackingRecordModificationTask();
+                UpdateTrackingRecordTask task = buildTrackingRecordModificationTask();
                 task.run();
             } else {
                 CreateTrackingRecordTask task = buildTrackingRecordCreationTask();
@@ -146,10 +146,10 @@ public class TrackingRecordModificationActivity extends BaseActivity {
         return configurationFragment.validateData();
     }
 
-    private ModifyTrackingRecordTask buildTrackingRecordModificationTask() {
+    private UpdateTrackingRecordTask buildTrackingRecordModificationTask() {
         TrackingRecordModificationFragment configurationFragment = getTrackingRecordModificationFragment();
 
-        ModifyTrackingRecordTask task = new ModifyTrackingRecordTask(this).withTrackingRecordUuid(trackingRecordUuidOpt.get());
+        UpdateTrackingRecordTask task = new UpdateTrackingRecordTask(this).withTrackingRecordUuid(trackingRecordUuidOpt.get());
         task = configurationFragment.collectModificationsForEdit(task);
 
         return task;
@@ -176,7 +176,7 @@ public class TrackingRecordModificationActivity extends BaseActivity {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
+    public void handleTrackingRecordUpdate(UpdateTrackingRecordEvent event) {
         super.onBackPressed();
     }
 

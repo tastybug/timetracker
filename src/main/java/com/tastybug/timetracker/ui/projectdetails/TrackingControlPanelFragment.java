@@ -19,7 +19,7 @@ import com.tastybug.timetracker.task.tracking.checkin.CheckInEvent;
 import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
 import com.tastybug.timetracker.task.tracking.checkout.CheckOutTask;
 import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordEvent;
 import com.tastybug.timetracker.ui.delegate.CheckInPreconditionCheckDelegate;
 
 public class TrackingControlPanelFragment extends Fragment implements View.OnClickListener {
@@ -93,7 +93,7 @@ public class TrackingControlPanelFragment extends Fragment implements View.OnCli
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
+    public void handleTrackingRecordUpdate(UpdateTrackingRecordEvent event) {
         if (currentProjectOpt.isPresent()
                 && currentProjectOpt.get().getUuid().equals(event.getTrackingRecord().getProjectUuid())) {
             if (!new TrackingRecordDAO(getActivity()).getRunning(currentProjectOpt.get().getUuid()).isPresent()) {

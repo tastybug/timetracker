@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.model.Project;
-import com.tastybug.timetracker.task.project.config.ConfigureProjectTask;
+import com.tastybug.timetracker.task.project.update.UpdateProjectTask;
 
 public class ConfirmProjectCloseToggleDialogFragment extends DialogFragment {
 
@@ -37,7 +37,7 @@ public class ConfirmProjectCloseToggleDialogFragment extends DialogFragment {
                 .setMessage(getDialogMessage(project))
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new ConfigureProjectTask(getActivity())
+                        new UpdateProjectTask(getActivity())
                                 .withProjectUuid(project.getUuid())
                                 .withClosureState(!project.isClosed())
                                 .run();

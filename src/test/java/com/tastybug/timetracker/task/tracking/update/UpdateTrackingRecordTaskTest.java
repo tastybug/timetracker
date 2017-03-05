@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.task.tracking.modify;
+package com.tastybug.timetracker.task.tracking.update;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -27,15 +27,15 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
-public class ModifyTrackingRecordTaskTest {
+public class UpdateTrackingRecordTaskTest {
 
 
     private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
     private TrackingRecord affectedTrackingRecord = new TrackingRecord();
-    private ModifyTrackingRecordTask subject = aValidTask();
+    private UpdateTrackingRecordTask subject = aValidTask();
 
-    private ModifyTrackingRecordTask aValidTask() {
-        return new ModifyTrackingRecordTask(mock(Context.class), trackingRecordDAO).withTrackingRecordUuid("123");
+    private UpdateTrackingRecordTask aValidTask() {
+        return new UpdateTrackingRecordTask(mock(Context.class), trackingRecordDAO).withTrackingRecordUuid("123");
     }
 
     @Before
@@ -46,7 +46,7 @@ public class ModifyTrackingRecordTaskTest {
     @Test(expected = IllegalArgumentException.class)
     public void validate_yields_IllegalArgument_on_missing_TrackingRecord_uuid() {
         // given
-        ModifyTrackingRecordTask task = new ModifyTrackingRecordTask(mock(Context.class), trackingRecordDAO);
+        UpdateTrackingRecordTask task = new UpdateTrackingRecordTask(mock(Context.class), trackingRecordDAO);
 
         // when
         task.validate();
@@ -113,7 +113,7 @@ public class ModifyTrackingRecordTaskTest {
         subject.prepareBatchOperations();
 
         // and
-        ModifiedTrackingRecordEvent event = (ModifiedTrackingRecordEvent) subject.preparePostEvent();
+        UpdateTrackingRecordEvent event = (UpdateTrackingRecordEvent) subject.preparePostEvent();
 
         // then
         assertEquals(affectedTrackingRecord, event.getTrackingRecord());
@@ -129,7 +129,7 @@ public class ModifyTrackingRecordTaskTest {
         subject.prepareBatchOperations();
 
         // and
-        ModifiedTrackingRecordEvent event = (ModifiedTrackingRecordEvent) subject.preparePostEvent();
+        UpdateTrackingRecordEvent event = (UpdateTrackingRecordEvent) subject.preparePostEvent();
 
         // then
         assertTrue(event.wasStopped());
@@ -144,7 +144,7 @@ public class ModifyTrackingRecordTaskTest {
         subject.prepareBatchOperations();
 
         // and
-        ModifiedTrackingRecordEvent event = (ModifiedTrackingRecordEvent) subject.preparePostEvent();
+        UpdateTrackingRecordEvent event = (UpdateTrackingRecordEvent) subject.preparePostEvent();
 
         // then
         assertFalse(event.wasStopped());

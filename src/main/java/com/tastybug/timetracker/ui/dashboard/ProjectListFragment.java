@@ -22,7 +22,7 @@ import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.task.tracking.checkin.CheckInEvent;
 import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
 import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordEvent;
 import com.tastybug.timetracker.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.ui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.ui.projectdetails.ProjectDetailsActivity;
@@ -136,7 +136,7 @@ public class ProjectListFragment extends ListFragment {
 
         @SuppressWarnings("unused")
         @Subscribe
-        public void handleTrackingModified(ModifiedTrackingRecordEvent event) {
+        public void handleTrackingRecordUpdate(UpdateTrackingRecordEvent event) {
             ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
         }
 

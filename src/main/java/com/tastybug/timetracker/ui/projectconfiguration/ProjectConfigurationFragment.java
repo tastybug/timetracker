@@ -15,8 +15,8 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.rounding.Rounding;
-import com.tastybug.timetracker.task.project.config.ConfigureProjectTask;
-import com.tastybug.timetracker.task.project.config.ProjectConfiguredEvent;
+import com.tastybug.timetracker.task.project.update.UpdateProjectEvent;
+import com.tastybug.timetracker.task.project.update.UpdateProjectTask;
 import com.tastybug.timetracker.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
@@ -219,7 +219,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
     }
 
     private void saveChanges(String projectTitle, String description) {
-        new ConfigureProjectTask(getActivity())
+        new UpdateProjectTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withProjectTitle(projectTitle)
                 .withProjectDescription(description)
@@ -227,7 +227,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
     }
 
     private void saveChanges(Integer hourLimit, Optional<Date> startDateOpt, Optional<Date> endDateInclusiveOpt, Boolean promptForDescription, Rounding.Strategy strategy) {
-        new ConfigureProjectTask(getActivity())
+        new UpdateProjectTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withHourLimit(hourLimit)
                 .withPromptForDescription(promptForDescription)
@@ -239,7 +239,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleProjectConfigured(ProjectConfiguredEvent event) {
+    public void handleProjectUpdate(UpdateProjectEvent event) {
         if (event.getProjectUuid().equals(projectUuid)) {
             Project project = getProjectFromDB();
             TrackingConfiguration trackingConfiguration = getTrackingConfigurationFromDB();

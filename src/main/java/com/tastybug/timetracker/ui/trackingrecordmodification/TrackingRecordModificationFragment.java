@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.task.tracking.create.CreateTrackingRecordTask;
-import com.tastybug.timetracker.task.tracking.modify.ModifyTrackingRecordTask;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordTask;
 
 import java.util.Date;
 
@@ -102,7 +102,7 @@ public class TrackingRecordModificationFragment extends Fragment {
                 && ensureEndDateIsAfterStartDate(startDate.get(), endDate.get());
     }
 
-    public ModifyTrackingRecordTask collectModificationsForEdit(ModifyTrackingRecordTask task) {
+    public UpdateTrackingRecordTask collectModificationsForEdit(UpdateTrackingRecordTask task) {
         task.withTrackingRecordUuid(existingTrackingRecordUuidOpt.get())
                 .withStartDate(ui.getAggregatedStartDate(true).get())
                 .withDescription(ui.getDescriptionFromWidget());

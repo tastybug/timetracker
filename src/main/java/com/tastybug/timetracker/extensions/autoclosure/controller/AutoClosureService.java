@@ -8,7 +8,7 @@ import com.tastybug.timetracker.model.TrackingConfiguration;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.model.statistics.Expiration;
-import com.tastybug.timetracker.task.project.config.ConfigureProjectTask;
+import com.tastybug.timetracker.task.project.update.UpdateProjectTask;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class AutoClosureService extends IntentService {
         List<Project> projects = getAllProjects();
         for (Project project : projects) {
             if (isProjectClosable(project)) {
-                new ConfigureProjectTask(getApplicationContext())
+                new UpdateProjectTask(getApplicationContext())
                         .withProjectUuid(project.getUuid())
                         .withClosureState(true)
                         .run();

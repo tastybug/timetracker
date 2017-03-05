@@ -19,7 +19,7 @@ import com.tastybug.timetracker.model.TrackingRecord;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
 import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.delete.DeletedTrackingRecordEvent;
-import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordEvent;
 import com.tastybug.timetracker.ui.dialog.trackingrecord.EditTrackingRecordDescriptionDialogFragment;
 import com.tastybug.timetracker.ui.trackingrecordmodification.TrackingRecordModificationActivity;
 
@@ -101,7 +101,7 @@ public class TrackingRecordListFragment extends ListFragment {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingRecordModifiedEvent(ModifiedTrackingRecordEvent event) {
+    public void handleTrackingRecordUpdate(UpdateTrackingRecordEvent event) {
         if (projectUuidOpt.isPresent()
                 && projectUuidOpt.get().equals(event.getTrackingRecord().getProjectUuid())) {
             ((TrackingRecordListAdapter) getListAdapter()).rebuildModel(event.getTrackingRecord().getProjectUuid());

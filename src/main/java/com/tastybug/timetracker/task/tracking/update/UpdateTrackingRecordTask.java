@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.task.tracking.modify;
+package com.tastybug.timetracker.task.tracking.update;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class ModifyTrackingRecordTask extends TaskPayload {
+public class UpdateTrackingRecordTask extends TaskPayload {
 
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
     private static final String START_DATE = "START_DATE";
@@ -25,31 +25,31 @@ public class ModifyTrackingRecordTask extends TaskPayload {
     private TrackingRecord trackingRecord;
     private boolean wasStopped = false;
 
-    public ModifyTrackingRecordTask(Context context) {
+    public UpdateTrackingRecordTask(Context context) {
         this(context, new TrackingRecordDAO(context));
     }
 
-    ModifyTrackingRecordTask(Context context, TrackingRecordDAO trackingRecordDAO) {
+    UpdateTrackingRecordTask(Context context, TrackingRecordDAO trackingRecordDAO) {
         super(context);
         this.trackingRecordDAO = trackingRecordDAO;
     }
 
-    public ModifyTrackingRecordTask withTrackingRecordUuid(String trackingRecordUuid) {
+    public UpdateTrackingRecordTask withTrackingRecordUuid(String trackingRecordUuid) {
         arguments.putString(TRACKING_RECORD_UUID, trackingRecordUuid);
         return this;
     }
 
-    public ModifyTrackingRecordTask withStartDate(Date startDate) {
+    public UpdateTrackingRecordTask withStartDate(Date startDate) {
         arguments.putSerializable(START_DATE, startDate);
         return this;
     }
 
-    public ModifyTrackingRecordTask withEndDate(Date endDate) {
+    public UpdateTrackingRecordTask withEndDate(Date endDate) {
         arguments.putSerializable(END_DATE, endDate);
         return this;
     }
 
-    public ModifyTrackingRecordTask withDescription(Optional<String> description) {
+    public UpdateTrackingRecordTask withDescription(Optional<String> description) {
         arguments.putSerializable(DESCRIPTION_OPT, description);
         return this;
     }
@@ -80,6 +80,6 @@ public class ModifyTrackingRecordTask extends TaskPayload {
 
     @Override
     protected OttoEvent preparePostEvent() {
-        return new ModifiedTrackingRecordEvent(trackingRecord, wasStopped);
+        return new UpdateTrackingRecordEvent(trackingRecord, wasStopped);
     }
 }

@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.task.project.config;
+package com.tastybug.timetracker.task.project.update;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class ConfigureProjectTask extends TaskPayload {
+public class UpdateProjectTask extends TaskPayload {
 
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
@@ -32,65 +32,65 @@ public class ConfigureProjectTask extends TaskPayload {
     private ProjectDAO projectDAO;
     private TrackingConfigurationDAO trackingConfigurationDAO;
 
-    public ConfigureProjectTask(Context context) {
+    public UpdateProjectTask(Context context) {
         this(context, new ProjectDAO(context), new TrackingConfigurationDAO(context));
     }
 
-    ConfigureProjectTask(Context context, ProjectDAO projectDAO, TrackingConfigurationDAO trackingConfigurationDAO) {
+    UpdateProjectTask(Context context, ProjectDAO projectDAO, TrackingConfigurationDAO trackingConfigurationDAO) {
         super(context);
         this.projectDAO = projectDAO;
         this.trackingConfigurationDAO = trackingConfigurationDAO;
     }
 
-    public ConfigureProjectTask withProjectUuid(String uuid) {
+    public UpdateProjectTask withProjectUuid(String uuid) {
         arguments.putString(PROJECT_UUID, uuid);
         return this;
     }
 
-    public ConfigureProjectTask withProjectTitle(String title) {
+    public UpdateProjectTask withProjectTitle(String title) {
         arguments.putString(PROJECT_TITLE, title);
         return this;
     }
 
-    public ConfigureProjectTask withProjectDescription(String description) {
+    public UpdateProjectTask withProjectDescription(String description) {
         arguments.putString(PROJECT_DESCRIPTION, description);
         return this;
     }
 
-    public ConfigureProjectTask withoutProjectDescription() {
+    public UpdateProjectTask withoutProjectDescription() {
         return withProjectDescription(null);
     }
 
-    public ConfigureProjectTask withHourLimit(Integer hourLimit) {
+    public UpdateProjectTask withHourLimit(Integer hourLimit) {
         arguments.putSerializable(HOUR_LIMIT, hourLimit);
         return this;
     }
 
-    public ConfigureProjectTask withoutHourLimit() {
+    public UpdateProjectTask withoutHourLimit() {
         return withHourLimit(null);
     }
 
-    public ConfigureProjectTask withStartDate(Date date) {
+    public UpdateProjectTask withStartDate(Date date) {
         arguments.putSerializable(START_DATE, date);
         return this;
     }
 
-    public ConfigureProjectTask withInclusiveEndDate(Date date) {
+    public UpdateProjectTask withInclusiveEndDate(Date date) {
         arguments.putSerializable(END_DATE_INCLUSIVE, date);
         return this;
     }
 
-    public ConfigureProjectTask withPromptForDescription(Boolean promptForDescription) {
+    public UpdateProjectTask withPromptForDescription(Boolean promptForDescription) {
         arguments.putBoolean(PROMPT_FOR_DESCRIPTION, promptForDescription);
         return this;
     }
 
-    public ConfigureProjectTask withRoundingStrategy(Rounding.Strategy strategy) {
+    public UpdateProjectTask withRoundingStrategy(Rounding.Strategy strategy) {
         arguments.putSerializable(ROUNDING_STRATEGY, strategy);
         return this;
     }
 
-    public ConfigureProjectTask withClosureState(boolean toBeClosed) {
+    public UpdateProjectTask withClosureState(boolean toBeClosed) {
         arguments.putBoolean(CLOSED, toBeClosed);
         return this;
     }
@@ -148,7 +148,7 @@ public class ConfigureProjectTask extends TaskPayload {
 
     @Override
     protected OttoEvent preparePostEvent() {
-        return new ProjectConfiguredEvent(arguments.getString(PROJECT_UUID),
+        return new UpdateProjectEvent(arguments.getString(PROJECT_UUID),
                 (arguments.containsKey(CLOSED) && arguments.getBoolean(CLOSED)));
     }
 }

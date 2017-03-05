@@ -1,14 +1,14 @@
-package com.tastybug.timetracker.task.project.config;
+package com.tastybug.timetracker.task.project.update;
 
 import com.google.common.base.MoreObjects;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 
-public class ProjectConfiguredEvent implements OttoEvent {
+public class UpdateProjectEvent implements OttoEvent {
 
     private String projectUuid;
     private boolean closure = false;
 
-    ProjectConfiguredEvent(String projectUuid, boolean closure) {
+    UpdateProjectEvent(String projectUuid, boolean closure) {
         this.projectUuid = projectUuid;
         this.closure = closure;
     }

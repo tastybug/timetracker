@@ -10,11 +10,11 @@ import com.tastybug.timetracker.extensions.trackingplayer.internal.NotificationM
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.dao.ProjectDAO;
-import com.tastybug.timetracker.task.project.config.ProjectConfiguredEvent;
 import com.tastybug.timetracker.task.project.delete.ProjectDeletedEvent;
+import com.tastybug.timetracker.task.project.update.UpdateProjectEvent;
 import com.tastybug.timetracker.task.tracking.checkin.CheckInEvent;
 import com.tastybug.timetracker.task.tracking.checkout.CheckOutEvent;
-import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
+import com.tastybug.timetracker.task.tracking.update.UpdateTrackingRecordEvent;
 
 /**
  * This long running service manages the Tracking Player notification regarding:
@@ -74,7 +74,7 @@ public class LifecycleService extends Service {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleTrackingRecordModified(ModifiedTrackingRecordEvent event) {
+    public void handleTrackingRecordUpdate(UpdateTrackingRecordEvent event) {
         if (event.wasStopped()) {
             handleProjectStopped(event.getTrackingRecord().getProjectUuid());
         }
@@ -88,7 +88,7 @@ public class LifecycleService extends Service {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void handleProjectModified(ProjectConfiguredEvent event) {
+    public void handleProjectUpdate(UpdateProjectEvent event) {
         Project project = new ProjectDAO(getApplicationContext()).get(event.getProjectUuid()).get();
         if (project.isClosed()) {
             removeProjectFromPlayer(event.getProjectUuid());
