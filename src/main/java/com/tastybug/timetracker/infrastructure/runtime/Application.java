@@ -3,10 +3,10 @@ package com.tastybug.timetracker.infrastructure.runtime;
 import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.tastybug.timetracker.extensions.autoclosure.controller.AutoClosureAlarmSetup;
+import com.tastybug.timetracker.extensions.trackingplayer.LifecycleService;
+import com.tastybug.timetracker.extensions.warning.WarningEventListenerService;
 import com.tastybug.timetracker.infrastructure.filecache.CacheCleaner;
-import com.tastybug.timetracker.ui.autoclosure.AutoClosureAlarmSetup;
-import com.tastybug.timetracker.ui.trackingplayer.LifecycleService;
-import com.tastybug.timetracker.ui.warn.WarningEventListenerService;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 

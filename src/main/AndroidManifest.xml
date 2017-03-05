@@ -41,7 +41,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.manualbackupimport.ManualBackupImportLandingActivity"
+            android:name=".extensions.backup.ui.ManualBackupImportLandingActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -50,12 +50,12 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ui.trackingplayer.AfterBootTrackingPlayerVisibilityHandler">
+        <receiver android:name=".extensions.trackingplayer.AfterBootTrackingPlayerVisibilityHandler">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".ui.autoclosure.AfterBootAutoClosureRestart">
+        <receiver android:name=".extensions.autoclosure.controller.AfterBootAutoClosureRestart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -78,16 +78,16 @@
         </provider>
 
         <service
-            android:name=".ui.trackingplayer.LifecycleService"
+            android:name=".extensions.trackingplayer.LifecycleService"
             android:exported="false" />
         <service
-            android:name=".ui.trackingplayer.CallbackService"
+            android:name=".extensions.trackingplayer.CallbackService"
             android:exported="false" />
         <service
-            android:name=".ui.warn.WarningEventListenerService"
+            android:name=".extensions.warning.WarningEventListenerService"
             android:exported="false" />
         <service
-            android:name=".ui.autoclosure.AutoClosureService"
+            android:name=".extensions.autoclosure.controller.AutoClosureService"
             android:exported="false" />
 
         <!--database stuff-->

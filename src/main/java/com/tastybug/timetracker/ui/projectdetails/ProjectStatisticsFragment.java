@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.extensions.reporting.ui.CreateReportDialogFragment;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.model.Project;
 import com.tastybug.timetracker.model.TrackingConfiguration;
@@ -25,7 +26,6 @@ import com.tastybug.timetracker.task.tracking.create.CreatedTrackingRecordEvent;
 import com.tastybug.timetracker.task.tracking.modify.ModifiedTrackingRecordEvent;
 import com.tastybug.timetracker.ui.dialog.project.ConfirmDeleteProjectDialogFragment;
 import com.tastybug.timetracker.ui.projectconfiguration.ProjectConfigurationActivity;
-import com.tastybug.timetracker.ui.report.CreateReportDialogFragment;
 
 public class ProjectStatisticsFragment extends Fragment {
 
