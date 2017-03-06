@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.tastybug.timetracker.extensions.autoclosure.controller.AutoClosureAlarmSetup;
+import com.tastybug.timetracker.extensions.checkoutreminder.controller.ReminderAlarmSetup;
 import com.tastybug.timetracker.extensions.trackingplayer.LifecycleService;
 import com.tastybug.timetracker.extensions.warning.WarningEventListenerService;
 import com.tastybug.timetracker.infrastructure.filecache.CacheCleaner;
@@ -25,6 +26,7 @@ public class Application extends android.app.Application {
         startTrackingPlayerLifecycleBackgroundService();
         startWarningBackgroundService();
         startAutoClosureAlarmSetup();
+        startCheckoutReminderAlarmSetup();
         if (isFirstRun()) {
             declareFirstRunConsumed();
         }
@@ -40,6 +42,10 @@ public class Application extends android.app.Application {
 
     private void startAutoClosureAlarmSetup() {
         new AutoClosureAlarmSetup().setAlarm(getApplicationContext());
+    }
+
+    private void startCheckoutReminderAlarmSetup() {
+        new ReminderAlarmSetup().setAlarm(getApplicationContext());
     }
 
     private void startWarningBackgroundService() {

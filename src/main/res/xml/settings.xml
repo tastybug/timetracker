@@ -1,44 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference
-        android:key="@string/app_version_info"
-        android:summary="@string/application_version_info_summary"
-        android:title="@string/sample_app_version_info" />
+    <PreferenceCategory android:title="@string/warnings_group_title">
 
-    <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/checkout_reminder_enabled_settings_key"
+            android:title="@string/checkout_reminder_title"
+            android:summary="@string/checkout_reminder_summary"/>
 
-        <PreferenceCategory android:title="@string/libraries_group_title">
+    </PreferenceCategory>
 
-            <Preference android:title="@string/guava_library_title">
-                <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="https://github.com/google/guava/blob/master/COPYING" />
-            </Preference>
-            <Preference android:title="@string/otto_library_title">
-                <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="http://square.github.io/otto/#license" />
-            </Preference>
-            <Preference android:title="@string/joda_library_title">
-                <intent
-                    android:action="android.intent.action.VIEW"
-                    android:data="http://www.joda.org/joda-time/license.html" />
-            </Preference>
+    <PreferenceCategory android:title="@string/about_group_title">
 
-        </PreferenceCategory>
+        <Preference
+            android:key="@string/app_version_info"
+            android:summary="@string/application_version_info_summary"
+            android:title="@string/sample_app_version_info" />
 
-        <PreferenceCategory android:title="@string/trademarks_group_title">
+        <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title">
 
-            <Preference
-                android:summary="@string/trademark_android_summary"
-                android:title="@string/trademark_android_title" />
-            <Preference
-                android:summary="@string/trademarks_other_summary"
-                android:title="@string/trademarks_other_title" />
+            <PreferenceCategory android:title="@string/libraries_group_title">
 
-        </PreferenceCategory>
+                <Preference android:title="@string/guava_library_title">
+                    <intent
+                        android:action="android.intent.action.VIEW"
+                        android:data="https://github.com/google/guava/blob/master/COPYING" />
+                </Preference>
+                <Preference android:title="@string/otto_library_title">
+                    <intent
+                        android:action="android.intent.action.VIEW"
+                        android:data="http://square.github.io/otto/#license" />
+                </Preference>
+                <Preference android:title="@string/joda_library_title">
+                    <intent
+                        android:action="android.intent.action.VIEW"
+                        android:data="http://www.joda.org/joda-time/license.html" />
+                </Preference>
 
-    </PreferenceScreen>
+            </PreferenceCategory>
+
+            <PreferenceCategory android:title="@string/trademarks_group_title">
+
+                <Preference
+                    android:summary="@string/trademark_android_summary"
+                    android:title="@string/trademark_android_title" />
+                <Preference
+                    android:summary="@string/trademarks_other_summary"
+                    android:title="@string/trademarks_other_title" />
+
+            </PreferenceCategory>
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

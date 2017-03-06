@@ -42,3 +42,8 @@ Verben
 * Pausieren: alias eines Checkouts
 * Schliessen/Close: Beendigung eines Projekts
 * Wiedereröffnen/Re-open: Projektbeendigung rückgängig machen
+
+Warnungen
+---------
+
+* Checkout Erinnerung / Checkout Reminder: Erinnerung bei überlangen Zeiterfassung, diese zu schließen

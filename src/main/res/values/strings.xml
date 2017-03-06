@@ -199,6 +199,10 @@
     <string name="trademarks_other_summary">All other trademarks belong to their respective owners.</string>
     <string name="application_W_version_X_githash_Y_buildtype_Z">%1$s, %2$s-%3$s (%4$s)</string>
     <string name="application_version_info_summary">Application name and version</string>
+    <string name="about_group_title">About</string>
+    <string name="warnings_group_title">Warning</string>
+    <string name="checkout_reminder_title">Show Checkout Reminder</string>
+    <string name="checkout_reminder_summary">Show reminder on overly long tracking sessions.</string>
 
     <!-- warning notifications -->
     <string name="project_X_completion_warning">%1$s completion warning</string>
@@ -249,5 +253,10 @@
     <string name="title_project_closure_change">Project closure</string>
     <string name="confirm_project_close">Do you want to close this project for edits?</string>
     <string name="confirm_project_reopen">Do you want to re-open this project?</string>
+
+    <!-- checkout reminder notification -->
+    <string name="checkout_reminder_notification_title">Checkout Reminder</string>
+    <string name="project_X_is_tracking_since_Y">%1$s is being tracked since %2$s</string>
+
 
 </resources>

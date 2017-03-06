@@ -89,6 +89,9 @@
         <service
             android:name=".extensions.autoclosure.controller.AutoClosureService"
             android:exported="false" />
+        <service
+            android:name=".extensions.checkoutreminder.controller.ReminderIntentService"
+            android:exported="false" />
 
         <!--database stuff-->
         <meta-data
