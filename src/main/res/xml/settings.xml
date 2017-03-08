@@ -5,6 +5,18 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="@string/expiration_warning_enabled_settings_key"
+            android:title="@string/expiration_warning_title"
+            android:summary="@string/expiration_warning_summary"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/completion_warning_enabled_settings_key"
+            android:title="@string/completion_warning_title"
+            android:summary="@string/completion_warning_summary"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="@string/checkout_reminder_enabled_settings_key"
             android:title="@string/checkout_reminder_title"
             android:summary="@string/checkout_reminder_summary"/>

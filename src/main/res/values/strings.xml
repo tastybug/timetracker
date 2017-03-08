@@ -183,8 +183,6 @@
     <string name="tracking_player_tracking_since_X">Tracking since %1$s</string>
     <string name="tracking_player_paused_since_X">Paused since %1$s</string>
 
-    <!-- backup stuff -->
-
     <!-- settings -->
     <string name="application_settings_activity_title">Settings</string>
     <string name="libraries_and_trademarks_screen_title">Libraries, Licenses &amp; Trademarks</string>
@@ -200,9 +198,13 @@
     <string name="application_W_version_X_githash_Y_buildtype_Z">%1$s, %2$s-%3$s (%4$s)</string>
     <string name="application_version_info_summary">Application name and version</string>
     <string name="about_group_title">About</string>
-    <string name="warnings_group_title">Warning</string>
-    <string name="checkout_reminder_title">Show Checkout Reminder</string>
-    <string name="checkout_reminder_summary">Show reminder on overly long tracking sessions.</string>
+    <string name="warnings_group_title">Warnings &amp; Reminders</string>
+    <string name="checkout_reminder_title">Checkout Reminder</string>
+    <string name="checkout_reminder_summary">Show reminder for overly long tracking sessions.</string>
+    <string name="expiration_warning_title">Project Expiration Warning</string>
+    <string name="expiration_warning_summary">For getting past the 90% time frame mark.</string>
+    <string name="completion_warning_title">Project Completion Warning</string>
+    <string name="completion_warning_summary">For getting past the 90% mark of allotted time.</string>
 
     <!-- warning notifications -->
     <string name="project_X_completion_warning">%1$s completion warning</string>
