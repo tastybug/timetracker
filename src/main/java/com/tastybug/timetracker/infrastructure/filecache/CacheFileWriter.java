@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.util.ConditionalLog;
+import com.tastybug.timetracker.infrastructure.util.ConditionalLog;
 
 import java.io.File;
 import java.io.FileOutputStream;

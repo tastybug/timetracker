@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        class="com.tastybug.timetracker.ui.dashboard.ProjectListFragment"
+        class="com.tastybug.timetracker.core.ui.dashboard.ProjectListFragment"
         android:id="@id/fragment_project_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -2,7 +2,7 @@ package com.tastybug.timetracker.infrastructure.filecache;
 
 import android.os.Build;
 
-import com.tastybug.timetracker.util.DateProvider;
+import com.tastybug.timetracker.infrastructure.util.DateProvider;
 
 import org.joda.time.DateTime;
 import org.junit.Before;

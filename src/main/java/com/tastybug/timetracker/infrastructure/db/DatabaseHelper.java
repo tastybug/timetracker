@@ -13,9 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logDebug;
-import static com.tastybug.timetracker.util.ConditionalLog.logError;
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
+import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logDebug;
+import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logError;
+import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
 class DatabaseHelper extends SQLiteOpenHelper {
 

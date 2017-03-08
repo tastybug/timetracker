@@ -2,14 +2,14 @@ package com.tastybug.timetracker.infrastructure.filecache;
 
 import android.content.Context;
 
-import com.tastybug.timetracker.util.ConditionalLog;
-import com.tastybug.timetracker.util.DateProvider;
+import com.tastybug.timetracker.infrastructure.util.ConditionalLog;
+import com.tastybug.timetracker.infrastructure.util.DateProvider;
 
 import org.joda.time.DateTime;
 
 import java.io.File;
 
-import static com.tastybug.timetracker.util.ConditionalLog.logInfo;
+import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
 public class CacheCleaner {
 
