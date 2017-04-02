@@ -1,18 +1,33 @@
 package com.tastybug.timetracker.core.task.tracking.delete;
 
+import android.content.Intent;
+
 import com.google.common.base.MoreObjects;
-import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.core.task.LifecycleEvent;
+import com.tastybug.timetracker.core.task.tracking.TrackingRecordChangeIntent;
 
-public class DeletedTrackingRecordEvent implements OttoEvent {
+import static com.tastybug.timetracker.core.task.tracking.TrackingRecordChangeIntent.Type.DELETE;
 
-    private String trackingRecordUuid;
+public class DeletedTrackingRecordEvent implements LifecycleEvent {
 
-    DeletedTrackingRecordEvent(String uuid) {
-        this.trackingRecordUuid = uuid;
+    private String projectUuid, trackingRecordUuid;
+
+    DeletedTrackingRecordEvent(String projectUuid, String trackingRecordUuid) {
+        this.projectUuid = projectUuid;
+        this.trackingRecordUuid = trackingRecordUuid;
     }
 
     public String getTrackingRecordUuid() {
         return trackingRecordUuid;
+    }
+
+    public String getProjectUuid() {
+        return projectUuid;
+    }
+
+    @Override
+    public Intent getAsBroadcastEvent() {
+        return new TrackingRecordChangeIntent(projectUuid, trackingRecordUuid, DELETE, false);
     }
 
     public String toString() {

@@ -63,9 +63,27 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".extension.wifitracking.controller.OSWifiBroadcastReceiver">
+        <receiver android:name=".extension.wifitracking.controller.OSWifiBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".extension.trackingplayer.DomainEventBroadcastReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.PROJECT_CHANGE" />
+                <category android:name="com.tastybug.timetracker.LIFECYCLE_EVENT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.TRACKING_RECORD_CHANGE" />
+                <category android:name="com.tastybug.timetracker.LIFECYCLE_EVENT" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".extension.warning.DomainEventBroadcastReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.PROJECT_CHANGE" />
+                <category android:name="com.tastybug.timetracker.LIFECYCLE_EVENT" />
             </intent-filter>
         </receiver>
 
@@ -84,17 +102,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_paths" />
         </provider>
-
-        <!-- long running -->
-        <service
-            android:name=".extension.trackingplayer.TrackingPlayerLifecycleService"
-            android:exported="false" />
-        <service
-            android:name=".extension.warning.WarningEventListenerService"
-            android:exported="false" />
-        <service
-            android:name=".extension.wifitracking.controller.WifiTriggerLifecycleService"
-            android:exported="false" />
 
         <!-- intent services -->
         <service

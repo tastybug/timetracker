@@ -19,15 +19,17 @@ class NGAsyncTask extends AsyncTask<Bundle, Integer, Long> {
     private TaskPayload taskPayload;
     private OttoProvider ottoProvider;
     private BatchOperationExecutor batchOperationExecutor;
+    private Context context;
 
     NGAsyncTask(Context context, TaskPayload payload) {
-        this(new OttoProvider(), new BatchOperationExecutor(context.getContentResolver()), payload);
+        this(context, new OttoProvider(), new BatchOperationExecutor(context.getContentResolver()), payload);
     }
 
-    NGAsyncTask(OttoProvider ottoProvider, BatchOperationExecutor batchOperationExecutor, TaskPayload payload) {
+    NGAsyncTask(Context context, OttoProvider ottoProvider, BatchOperationExecutor batchOperationExecutor, TaskPayload payload) {
         this.batchOperationExecutor = batchOperationExecutor;
         this.taskPayload = payload;
         this.ottoProvider = ottoProvider;
+        this.context = context;
     }
 
     void run() throws IllegalArgumentException, NullPointerException {
@@ -48,5 +50,8 @@ class NGAsyncTask extends AsyncTask<Bundle, Integer, Long> {
         OttoEvent event = taskPayload.preparePostEvent();
         logInfo(getClass().getSimpleName(), "Finished! Firing " + event);
         ottoProvider.getSharedBus().post(event);
+        if (event instanceof LifecycleEvent) {
+            context.sendBroadcast(((LifecycleEvent) event).getAsBroadcastEvent());
+        }
     }
 }

@@ -1,10 +1,15 @@
 package com.tastybug.timetracker.core.task.project.create;
 
+import android.content.Intent;
+
 import com.google.common.base.MoreObjects;
 import com.tastybug.timetracker.core.model.Project;
-import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import com.tastybug.timetracker.core.task.LifecycleEvent;
+import com.tastybug.timetracker.core.task.project.ProjectChangeIntent;
 
-public class ProjectCreatedEvent implements OttoEvent {
+import static com.tastybug.timetracker.core.task.project.ProjectChangeIntent.Type.CREATE;
+
+public class ProjectCreatedEvent implements LifecycleEvent {
 
     private Project project;
 
@@ -16,10 +21,14 @@ public class ProjectCreatedEvent implements OttoEvent {
         return project;
     }
 
+    @Override
+    public Intent getAsBroadcastEvent() {
+        return new ProjectChangeIntent(project.getUuid(), CREATE);
+    }
+
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("project", getProject())
                 .toString();
     }
-
 }

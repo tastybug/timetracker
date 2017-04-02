@@ -16,8 +16,7 @@ public class AfterBootTrackingPlayerVisibilityHandler extends BroadcastReceiver 
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             ConditionalLog.logInfo(TAG, "Boot up completed, checking tracking player visibility.");
             if (hasOngoingProjects(context)) {
-                Intent pushIntent = new Intent(context, TrackingPlayerLifecycleService.class);
-                context.startService(pushIntent);
+                new TrackingPlayer(context).showSomeProjectOrHide();
             }
         }
     }

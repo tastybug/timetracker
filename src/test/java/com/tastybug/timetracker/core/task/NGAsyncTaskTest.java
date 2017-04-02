@@ -1,6 +1,8 @@
 package com.tastybug.timetracker.core.task;
 
 import android.content.ContentProviderOperation;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import com.squareup.otto.Bus;
@@ -17,6 +19,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -27,11 +30,12 @@ import static org.mockito.Mockito.when;
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class NGAsyncTaskTest {
 
+    private Context context = mock(Context.class);
     private OttoProvider ottoProvider = mock(OttoProvider.class);
     private Bus ottoBus = mock(Bus.class);
     private BatchOperationExecutor batchOperationExecutor = mock(BatchOperationExecutor.class);
     private TaskPayload payload = mock(TaskPayload.class);
-    private NGAsyncTask subject = new NGAsyncTask(ottoProvider, batchOperationExecutor, payload);
+    private NGAsyncTask subject = new NGAsyncTask(context, ottoProvider, batchOperationExecutor, payload);
 
     @Before
     public void setup() {
@@ -62,6 +66,22 @@ public class NGAsyncTaskTest {
 
         // then
         verify(batchOperationExecutor).executeBatch(operationList);
+    }
+
+    @Test
+    public void RUN_will_broadcast_lifecycle_event_depending_on_otto_event_type() {
+        // given
+        LifecycleEvent lifeCycleOttoEvent = mock(LifecycleEvent.class);
+        Intent intent = mock(Intent.class);
+        when(lifeCycleOttoEvent.getAsBroadcastEvent()).thenReturn(intent);
+        when(payload.preparePostEvent()).thenReturn(lifeCycleOttoEvent);
+
+
+        // when
+        subject.run();
+
+        // then
+        verify(context).sendBroadcast(eq(intent));
     }
 
 }

@@ -1,9 +1,14 @@
 package com.tastybug.timetracker.core.task.project.delete;
 
-import com.google.common.base.MoreObjects;
-import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import android.content.Intent;
 
-public class ProjectDeletedEvent implements OttoEvent {
+import com.google.common.base.MoreObjects;
+import com.tastybug.timetracker.core.task.LifecycleEvent;
+import com.tastybug.timetracker.core.task.project.ProjectChangeIntent;
+
+import static com.tastybug.timetracker.core.task.project.ProjectChangeIntent.Type.DELETE;
+
+public class ProjectDeletedEvent implements LifecycleEvent {
 
     private String projectUuid;
 
@@ -13,6 +18,11 @@ public class ProjectDeletedEvent implements OttoEvent {
 
     public String getProjectUuid() {
         return projectUuid;
+    }
+
+    @Override
+    public Intent getAsBroadcastEvent() {
+        return new ProjectChangeIntent(projectUuid, DELETE);
     }
 
     public String toString() {

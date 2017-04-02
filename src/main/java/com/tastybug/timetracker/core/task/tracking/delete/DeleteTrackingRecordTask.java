@@ -16,6 +16,7 @@ public class DeleteTrackingRecordTask extends TaskPayload {
     private static final String TRACKING_RECORD_UUID = "TRACKING_RECORD_UUID";
 
     private TrackingRecordDAO trackingRecordDAO;
+    private String projectUuid, trackingRecordUuid;
 
     public DeleteTrackingRecordTask(Context context) {
         this(context, new TrackingRecordDAO(context));
@@ -38,15 +39,15 @@ public class DeleteTrackingRecordTask extends TaskPayload {
 
     @Override
     protected List<ContentProviderOperation> prepareBatchOperations() {
-        String uuid = arguments.getString(TRACKING_RECORD_UUID);
-        trackingRecordDAO.delete(uuid);
+        trackingRecordUuid = arguments.getString(TRACKING_RECORD_UUID);
+        projectUuid = trackingRecordDAO.get(trackingRecordUuid).get().getProjectUuid();
+        trackingRecordDAO.delete(trackingRecordUuid);
 
         return Collections.emptyList();
     }
 
     @Override
     protected OttoEvent preparePostEvent() {
-        String uuid = arguments.getString(TRACKING_RECORD_UUID);
-        return new DeletedTrackingRecordEvent(uuid);
+        return new DeletedTrackingRecordEvent(projectUuid, trackingRecordUuid);
     }
 }

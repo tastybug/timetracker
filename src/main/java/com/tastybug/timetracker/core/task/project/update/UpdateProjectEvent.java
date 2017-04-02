@@ -1,9 +1,14 @@
 package com.tastybug.timetracker.core.task.project.update;
 
-import com.google.common.base.MoreObjects;
-import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
+import android.content.Intent;
 
-public class UpdateProjectEvent implements OttoEvent {
+import com.google.common.base.MoreObjects;
+import com.tastybug.timetracker.core.task.LifecycleEvent;
+import com.tastybug.timetracker.core.task.project.ProjectChangeIntent;
+
+import static com.tastybug.timetracker.core.task.project.ProjectChangeIntent.Type.UPDATE;
+
+public class UpdateProjectEvent implements LifecycleEvent {
 
     private String projectUuid;
     private boolean closure = false;
@@ -19,6 +24,11 @@ public class UpdateProjectEvent implements OttoEvent {
 
     public boolean isClosure() {
         return closure;
+    }
+
+    @Override
+    public Intent getAsBroadcastEvent() {
+        return new ProjectChangeIntent(projectUuid, UPDATE);
     }
 
     public String toString() {

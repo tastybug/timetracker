@@ -17,6 +17,7 @@ public class CheckInTask extends TaskPayload {
 
     protected static final String PROJECT_UUID = "PROJECT_UUID";
 
+    protected Context context;
     protected ProjectDAO projectDAO;
     protected TrackingRecordDAO trackingRecordDAO;
     protected TrackingRecord trackingRecord;
@@ -27,6 +28,7 @@ public class CheckInTask extends TaskPayload {
 
     CheckInTask(Context context, ProjectDAO projectDAO, TrackingRecordDAO trackingRecordDAO) {
         super(context);
+        this.context = context;
         this.trackingRecordDAO = trackingRecordDAO;
         this.projectDAO = projectDAO;
     }
