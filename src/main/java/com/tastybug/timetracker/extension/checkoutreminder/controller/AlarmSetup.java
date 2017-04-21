@@ -13,13 +13,13 @@ import java.util.Date;
 
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
-public class ReminderAlarmSetup {
+public class AlarmSetup {
 
     private static final int RELEASE_FREQUENCY = 1000 * 60 * 60 * 3;
     private static final int DEBUG_FREQUENCY = 1000 * 20;
 
     public void setAlarm(Context context) {
-        logInfo(ReminderAlarmSetup.class.getSimpleName(), "Arming alarm for checkout reminder on " + getStartDate());
+        logInfo(AlarmSetup.class.getSimpleName(), "Arming alarm for checkout reminder on " + getStartDate());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = getPendingIntent(context);

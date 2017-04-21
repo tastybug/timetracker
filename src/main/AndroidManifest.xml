@@ -57,18 +57,27 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".extension.autoclosure.controller.AfterBootAutoClosureRestart">
+        <receiver android:name=".extension.autoclosure.controller.AlarmStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.APP_START" />
+            </intent-filter>
         </receiver>
-
+        <receiver android:name=".extension.checkoutreminder.controller.AlarmStarter">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.APP_START" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".extension.wifitracking.controller.OSWifiBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".extension.trackingplayer.DomainEventBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.tastybug.timetracker.PROJECT_CHANGE" />
@@ -79,7 +88,6 @@
                 <category android:name="com.tastybug.timetracker.LIFECYCLE_EVENT" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".extension.warning.DomainEventBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.tastybug.timetracker.PROJECT_CHANGE" />

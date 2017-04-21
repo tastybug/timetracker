@@ -11,10 +11,10 @@ import java.util.Date;
 
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
-public class AutoClosureAlarmSetup {
+class AlarmSetup {
 
-    public void setAlarm(Context context) {
-        logInfo(AutoClosureAlarmSetup.class.getSimpleName(), "Arming alarm for auto closure on " + getStartDate());
+    void setAlarm(Context context) {
+        logInfo(AlarmSetup.class.getSimpleName(), "Arming alarm for auto closure on " + getStartDate());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = getPendingIntent(context);
