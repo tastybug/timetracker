@@ -7,12 +7,13 @@ Entitäten
 * `Projekt`
     * `Titel`
     * `Beschreibung`
+    * `Kontrakt Id`: Vom Auftraggeber vergebener Schlüssel, der den Arbeitsauftrag identifiziert und zu Abrechnungszwecken bekannt sein kann.
     
 * `Zeiterfassungskonfiguration` / `Tracking Configuration`
-    * Projektzeitraum (Time Frame): Start- und Enddatum eines Projekts (jeweils optional)
-    * maximaler Projektumfang: eine Höchstdauer für ein Projekt
+    * `Projektzeitraum` / `Time Frame`: Start- und Enddatum eines Projekts (jeweils optional)
+    * `Maximaler Projektumfang`: eine Höchstdauer für ein Projekt
         * ein Projekt, auf welches mehr gebucht wurde als konfiguriert ist 'OVERBOOKED'
-    * Rundungsstrategie: werden Zeiterfassungen nach Beendigung auf/ab gerundet?
+    * `Rundungsstrategie` / `Rounding Strategy`: werden Zeiterfassungen nach Beendigung auf/ab gerundet?
     
 * `Zeiterfassung` / `TrackingRecord`: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
     * Start-,Endedatum der -
@@ -22,13 +23,12 @@ Entitäten
 Statistiken
 -----------
 
-* Projektstatistiken (Project Statistics)
-    * `Effektiver Projektumfang` / `Project Duration`: die Dauer eines Projektes auf Basis der bisherigen Zeiterfassungen ('es wurden bisher 10h erfasst')
-    * `Projekterfüllung` / `Project Completion`: prozentuale Erfüllung eines Projekts. Ist gleich effektivem Projektumfang im Verhältnis zum max. Projektumfang.
-        * ein Projekt ohne max. Umfang hat keine Projekterfüllung
-    * `Projektfristerreichung` / `Project Expiration`: prozentualer Wert der Fristerreichung eines Projekts. Messgenauigkeit in Stunden.
-        * ein Projekt ohne Start- oder Enddatum hat kein Projektablauf
-    
+* `Effektiver Projektumfang` / `Project Duration`: die Dauer eines Projektes auf Basis der bisherigen Zeiterfassungen ('es wurden bisher 10h erfasst')
+* `Projekterfüllung` / `Project Completion`: prozentuale Erfüllung eines Projekts. Ist gleich effektivem Projektumfang im Verhältnis zum max. Projektumfang.
+    * ein Projekt ohne max. Umfang hat keine Projekterfüllung
+* `Projektfristerreichung` / `Project Expiration`: prozentualer Wert der Fristerreichung eines Projekts. Messgenauigkeit in Stunden.
+    * ein Projekt ohne Start- oder Enddatum hat kein Projektablauf
+
 Warnungen
 ---------
 
