@@ -127,7 +127,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), false));
+        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), Optional.<String>absent(), false));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -138,7 +138,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), false));
+        htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), Optional.<String>absent(), false));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -171,7 +171,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // when
-        htmlReport.insertProjectTitle(new Project("", "MyTitle", Optional.<String>absent(), false));
+        htmlReport.insertProjectTitle(new Project("", "MyTitle", Optional.<String>absent(), Optional.<String>absent(), false));
 
         // then
         assertEquals("ProjectLabel MyTitle", htmlReport.toHtml());
@@ -184,7 +184,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), false));
+        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), Optional.<String>absent(), false));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -195,7 +195,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // expect
-        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), false));
+        htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), Optional.<String>absent(), false));
     }
 
     @Test
@@ -206,7 +206,7 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // when
-        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.of("desc"), false));
+        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.of("desc"), Optional.<String>absent(), false));
 
         // then
         assertEquals("ProjectDescLabel desc", htmlReport.toHtml());
@@ -221,10 +221,62 @@ public class HtmlReportTest {
         htmlReport = new HtmlReport(context, templateAssetProvider);
 
         // when: reporting a project *without* a description
-        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.<String>absent(), false));
+        htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.<String>absent(), Optional.<String>absent(), false));
 
         // then
         assertEquals("ProjectDescLabel NoDescriptionPlaceholder", htmlReport.toHtml());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void insertContractId_throws_IllegalState_when_label_marker_is_not_found_in_template() throws IOException {
+        // given
+        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_labelXX} --> <!-- ${project_contract_id} -->");
+        htmlReport = new HtmlReport(context, templateAssetProvider);
+
+        // expect
+        htmlReport.insertContractId(new Project("", "A Title", Optional.of("desc"), Optional.of("contract"), false));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void insertContractId_throws_IllegalState_when_value_marker_is_not_found_in_template() throws IOException {
+        // given
+        when(context.getString(R.string.report_project_contract_id_label)).thenReturn("ContractIdLabel");
+        when(context.getString(R.string.report_project_no_contract_id_placeholder)).thenReturn("Placeholder");
+        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_label} --> <!-- ${project_contract_idXX} -->");
+        htmlReport = new HtmlReport(context, templateAssetProvider);
+
+        // expect
+        htmlReport.insertContractId(new Project("", "A Title", Optional.of("desc"), Optional.of("contract"), false));
+    }
+
+    @Test
+    public void insertContractId_sets_contract_id_and_a_localized_label() throws IOException {
+        // given
+        when(context.getString(R.string.report_project_contract_id_label)).thenReturn("ContractIdLabel");
+        when(context.getString(R.string.report_project_no_contract_id_placeholder)).thenReturn("Placeholder");
+        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_label} --> <!-- ${project_contract_id} -->");
+        htmlReport = new HtmlReport(context, templateAssetProvider);
+
+        // when
+        htmlReport.insertContractId(new Project("", "MyTitle", Optional.<String>absent(), Optional.of("contract"), false));
+
+        // then
+        assertEquals("ContractIdLabel contract", htmlReport.toHtml());
+    }
+
+    @Test
+    public void insertContractId_inserts_localized_placeholder_when_no_description_is_set_at_project() throws IOException {
+        // given
+        when(context.getString(R.string.report_project_contract_id_label)).thenReturn("ContractIdLabel");
+        when(context.getString(R.string.report_project_no_contract_id_placeholder)).thenReturn("Placeholder");
+        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_label} --> <!-- ${project_contract_id} -->");
+        htmlReport = new HtmlReport(context, templateAssetProvider);
+
+        // when: reporting a project *without* a contract id
+        htmlReport.insertContractId(new Project("", "MyTitle", Optional.<String>absent(), Optional.<String>absent(), false));
+
+        // then
+        assertEquals("ContractIdLabel Placeholder", htmlReport.toHtml());
     }
 
     public void insertTotalDuration_inserts_localized_label_and_total_duration_value() throws IOException {

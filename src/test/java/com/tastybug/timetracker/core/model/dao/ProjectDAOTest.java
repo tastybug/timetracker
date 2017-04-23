@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.CLOSED_COLUMN;
+import static com.tastybug.timetracker.core.model.dao.ProjectDAO.CONTRACT_ID_COLUMN;
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.DESCRIPTION_COLUMN;
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.TITLE_COLUMN;
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.UUID_COLUMN;
@@ -52,7 +53,7 @@ public class ProjectDAOTest {
     @Test
     public void canGetExistingProjectById() {
         // given
-        Cursor cursor = aProjectCursor("1", "title", "desc", true);
+        Cursor cursor = aProjectCursor("1", "title", "desc", "ABC/123", true);
         when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
@@ -64,8 +65,8 @@ public class ProjectDAOTest {
         assertEquals("1", project.getUuid());
         assertEquals("title", project.getTitle());
         assertEquals("desc", project.getDescription().get());
+        assertEquals("ABC/123", project.getContractId().get());
         assertEquals(true, project.isClosed());
-
     }
 
     @Test
@@ -125,7 +126,7 @@ public class ProjectDAOTest {
     @Test
     public void canUpdateProject() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent(), false);
+        Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
         when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -138,7 +139,7 @@ public class ProjectDAOTest {
     @Test
     public void canDeleteProject() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent(), false);
+        Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -151,7 +152,7 @@ public class ProjectDAOTest {
     @Test
     public void canDeleteProjectByUuid() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent(), false);
+        Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
 
         // when
@@ -164,7 +165,7 @@ public class ProjectDAOTest {
     @Test
     public void deleteReturnsFalseWhenNotSuccessful() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent(), false);
+        Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
         when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
 
         // when
@@ -177,7 +178,7 @@ public class ProjectDAOTest {
     @Test
     public void getContentValues_returns_complete_map_with_correct_values() {
         // given
-        Project project = new Project("1", "title", Optional.<String>absent(), true);
+        Project project = new Project("1", "title", Optional.of("desc"), Optional.of("contract"), true);
 
         // when
         ContentValues cv = projectDAO.getContentValues(project);
@@ -185,11 +186,12 @@ public class ProjectDAOTest {
         // then
         assertEquals(project.getUuid(), cv.getAsString(UUID_COLUMN));
         assertEquals(project.getTitle(), cv.getAsString(TITLE_COLUMN));
-        assertEquals(project.getDescription().orNull(), cv.getAsString(DESCRIPTION_COLUMN));
+        assertEquals(project.getDescription().get(), cv.getAsString(DESCRIPTION_COLUMN));
+        assertEquals(project.getContractId().get(), cv.getAsString(CONTRACT_ID_COLUMN));
         assertEquals(project.isClosed(), cv.getAsBoolean(CLOSED_COLUMN));
 
         // and
-        assertEquals(4, cv.size());
+        assertEquals(5, cv.size());
     }
 
     @Test
@@ -201,19 +203,21 @@ public class ProjectDAOTest {
     @Test
     public void knowsAllColumns() {
         // expect
-        assertEquals(4, projectDAO.getColumns().length);
+        assertEquals(5, projectDAO.getColumns().length);
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(UUID_COLUMN));
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.TITLE_COLUMN));
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.DESCRIPTION_COLUMN));
+        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.CONTRACT_ID_COLUMN));
         assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.CLOSED_COLUMN));
     }
 
-    private Cursor aProjectCursor(String uuid, String title, String description, boolean closed) {
+    private Cursor aProjectCursor(String uuid, String title, String description, String contractId, boolean closed) {
         Cursor cursor = mock(Cursor.class);
         when(cursor.getString(0)).thenReturn(uuid);
         when(cursor.getString(1)).thenReturn(title);
         when(cursor.getString(2)).thenReturn(description);
-        when(cursor.getInt(3)).thenReturn(closed ? 1 : 0);
+        when(cursor.getString(3)).thenReturn(contractId);
+        when(cursor.getInt(4)).thenReturn(closed ? 1 : 0);
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -231,7 +235,8 @@ public class ProjectDAOTest {
         when(cursor.getInt(0)).thenReturn(1);
         when(cursor.getString(1)).thenReturn("title");
         when(cursor.getString(2)).thenReturn("desc");
-        when(cursor.getInt(3)).thenReturn(0);
+        when(cursor.getString(3)).thenReturn("contract");
+        when(cursor.getInt(4)).thenReturn(0);
         when(cursor.moveToNext()).thenReturn(true, true, false);
 
         return cursor;

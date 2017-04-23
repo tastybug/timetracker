@@ -53,6 +53,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         sharedPref.edit()
                 .putString(getString(R.string.project_title_preference_key), project.getTitle())
                 .putString(getString(R.string.project_description_preference_key), project.getDescription().or(""))
+                .putString(getString(R.string.project_contract_id_preference_key), project.getContractId().or(""))
                 .putInt(getString(R.string.tracking_configuration_hour_limit_preference_key),
                         trackingConfiguration.getHourLimit().or(0))
                 .putLong(getString(R.string.tracking_configuration_start_date_preference_key),
@@ -69,6 +70,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
     private void setSummaries(Project project, TrackingConfiguration trackingConfiguration) {
         findPreference(getString(R.string.project_title_preference_key)).setSummary(project.getTitle());
         findPreference(getString(R.string.project_description_preference_key)).setSummary(project.getDescription().or(""));
+        findPreference(getString(R.string.project_contract_id_preference_key)).setSummary(project.getContractId().or(""));
         if (trackingConfiguration.getHourLimit().isPresent()) {
             findPreference(getString(R.string.tracking_configuration_hour_limit_preference_key)).setSummary(getString(R.string.hour_limit_of_X_hours, trackingConfiguration.getHourLimit().get()));
         } else {
@@ -118,6 +120,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         TrackingConfiguration trackingConfiguration = getTrackingConfigurationFromDB();
         String title = sharedPreferences.getString(getString(R.string.project_title_preference_key), "");
         String description = sharedPreferences.getString(getString(R.string.project_description_preference_key), "");
+        String contractId = sharedPreferences.getString(getString(R.string.project_contract_id_preference_key), "");
         Integer hourLimit = sharedPreferences.getInt(getString(R.string.tracking_configuration_hour_limit_preference_key), 0);
         Long startTimeStamp = sharedPreferences.getLong(getString(R.string.tracking_configuration_start_date_preference_key), -1L);
         Optional<Date> startDateOpt = startTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(startTimeStamp));
@@ -134,6 +137,10 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
                 && !isDescriptionValid(description)) {
             revertChanges(project, trackingConfiguration, sharedPreferences);
             showWarningInvalidDescription();
+        } else if (key.equals(getString(R.string.project_contract_id_preference_key))
+                && !isContractIdValid(contractId)) {
+            revertChanges(project, trackingConfiguration, sharedPreferences);
+            showWarningInvalidContractId();
         } else if (key.equals(getString(R.string.tracking_configuration_hour_limit_preference_key))
                 && !isHourLimitValid(hourLimit)) {
             revertChanges(project, trackingConfiguration, sharedPreferences);
@@ -147,7 +154,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
             revertChanges(project, trackingConfiguration, sharedPreferences);
             showWarningInvalidEndDateLimit();
         } else {
-            saveChanges(title, description);
+            saveChanges(title, description, contractId);
             saveChanges(hourLimit, startDateOpt, endDateInclusiveOpt, promptForDescription, strategy);
         }
     }
@@ -166,6 +173,16 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         try {
             Project project1 = new Project("");
             project1.setDescription(Optional.of(description));
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isContractIdValid(String contractId) {
+        try {
+            Project project1 = new Project("");
+            project1.setContractId(Optional.of(contractId));
         } catch (Exception e) {
             return false;
         }
@@ -214,15 +231,20 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         Toast.makeText(getActivity(), R.string.warning_invalid_description_was_reverted, Toast.LENGTH_LONG).show();
     }
 
+    private void showWarningInvalidContractId() {
+        Toast.makeText(getActivity(), R.string.warning_invalid_contract_id_was_reverted, Toast.LENGTH_LONG).show();
+    }
+
     private void revertChanges(Project project, TrackingConfiguration configuration, SharedPreferences sharedPreferences) {
         initPreferencesWithDataFromProject(sharedPreferences, project, configuration);
     }
 
-    private void saveChanges(String projectTitle, String description) {
+    private void saveChanges(String projectTitle, String description, String contractId) {
         new UpdateProjectTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withProjectTitle(projectTitle)
                 .withProjectDescription(description)
+                .withContractId(contractId)
                 .run();
     }
 

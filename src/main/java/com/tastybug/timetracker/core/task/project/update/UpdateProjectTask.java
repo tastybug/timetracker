@@ -22,6 +22,7 @@ public class UpdateProjectTask extends TaskPayload {
     private static final String PROJECT_UUID = "PROJECT_UUID";
     private static final String PROJECT_TITLE = "PROJECT_TITLE";
     private static final String PROJECT_DESCRIPTION = "PROJECT_DESCRIPTION";
+    private static final String CONTRACT_ID = "CONTRACT_ID";
     private static final String HOUR_LIMIT = "HOUR_LIMIT";
     private static final String START_DATE = "START_DATE";
     private static final String END_DATE_INCLUSIVE = "END_DATE_INCLUSIVE";
@@ -59,6 +60,15 @@ public class UpdateProjectTask extends TaskPayload {
 
     public UpdateProjectTask withoutProjectDescription() {
         return withProjectDescription(null);
+    }
+
+    public UpdateProjectTask withContractId(String contractId) {
+        arguments.putString(CONTRACT_ID, contractId);
+        return this;
+    }
+
+    public UpdateProjectTask withoutContractId() {
+        return withContractId(null);
     }
 
     public UpdateProjectTask withHourLimit(Integer hourLimit) {
@@ -111,6 +121,10 @@ public class UpdateProjectTask extends TaskPayload {
 
         if (arguments.containsKey(PROJECT_DESCRIPTION)) {
             project.setDescription(Optional.fromNullable(arguments.getString(PROJECT_DESCRIPTION)));
+        }
+
+        if (arguments.containsKey(CONTRACT_ID)) {
+            project.setContractId(Optional.fromNullable(arguments.getString(CONTRACT_ID)));
         }
 
         if (arguments.containsKey(CLOSED)) {

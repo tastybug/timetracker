@@ -14,11 +14,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectJSON extends JSONObject {
+class ProjectJSON extends JSONObject {
 
     static String UUID = "uuid";
     static String TITLE = "title";
     static String DESCRIPTION = "description";
+    static String CONTRACT_ID = "contract_id";
     static String CLOSED = "closed";
     static String TRACKING_CONFIGURATION = "tracking_configuration";
     static String TRACKING_RECORDS = "tracking_records";
@@ -27,10 +28,11 @@ public class ProjectJSON extends JSONObject {
      * The caller has to provide a full project, including TrackingConfiguration and the list
      * of TrackingRecords (can be empty of course).
      *
-     * @throws JSONException
+     * @throws JSONException        on json marshalling problems
      * @throws NullPointerException if the caller didn't properly assemble the project by leaving
      *                              out the TrackingConfiguration and/or TrackingRecord list
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     ProjectJSON(Project project) throws JSONException {
         Preconditions.checkNotNull(project.getTrackingConfiguration());
         Preconditions.checkNotNull(project.getTrackingRecords());
@@ -39,6 +41,9 @@ public class ProjectJSON extends JSONObject {
         put(TITLE, project.getTitle());
         if (project.getDescription().isPresent()) {
             put(DESCRIPTION, project.getDescription().get());
+        }
+        if (project.getContractId().isPresent()) {
+            put(CONTRACT_ID, project.getContractId().get());
         }
         put(CLOSED, project.isClosed());
         setTrackingConfiguration(project.getTrackingConfiguration());
@@ -49,6 +54,7 @@ public class ProjectJSON extends JSONObject {
         put(UUID, toImport.get(UUID));
         put(TITLE, toImport.get(TITLE));
         put(DESCRIPTION, toImport.opt(DESCRIPTION));
+        put(CONTRACT_ID, toImport.opt(CONTRACT_ID));
         put(CLOSED, toImport.get(CLOSED));
         put(TRACKING_CONFIGURATION, toImport.get(TRACKING_CONFIGURATION));
         put(TRACKING_RECORDS, toImport.get(TRACKING_RECORDS));
@@ -85,6 +91,7 @@ public class ProjectJSON extends JSONObject {
                 getString(UUID),
                 getString(TITLE),
                 isNull(DESCRIPTION) ? Optional.<String>absent() : Optional.of(getString(DESCRIPTION)),
+                isNull(CONTRACT_ID) ? Optional.<String>absent() : Optional.of(getString(CONTRACT_ID)),
                 getBoolean(CLOSED));
         project.setTrackingConfiguration(getTrackingConfiguration());
         project.setTrackingRecords(getTrackingRecords());

@@ -44,7 +44,7 @@ public class ProjectTest {
     @Test
     public void can_serialize() {
         // given
-        Project project = new Project("1234", "some title", Optional.of("a desc"), false);
+        Project project = new Project("1234", "some title", Optional.of("a desc"), Optional.of("ABC/123"), false);
 
         // when: this is supposed to cause no exception
         SerializationUtils.serialize(project);

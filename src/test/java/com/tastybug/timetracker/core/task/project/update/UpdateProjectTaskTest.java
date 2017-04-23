@@ -36,7 +36,7 @@ public class UpdateProjectTaskTest {
     private UpdateProjectTask subject = new UpdateProjectTask(mock(Context.class),
             projectDAO,
             trackingConfigurationDAO).withProjectUuid("1");
-    private Project project = new Project("1", "title", Optional.<String>absent(), false);
+    private Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
     private TrackingConfiguration trackingConfiguration = new TrackingConfiguration("1");
 
     @Before
@@ -118,6 +118,18 @@ public class UpdateProjectTaskTest {
     }
 
     @Test
+    public void can_change_contract_id() {
+        // given
+        subject = subject.withContractId("new contract id");
+
+        // when
+        subject.prepareBatchOperations();
+
+        // then
+        assertEquals(project.getContractId().get(), "new contract id");
+    }
+
+    @Test
     public void can_remove_project_description() {
         // given
         subject = subject.withoutProjectDescription();
@@ -127,6 +139,18 @@ public class UpdateProjectTaskTest {
 
         // then
         assertFalse(project.getDescription().isPresent());
+    }
+
+    @Test
+    public void can_remove_contract_id() {
+        // given
+        subject = subject.withoutContractId();
+
+        // when
+        subject.prepareBatchOperations();
+
+        // then
+        assertFalse(project.getContractId().isPresent());
     }
 
     @Test

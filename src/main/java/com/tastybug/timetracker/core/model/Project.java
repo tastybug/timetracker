@@ -13,17 +13,21 @@ import java.util.UUID;
 public class Project extends Entity implements Comparable<Project> {
 
     private String uuid = UUID.randomUUID().toString();
-    private String title;
-    private String description;
+    private String title, description, contractId;
     private boolean closed = false;
     private TrackingConfiguration trackingConfiguration;
     private ArrayList<TrackingRecord> trackingRecords;
 
 
-    public Project(String uuid, String title, Optional<String> description, boolean closed) {
+    public Project(String uuid,
+                   String title,
+                   Optional<String> description,
+                   Optional<String> contractId,
+                   boolean closed) {
         this.uuid = uuid;
         this.title = title;
         this.description = description.orNull();
+        this.contractId = contractId.orNull();
         this.closed = closed;
     }
 
@@ -60,6 +64,15 @@ public class Project extends Entity implements Comparable<Project> {
         this.description = descriptionOptional.orNull();
     }
 
+    public Optional<String> getContractId() {
+        return Optional.fromNullable(contractId);
+    }
+
+    public void setContractId(Optional<String> contractId) {
+        Preconditions.checkNotNull(contractId);
+        this.contractId = contractId.orNull();
+    }
+
     public boolean isClosed() {
         return closed;
     }
@@ -89,6 +102,7 @@ public class Project extends Entity implements Comparable<Project> {
                 .add("uuid", getUuid())
                 .add("title", getTitle())
                 .add("description", getDescription().orNull())
+                .add("contractId", getContractId().orNull())
                 .add("closed", isClosed())
                 .toString();
     }
@@ -106,6 +120,7 @@ public class Project extends Entity implements Comparable<Project> {
             return Objects.equals(getUuid(), other.getUuid())
                     && Objects.equals(title, other.getTitle())
                     && Objects.equals(description, other.getDescription().orNull())
+                    && Objects.equals(contractId, other.getContractId().orNull())
                     && Objects.equals(closed, other.isClosed());
         }
         return false;

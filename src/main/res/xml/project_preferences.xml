@@ -14,6 +14,12 @@
             android:title="@string/project_description_preference_title" />
         <!-- summary is set programmatically -->
 
+        <EditTextPreference
+            android:dialogTitle="@string/project_contract_id_preference_title"
+            android:key="@string/project_contract_id_preference_key"
+            android:title="@string/project_contract_id_preference_title" />
+        <!-- summary is set programmatically -->
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/expiration_and_duration_limits_preference_group_title">

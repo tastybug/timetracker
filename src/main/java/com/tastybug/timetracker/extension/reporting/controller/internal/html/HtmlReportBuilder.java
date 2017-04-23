@@ -76,6 +76,7 @@ public class HtmlReportBuilder {
         htmlReport.insertReportTitle(titleGenerator.getTitle(project, firstDay, lastDay));
         htmlReport.insertProjectTitle(project);
         htmlReport.insertProjectDescription(project);
+        htmlReport.insertContractId(project);
         htmlReport.insertTotalDuration(localizedDurationFormatter.formatDuration(totalDuration));
         htmlReport.localizeHeaders();
 

@@ -47,6 +47,13 @@ public class HtmlReport implements Serializable {
         insertStringAtMarker(valueMarker, project.getDescription().or(context.getString(R.string.report_project_no_description_placeholder)));
     }
 
+    void insertContractId(Project project) {
+        String labelMarker = "<!-- ${project_contract_id_label} -->";
+        insertStringAtMarker(labelMarker, context.getString(R.string.report_project_contract_id_label));
+        String valueMarker = "<!-- ${project_contract_id} -->";
+        insertStringAtMarker(valueMarker, project.getContractId().or(context.getString(R.string.report_project_no_contract_id_placeholder)));
+    }
+
     void insertTotalDuration(String totalDuration) {
         String labelMarker = "<!-- ${total_duration_label} -->";
         insertStringAtMarker(labelMarker, context.getString(R.string.report_total_duration_label));

@@ -51,8 +51,8 @@ public class DbImportBatchOpsProviderTest {
     }
 
     private List<Project> aListOfTwoProjects() {
-        Project project1 = new Project("123", "proj1", Optional.<String>absent(), false);
-        Project project2 = new Project("456", "proj2", Optional.<String>absent(), false);
+        Project project1 = new Project("123", "proj1", Optional.<String>absent(), Optional.<String>absent(), false);
+        Project project2 = new Project("456", "proj2", Optional.<String>absent(), Optional.<String>absent(), false);
         project1.setTrackingConfiguration(new TrackingConfiguration("123"));
         project2.setTrackingConfiguration(new TrackingConfiguration("456"));
 
