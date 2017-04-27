@@ -3,4 +3,6 @@
     <string name="expiration_warning_enabled_settings_key">expiration_warning_enabled_settings_key</string>
     <string name="completion_warning_enabled_settings_key">completion_warning_enabled_settings_key</string>
     <string name="wifi_tracking_grace_period_in_minutes_key">wifi_tracking_grace_period_in_minutes_key</string>
+
+    <string name="local_backup_enabled_key">local_backup_enabled_key</string>
 </resources>

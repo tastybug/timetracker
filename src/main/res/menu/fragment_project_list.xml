@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <item
         android:id="@+id/menu_item_create_project"
         android:icon="@drawable/ic_create"
         android:title="@string/menu_create_project"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
-    <item
-        android:id="@+id/menu_item_backup"
-        android:icon="@drawable/ic_manual_backup"
-        android:title="@string/menu_backup"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_item_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/menu_settings"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

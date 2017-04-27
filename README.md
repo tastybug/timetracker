@@ -52,3 +52,5 @@ Begriffe
     * `WiFi-CheckIn`
     * `WiFi-CheckOut`
     * `Toleranzzeit` / `Grace Period`: Ruhezeitraum nach dem Verlassen eines WLAN Netzes, der vergehen muss, damit das WiFi-Checkout erfolgt. Verhindert erratische Zeiterfassung bei schlechter Netzqualität.
+* `Daten zurücksetzen` / `Restore Backup`: Wiederherstellung eines lokalen Backups.
+* `Automatische lokale Datensicherung` / `Automatic Local Backup`: Der Mechanismus, welcher jeden Tag eine lokal gespeicherte Datensicherung erstellt.

@@ -22,19 +22,13 @@ import com.tastybug.timetracker.core.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.core.ui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.core.ui.projectdetails.ProjectDetailsActivity;
 import com.tastybug.timetracker.core.ui.settings.SettingsActivity;
-import com.tastybug.timetracker.extension.backup.controller.dataexport.DataExportedEvent;
-import com.tastybug.timetracker.extension.backup.ui.ConfirmManualBackupCreationFragment;
-import com.tastybug.timetracker.extension.backup.ui.ShareManualBackupIntentFactory;
 import com.tastybug.timetracker.extension.testdata.controller.TestDataGeneratedEvent;
 import com.tastybug.timetracker.extension.testdata.controller.TestDataGenerationTask;
-
-import java.io.IOException;
 
 public class ProjectListFragment extends ListFragment {
 
     private UpdateProjectListOnTrackingEventsHandler updateProjectListOnTrackingEventsHandler;
     private TestDataCreationHandler testDataCreationHandler;
-    private ManualBackupReadyHandler manualBackupReadyHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +43,6 @@ public class ProjectListFragment extends ListFragment {
 
         updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
         testDataCreationHandler = new TestDataCreationHandler();
-        manualBackupReadyHandler = new ManualBackupReadyHandler();
     }
 
     @Override
@@ -57,7 +50,6 @@ public class ProjectListFragment extends ListFragment {
         super.onPause();
         updateProjectListOnTrackingEventsHandler.stop();
         testDataCreationHandler.stop();
-        manualBackupReadyHandler.stop();
     }
 
     @Override
@@ -75,6 +67,7 @@ public class ProjectListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_project_list, menu);
+        // TODO das hier rausschmeissen und in der extension als activity unterbringen. vielleicht ueber die settings nen knopf anbieten?
         if (BuildConfig.DEBUG) {
             menu.add(Menu.NONE, R.id.menu_item_generate_testdata, 100, getString(R.string.menu_item_generate_testdata));
         }
@@ -85,9 +78,6 @@ public class ProjectListFragment extends ListFragment {
         switch (item.getItemId()) {
             case R.id.menu_item_create_project:
                 showProjectCreationDialog();
-                return true;
-            case R.id.menu_item_backup:
-                showBackupDialog();
                 return true;
             case R.id.menu_item_settings:
                 showSettingsActivity();
@@ -109,10 +99,6 @@ public class ProjectListFragment extends ListFragment {
 
     private void generateTestdata() {
         new TestDataGenerationTask(getActivity()).run();
-    }
-
-    private void showBackupDialog() {
-        ConfirmManualBackupCreationFragment.aDialog().show(getFragmentManager(), getClass().getSimpleName());
     }
 
     private void showSettingsActivity() {
@@ -144,26 +130,6 @@ public class ProjectListFragment extends ListFragment {
         @Subscribe
         public void handleCheckOut(CheckOutEvent event) {
             ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
-        }
-    }
-
-    class ManualBackupReadyHandler extends AbstractOttoEventHandler {
-
-        @SuppressWarnings("unused")
-        @Subscribe
-        public void handleDataExported(final DataExportedEvent event) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Intent intent = new ShareManualBackupIntentFactory(getActivity()).create(event.getData());
-                        startActivity(intent);
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to share exported data.", e);
-                    }
-
-                }
-            });
         }
     }
 

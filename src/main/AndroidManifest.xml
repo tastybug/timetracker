@@ -43,12 +43,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".extension.backup.ui.ManualBackupImportLandingActivity"
+            android:name=".extension.backup.ui.BackupActivity"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="application/json" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="RESTORE_LAST_BACKUP" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="CREATE_AND_SHARE_BACKUP" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 
@@ -76,6 +86,14 @@
         <receiver android:name=".extension.wifitracking.controller.OSWifiBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".extension.backup.controller.localbackup.scheduling.AlarmArming">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.APP_START" />
             </intent-filter>
         </receiver>
         <receiver android:name=".extension.trackingplayer.DomainEventBroadcastReceiver" android:exported="false">
@@ -114,6 +132,9 @@
         <!-- intent services -->
         <service
             android:name=".extension.trackingplayer.CallbackService"
+            android:exported="false" />
+        <service
+            android:name=".extension.backup.controller.localbackup.scheduling.AlarmCallback"
             android:exported="false" />
         <service
             android:name=".extension.autoclosure.controller.AutoClosureService"

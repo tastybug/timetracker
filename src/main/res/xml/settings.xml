@@ -1,35 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/wifi_tracking_group_title">
+    <PreferenceCategory android:title="@string/general_group_title">
 
-        <ListPreference
-            android:entries="@array/wifi_tracking_grace_period_labels"
-            android:entryValues="@array/wifi_tracking_grace_period_values"
-            android:key="@string/wifi_tracking_grace_period_in_minutes_key"
-            android:title="@string/wifi_tracking_grace_period_in_minutes_label" />
+        <PreferenceScreen android:title="@string/preference_category_backup" >
 
-    </PreferenceCategory>
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/local_backup_enabled_key"
+                android:title="@string/preference_item_local_backup_enabled_title"
+                android:summary="@string/preference_item_local_backup_enabled_summary"/>
 
-    <PreferenceCategory android:title="@string/warnings_group_title">
+            <Preference android:title="@string/preference_item_restore_last_backup" android:summary="@string/preference_item_restore_last_backup_summary">
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/expiration_warning_enabled_settings_key"
-            android:title="@string/expiration_warning_title"
-            android:summary="@string/expiration_warning_summary"/>
+                <intent
+                    android:action="RESTORE_LAST_BACKUP"
+                    android:category="android.intent.category.DEFAULT"
+                    android:mimeType="text/plain" />
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/completion_warning_enabled_settings_key"
-            android:title="@string/completion_warning_title"
-            android:summary="@string/completion_warning_summary"/>
+            </Preference>
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/checkout_reminder_enabled_settings_key"
-            android:title="@string/checkout_reminder_title"
-            android:summary="@string/checkout_reminder_summary"/>
+            <Preference android:title="@string/preference_item_create_and_share_backup" android:summary="@string/preference_item_create_and_share_backup_summary">
+
+                <intent
+                    android:action="CREATE_AND_SHARE_BACKUP"
+                    android:category="android.intent.category.DEFAULT"
+                    android:mimeType="text/plain" />
+
+            </Preference>
+
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="@string/wifi_tracking_group_title" >
+
+            <ListPreference
+                android:entries="@array/wifi_tracking_grace_period_labels"
+                android:entryValues="@array/wifi_tracking_grace_period_values"
+                android:key="@string/wifi_tracking_grace_period_in_minutes_key"
+                android:title="@string/wifi_tracking_grace_period_in_minutes_label" />
+
+        </PreferenceScreen>
+
+        <PreferenceScreen android:title="@string/warnings_group_title" >
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/expiration_warning_enabled_settings_key"
+                android:title="@string/expiration_warning_title"
+                android:summary="@string/expiration_warning_summary"/>
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/completion_warning_enabled_settings_key"
+                android:title="@string/completion_warning_title"
+                android:summary="@string/completion_warning_summary"/>
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="@string/checkout_reminder_enabled_settings_key"
+                android:title="@string/checkout_reminder_title"
+                android:summary="@string/checkout_reminder_summary"/>
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
 
@@ -37,7 +69,6 @@
 
         <Preference
             android:key="@string/app_version_info"
-            android:summary="@string/application_version_info_summary"
             android:title="@string/sample_app_version_info" />
 
         <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title">

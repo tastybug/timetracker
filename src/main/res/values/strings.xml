@@ -188,6 +188,7 @@
     <string name="tracking_player_paused_since_X">Paused since %1$s</string>
 
     <!-- settings -->
+    <string name="general_group_title">General Settings</string>
     <string name="application_settings_activity_title">Settings</string>
     <string name="libraries_and_trademarks_screen_title">Libraries, Licenses &amp; Trademarks</string>
     <string name="libraries_group_title">Libraries used</string>
@@ -200,9 +201,8 @@
     <string name="trademarks_other_title">Other Trademarks</string>
     <string name="trademarks_other_summary">All other trademarks belong to their respective owners.</string>
     <string name="application_W_version_X_githash_Y_buildtype_Z">%1$s, %2$s-%3$s (%4$s)</string>
-    <string name="application_version_info_summary">Application name and version</string>
     <string name="about_group_title">About</string>
-    <string name="warnings_group_title">Warnings &amp; Reminders</string>
+    <string name="warnings_group_title">Notifications</string>
     <string name="checkout_reminder_title">Checkout Reminder</string>
     <string name="checkout_reminder_summary">Show reminder for overly long tracking sessions.</string>
     <string name="expiration_warning_title">Project Expiration Warning</string>
@@ -250,6 +250,22 @@
     <string name="chooser_title_share_report_via">Share Via ..</string>
     <string name="report_for_project_X_with_time_frame_Y_to_Z">Time Sheet \"%1$s\": %2$s &#8212; %3$s.</string>
     <string name="report_for_project_X_with_time_frame_Y_to_Z_message_text">This message contains a comprehensive time sheet for project \"%1$s\", ranging from %2$s until %3$s.\n\nPlease note the attached file.</string>
+
+    <!-- backup settings -->
+    <string name="preference_category_backup">Backup &amp; Data Restoration</string>
+    <string name="preference_item_local_backup_enabled_title">Automated Local Backup</string>
+    <string name="preference_item_local_backup_enabled_summary">Perform nightly backups, stored on this device</string>
+    <string name="preference_item_restore_last_backup">Restore Local Backup</string>
+    <string name="preference_item_restore_last_backup_summary">Restore the last available local backup</string>
+    <string name="preference_item_create_and_share_backup">Manual Backup</string>
+    <string name="preference_item_create_and_share_backup_summary">Create an exportable backup file</string>
+
+    <!-- backup restoration -->
+    <string name="title_restore_last_backup_activity">Backup Restoration</string>
+
+    <!-- backup restoration confirmation dialog -->
+    <string name="restore_backup_dialog_title">Restore Backup?</string>
+    <string name="restore_backup_from_X">Do you want to restore the last known backup from %1$s, REPLACING any and all existing data?\n\nWarning: this will take a few moments to complete!</string>
 
     <!-- create manual backup dialog -->
     <string name="manual_backup_creation_dialog_title">Manual Backup</string>

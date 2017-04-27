@@ -23,6 +23,7 @@ import java.util.List;
 public class ImportDataTask extends TaskPayload {
 
     private static final String DATA_URI = "DATA_URI";
+    private static final String DATA_BYTE = "DATA_BYTE";
 
     private DbWipeBatchOpsProvider dbWipeBatchOpsProvider;
     private DbImportBatchOpsProvider dbImportBatchOpsProvider;
@@ -55,13 +56,23 @@ public class ImportDataTask extends TaskPayload {
         return this;
     }
 
+    public ImportDataTask withData(byte[] data) {
+        Preconditions.checkArgument(data.length > 0);
+        arguments.putByteArray(DATA_BYTE, data);
+        return this;
+    }
+
     private byte[] getRawData() {
-        Uri dataUri = arguments.getParcelable(DATA_URI);
-        try {
-            return uriToByteArrayHelper.readByteArrayFromUri(dataUri);
-        } catch (IOException e) {
-            ConditionalLog.logError(getClass().getSimpleName(), "Failed to import data.", e);
-            throw new RuntimeException("Failed to import data.", e);
+        if (arguments.containsKey(DATA_URI)) {
+            Uri dataUri = arguments.getParcelable(DATA_URI);
+            try {
+                return uriToByteArrayHelper.readByteArrayFromUri(dataUri);
+            } catch (IOException e) {
+                ConditionalLog.logError(getClass().getSimpleName(), "Failed to import data.", e);
+                throw new RuntimeException("Failed to import data.", e);
+            }
+        } else {
+            return arguments.getByteArray(DATA_BYTE);
         }
     }
 
@@ -76,12 +87,13 @@ public class ImportDataTask extends TaskPayload {
 
     @Override
     protected void validate() throws IllegalArgumentException, NullPointerException {
-        Preconditions.checkNotNull(arguments.getParcelable(DATA_URI));
+        Preconditions.checkArgument(arguments.getParcelable(DATA_URI) != null || arguments.containsKey(DATA_BYTE));
     }
 
     @Override
     protected List<ContentProviderOperation> prepareBatchOperations() {
         byte[] data = getRawData();
+
         List<Project> importableProjects = convertDataToImportableProjects(data);
         ArrayList<ContentProviderOperation> operations = new ArrayList<>();
         operations.addAll(dbWipeBatchOpsProvider.getOperations());
