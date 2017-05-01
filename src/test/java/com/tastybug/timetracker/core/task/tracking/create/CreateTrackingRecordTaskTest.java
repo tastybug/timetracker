@@ -7,6 +7,7 @@ import android.os.Build;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +39,7 @@ public class CreateTrackingRecordTaskTest {
     public void validate_throws_IllegalArgument_on_missing_project_uuid() {
         // given
         CreateTrackingRecordTask subject = new CreateTrackingRecordTask(mock(Context.class),
-                trackingRecordDAO).withStartDate(new Date()).withEndDate(new Date());
+                trackingRecordDAO).withStartDate(new Date()).withEndDate(new Date()).withRoundingStrategy(Rounding.Strategy.NO_ROUNDING);
 
         // when
         subject.validate();
@@ -48,7 +49,7 @@ public class CreateTrackingRecordTaskTest {
     public void validate_throws_IllegalArgument_on_missing_start_date() {
         // given
         CreateTrackingRecordTask subject = new CreateTrackingRecordTask(mock(Context.class),
-                trackingRecordDAO).withProjectUuid("1").withEndDate(new Date());
+                trackingRecordDAO).withProjectUuid("1").withEndDate(new Date()).withRoundingStrategy(Rounding.Strategy.NO_ROUNDING);
 
         // when
         subject.validate();
@@ -58,7 +59,17 @@ public class CreateTrackingRecordTaskTest {
     public void validate_throws_IllegalArgument_on_missing_end_date() {
         // given
         CreateTrackingRecordTask subject = new CreateTrackingRecordTask(mock(Context.class),
-                trackingRecordDAO).withStartDate(new Date()).withProjectUuid("1");
+                trackingRecordDAO).withStartDate(new Date()).withProjectUuid("1").withRoundingStrategy(Rounding.Strategy.NO_ROUNDING);
+
+        // when
+        subject.validate();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void validate_throws_IllegalArgument_on_missing_rounding_strategy() {
+        // given
+        CreateTrackingRecordTask subject = new CreateTrackingRecordTask(mock(Context.class),
+                trackingRecordDAO).withStartDate(new Date()).withEndDate(new Date()).withProjectUuid("1");
 
         // when
         subject.validate();
@@ -122,6 +133,21 @@ public class CreateTrackingRecordTaskTest {
 
         // then
         assertEquals(argumentCaptor.getValue().getEnd().get(), expectedEndDate);
+    }
+
+    @Test
+    public void will_set_rounding_strategy_on_created_TrackingRecord() {
+        // given
+        ArgumentCaptor<TrackingRecord> argumentCaptor = ArgumentCaptor.forClass(TrackingRecord.class);
+        when(trackingRecordDAO.getBatchCreate(argumentCaptor.capture())).thenReturn(mock(ContentProviderOperation.class));
+        Rounding.Strategy expectedRoundingStrategy = Rounding.Strategy.NO_ROUNDING;
+        subject = subject.withRoundingStrategy(expectedRoundingStrategy);
+
+        // when
+        subject.prepareBatchOperations();
+
+        // then
+        assertEquals(argumentCaptor.getValue().getRoundingStrategy(), expectedRoundingStrategy);
     }
 
     @Test

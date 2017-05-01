@@ -2,6 +2,7 @@ package com.tastybug.timetracker.core.model;
 
 
 import com.google.common.base.Optional;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.infrastructure.util.DateProvider;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -179,6 +180,15 @@ public class TrackingRecordTest {
         assertTrue(trackingRecord.isFinished());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void setRoundingStrategy_yields_NPE_for_null_argument() {
+        // given
+        TrackingRecord trackingRecord = new TrackingRecord();
+
+        // when
+        trackingRecord.setRoundingStrategy(null);
+    }
+
     @Test
     public void toDuration_returns_nothing_when_not_started() {
         // expect
@@ -281,7 +291,7 @@ public class TrackingRecordTest {
     @Test
     public void can_serialize() {
         // given
-        TrackingRecord trackingRecord = new TrackingRecord("proj", "uuid", Optional.of(new Date(1)), Optional.of(new Date(2)), Optional.of(""));
+        TrackingRecord trackingRecord = new TrackingRecord("proj", "uuid", Optional.of(new Date(1)), Optional.of(new Date(2)), Optional.of(""), Rounding.Strategy.NO_ROUNDING);
 
         // when: this is supposed to cause no exception
         SerializationUtils.serialize(trackingRecord);

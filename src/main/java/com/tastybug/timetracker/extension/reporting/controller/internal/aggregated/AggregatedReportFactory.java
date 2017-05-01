@@ -3,7 +3,6 @@ package com.tastybug.timetracker.extension.reporting.controller.internal.aggrega
 import android.content.Context;
 
 import com.tastybug.timetracker.core.model.Project;
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.extension.reporting.controller.Report;
 import com.tastybug.timetracker.extension.reporting.controller.internal.ReportFactory;
@@ -31,10 +30,9 @@ public class AggregatedReportFactory implements ReportFactory {
     public Report create(Project project, Date firstDay,
                          Date lastDay,
                          List<TrackingRecord> includedTrackingRecords,
-                         List<TrackingRecord> edgeTrackingRecords,
-                         TrackingConfiguration trackingConfiguration) {
+                         List<TrackingRecord> edgeTrackingRecords) {
         List<AggregatedDay> aggregatedDayList = dayListFactory.createList(firstDay, lastDay);
-        aggregatedDayList = trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(aggregatedDayList, includedTrackingRecords, trackingConfiguration);
+        aggregatedDayList = trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(aggregatedDayList, includedTrackingRecords);
         List<ReportableItem> reportableItems = filterEmptyDays(aggregatedDayList);
         HtmlReport htmlReport = htmlReportBuilder.withProject(project)
                 .withTimeFrame(firstDay, lastDay)

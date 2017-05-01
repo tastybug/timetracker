@@ -8,9 +8,11 @@
         android:id="@+id/tracking_record_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="top"
         android:ems="10"
         android:hint="@string/hint_tracking_record_description"
         android:inputType="textMultiLine"
-        android:minLines="5" />
+        android:minLines="5"
+        android:maxLines="10"/>
 
 </LinearLayout>

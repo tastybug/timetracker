@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.infrastructure.util.DateProvider;
 
 import org.joda.time.DateTime;
@@ -23,25 +24,29 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
     private String projectUuid;
     private Date start, end;
     private String description;
+    private Rounding.Strategy roundingStrategy = Rounding.Strategy.NO_ROUNDING;
 
 
     public TrackingRecord() {
     }
 
-    public TrackingRecord(String projectUuid) {
+    public TrackingRecord(String projectUuid, Rounding.Strategy roundingStrategy) {
         this.projectUuid = projectUuid;
+        this.roundingStrategy = roundingStrategy;
     }
 
     public TrackingRecord(String uuid,
                           String projectUuid,
                           Optional<Date> start,
                           Optional<Date> end,
-                          Optional<String> description) {
+                          Optional<String> description,
+                          Rounding.Strategy roundingStrategy) {
         this.uuid = uuid;
         this.projectUuid = projectUuid;
         this.start = start.orNull();
         this.end = end.orNull();
         this.description = description.orNull();
+        this.roundingStrategy = roundingStrategy;
     }
 
     @Override
@@ -125,6 +130,19 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         }
     }
 
+    public Rounding.Strategy getRoundingStrategy() {
+        return roundingStrategy;
+    }
+
+    public void setRoundingStrategy(Rounding.Strategy roundingStrategy) {
+        Preconditions.checkNotNull(roundingStrategy);
+        this.roundingStrategy = roundingStrategy;
+    }
+
+    public boolean hasAlteringRoundingStrategy() {
+        return roundingStrategy != Rounding.Strategy.NO_ROUNDING;
+    }
+
     public Optional<Duration> toDuration() {
         // when creating the duration, shave off additional millis as it confuses the duration
         // calculation, resulting in e.g. a 5 minutes duration coming out as 4:59
@@ -141,12 +159,12 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
         return toDuration().isPresent() && toDuration().get().getStandardMinutes() <= MINUTES_LIMIT_FOR_TINY_RECORDS;
     }
 
-    public Optional<Duration> toEffectiveDuration(TrackingConfiguration configuration) {
+    public Optional<Duration> toEffectiveDuration() {
         Optional<Duration> durationOpt = toDuration();
         if (!durationOpt.isPresent()) {
             return Optional.absent();
         } else {
-            return Optional.of(new Duration(configuration.getRoundingStrategy().getStrategy().getEffectiveDurationInSeconds(durationOpt.get()) * 1000));
+            return Optional.of(new Duration(getRoundingStrategy().getStrategy().getEffectiveDurationInSeconds(durationOpt.get()) * 1000));
         }
     }
 
@@ -166,6 +184,7 @@ public class TrackingRecord extends Entity implements Comparable<TrackingRecord>
                 .add("start", getStart().orNull())
                 .add("end", getEnd().orNull())
                 .add("description", getDescription().orNull())
+                .add("roundingStrategy", getRoundingStrategy().name())
                 .toString();
     }
 

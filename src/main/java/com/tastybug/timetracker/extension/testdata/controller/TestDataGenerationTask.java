@@ -95,7 +95,7 @@ public class TestDataGenerationTask extends TaskPayload {
         TrackingRecord record;
         LocalDateTime time = new LocalDateTime(2016, 11, 24, 9, 0);
         for (int i = 0; i < 200; i++) {
-            record = new TrackingRecord(project.getUuid());
+            record = new TrackingRecord(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
             record.setStart(time.toDate());
             time = time.plusHours(1);
             record.setEnd(time.toDate());
@@ -111,7 +111,7 @@ public class TestDataGenerationTask extends TaskPayload {
         Project project = new Project("Overlong Record Descriptions");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
-        TrackingRecord record = new TrackingRecord(project.getUuid());
+        TrackingRecord record = new TrackingRecord(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         record.setStart(new LocalDateTime(2016, 11, 24, 9, 0).toDate());
         record.setEnd(new LocalDateTime(2016, 11, 24, 10, 0).toDate());
         record.setDescription(Optional.of(aVeryLongRecordDescription()));
@@ -135,7 +135,7 @@ public class TestDataGenerationTask extends TaskPayload {
         Project project = new Project("Ongoing Overlong Record");
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
 
-        TrackingRecord record = new TrackingRecord(project.getUuid());
+        TrackingRecord record = new TrackingRecord(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         record.setStart(new LocalDateTime().minusDays(2).toDate());
 
         return Arrays.asList(new ProjectDAO(context).getBatchCreate(project),
@@ -148,7 +148,7 @@ public class TestDataGenerationTask extends TaskPayload {
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
 
-        TrackingRecord record = new TrackingRecord(project.getUuid());
+        TrackingRecord record = new TrackingRecord(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         record.setStart(new LocalDate(2016, 12, 24).minusDays(2).toDate());
         record.setEnd(new LocalDate(2016, 12, 24).minusDays(1).toDate());
 
@@ -162,7 +162,7 @@ public class TestDataGenerationTask extends TaskPayload {
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         trackingConfiguration.setEnd(Optional.of(new LocalDate(2016, 12, 24).toDate()));
 
-        TrackingRecord record = new TrackingRecord(project.getUuid());
+        TrackingRecord record = new TrackingRecord(project.getUuid(), Rounding.Strategy.NO_ROUNDING);
         record.setStart(new LocalDate(2016, 12, 24).plusDays(1).toDate());
         record.setEnd(new LocalDate(2016, 12, 24).plusDays(2).toDate());
 

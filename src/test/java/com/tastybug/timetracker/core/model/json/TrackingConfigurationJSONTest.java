@@ -139,7 +139,6 @@ public class TrackingConfigurationJSONTest {
     @Test
     public void can_marshal_description_prompting_flag() throws Exception {
         // given
-        Date date = new Date();
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("project-uuid");
         trackingConfiguration.setPromptForDescription(true);
 

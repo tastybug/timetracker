@@ -47,8 +47,8 @@
     <PreferenceCategory android:title="@string/after_tracking_preference_group_title">
 
         <ListPreference
-            android:entries="@array/rouding_strategy_labels"
-            android:entryValues="@array/rouding_strategy_values"
+            android:entries="@array/rounding_strategy_labels"
+            android:entryValues="@array/rounding_strategy_values"
             android:key="@string/tracking_configuration_rounding_strategy_preference_key"
             android:title="@string/tracking_configuration_rounding_strategy_preference_title" />
 

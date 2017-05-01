@@ -75,7 +75,6 @@ class ProjectListAdapter extends BaseAdapter {
     }
 
     private ProjectDuration getDurationStatisticAt(Project project) {
-        return new ProjectDuration(getTrackingConfiguration(project),
-                trackingRecordDAO.getByProjectUuid(project.getUuid()));
+        return new ProjectDuration(trackingRecordDAO.getByProjectUuid(project.getUuid()));
     }
 }

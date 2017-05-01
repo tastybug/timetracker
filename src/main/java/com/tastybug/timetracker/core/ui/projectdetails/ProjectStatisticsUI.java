@@ -57,7 +57,7 @@ public class ProjectStatisticsUI {
             return;
         }
         TrackingConfiguration configuration = getTrackingConfigurationForProject(projectOpt.get());
-        org.joda.time.Duration duration = new ProjectDuration(configuration, getTrackingRecordsByProject(projectOpt.get())).getDuration();
+        org.joda.time.Duration duration = new ProjectDuration(getTrackingRecordsByProject(projectOpt.get())).getDuration();
 
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {

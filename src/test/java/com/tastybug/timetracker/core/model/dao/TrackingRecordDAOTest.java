@@ -9,6 +9,7 @@ import android.os.Build;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -55,23 +56,25 @@ public class TrackingRecordDAOTest {
     @Test
     public void canGetExistingTrackingRecordById() {
         // given
-        Cursor cursor = aTrackingRecordCursor("1", "2");
+        Cursor cursor = aTrackingRecordCursor("uuid", "project-uuid");
         when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
                 .thenReturn(cursor);
 
         // when
-        TrackingRecord tf = trackingRecordDAO.get("1").get();
+        TrackingRecord tf = trackingRecordDAO.get("uuid").get();
 
         // then
         assertNotNull(tf);
-        assertEquals("1", tf.getUuid());
-        assertEquals("2", tf.getProjectUuid());
+        assertEquals("uuid", tf.getUuid());
+        assertEquals("project-uuid", tf.getProjectUuid());
         assertNotNull(tf.getStart());
         assertNotNull(tf.getEnd());
+        assertNotNull(tf.getDescription());
+        assertNotNull(tf.getRoundingStrategy());
     }
 
     @Test
-    public void gettingNonexistingProjectByIdYieldsNull() {
+    public void gettingNonExistingProjectByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
         when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
@@ -222,16 +225,17 @@ public class TrackingRecordDAOTest {
     @Test
     public void knowsAllColumns() {
         // expect
-        assertEquals(5, trackingRecordDAO.getColumns().length);
+        assertEquals(6, trackingRecordDAO.getColumns().length);
         assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.ID_COLUMN));
         assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.PROJECT_UUID_COLUMN));
         assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.START_DATE_COLUMN));
         assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.END_DATE_COLUMN));
         assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.DESCRIPTION_COLUMN));
+        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.ROUNDING_STRATEGY_COLUMN));
     }
 
     @Test(expected = NullPointerException.class)
-    public void gettingAllTrackinRecordsByNullProjectUuidYieldsException() {
+    public void gettingAllTrackingRecordsByNullProjectUuidYieldsException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
         when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
@@ -281,6 +285,8 @@ public class TrackingRecordDAOTest {
         when(cursor.getString(1)).thenReturn(projectUuid);
         when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
+        when(cursor.getString(4)).thenReturn(null);
+        when(cursor.getString(5)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -292,6 +298,8 @@ public class TrackingRecordDAOTest {
         when(cursor.getString(1)).thenReturn(projectUuid);
         when(cursor.getString(2)).thenReturn(startDateString);
         when(cursor.getString(3)).thenReturn(endDateString);
+        when(cursor.getString(4)).thenReturn(null);
+        when(cursor.getString(5)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToFirst()).thenReturn(true);
 
         return cursor;
@@ -310,6 +318,8 @@ public class TrackingRecordDAOTest {
         when(cursor.getString(1)).thenReturn("project_uuid1", "project_uuid2");
         when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
         when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        when(cursor.getString(4)).thenReturn(null);
+        when(cursor.getString(5)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
         when(cursor.moveToNext()).thenReturn(true, true, false);
         when(cursor.moveToFirst()).thenReturn(true);
 

@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.core.ui.util;
 
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 
 import org.joda.time.Duration;
@@ -27,8 +26,8 @@ public class DurationFormatter {
         return new DurationFormatter();
     }
 
-    public String formatEffectiveDuration(TrackingConfiguration trackingConfiguration, TrackingRecord trackingRecord) {
-        Duration effectiveDuration = trackingRecord.toEffectiveDuration(trackingConfiguration).get();
+    public String formatEffectiveDuration(TrackingRecord trackingRecord) {
+        Duration effectiveDuration = trackingRecord.toEffectiveDuration().get();
         return formatDuration(effectiveDuration);
     }
 

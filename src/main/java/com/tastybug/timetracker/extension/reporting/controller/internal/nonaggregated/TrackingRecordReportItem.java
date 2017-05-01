@@ -1,7 +1,6 @@
 package com.tastybug.timetracker.extension.reporting.controller.internal.nonaggregated;
 
 import com.google.common.base.Optional;
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.extension.reporting.controller.internal.ReportableItem;
 
@@ -16,10 +15,10 @@ class TrackingRecordReportItem implements ReportableItem {
     public Optional<String> description;
     public Duration duration;
 
-    TrackingRecordReportItem(TrackingRecord trackingRecord, TrackingConfiguration trackingConfiguration) {
+    TrackingRecordReportItem(TrackingRecord trackingRecord) {
         this.start = trackingRecord.getStart().get();
         this.end = trackingRecord.getEnd().get();
-        this.duration = trackingRecord.toEffectiveDuration(trackingConfiguration).get();
+        this.duration = trackingRecord.toEffectiveDuration().get();
         this.description = trackingRecord.getDescription();
     }
 

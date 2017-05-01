@@ -101,7 +101,7 @@ public class CheckInPreconditionCheckDelegate {
         if (configuration.getHourLimit().isPresent()) {
             ArrayList<TrackingRecord> trackingRecordList = new TrackingRecordDAO(activity).getByProjectUuid(project.getUuid());
 
-            org.joda.time.Duration effectiveDuration = new ProjectDuration(configuration, trackingRecordList).getDuration();
+            org.joda.time.Duration effectiveDuration = new ProjectDuration(trackingRecordList).getDuration();
             if (!effectiveDuration.isShorterThan(org.joda.time.Duration.standardHours(configuration.getHourLimit().get()))) {
                 return configuration.getHourLimit();
             }

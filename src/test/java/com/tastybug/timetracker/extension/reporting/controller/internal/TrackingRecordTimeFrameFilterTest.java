@@ -2,6 +2,7 @@ package com.tastybug.timetracker.extension.reporting.controller.internal;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -168,7 +169,7 @@ public class TrackingRecordTimeFrameFilterTest {
     }
 
     private List<TrackingRecord> aListWithOneUnfinishedTrackingRecord() {
-        TrackingRecord trackingRecord = new TrackingRecord("uuid", "project-uuid", Optional.of(new Date()), Optional.<Date>absent(), Optional.<String>absent());
+        TrackingRecord trackingRecord = new TrackingRecord("uuid", "project-uuid", Optional.of(new Date()), Optional.<Date>absent(), Optional.<String>absent(), Rounding.Strategy.NO_ROUNDING);
         return Collections.singletonList(trackingRecord);
     }
 
@@ -177,7 +178,7 @@ public class TrackingRecordTimeFrameFilterTest {
     }
 
     private List<TrackingRecord> aListWithTR(Date start, Date end) {
-        TrackingRecord trackingRecord = new TrackingRecord("uuid", "project-uuid", Optional.of(start), Optional.of(end), Optional.<String>absent());
+        TrackingRecord trackingRecord = new TrackingRecord("uuid", "project-uuid", Optional.of(start), Optional.of(end), Optional.<String>absent(), Rounding.Strategy.NO_ROUNDING);
         return Collections.singletonList(trackingRecord);
     }
 }

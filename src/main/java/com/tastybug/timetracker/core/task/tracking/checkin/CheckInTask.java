@@ -4,8 +4,10 @@ import android.content.ContentProviderOperation;
 import android.content.Context;
 
 import com.google.common.base.Preconditions;
+import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
+import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.core.task.TaskPayload;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
@@ -19,18 +21,26 @@ public class CheckInTask extends TaskPayload {
 
     protected Context context;
     protected ProjectDAO projectDAO;
+    protected TrackingConfigurationDAO trackingConfigurationDAO;
     protected TrackingRecordDAO trackingRecordDAO;
     protected TrackingRecord trackingRecord;
 
     public CheckInTask(Context context) {
-        this(context, new ProjectDAO(context), new TrackingRecordDAO(context));
+        this(context,
+                new ProjectDAO(context),
+                new TrackingConfigurationDAO(context),
+                new TrackingRecordDAO(context));
     }
 
-    CheckInTask(Context context, ProjectDAO projectDAO, TrackingRecordDAO trackingRecordDAO) {
+    CheckInTask(Context context,
+                ProjectDAO projectDAO,
+                TrackingConfigurationDAO trackingConfigurationDAO,
+                TrackingRecordDAO trackingRecordDAO) {
         super(context);
         this.context = context;
-        this.trackingRecordDAO = trackingRecordDAO;
         this.projectDAO = projectDAO;
+        this.trackingConfigurationDAO = trackingConfigurationDAO;
+        this.trackingRecordDAO = trackingRecordDAO;
     }
 
     public CheckInTask withProjectUuid(String projectUuid) {
@@ -52,8 +62,8 @@ public class CheckInTask extends TaskPayload {
         if (trackingRecordDAO.getRunning(projectUuid).isPresent()) {
             throw new IllegalArgumentException("Project is already tracking!");
         }
-
-        trackingRecord = new TrackingRecord(projectUuid);
+        TrackingConfiguration trackingConfiguration = trackingConfigurationDAO.getByProjectUuid(projectUuid).get();
+        trackingRecord = new TrackingRecord(projectUuid, trackingConfiguration.getRoundingStrategy());
         trackingRecord.start();
         return Collections.singletonList(trackingRecordDAO.getBatchCreate(trackingRecord));
     }

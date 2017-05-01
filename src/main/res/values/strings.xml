@@ -49,16 +49,19 @@
     <!-- tracking record editing -->
     <string name="menu_confirm_tracking_record_edit">Confirm</string>
     <string name="menu_delete_tracking_record">Delete Record</string>
-    <string name="from_X">From %1$s</string>
-    <string name="until_X">Until %1$s</string>
+    <string name="from_X">%1$s</string>
+    <string name="until_X">%1$s</string>
     <string name="title_tracking_record_creation">Create Time Record</string>
     <string name="title_tracking_record_editing">Edit Time Record</string>
     <string name="error_date_missing">Please set a date</string>
     <string name="error_time_missing">Please set a time</string>
     <string name="error_end_before_start">This ends before it starts</string>
-    <string name="hint_from_date">From date..</string>
-    <string name="hint_until_date">Until date..</string>
-    <string name="hint_time">Time</string>
+    <string name="hint_date">Date..</string>
+    <string name="hint_time">.. time</string>
+    <string name="label_from">From</string>
+    <string name="label_until">Until</string>
+    <string name="label_rounding">Rounding</string>
+    <string name="label_description">Log</string>
 
     <!-- tracking record view -->
     <string name="running_since_X">Started %1$s</string>
@@ -166,15 +169,15 @@
     <string name="warning_invalid_start_date_was_reverted">Invalid start date has been reverted!</string>
     <string name="warning_invalid_end_date_was_reverted">Invalid end date has been reverted!</string>
 
-    <string name="after_tracking_preference_group_title">After Each Tracking</string>
+    <string name="after_tracking_preference_group_title">After Check Out</string>
     <string name="tracking_configuration_rounding_strategy_preference_key">tracking_configuration_rounding_strategy_preference_key</string>
-    <string name="tracking_configuration_rounding_strategy_preference_title">Tracked time will ..</string>
-    <string name="rounding_no_rounding_label">.. not be rounded</string>
-    <string name="rounding_minutes_down">.. be rounded down to full minutes</string>
-    <string name="rounding_minutes_up">.. be rounded up to full minutes</string>
-    <string name="rounding_ten_minutes_up">.. be rounded up to a full 10 minutes block</string>
-    <string name="rounding_thirty_minutes_up">.. be rounded up to a full half hour block</string>
-    <string name="rounding_sixty_minutes_up">.. be rounded up to full hours</string>
+    <string name="tracking_configuration_rounding_strategy_preference_title">Rounding Behaviour</string>
+    <string name="rounding_no_rounding_label">No rounding</string>
+    <string name="rounding_minutes_down">Round down to full minutes</string>
+    <string name="rounding_minutes_up">Round up to full minutes</string>
+    <string name="rounding_ten_minutes_up">Round up to a full 10 minutes block</string>
+    <string name="rounding_thirty_minutes_up">Round up to a full half hour block</string>
+    <string name="rounding_sixty_minutes_up">Round up to full hours</string>
     <string name="tracking_configuration_prompt_for_description_preference_key">tracking_configuration_prompt_for_description_preference_key</string>
     <string name="tracking_configuration_prompt_for_description_preference_title">Ask for a comment after each session</string>
 

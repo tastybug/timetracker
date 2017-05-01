@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.ui.util.LocalizedDurationFormatter;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
@@ -33,10 +32,9 @@ public class TrackingRecordView extends LinearLayout {
         descriptionTextView = (TextView) findViewById(R.id.description);
     }
 
-    public void showTrackingRecord(TrackingConfiguration trackingConfiguration,
-                                   TrackingRecord trackingRecord) {
+    public void showTrackingRecord(TrackingRecord trackingRecord) {
         renderTimeFrame(trackingRecord);
-        renderDuration(trackingConfiguration, trackingRecord);
+        renderDuration(trackingRecord);
         renderDescription(trackingRecord);
     }
 
@@ -63,14 +61,13 @@ public class TrackingRecordView extends LinearLayout {
         timeFrameTextView.setText(timeFrameText);
     }
 
-    private void renderDuration(TrackingConfiguration trackingConfiguration,
-                                TrackingRecord trackingRecord) {
+    private void renderDuration(TrackingRecord trackingRecord) {
         Preconditions.checkState(trackingRecord.isFinished() || trackingRecord.isRunning(),
                 "TrackingRecord not started yet, this is not supposed to happen!");
 
         if (trackingRecord.isFinished()
-                && trackingConfiguration.hasAlteringRoundingStrategy()) {
-            durationTextView.setText(LocalizedDurationFormatter.a().formatEffectiveDuration(trackingConfiguration, trackingRecord));
+                && trackingRecord.hasAlteringRoundingStrategy()) {
+            durationTextView.setText(LocalizedDurationFormatter.a().formatEffectiveDuration(trackingRecord));
         } else {
             durationTextView.setText(LocalizedDurationFormatter.a().formatMeasuredDuration(trackingRecord));
         }

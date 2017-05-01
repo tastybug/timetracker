@@ -7,6 +7,7 @@ import android.database.Cursor;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
 
 import java.text.ParseException;
@@ -22,13 +23,15 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
     static String START_DATE_COLUMN = "start_date";
     static String END_DATE_COLUMN = "end_date";
     static String DESCRIPTION_COLUMN = "description";
+    static String ROUNDING_STRATEGY_COLUMN = "rounding_strategy";
 
     static String[] COLUMNS = new String[]{
             ID_COLUMN,
             PROJECT_UUID_COLUMN,
             START_DATE_COLUMN,
             END_DATE_COLUMN,
-            DESCRIPTION_COLUMN
+            DESCRIPTION_COLUMN,
+            ROUNDING_STRATEGY_COLUMN
     };
 
     public TrackingRecordDAO(Context context) {
@@ -141,7 +144,8 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
                     projectUuid,
                     startAsString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(startAsString)) : Optional.<Date>absent(),
                     endAsString != null ? Optional.of(DefaultLocaleDateFormatter.iso8601().parse(endAsString)) : Optional.<Date>absent(),
-                    Optional.fromNullable(description)
+                    Optional.fromNullable(description),
+                    Rounding.Strategy.valueOf(cursor.getString(colsList.indexOf(ROUNDING_STRATEGY_COLUMN)))
             );
         } catch (ParseException pe) {
             throw new IllegalArgumentException("Problem parsing date.", pe);
@@ -156,6 +160,7 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
         contentValues.put(START_DATE_COLUMN, formatDate(entity.getStart()));
         contentValues.put(END_DATE_COLUMN, formatDate(entity.getEnd()));
         contentValues.put(DESCRIPTION_COLUMN, entity.getDescription().orNull());
+        contentValues.put(ROUNDING_STRATEGY_COLUMN, entity.getRoundingStrategy().name());
 
         return contentValues;
     }

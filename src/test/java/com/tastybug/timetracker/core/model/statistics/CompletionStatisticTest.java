@@ -172,7 +172,8 @@ public class CompletionStatisticTest {
                 "some project uuid",
                 Optional.of(start.toDate()),
                 Optional.of(stop.toDate()),
-                Optional.of("some description")
+                Optional.of("some description"),
+                Rounding.Strategy.NO_ROUNDING
         );
     }
 }

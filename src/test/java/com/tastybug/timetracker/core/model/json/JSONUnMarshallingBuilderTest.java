@@ -58,8 +58,8 @@ public class JSONUnMarshallingBuilderTest {
         Project project = new Project("uuid", "title", Optional.<String>absent(), Optional.<String>absent(), false);
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", Rounding.Strategy.FULL_MINUTE_UP);
         ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<>();
-        trackingRecordArrayList.add(new TrackingRecord("uuid"));
-        trackingRecordArrayList.add(new TrackingRecord("uuid"));
+        trackingRecordArrayList.add(new TrackingRecord("uuid", Rounding.Strategy.FULL_MINUTE_UP));
+        trackingRecordArrayList.add(new TrackingRecord("uuid", Rounding.Strategy.FULL_MINUTE_UP));
         project.setTrackingConfiguration(trackingConfiguration);
         project.setTrackingRecords(trackingRecordArrayList);
 

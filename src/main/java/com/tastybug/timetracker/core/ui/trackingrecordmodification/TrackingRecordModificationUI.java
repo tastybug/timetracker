@@ -6,11 +6,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.core.ui.dialog.picker.DatePickerDialogFragment;
 import com.tastybug.timetracker.core.ui.dialog.picker.TimePickerDialogFragment;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
@@ -22,7 +25,7 @@ import org.joda.time.LocalTime;
 
 import java.util.Date;
 
-public class TrackingRecordModificationUI {
+class TrackingRecordModificationUI {
 
     private static final String START_DATE_TOPIC = "START_DATE_TOPIC";
     private static final String START_TIME_TOPIC = "START_TIME_TOPIC";
@@ -34,6 +37,7 @@ public class TrackingRecordModificationUI {
     private EditText endDateEditText;
     private EditText endTimeEditText;
     private EditText descriptionEditText;
+    private Spinner roundingStrategySpinner;
 
     private Context context;
 
@@ -50,6 +54,7 @@ public class TrackingRecordModificationUI {
         endDateEditText = (EditText) rootView.findViewById(R.id.end_date);
         endTimeEditText = (EditText) rootView.findViewById(R.id.end_time);
         descriptionEditText = (EditText) rootView.findViewById(R.id.tracking_record_description);
+        roundingStrategySpinner = (Spinner) rootView.findViewById(R.id.rounding_strategy_spinner);
 
 
         startDateEditText.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +162,11 @@ public class TrackingRecordModificationUI {
                 : "");
     }
 
+    void renderRoundingStrategy(Rounding.Strategy strategy) {
+        String strategyLabel = context.getString(strategy.getDescriptionStringResource());
+        roundingStrategySpinner.setSelection(((ArrayAdapter)roundingStrategySpinner.getAdapter()).getPosition(strategyLabel));
+    }
+
     Optional<Date> getStartDateFromWidget(boolean blame) {
         Optional<Date> dateOptional = Optional.fromNullable((Date) startDateEditText.getTag());
         if (blame) {
@@ -201,6 +211,11 @@ public class TrackingRecordModificationUI {
         return TextUtils.isEmpty(descriptionEditText.getText())
                 ? Optional.<String>absent()
                 : Optional.of(descriptionEditText.getText().toString());
+    }
+
+    Rounding.Strategy getRoundingStrategyFromWidget() {
+        String strategyName = context.getResources().getStringArray(R.array.rounding_strategy_values)[roundingStrategySpinner.getSelectedItemPosition()];
+        return Rounding.Strategy.valueOf(strategyName);
     }
 
     void blameEndDateBeforeStartDate(boolean isErroneous) {

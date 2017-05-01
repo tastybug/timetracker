@@ -4,6 +4,7 @@ import android.os.Build;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
 
 import org.json.JSONException;
@@ -19,6 +20,7 @@ import static com.tastybug.timetracker.core.model.json.TrackingRecordJSON.DESCRI
 import static com.tastybug.timetracker.core.model.json.TrackingRecordJSON.END_DATE_COLUMN;
 import static com.tastybug.timetracker.core.model.json.TrackingRecordJSON.ID_COLUMN;
 import static com.tastybug.timetracker.core.model.json.TrackingRecordJSON.PROJECT_UUID_COLUMN;
+import static com.tastybug.timetracker.core.model.json.TrackingRecordJSON.ROUNDING_STRATEGY_COLUMN;
 import static com.tastybug.timetracker.core.model.json.TrackingRecordJSON.START_DATE_COLUMN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -128,6 +130,21 @@ public class TrackingRecordJSONTest {
     }
 
     @Test
+    public void can_marshal_all_rounding_strategies() throws Exception {
+        for (Rounding.Strategy strategy : Rounding.Strategy.values()) {
+            // given
+            TrackingRecord trackingRecord = new TrackingRecord("project-uuid", strategy);
+            trackingRecord.setRoundingStrategy(strategy);
+
+            // when
+            TrackingRecordJSON json = new TrackingRecordJSON(trackingRecord);
+
+            // then
+            assertEquals(strategy, Rounding.Strategy.valueOf(json.getString(TrackingConfigurationJSON.ROUNDING_STRATEGY_COLUMN)));
+        }
+    }
+
+    @Test
     public void can_import_a_json() throws Exception {
         // given
         JSONObject toImportFrom = aTrackingRecordJSONToImport();
@@ -141,6 +158,7 @@ public class TrackingRecordJSONTest {
         assertEquals(toImportFrom.getString(START_DATE_COLUMN), subject.getString(START_DATE_COLUMN));
         assertEquals(toImportFrom.getString(END_DATE_COLUMN), subject.getString(END_DATE_COLUMN));
         assertEquals(toImportFrom.getString(DESCRIPTION_COLUMN), subject.getString(DESCRIPTION_COLUMN));
+        assertEquals(toImportFrom.getString(ROUNDING_STRATEGY_COLUMN), subject.getString(ROUNDING_STRATEGY_COLUMN));
     }
 
     @Test
@@ -196,6 +214,7 @@ public class TrackingRecordJSONTest {
         assertEquals(toImportFrom.getString(START_DATE_COLUMN), DefaultLocaleDateFormatter.iso8601().format(trackingRecord.getStart().get()));
         assertEquals(toImportFrom.getString(END_DATE_COLUMN), DefaultLocaleDateFormatter.iso8601().format(trackingRecord.getEnd().get()));
         assertEquals(toImportFrom.getString(DESCRIPTION_COLUMN), trackingRecord.getDescription().get());
+        assertEquals(toImportFrom.getString(ROUNDING_STRATEGY_COLUMN), trackingRecord.getRoundingStrategy().name());
     }
 
     @Test
@@ -237,6 +256,21 @@ public class TrackingRecordJSONTest {
         assertFalse(trackingRecord.getDescription().isPresent());
     }
 
+    @Test
+    public void to_tracking_configuration_can_deal_with_any_type_of_rounding_strategy() throws Exception {
+        for (Rounding.Strategy strategy : Rounding.Strategy.values()) {
+            // given
+            JSONObject toImportFrom = aTrackingRecordJSONToImport();
+            toImportFrom.put(TrackingRecordJSON.ROUNDING_STRATEGY_COLUMN, strategy.name());
+
+            // when
+            TrackingRecord trackingRecord = new TrackingRecordJSON(toImportFrom).toTrackingRecord();
+
+            // then
+            assertEquals(strategy, trackingRecord.getRoundingStrategy());
+        }
+    }
+
     private JSONObject aTrackingRecordJSONToImport() throws JSONException {
         TrackingRecord trackingRecord = new TrackingRecord();
         trackingRecord.setUuid("uuid");
@@ -244,6 +278,7 @@ public class TrackingRecordJSONTest {
         trackingRecord.setStart(new Date(1));
         trackingRecord.setEnd(new Date(2));
         trackingRecord.setDescription(Optional.of("desc"));
+        trackingRecord.setRoundingStrategy(Rounding.Strategy.NO_ROUNDING);
 
 
         return new TrackingRecordJSON(trackingRecord);

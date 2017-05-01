@@ -5,28 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
-import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class TrackingRecordListAdapter extends BaseAdapter {
+class TrackingRecordListAdapter extends BaseAdapter {
 
     private ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<TrackingRecord>();
     private Activity activity;
-    private TrackingConfiguration trackingConfiguration;
 
-    public TrackingRecordListAdapter(Activity activity, String projectUuid) {
+    TrackingRecordListAdapter(Activity activity, String projectUuid) {
         this.activity = activity;
         rebuildModel(projectUuid);
     }
 
-    public void rebuildModel(String projectUuid) {
+    void rebuildModel(String projectUuid) {
         trackingRecordArrayList = new TrackingRecordDAO(activity).getByProjectUuid(projectUuid);
-        trackingConfiguration = new TrackingConfigurationDAO(activity).getByProjectUuid(projectUuid).get();
         Collections.sort(trackingRecordArrayList);
         notifyDataSetChanged();
     }
@@ -58,7 +54,7 @@ public class TrackingRecordListAdapter extends BaseAdapter {
         }
 
         TrackingRecordView trackingRecordView = (TrackingRecordView) convertView;
-        trackingRecordView.showTrackingRecord(trackingConfiguration, getTrackingRecordAt(position));
+        trackingRecordView.showTrackingRecord(getTrackingRecordAt(position));
 
         return trackingRecordView;
     }

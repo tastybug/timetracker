@@ -231,8 +231,8 @@ public class ProjectJSONTest {
         Project project = new Project("uuid", "title", Optional.<String>absent(), Optional.<String>absent(), false);
         TrackingConfiguration trackingConfiguration = new TrackingConfiguration("uuid", Rounding.Strategy.NO_ROUNDING);
         ArrayList<TrackingRecord> trackingRecordArrayList = new ArrayList<>();
-        trackingRecordArrayList.add(new TrackingRecord("uuid"));
-        trackingRecordArrayList.add(new TrackingRecord("uuid"));
+        trackingRecordArrayList.add(new TrackingRecord("uuid", Rounding.Strategy.NO_ROUNDING));
+        trackingRecordArrayList.add(new TrackingRecord("uuid", Rounding.Strategy.NO_ROUNDING));
         project.setTrackingConfiguration(trackingConfiguration);
         project.setTrackingRecords(trackingRecordArrayList);
 

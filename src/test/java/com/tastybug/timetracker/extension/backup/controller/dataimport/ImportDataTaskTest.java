@@ -48,7 +48,7 @@ public class ImportDataTaskTest {
 
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void validate_yields_NPE_if_no_data_uri_is_given() {
         // given
         ImportDataTask subject = new ImportDataTask(mock(Context.class), dbWipeBatchOpsProvider, dbImportBatchOpsProvider, uriToByteArrayHelper, jsonUnMarshallingBuilder);

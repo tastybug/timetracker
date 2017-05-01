@@ -2,12 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_from"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <EditText
             android:id="@+id/start_date"
@@ -16,20 +27,37 @@
             android:layout_weight="2"
             android:focusable="false"
             android:gravity="center"
-            android:hint="@string/hint_from_date"
+            android:hint="@string/hint_date"
             android:inputType="none"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <EditText
             android:id="@+id/start_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:focusable="false"
             android:gravity="center"
             android:hint="@string/hint_time"
             android:inputType="none"
-            android:singleLine="true" />
+            android:maxLines="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_until"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <EditText
             android:id="@+id/end_date"
@@ -38,30 +66,83 @@
             android:layout_weight="2"
             android:focusable="false"
             android:gravity="center"
-            android:hint="@string/hint_until_date"
+            android:hint="@string/hint_date"
             android:inputType="none"
-            android:singleLine="true" />
+            android:maxLines="1"/>
 
         <EditText
             android:id="@+id/end_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:focusable="false"
             android:gravity="center"
             android:hint="@string/hint_time"
             android:inputType="none"
-            android:singleLine="true" />
+            android:maxLines="1"/>
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/tracking_record_description"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hint_tracking_record_description"
-        android:inputType="textMultiLine"
-        android:minLines="5" />
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_rounding"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/holo_blue_dark"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <Spinner
+            android:id="@+id/rounding_strategy_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:entries="@array/rounding_strategy_labels"
+            android:entryValues="@array/rounding_strategy_values" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:layout_gravity="top"
+            android:maxLines="1"
+            android:text="@string/label_description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <EditText
+            android:id="@+id/tracking_record_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:ems="10"
+            android:hint="@string/hint_tracking_record_description"
+            android:inputType="textMultiLine"
+            android:minLines="5" />
+
+    </LinearLayout>
 
 </LinearLayout>

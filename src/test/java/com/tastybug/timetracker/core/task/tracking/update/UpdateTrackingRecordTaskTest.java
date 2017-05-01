@@ -7,6 +7,7 @@ import android.os.Build;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -28,7 +29,6 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.JELLY_BEAN, manifest = Config.NONE)
 public class UpdateTrackingRecordTaskTest {
-
 
     private TrackingRecordDAO trackingRecordDAO = mock(TrackingRecordDAO.class);
     private TrackingRecord affectedTrackingRecord = new TrackingRecord();
@@ -89,6 +89,19 @@ public class UpdateTrackingRecordTaskTest {
 
         // then
         assertEquals(newDescription, affectedTrackingRecord.getDescription().get());
+    }
+
+    @Test
+    public void can_change_rounding_strategy() {
+        // given
+        Rounding.Strategy newStrategy = Rounding.Strategy.TEN_MINUTES_UP;
+        subject = subject.withRoundingStrategy(newStrategy);
+
+        // when
+        subject.prepareBatchOperations();
+
+        // then
+        assertEquals(newStrategy, affectedTrackingRecord.getRoundingStrategy());
     }
 
     @Test

@@ -3,7 +3,6 @@ package com.tastybug.timetracker.extension.reporting.controller.internal.aggrega
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.ui.util.DurationFormatter;
 import com.tastybug.timetracker.extension.reporting.controller.internal.ReportableItem;
@@ -28,15 +27,15 @@ class AggregatedDay implements ReportableItem {
         this.dayEnd = dayStart.plusDays(1);
     }
 
-    void addRecord(TrackingRecord trackingRecord, TrackingConfiguration configuration) {
+    void addRecord(TrackingRecord trackingRecord) {
         Preconditions.checkArgument(trackingRecord.getStart().isPresent());
         Preconditions.checkArgument(trackingRecord.getEnd().isPresent());
 
         if (!isOutsideOfScope(trackingRecord)) {
             if (isContainedTrackingRecord(trackingRecord)) {
-                processContainedTrackingRecord(trackingRecord, configuration);
+                processContainedTrackingRecord(trackingRecord);
             } else {
-                processLeakingTrackingRecord(trackingRecord, configuration);
+                processLeakingTrackingRecord(trackingRecord);
             }
         }
     }
@@ -69,12 +68,12 @@ class AggregatedDay implements ReportableItem {
         return Optional.fromNullable(aggregatedDescription);
     }
 
-    private void processContainedTrackingRecord(TrackingRecord trackingRecord, TrackingConfiguration configuration) {
-        duration = duration.plus(trackingRecord.toEffectiveDuration(configuration).get());
+    private void processContainedTrackingRecord(TrackingRecord trackingRecord) {
+        duration = duration.plus(trackingRecord.toEffectiveDuration().get());
         addAggregatedDescription(trackingRecord);
     }
 
-    private void processLeakingTrackingRecord(TrackingRecord trackingRecord, TrackingConfiguration configuration) {
+    private void processLeakingTrackingRecord(TrackingRecord trackingRecord) {
         Date startingFrom;
         Date endingAt;
         if (isRecordStartingBeforeToday(trackingRecord)) {
@@ -89,8 +88,8 @@ class AggregatedDay implements ReportableItem {
         }
         //
         if (!isRecordEndingAfterToday(trackingRecord)
-                && configuration.hasAlteringRoundingStrategy()) {
-            duration = duration.plus(getRoundingDifferenceAsDuration(trackingRecord, configuration));
+                && trackingRecord.hasAlteringRoundingStrategy()) {
+            duration = duration.plus(getRoundingDifferenceAsDuration(trackingRecord));
         }
         duration = duration.plus(getDurationForInterval(startingFrom, endingAt));
 
@@ -131,9 +130,8 @@ class AggregatedDay implements ReportableItem {
         return new DateTime(trackingRecord.getEnd().get()).isAfter(dayEnd);
     }
 
-    private Duration getRoundingDifferenceAsDuration(TrackingRecord trackingRecord,
-                                                     TrackingConfiguration trackingConfiguration) {
-        return trackingRecord.toEffectiveDuration(trackingConfiguration).get().minus(trackingRecord.toDuration().get());
+    private Duration getRoundingDifferenceAsDuration(TrackingRecord trackingRecord) {
+        return trackingRecord.toEffectiveDuration().get().minus(trackingRecord.toDuration().get());
     }
 
     public String toString() {

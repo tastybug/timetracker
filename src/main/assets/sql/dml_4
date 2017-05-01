@@ -1,0 +1,5 @@
+CREATE TABLE tracking_record2 (uuid VARCHAR PRIMARY KEY, project_uuid INTEGER DEFAULT NULL, start_date VARCHAR DEFAULT NULL, end_date VARCHAR DEFAULT NULL, description VARCHAR DEFAULT NULL, rounding_strategy VARCHAR NOT NULL DEFAULT 'NO_ROUNDING', FOREIGN KEY(project_uuid) REFERENCES project(uuid) ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO tracking_record2 SELECT tracking_record.uuid, tracking_record.project_uuid, tracking_record.start_date, tracking_record.end_date, tracking_record.description, tracking_configuration.rounding_strategy FROM tracking_record, tracking_configuration WHERE tracking_record.project_uuid=tracking_configuration.project_uuid;
+DELETE FROM tracking_record;
+INSERT INTO tracking_record SELECT tracking_record2.uuid, tracking_record2.project_uuid, tracking_record2.start_date, tracking_record2.end_date, tracking_record2.description, tracking_record2.rounding_strategy FROM tracking_record2 WHERE 1=1;
+DROP TABLE tracking_record2;

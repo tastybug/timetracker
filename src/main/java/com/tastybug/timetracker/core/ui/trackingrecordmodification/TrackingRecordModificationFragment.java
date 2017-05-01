@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.core.task.tracking.create.CreateTrackingRecordTask;
 import com.tastybug.timetracker.core.task.tracking.update.UpdateTrackingRecordTask;
 
@@ -20,6 +21,7 @@ public class TrackingRecordModificationFragment extends Fragment {
     private static final String END_DATE = "END_DATE";
     private static final String END_TIME = "END_TIME";
     private static final String DESCRIPTION = "DESCRIPTION";
+    private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
     private TrackingRecordModificationUI ui;
 
@@ -39,6 +41,7 @@ public class TrackingRecordModificationFragment extends Fragment {
             ui.renderEndDate(Optional.fromNullable((Date) savedInstanceState.getSerializable(END_DATE)));
             ui.renderEndTime(Optional.fromNullable((Date) savedInstanceState.getSerializable(END_TIME)));
             ui.renderDescription(Optional.fromNullable(savedInstanceState.getString(DESCRIPTION)));
+            ui.renderRoundingStrategy((Rounding.Strategy) savedInstanceState.getSerializable(ROUNDING_STRATEGY));
         }
         return rootView;
     }
@@ -52,6 +55,7 @@ public class TrackingRecordModificationFragment extends Fragment {
         outState.putSerializable(END_DATE, ui.getEndDateFromWidget(false).orNull());
         outState.putSerializable(END_TIME, ui.getEndTimeFromWidget(false).orNull());
         outState.putString(DESCRIPTION, ui.getDescriptionFromWidget().orNull());
+        outState.putSerializable(ROUNDING_STRATEGY, ui.getRoundingStrategyFromWidget());
     }
 
     @Override
@@ -69,6 +73,7 @@ public class TrackingRecordModificationFragment extends Fragment {
         ui.renderEndDate(trackingRecord.getEnd());
         ui.renderEndTime(trackingRecord.getEnd());
         ui.renderDescription(trackingRecord.getDescription());
+        ui.renderRoundingStrategy(trackingRecord.getRoundingStrategy());
     }
 
     public void showCreationForProject(String projectUuid) {
@@ -105,7 +110,8 @@ public class TrackingRecordModificationFragment extends Fragment {
     public UpdateTrackingRecordTask collectModificationsForEdit(UpdateTrackingRecordTask task) {
         task.withTrackingRecordUuid(existingTrackingRecordUuidOpt.get())
                 .withStartDate(ui.getAggregatedStartDate(true).get())
-                .withDescription(ui.getDescriptionFromWidget());
+                .withDescription(ui.getDescriptionFromWidget())
+                .withRoundingStrategy(ui.getRoundingStrategyFromWidget());
 
         if (isExistingTrackingRecordThatIsRunning.or(false)) {
             if (ui.getAggregatedEndDate(false).isPresent()) {
@@ -121,7 +127,8 @@ public class TrackingRecordModificationFragment extends Fragment {
         return task.withProjectUuid(creationForProjectUuid.get())
                 .withStartDate(ui.getAggregatedStartDate(true).get())
                 .withEndDate(ui.getAggregatedEndDate(true).get())
-                .withDescription(ui.getDescriptionFromWidget());
+                .withDescription(ui.getDescriptionFromWidget())
+                .withRoundingStrategy(ui.getRoundingStrategyFromWidget());
     }
 
     public boolean hasUnsavedModifications(Optional<TrackingRecord> recordBeingEdited) {

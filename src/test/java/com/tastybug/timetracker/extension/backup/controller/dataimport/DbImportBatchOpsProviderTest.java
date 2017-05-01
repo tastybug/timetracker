@@ -9,6 +9,7 @@ import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 
 import org.junit.Test;
 
@@ -61,11 +62,11 @@ public class DbImportBatchOpsProviderTest {
         list.add(project2);
 
         ArrayList<TrackingRecord> trackingRecords = new ArrayList<>();
-        trackingRecords.add(new TrackingRecord("123"));
+        trackingRecords.add(new TrackingRecord("123", Rounding.Strategy.NO_ROUNDING));
         project1.setTrackingRecords(trackingRecords);
 
         trackingRecords = new ArrayList<>();
-        trackingRecords.add(new TrackingRecord("456"));
+        trackingRecords.add(new TrackingRecord("456", Rounding.Strategy.NO_ROUNDING));
         project2.setTrackingRecords(trackingRecords);
 
         return list;

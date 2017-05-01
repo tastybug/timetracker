@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.core.task.TaskPayload;
 import com.tastybug.timetracker.infrastructure.otto.OttoEvent;
 
@@ -20,6 +21,7 @@ public class UpdateTrackingRecordTask extends TaskPayload {
     private static final String START_DATE = "START_DATE_KEY";
     private static final String END_DATE = "END_DATE";
     private static final String DESCRIPTION_OPT = "DESCRIPTION_OPT";
+    private static final String ROUNDING_STRATEGY = "ROUNDING_STRATEGY";
 
     private TrackingRecordDAO trackingRecordDAO;
     private TrackingRecord trackingRecord;
@@ -54,6 +56,11 @@ public class UpdateTrackingRecordTask extends TaskPayload {
         return this;
     }
 
+    public UpdateTrackingRecordTask withRoundingStrategy(Rounding.Strategy strategy) {
+        arguments.putSerializable(ROUNDING_STRATEGY, strategy);
+        return this;
+    }
+
     @Override
     protected void validate() throws IllegalArgumentException, NullPointerException {
         Preconditions.checkArgument(arguments.containsKey(TRACKING_RECORD_UUID));
@@ -73,6 +80,9 @@ public class UpdateTrackingRecordTask extends TaskPayload {
         }
         if (arguments.containsKey(DESCRIPTION_OPT)) {
             trackingRecord.setDescription((Optional<String>) arguments.getSerializable(DESCRIPTION_OPT));
+        }
+        if (arguments.containsKey(ROUNDING_STRATEGY)) {
+            trackingRecord.setRoundingStrategy((Rounding.Strategy) arguments.getSerializable(ROUNDING_STRATEGY));
         }
 
         return Collections.singletonList(trackingRecordDAO.getBatchUpdate(trackingRecord));

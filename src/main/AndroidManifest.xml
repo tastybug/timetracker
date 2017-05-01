@@ -149,7 +149,7 @@
         <!--database stuff-->
         <meta-data
             android:name="database.schema.version.current"
-            android:value="3" />
+            android:value="4" />
         <meta-data
             android:name="database.file.name"
             android:value="timetracker.database" />

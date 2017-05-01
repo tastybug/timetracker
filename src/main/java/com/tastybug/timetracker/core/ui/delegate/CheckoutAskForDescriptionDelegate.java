@@ -7,7 +7,6 @@ import android.view.View;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
@@ -43,8 +42,7 @@ public class CheckoutAskForDescriptionDelegate extends AbstractOttoEventHandler 
 
     private void showSummarySnackBar(final TrackingRecord trackingRecord) {
         Project project = new ProjectDAO(activity).get(trackingRecord.getProjectUuid()).get();
-        TrackingConfiguration trackingConfiguration = new TrackingConfigurationDAO(activity).getByProjectUuid(trackingRecord.getProjectUuid()).get();
-        String durationString = LocalizedDurationFormatter.a().formatEffectiveDuration(trackingConfiguration, trackingRecord);
+        String durationString = LocalizedDurationFormatter.a().formatEffectiveDuration(trackingRecord);
 
         Snackbar.make(getRootViewOfCurrentActivity(activity),
                 activity.getString(R.string.snack_X_booked_on_project_Y, durationString, project.getTitle()),

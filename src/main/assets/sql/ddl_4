@@ -1,0 +1,1 @@
+ALTER TABLE tracking_record ADD rounding_strategy VARCHAR NOT NULL DEFAULT 'NO_ROUNDING';

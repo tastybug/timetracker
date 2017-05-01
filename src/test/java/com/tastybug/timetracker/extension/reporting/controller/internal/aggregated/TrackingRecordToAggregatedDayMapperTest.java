@@ -1,6 +1,5 @@
 package com.tastybug.timetracker.extension.reporting.controller.internal.aggregated;
 
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 
 import org.junit.Test;
@@ -20,17 +19,12 @@ public class TrackingRecordToAggregatedDayMapperTest {
 
     @Test(expected = NullPointerException.class)
     public void mapTrackingRecordsToAggregatedDays_throws_NPE_on_null_aggregated_days_list() {
-        trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(null, new ArrayList<TrackingRecord>(), new TrackingConfiguration(""));
+        trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(null, new ArrayList<TrackingRecord>());
     }
 
     @Test(expected = NullPointerException.class)
     public void mapTrackingRecordsToAggregatedDays_throws_NPE_on_null_tracking_record_list() {
-        trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(new ArrayList<AggregatedDay>(), null, new TrackingConfiguration(""));
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void mapTrackingRecordsToAggregatedDays_throws_NPE_on_null_tracking_configuration() {
-        trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(new ArrayList<AggregatedDay>(), new ArrayList<TrackingRecord>(), null);
+        trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(new ArrayList<AggregatedDay>(), null);
     }
 
     @Test
@@ -41,8 +35,7 @@ public class TrackingRecordToAggregatedDayMapperTest {
 
         // when
         trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(aggregatedDayList,
-                new ArrayList<TrackingRecord>(),
-                new TrackingConfiguration(""));
+                new ArrayList<TrackingRecord>());
 
         // then: no aggregations have been done
         verifyZeroInteractions(aggregatedDay);
@@ -55,17 +48,16 @@ public class TrackingRecordToAggregatedDayMapperTest {
         AggregatedDay aggregatedDay2 = mock(AggregatedDay.class);
         TrackingRecord trackingRecord1 = mock(TrackingRecord.class);
         TrackingRecord trackingRecord2 = mock(TrackingRecord.class);
-        TrackingConfiguration trackingConfiguration = mock(TrackingConfiguration.class);
         List<AggregatedDay> aggregatedDayList = Arrays.asList(aggregatedDay1, aggregatedDay2);
         List<TrackingRecord> trackingRecords = Arrays.asList(trackingRecord1, trackingRecord2);
 
         // when
-        trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(aggregatedDayList, trackingRecords, trackingConfiguration);
+        trackingRecordToAggregatedDayMapper.mapTrackingRecordsToAggregatedDays(aggregatedDayList, trackingRecords);
 
         // then
-        verify(aggregatedDay1).addRecord(trackingRecord1, trackingConfiguration);
-        verify(aggregatedDay1).addRecord(trackingRecord2, trackingConfiguration);
-        verify(aggregatedDay2).addRecord(trackingRecord1, trackingConfiguration);
-        verify(aggregatedDay2).addRecord(trackingRecord2, trackingConfiguration);
+        verify(aggregatedDay1).addRecord(trackingRecord1);
+        verify(aggregatedDay1).addRecord(trackingRecord2);
+        verify(aggregatedDay2).addRecord(trackingRecord1);
+        verify(aggregatedDay2).addRecord(trackingRecord2);
     }
 }
