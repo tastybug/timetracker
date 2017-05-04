@@ -5,4 +5,7 @@
     <string name="wifi_tracking_grace_period_in_minutes_key">wifi_tracking_grace_period_in_minutes_key</string>
 
     <string name="local_backup_enabled_key">local_backup_enabled_key</string>
+
+    <string name="project_closed_key">project_closed_key</string>
+
 </resources>

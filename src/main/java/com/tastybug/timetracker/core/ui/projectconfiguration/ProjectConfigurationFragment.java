@@ -13,6 +13,7 @@ import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
+import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.core.model.rounding.Rounding;
 import com.tastybug.timetracker.core.task.project.update.UpdateProjectEvent;
 import com.tastybug.timetracker.core.task.project.update.UpdateProjectTask;
@@ -39,6 +40,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         initPreferencesWithDataFromProject(PreferenceManager.getDefaultSharedPreferences(getActivity()), project, trackingConfiguration);
         addPreferencesFromResource(R.xml.project_preferences);
         setSummaries(project, trackingConfiguration);
+        disablePreferencesDependingOnStates();
     }
 
     private Project getProjectFromDB() {
@@ -64,6 +66,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
                         trackingConfiguration.getRoundingStrategy().name())
                 .putBoolean(getString(R.string.tracking_configuration_prompt_for_description_preference_key),
                         trackingConfiguration.isPromptForDescription())
+                .putBoolean(getString(R.string.project_closed_key), project.isClosed())
                 .apply();
     }
 
@@ -71,6 +74,11 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         findPreference(getString(R.string.project_title_preference_key)).setSummary(project.getTitle());
         findPreference(getString(R.string.project_description_preference_key)).setSummary(project.getDescription().or(""));
         findPreference(getString(R.string.project_contract_id_preference_key)).setSummary(project.getContractId().or(""));
+        if (project.isClosed()) {
+            findPreference(getString(R.string.project_closed_key)).setSummary(R.string.project_closed_summary);
+        } else {
+            findPreference(getString(R.string.project_closed_key)).setSummary(R.string.project_not_closed_summary);
+        }
         if (trackingConfiguration.getHourLimit().isPresent()) {
             findPreference(getString(R.string.tracking_configuration_hour_limit_preference_key)).setSummary(getString(R.string.hour_limit_of_X_hours, trackingConfiguration.getHourLimit().get()));
         } else {
@@ -90,6 +98,13 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         }
         findPreference(getString(R.string.tracking_configuration_rounding_strategy_preference_key))
                 .setSummary(trackingConfiguration.getRoundingStrategy().getDescriptionStringResource());
+    }
+
+    private void disablePreferencesDependingOnStates() {
+        if (!isProjectClosable()) {
+            findPreference(getString(R.string.project_closed_key)).setEnabled(false);
+            findPreference(getString(R.string.project_closed_key)).setSummary(R.string.project_not_closable_summary);
+        }
     }
 
     @Override
@@ -121,6 +136,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         String title = sharedPreferences.getString(getString(R.string.project_title_preference_key), "");
         String description = sharedPreferences.getString(getString(R.string.project_description_preference_key), "");
         String contractId = sharedPreferences.getString(getString(R.string.project_contract_id_preference_key), "");
+        Boolean isClosed = sharedPreferences.getBoolean(getString(R.string.project_closed_key), false);
         Integer hourLimit = sharedPreferences.getInt(getString(R.string.tracking_configuration_hour_limit_preference_key), 0);
         Long startTimeStamp = sharedPreferences.getLong(getString(R.string.tracking_configuration_start_date_preference_key), -1L);
         Optional<Date> startDateOpt = startTimeStamp == -1L ? Optional.<Date>absent() : Optional.of(new Date(startTimeStamp));
@@ -154,7 +170,7 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
             revertChanges(project, trackingConfiguration, sharedPreferences);
             showWarningInvalidEndDateLimit();
         } else {
-            saveChanges(title, description, contractId);
+            saveChanges(title, description, contractId, isClosed);
             saveChanges(hourLimit, startDateOpt, endDateInclusiveOpt, promptForDescription, strategy);
         }
     }
@@ -187,6 +203,14 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
             return false;
         }
         return true;
+    }
+
+    private boolean isProjectClosable() {
+        try {
+            return !new TrackingRecordDAO(getActivity()).getRunning(projectUuid).isPresent();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isHourLimitValid(Integer limit) {
@@ -239,12 +263,13 @@ public class ProjectConfigurationFragment extends PreferenceFragment implements 
         initPreferencesWithDataFromProject(sharedPreferences, project, configuration);
     }
 
-    private void saveChanges(String projectTitle, String description, String contractId) {
+    private void saveChanges(String projectTitle, String description, String contractId, boolean isClosed) {
         new UpdateProjectTask(getActivity())
                 .withProjectUuid(projectUuid)
                 .withProjectTitle(projectTitle)
                 .withProjectDescription(description)
                 .withContractId(contractId)
+                .withClosureState(isClosed)
                 .run();
     }
 

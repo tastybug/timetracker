@@ -22,39 +22,50 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/expiration_and_duration_limits_preference_group_title">
+    <PreferenceCategory android:title="@string/advanced_project_preference_group_title" >
+        <PreferenceScreen android:title="@string/project_lifecycle_subscreen_title" android:summary="@string/project_lifecycle_subscreen_summary">
 
-        <com.tastybug.timetracker.core.ui.projectconfiguration.HourLimitPickerDialog
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:key="@string/tracking_configuration_hour_limit_preference_key"
-            android:title="@string/tracking_configuration_hour_limit_preference_title" />
-        <!-- summary is set programmatically -->
+            <com.tastybug.timetracker.core.ui.projectconfiguration.DatePickerPreference
+                android:key="@string/tracking_configuration_start_date_preference_key"
+                android:title="@string/tracking_configuration_start_date_preference_title" />
+            <!-- summary is set programmatically -->
 
-        <com.tastybug.timetracker.core.ui.projectconfiguration.DatePickerPreference
-            android:key="@string/tracking_configuration_start_date_preference_key"
-            android:title="@string/tracking_configuration_start_date_preference_title" />
-        <!-- summary is set programmatically -->
+            <com.tastybug.timetracker.core.ui.projectconfiguration.DatePickerPreference
+                android:key="@string/tracking_configuration_end_date_inclusive_preference_key"
+                android:title="@string/tracking_configuration_end_date_inclusive_preference_title" />
+            <!-- summary is set programmatically -->
 
-        <com.tastybug.timetracker.core.ui.projectconfiguration.DatePickerPreference
-            android:key="@string/tracking_configuration_end_date_inclusive_preference_key"
-            android:title="@string/tracking_configuration_end_date_inclusive_preference_title" />
-        <!-- summary is set programmatically -->
+            <CheckBoxPreference
+                android:key="@string/project_closed_key"
+                android:title="@string/project_closed_title" />
+            <!-- summary is set programmatically -->
 
-    </PreferenceCategory>
+        </PreferenceScreen>
 
+        <PreferenceScreen android:title="@string/project_limits_subscreen_title" android:summary="@string/project_limits_subscreen_summary">
 
-    <PreferenceCategory android:title="@string/after_tracking_preference_group_title">
+            <com.tastybug.timetracker.core.ui.projectconfiguration.HourLimitPickerDialog
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:key="@string/tracking_configuration_hour_limit_preference_key"
+                android:title="@string/tracking_configuration_hour_limit_preference_title" />
+            <!-- summary is set programmatically -->
 
-        <ListPreference
-            android:entries="@array/rounding_strategy_labels"
-            android:entryValues="@array/rounding_strategy_values"
-            android:key="@string/tracking_configuration_rounding_strategy_preference_key"
-            android:title="@string/tracking_configuration_rounding_strategy_preference_title" />
+        </PreferenceScreen>
 
-        <CheckBoxPreference
-            android:key="@string/tracking_configuration_prompt_for_description_preference_key"
-            android:title="@string/tracking_configuration_prompt_for_description_preference_title" />
+        <PreferenceScreen android:title="@string/project_after_checkout_subscreen_title" android:summary="@string/project_after_checkout_subscreen_summary">
+
+            <ListPreference
+                android:entries="@array/rounding_strategy_labels"
+                android:entryValues="@array/rounding_strategy_values"
+                android:key="@string/tracking_configuration_rounding_strategy_preference_key"
+                android:title="@string/tracking_configuration_rounding_strategy_preference_title" />
+
+            <CheckBoxPreference
+                android:key="@string/tracking_configuration_prompt_for_description_preference_key"
+                android:title="@string/tracking_configuration_prompt_for_description_preference_title" />
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
 

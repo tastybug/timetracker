@@ -9,18 +9,6 @@
         android:title="@string/menu_generate_report"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@id/menu_item_close_project"
-        android:icon="@drawable/ic_project_closure"
-        android:orderInCategory="0"
-        android:title="@string/menu_close_project"
-        app:showAsAction="never" />
-    <item
-        android:id="@id/menu_item_reopen_project"
-        android:icon="@drawable/ic_project_closure"
-        android:orderInCategory="0"
-        android:title="@string/menu_reopen_project"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/menu_configure_project"
         android:icon="@drawable/ic_modify"
         android:orderInCategory="1"
