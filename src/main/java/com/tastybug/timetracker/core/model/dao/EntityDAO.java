@@ -10,6 +10,7 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.Entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class EntityDAO<T extends Entity> {
 
@@ -41,7 +42,7 @@ public abstract class EntityDAO<T extends Entity> {
         return Optional.fromNullable(t);
     }
 
-    public ArrayList<T> getAll() {
+    public List<T> getAll() {
         Cursor cursor = context.getContentResolver().query(getQueryUri(), getColumns(), null, null, null);
         ArrayList<T> list = new ArrayList<T>();
         while (cursor.moveToNext()) {

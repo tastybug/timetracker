@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.autoclosure.controller;
+package com.tastybug.timetracker.extension.autoclosure.controller.scheduling;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,7 @@ public class AlarmStarter extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        logInfo(AlarmStarter.class.getSimpleName(), "Starting auto closure service alarm.");
+        logInfo(AlarmStarter.class.getSimpleName(), "Setting up ");
         new AlarmSetup().setAlarm(context);
     }
 }

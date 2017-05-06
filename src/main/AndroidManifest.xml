@@ -67,7 +67,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".extension.autoclosure.controller.AlarmStarter">
+        <receiver android:name=".extension.autoclosure.controller.scheduling.AlarmStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -134,10 +134,10 @@
             android:name=".extension.trackingplayer.CallbackService"
             android:exported="false" />
         <service
-            android:name=".extension.backup.controller.localbackup.scheduling.AlarmCallback"
+            android:name=".extension.backup.controller.localbackup.scheduling.ScheduledIntentService"
             android:exported="false" />
         <service
-            android:name=".extension.autoclosure.controller.AutoClosureService"
+            android:name=".extension.autoclosure.controller.scheduling.ScheduledIntentService"
             android:exported="false" />
         <service
             android:name=".extension.checkoutreminder.controller.ReminderIntentService"

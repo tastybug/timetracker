@@ -16,8 +16,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.CLOSED_COLUMN;
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.CONTRACT_ID_COLUMN;
@@ -91,7 +91,7 @@ public class ProjectDAOTest {
                 .thenReturn(multipleProjects);
 
         // when
-        ArrayList<Project> projects = projectDAO.getAll();
+        List<Project> projects = projectDAO.getAll();
 
         // then
         assertEquals(2, projects.size());
@@ -105,7 +105,7 @@ public class ProjectDAOTest {
                 .thenReturn(noProjects);
 
         // when
-        ArrayList<Project> projects = projectDAO.getAll();
+        List<Project> projects = projectDAO.getAll();
 
         // then
         assertEquals(0, projects.size());

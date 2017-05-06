@@ -14,10 +14,11 @@ import com.tastybug.timetracker.core.model.statistics.ProjectDuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 class ProjectListAdapter extends BaseAdapter {
 
-    private ArrayList<Project> projectArrayList = new ArrayList<>();
+    private List<Project> projectArrayList = new ArrayList<>();
     private Activity activity;
 
     private TrackingRecordDAO trackingRecordDAO;

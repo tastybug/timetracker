@@ -17,11 +17,9 @@ public class Expiration {
     private Optional<Long> remainingDays;
     private Optional<Integer> expirationPercent;
 
-
     public Expiration(TrackingConfiguration trackingConfiguration) {
         this(trackingConfiguration, new Date());
     }
-
 
     public Expiration(TrackingConfiguration trackingConfiguration,
                       Date now) {

@@ -21,6 +21,7 @@ import org.robolectric.annotation.Config;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -117,7 +118,7 @@ public class TrackingRecordDAOTest {
                 .thenReturn(aCursorWith2TrackingRecords);
 
         // when
-        ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
+        List<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
 
         // then
         assertEquals(2, trackingRecords.size());
@@ -131,7 +132,7 @@ public class TrackingRecordDAOTest {
                 .thenReturn(noProjects);
 
         // when
-        ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
+        List<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
 
         // then
         assertEquals(0, trackingRecords.size());

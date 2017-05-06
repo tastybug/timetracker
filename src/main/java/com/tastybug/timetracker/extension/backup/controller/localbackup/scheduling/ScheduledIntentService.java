@@ -7,12 +7,12 @@ import com.tastybug.timetracker.extension.backup.controller.localbackup.LocalBac
 
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
-public class AlarmCallback extends IntentService {
+public class ScheduledIntentService extends IntentService {
 
-    private static final String TAG = AlarmCallback.class.getSimpleName();
+    private static final String TAG = ScheduledIntentService.class.getSimpleName();
 
-    public AlarmCallback() {
-        super(AlarmCallback.class.getSimpleName());
+    public ScheduledIntentService() {
+        super(ScheduledIntentService.class.getSimpleName());
     }
 
     @Override
