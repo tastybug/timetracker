@@ -23,41 +23,37 @@ import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
 
 import java.util.List;
 
-public class ProjectStatisticsUI {
+class ProjectStatisticsUI {
 
     private TextView projectTimeFrameTextView, projectDurationTextView;
-    private ProgressBar timeframeCompletionProgressBar, durationCompletionProgressBar;
+    private ProgressBar timeFrameCompletionProgressBar, durationCompletionProgressBar;
     private Context context;
 
-    public ProjectStatisticsUI(Context context) {
+    ProjectStatisticsUI(Context context) {
         this.context = context;
     }
 
-    public View inflateWidgets(LayoutInflater inflater,
+    View inflateWidgets(LayoutInflater inflater,
                                ViewGroup container) {
         View rootView = inflater.inflate(R.layout.fragment_project_statistics, container);
 
         projectTimeFrameTextView = (TextView) rootView.findViewById(R.id.project_info_time_frame);
         projectDurationTextView = (TextView) rootView.findViewById(R.id.project_info_current_project_duration);
-        timeframeCompletionProgressBar = (ProgressBar) rootView.findViewById(R.id.completion_timeframe);
+        timeFrameCompletionProgressBar = (ProgressBar) rootView.findViewById(R.id.completion_timeframe);
         durationCompletionProgressBar = (ProgressBar) rootView.findViewById(R.id.completion_duration);
 
         return rootView;
     }
 
-    public void renderProjectDuration(Optional<Project> projectOpt) {
-        renderProjectDurationText(projectOpt);
-        renderProjectCompletionProgress(projectOpt);
+    void renderProjectDuration(Project project) {
+        renderProjectDurationText(project);
+        renderProjectCompletionProgress(project);
 
     }
 
-    private void renderProjectDurationText(Optional<Project> projectOpt) {
-        if (!projectOpt.isPresent()) {
-            projectDurationTextView.setText("");
-            return;
-        }
-        TrackingConfiguration configuration = getTrackingConfigurationForProject(projectOpt.get());
-        org.joda.time.Duration duration = new ProjectDuration(getTrackingRecordsByProject(projectOpt.get())).getDuration();
+    private void renderProjectDurationText(Project project) {
+        TrackingConfiguration configuration = getTrackingConfigurationForProject(project);
+        org.joda.time.Duration duration = new ProjectDuration(getTrackingRecordsByProject(project)).getDuration();
 
         if (configuration.getHourLimit().isPresent()) {
             if (duration.getStandardHours() < 1) {
@@ -82,13 +78,9 @@ public class ProjectStatisticsUI {
         }
     }
 
-    private void renderProjectCompletionProgress(Optional<Project> projectOpt) {
-        if (!projectOpt.isPresent()) {
-//            durationCompletionProgressBar.setVisibility(View.GONE);
-            return;
-        }
-        TrackingConfiguration configuration = getTrackingConfigurationForProject(projectOpt.get());
-        Completion completion = new Completion(configuration, getTrackingRecordsByProject(projectOpt.get()), true);
+    private void renderProjectCompletionProgress(Project project) {
+        TrackingConfiguration configuration = getTrackingConfigurationForProject(project);
+        Completion completion = new Completion(configuration, getTrackingRecordsByProject(project), true);
 
         durationCompletionProgressBar.setVisibility(View.VISIBLE);
         durationCompletionProgressBar.setProgress(completion.getCompletionPercent().or(0d).intValue());
@@ -113,16 +105,11 @@ public class ProjectStatisticsUI {
         }
     }
 
-    public void renderProjectTimeFrame(Optional<Project> projectOpt) {
-        if (projectOpt.isPresent()) {
-            TrackingConfiguration trackingConfiguration = getTrackingConfigurationForProject(projectOpt.get());
-            Expiration statistic = new Expiration(trackingConfiguration);
-            renderProjectTimeFrameTextualDescription(statistic, trackingConfiguration);
-            renderProjectTimeframeProgress(Optional.of(statistic));
-        } else {
-            renderNoProjectTimeFrameTextualDescription();
-            renderProjectTimeframeProgress(Optional.<Expiration>absent());
-        }
+    void renderProjectTimeFrame(Project project) {
+        TrackingConfiguration trackingConfiguration = getTrackingConfigurationForProject(project);
+        Expiration statistic = new Expiration(trackingConfiguration);
+        renderProjectTimeFrameTextualDescription(statistic, trackingConfiguration);
+        renderProjectTimeFrameProgress(Optional.of(statistic));
     }
 
     private void renderProjectTimeFrameTextualDescription(Expiration statistic, TrackingConfiguration trackingConfiguration) {
@@ -140,28 +127,23 @@ public class ProjectStatisticsUI {
         projectTimeFrameTextView.setVisibility(View.VISIBLE);
     }
 
-    private void renderNoProjectTimeFrameTextualDescription() {
-        projectTimeFrameTextView.setText("");
-        projectTimeFrameTextView.setVisibility(View.GONE);
-    }
-
-    private void renderProjectTimeframeProgress(Optional<Expiration> statistic) {
+    private void renderProjectTimeFrameProgress(Optional<Expiration> statistic) {
         if (statistic.isPresent() && statistic.get().getExpirationPercent().isPresent()) {
-            timeframeCompletionProgressBar.setProgress(statistic.get().getExpirationPercent().get());
-            timeframeCompletionProgressBar.setVisibility(View.VISIBLE);
+            timeFrameCompletionProgressBar.setProgress(statistic.get().getExpirationPercent().get());
+            timeFrameCompletionProgressBar.setVisibility(View.VISIBLE);
             renderProjectTimeFrameProgressColoring(statistic.get());
         } else {
-            timeframeCompletionProgressBar.setVisibility(View.GONE);
+            timeFrameCompletionProgressBar.setVisibility(View.GONE);
         }
     }
 
     private void renderProjectTimeFrameProgressColoring(Expiration statistic) {
         if (statistic.getExpirationPercent().get() > 100) {
-            timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.RED));
+            timeFrameCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.RED));
         } else if (statistic.getExpirationPercent().get() > 80) {
-            timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.YELLOW));
+            timeFrameCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.YELLOW));
         } else {
-            timeframeCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.GREEN));
+            timeFrameCompletionProgressBar.getProgressDrawable().setColorFilter(new LightingColorFilter(0xFF000000, Color.GREEN));
         }
     }
 }

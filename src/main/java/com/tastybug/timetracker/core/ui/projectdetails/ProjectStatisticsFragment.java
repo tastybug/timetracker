@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.common.base.Optional;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
@@ -29,7 +28,7 @@ public class ProjectStatisticsFragment extends Fragment {
 
     private ProjectStatisticsUI ui;
 
-    private Optional<Project> currentProjectOpt;
+    private Project currentProject;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class ProjectStatisticsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_delete_project:
                 ConfirmDeleteProjectDialogFragment.aDialog()
-                        .forProject(currentProjectOpt.get())
+                        .forProject(currentProject)
                         .show(getFragmentManager(), getClass().getSimpleName());
                 return true;
             case R.id.menu_configure_project:
@@ -84,8 +83,14 @@ public class ProjectStatisticsFragment extends Fragment {
         }
     }
 
+    public void showProjectDetailsFor(Project projectToShow) {
+        this.currentProject = projectToShow;
+        ui.renderProjectTimeFrame(projectToShow);
+        ui.renderProjectDuration(projectToShow);
+    }
+
     private void showManageWifiTrackingSetupDialog() {
-        ManageWifiTrackingDialogFragment.aDialog(currentProjectOpt.get().getUuid())
+        ManageWifiTrackingDialogFragment.aDialog(currentProject.getUuid())
                 .show(getFragmentManager(), ManageWifiTrackingDialogFragment.class.getSimpleName());
     }
 
@@ -96,19 +101,13 @@ public class ProjectStatisticsFragment extends Fragment {
     }
 
     private TrackingConfiguration getTrackingConfigurationForCurrentProject() {
-        return new TrackingConfigurationDAO(getActivity()).getByProjectUuid(currentProjectOpt.get().getUuid()).get();
+        return new TrackingConfigurationDAO(getActivity()).getByProjectUuid(currentProject.getUuid()).get();
     }
 
     private void showProjectConfigurationActivity() {
         Intent intent = new Intent(getActivity(), ProjectConfigurationActivity.class);
-        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProjectOpt.get().getUuid());
+        intent.putExtra(ProjectConfigurationActivity.PROJECT_UUID, currentProject.getUuid());
         startActivity(intent);
-    }
-
-    public void showProjectDetailsFor(Project project) {
-        this.currentProjectOpt = Optional.of(project);
-        ui.renderProjectTimeFrame(Optional.of(project));
-        ui.renderProjectDuration(Optional.of(project));
     }
 
     @SuppressWarnings("unused")

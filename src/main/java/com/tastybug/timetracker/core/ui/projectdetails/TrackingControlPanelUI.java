@@ -18,7 +18,7 @@ import org.joda.time.LocalDate;
 
 import java.util.Date;
 
-public class TrackingControlPanelUI {
+class TrackingControlPanelUI {
 
     private View projectOngoingContainer;
     private TextView lineOne, lineTwo, projectClosedMessage;
