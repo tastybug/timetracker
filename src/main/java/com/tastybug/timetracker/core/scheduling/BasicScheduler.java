@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.core.util;
+package com.tastybug.timetracker.core.scheduling;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -12,10 +12,10 @@ import java.util.Date;
 
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
-public abstract class BasicAlarmSetup {
+public abstract class BasicScheduler {
 
     public void setAlarm(Context context) {
-        logInfo(BasicAlarmSetup.class.getSimpleName(), "Arming alarm for '%s' on %s", getAlarmTopic(), getStartDate().toString());
+        logInfo(BasicScheduler.class.getSimpleName(), "Scheduling '%s' for %s", getAlarmTopic(), getStartDate().toString());
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = getPendingIntent(context);

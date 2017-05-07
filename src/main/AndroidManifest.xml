@@ -67,7 +67,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".extension.autoclosure.controller.scheduling.AlarmStarter">
+        <receiver android:name=".extension.autoclosure.controller.scheduling.SchedulerStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -75,7 +75,7 @@
                 <action android:name="com.tastybug.timetracker.APP_START" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".extension.checkoutreminder.controller.AlarmStarter">
+        <receiver android:name=".extension.checkoutreminder.controller.scheduling.SchedulerStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -88,7 +88,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".extension.backup.controller.localbackup.scheduling.AlarmArming">
+        <receiver android:name=".extension.backup.controller.localbackup.scheduling.SchedulerStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -140,7 +140,7 @@
             android:name=".extension.autoclosure.controller.scheduling.ScheduledIntentService"
             android:exported="false" />
         <service
-            android:name=".extension.checkoutreminder.controller.ReminderIntentService"
+            android:name=".extension.checkoutreminder.controller.scheduling.ScheduledIntentService"
             android:exported="false" />
         <service
             android:name=".extension.wifitracking.controller.checkout.PostGracePeriodCallbackService"

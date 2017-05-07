@@ -1,7 +1,7 @@
-package com.tastybug.timetracker.extension.backup.controller.localbackup.scheduling;
+package com.tastybug.timetracker.extension.checkoutreminder.controller.scheduling;
 
 import com.tastybug.timetracker.core.scheduling.BasicScheduledIntentService;
-import com.tastybug.timetracker.extension.backup.controller.localbackup.LocalBackupService;
+import com.tastybug.timetracker.extension.checkoutreminder.controller.ReminderIntentService;
 
 public class ScheduledIntentService extends BasicScheduledIntentService {
 
@@ -16,11 +16,12 @@ public class ScheduledIntentService extends BasicScheduledIntentService {
 
     @Override
     protected void perform() {
-        new LocalBackupService(getApplicationContext()).performBackup();
+        new ReminderIntentService(getApplicationContext()).perform();
     }
 
     @Override
     protected boolean isEnabled() {
-        return new ScheduleSettings(getApplicationContext()).isBackupEnabled();
+        return new ReminderSettings(getApplicationContext()).isEnabled();
     }
+
 }

@@ -1,17 +1,19 @@
-package com.tastybug.timetracker.extension.backup.controller.localbackup.scheduling;
+package com.tastybug.timetracker.extension.autoclosure.controller.scheduling;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.tastybug.timetracker.core.util.BasicAlarmSetup;
+import com.tastybug.timetracker.core.scheduling.BasicScheduler;
 
-class AlarmSetup extends BasicAlarmSetup {
+class Scheduler extends BasicScheduler {
+
+    static final String TOPIC = "Auto Project Closure";
 
     @Override
     protected String getAlarmTopic() {
-        return "local auto backup";
+        return TOPIC;
     }
 
     protected PendingIntent getPendingIntent(Context context) {

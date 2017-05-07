@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.checkoutreminder.controller;
+package com.tastybug.timetracker.extension.checkoutreminder.controller.scheduling;
 
 import android.content.Context;
 import android.content.SharedPreferences;
