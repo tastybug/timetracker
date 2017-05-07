@@ -1,7 +1,7 @@
 package com.tastybug.timetracker.extension.checkoutreminder.controller.scheduling;
 
 import com.tastybug.timetracker.core.scheduling.BasicScheduledIntentService;
-import com.tastybug.timetracker.extension.checkoutreminder.controller.ReminderIntentService;
+import com.tastybug.timetracker.extension.checkoutreminder.controller.CheckoutReminderService;
 
 public class ScheduledIntentService extends BasicScheduledIntentService {
 
@@ -16,7 +16,7 @@ public class ScheduledIntentService extends BasicScheduledIntentService {
 
     @Override
     protected void perform() {
-        new ReminderIntentService(getApplicationContext()).perform();
+        new CheckoutReminderService(getApplicationContext()).perform();
     }
 
     @Override

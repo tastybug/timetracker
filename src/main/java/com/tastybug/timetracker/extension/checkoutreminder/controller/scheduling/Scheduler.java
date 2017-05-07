@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.tastybug.timetracker.core.scheduling.BasicScheduler;
-import com.tastybug.timetracker.extension.checkoutreminder.controller.ReminderIntentService;
+import com.tastybug.timetracker.extension.checkoutreminder.controller.CheckoutReminderService;
 
 class Scheduler extends BasicScheduler {
 
@@ -17,7 +17,7 @@ class Scheduler extends BasicScheduler {
     }
 
     protected PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context, ReminderIntentService.class);
+        Intent intent = new Intent(context, CheckoutReminderService.class);
         return PendingIntent.getService(context, 0, intent, 0);
     }
 

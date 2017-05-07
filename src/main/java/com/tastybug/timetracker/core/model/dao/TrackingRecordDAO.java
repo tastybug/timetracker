@@ -100,7 +100,7 @@ public class TrackingRecordDAO extends EntityDAO<TrackingRecord> {
         return Optional.fromNullable(trackingRecord);
     }
 
-    public ArrayList<TrackingRecord> getRunning() {
+    public List<TrackingRecord> getRunning() {
         Cursor cursor = context.getContentResolver().query(getQueryUri(),
                 getColumns(),
                 END_DATE_COLUMN + " IS NULL",
