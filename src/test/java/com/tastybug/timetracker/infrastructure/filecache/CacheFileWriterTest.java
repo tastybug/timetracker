@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.infrastructure.filecache;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -20,6 +21,13 @@ public class CacheFileWriterTest {
 
     private CacheDirectoryProvider cacheDirectoryProvider = mock(CacheDirectoryProvider.class);
     private CacheFileWriter subject = new CacheFileWriter(cacheDirectoryProvider);
+    private File tempFolder;
+
+    @Before
+    public void setup() throws IOException {
+        tempFolder = pseudoCacheDir.newFolder();
+        when(cacheDirectoryProvider.getCacheDirectory()).thenReturn(tempFolder);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void writeToCache_throws_IllegalArgument_on_null_data() throws IOException {
@@ -61,6 +69,8 @@ public class CacheFileWriterTest {
     public void writeToCache_writes_data_to_file() throws IOException {
         // given
         byte[] data = new byte[]{1, 2, 3};
+        File tempFolder = pseudoCacheDir.newFolder();
+        when(cacheDirectoryProvider.getCacheDirectory()).thenReturn(tempFolder);
 
         // when
         File file = subject.writeToCache("filename", "txt", data);
@@ -73,8 +83,6 @@ public class CacheFileWriterTest {
     public void writeToCache_writes_file_into_temp_folder_provided_by_CacheDirectoryProvider() throws IOException {
         // given
         byte[] data = new byte[]{1, 2, 3};
-        File tempFolder = pseudoCacheDir.newFolder();
-        when(cacheDirectoryProvider.getCacheDirectory()).thenReturn(tempFolder);
 
         // when
         File tempFile = subject.writeToCache("filename", "txt", data);
