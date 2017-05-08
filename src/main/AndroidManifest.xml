@@ -61,7 +61,17 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".extension.testdata.ui.TestDataGenerationActivity"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="GENERATE_TEST_DATA" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
 
+        <!-- broadcast receivers-->
         <receiver android:name=".extension.trackingplayer.AfterBootTrackingPlayerVisibilityHandler">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -113,6 +123,7 @@
             </intent-filter>
         </receiver>
 
+        <!-- -->
         <provider
             android:name=".infrastructure.db.DatabaseContentProvider"
             android:authorities="com.tastybug.timetracker"

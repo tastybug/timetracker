@@ -59,9 +59,11 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
+            resValue "bool", "test_data_generator_accessible", 'true'
         }
         release {
             buildConfigField "String", "GIT_HASH", "\"${getGitHash()}\""
+            resValue "bool", "test_data_generator_accessible", 'false'
             signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android.txt"),

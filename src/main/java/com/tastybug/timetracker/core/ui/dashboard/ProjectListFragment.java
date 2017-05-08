@@ -8,10 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
-import com.tastybug.timetracker.BuildConfig;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.task.tracking.checkin.CheckInEvent;
@@ -22,13 +20,10 @@ import com.tastybug.timetracker.core.ui.core.AbstractOttoEventHandler;
 import com.tastybug.timetracker.core.ui.dialog.project.ProjectCreationDialog;
 import com.tastybug.timetracker.core.ui.projectdetails.ProjectDetailsActivity;
 import com.tastybug.timetracker.core.ui.settings.SettingsActivity;
-import com.tastybug.timetracker.extension.testdata.controller.TestDataGeneratedEvent;
-import com.tastybug.timetracker.extension.testdata.controller.TestDataGenerationTask;
 
 public class ProjectListFragment extends ListFragment {
 
     private UpdateProjectListOnTrackingEventsHandler updateProjectListOnTrackingEventsHandler;
-    private TestDataCreationHandler testDataCreationHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,14 +37,12 @@ public class ProjectListFragment extends ListFragment {
         setListAdapter(new ProjectListAdapter(getActivity()));
 
         updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
-        testDataCreationHandler = new TestDataCreationHandler();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         updateProjectListOnTrackingEventsHandler.stop();
-        testDataCreationHandler.stop();
     }
 
     @Override
@@ -67,10 +60,6 @@ public class ProjectListFragment extends ListFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_project_list, menu);
-        // TODO das hier rausschmeissen und in der extension als activity unterbringen. vielleicht ueber die settings nen knopf anbieten?
-        if (BuildConfig.DEBUG) {
-            menu.add(Menu.NONE, R.id.menu_item_generate_testdata, 100, getString(R.string.menu_item_generate_testdata));
-        }
     }
 
     @Override
@@ -81,9 +70,6 @@ public class ProjectListFragment extends ListFragment {
                 return true;
             case R.id.menu_item_settings:
                 showSettingsActivity();
-                return true;
-            case R.id.menu_item_generate_testdata:
-                generateTestdata();
                 return true;
             default:
                 super.onOptionsItemSelected(item);
@@ -97,16 +83,12 @@ public class ProjectListFragment extends ListFragment {
                 .show(getFragmentManager(), getClass().getSimpleName());
     }
 
-    private void generateTestdata() {
-        new TestDataGenerationTask(getActivity()).run();
-    }
-
     private void showSettingsActivity() {
         Intent intent = new Intent(getActivity(), SettingsActivity.class);
         startActivity(intent);
     }
 
-    class UpdateProjectListOnTrackingEventsHandler extends AbstractOttoEventHandler {
+    private class UpdateProjectListOnTrackingEventsHandler extends AbstractOttoEventHandler {
 
         @SuppressWarnings("unused")
         @Subscribe
@@ -130,16 +112,6 @@ public class ProjectListFragment extends ListFragment {
         @Subscribe
         public void handleCheckOut(CheckOutEvent event) {
             ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
-        }
-    }
-
-    class TestDataCreationHandler extends AbstractOttoEventHandler {
-
-        @SuppressWarnings("unused")
-        @Subscribe
-        public void handleTestdataGenerated(TestDataGeneratedEvent event) {
-            Toast.makeText(getActivity(), "DEBUG: Testdaten generiert!", Toast.LENGTH_LONG).show();
-            setListAdapter(new ProjectListAdapter(getActivity()));
         }
     }
 }

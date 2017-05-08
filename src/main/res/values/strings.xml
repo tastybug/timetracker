@@ -137,8 +137,10 @@
     <string name="sample_until_date_X">Until 24/12/2016</string>
     <string name="sample_app_version_info">More Time, 1.123-abcd1234</string>
 
-    <!-- Development stuff -->
-    <string name="menu_item_generate_testdata">Generate Testdata</string>
+    <!-- Test data generation -->
+    <string name="test_data_generation_activity_title">Test Data Generator</string>
+    <string name="confirm_test_data_creation_dialog_msg">Generate test data?</string>
+    <string name="toast_starting_test_data_generator">Starting Generator, you will be sent to dashboard once it is done ..</string>
 
     <!-- project settings -->
     <string name="project_configuration_activity_title">Project Settings</string>

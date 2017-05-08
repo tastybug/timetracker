@@ -69,7 +69,15 @@
 
         <Preference
             android:key="@string/app_version_info"
-            android:title="@string/sample_app_version_info" />
+            android:title="@string/sample_app_version_info"
+            android:enabled="@bool/test_data_generator_accessible">
+            <!-- enabled via buildTypes in gradle -->
+            <intent
+                android:action="GENERATE_TEST_DATA"
+                android:category="android.intent.category.DEFAULT"
+                android:mimeType="text/plain" />
+
+        </Preference>
 
         <PreferenceScreen android:title="@string/libraries_and_trademarks_screen_title">
 
