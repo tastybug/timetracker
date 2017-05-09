@@ -1,56 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/ongoing_tracking_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="10dp">
 
-    <ProgressBar
-        android:id="@+id/completion_timeframe"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="3dp"
-        android:indeterminate="false"
-        android:progressDrawable="@drawable/circular_progressbar"
-        android:background="@drawable/circle_shape"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:max="100"
-        android:progress="65" />
-
-    <TextView
-        android:id="@+id/project_info_time_frame"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:text="@string/project_remaining_days_X_until_Y"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignBottom="@+id/completion_timeframe"
-        android:layout_toRightOf="@+id/completion_timeframe"
-        android:layout_toEndOf="@+id/completion_timeframe" />
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/completion_duration"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="3dp"
-        android:layout_below="@id/completion_timeframe"
-        android:indeterminate="false"
-        android:progressDrawable="@drawable/circular_progressbar"
-        android:background="@drawable/circle_shape"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:max="100"
-        android:progress="35" />
+        <ProgressBar
+            android:id="@+id/expiration_progressbar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="3dp"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/circular_progressbar"
+            android:background="@drawable/circle_shape"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:progress="65" />
 
-    <TextView
-        android:id="@+id/project_info_current_project_duration"
+        <TextView
+            android:id="@+id/expiration_statistic_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="@string/expiration_statistic_X_days_remaining_until_end_date_Y"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignBottom="@+id/expiration_progressbar"
+            android:layout_toRightOf="@+id/expiration_progressbar"
+            android:layout_toEndOf="@+id/expiration_progressbar" />
+
+        <ProgressBar
+            android:id="@+id/completion_progressbar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="3dp"
+            android:layout_below="@id/expiration_progressbar"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/circular_progressbar"
+            android:background="@drawable/circle_shape"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:progress="35" />
+
+        <TextView
+            android:id="@+id/completion_statistic_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="@string/completion_statistic_X_of_Y_recorded"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignBottom="@+id/completion_progressbar"
+            android:layout_toRightOf="@+id/completion_progressbar"
+            android:layout_toEndOf="@+id/completion_progressbar" />
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/trackingStartStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:text="@string/X_recorded_hours_so_far_from_a_total_of_Y"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignBottom="@+id/completion_duration"
-        android:layout_toRightOf="@+id/completion_duration"
-        android:layout_toEndOf="@+id/completion_duration" />
-
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_start_tracking" />
 
 </RelativeLayout>

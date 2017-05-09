@@ -6,20 +6,6 @@
     android:orientation="vertical">
 
     <fragment
-        class="com.tastybug.timetracker.core.ui.projectdetails.TrackingControlPanelFragment"
-        android:id="@id/fragment_tracking_control_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_tracking_control_panel" />
-
-    <View
-        android:layout_width="5dp"
-        android:layout_height="1dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="5dp"
-        android:background="#778899" />
-
-    <fragment
         class="com.tastybug.timetracker.core.ui.projectdetails.ProjectStatisticsFragment"
         android:id="@id/fragment_project_statistics"
         android:layout_width="match_parent"

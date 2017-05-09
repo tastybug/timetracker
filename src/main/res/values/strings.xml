@@ -38,13 +38,12 @@
     <string name="stop_tracking_before_closing_project">This project is currently tracking time. Please check out before closing this project!</string>
 
     <!-- project statistics -->
-    <string name="project_ended_on_X">The project ended on %1$s.</string>
-    <string name="project_remaining_days_X_until_Y">Remaining days %1$d (until %2$s)</string>
-    <string name="less_than_one_hour_recorded_so_far">Recorded &lt;1h</string>
-    <string name="X_recorded_hours_so_far">Recorded %1$dh</string>
-    <string name="less_than_one_hour_recorded_from_a_total_of_Y">Recorded &lt;1h/%1$dh</string>
-    <string name="X_recorded_hours_so_far_from_a_total_of_Y">Recorded %1$dh/%2$dh</string>
+    <string name="expiration_statistic_project_ended_on_X">Expired on %1$s.</string>
+    <string name="expiration_statistic_X_days_remaining_until_end_date_Y">Expires in %1$d days (until %2$s)</string>
+    <string name="completion_statistic_X_recorded">Completed %1$sh</string>
+    <string name="completion_statistic_X_of_Y_recorded">Completed %1$sh/%2$dh</string>
     <string name="nothing_recorded_yet">Nothing recorded yet ..</string>
+    <string name="less_than_one">&lt;1</string>
 
     <!-- tracking record editing -->
     <string name="menu_confirm_tracking_record_edit">Confirm</string>

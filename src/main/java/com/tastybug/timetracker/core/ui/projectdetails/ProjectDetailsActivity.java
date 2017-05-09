@@ -45,14 +45,12 @@ public class ProjectDetailsActivity extends BaseActivity {
         backPressOnProjectDeletion = new BackPressOnProjectDeletion();
 
         ProjectStatisticsFragment detailsFragment = getProjectStatisticsFragment();
-        TrackingControlPanelFragment trackingPanelFragment = getTrackingControlPanelFragment();
         TrackingRecordListFragment trackingRecordListFragment = getTrackingRecordListFragment();
 
         Project project = getProjectByUuid(projectUuid);
         setTitle(getProjectByUuid(projectUuid).getTitle());
 
         detailsFragment.showProjectDetailsFor(project);
-        trackingPanelFragment.renderProject(project);
         trackingRecordListFragment.showProject(projectUuid);
     }
 
@@ -90,7 +88,17 @@ public class ProjectDetailsActivity extends BaseActivity {
         }
     }
 
-    class BackPressOnProjectDeletion extends AbstractOttoEventHandler {
+    protected ProjectStatisticsFragment getProjectStatisticsFragment() {
+        return (ProjectStatisticsFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_project_statistics);
+    }
+
+    protected TrackingRecordListFragment getTrackingRecordListFragment() {
+        return (TrackingRecordListFragment) getFragmentManager()
+                .findFragmentById(R.id.fragment_tracking_record_list);
+    }
+
+    private class BackPressOnProjectDeletion extends AbstractOttoEventHandler {
 
         @SuppressWarnings("unused")
         @Subscribe
