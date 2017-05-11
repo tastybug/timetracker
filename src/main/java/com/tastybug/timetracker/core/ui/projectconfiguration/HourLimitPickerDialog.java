@@ -4,15 +4,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 
 public class HourLimitPickerDialog extends DialogPreference {
 
-    EditText numberEditText;
-    Integer initialValue;
+    private EditText numberEditText;
+    private Integer initialValue;
 
     public HourLimitPickerDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -29,9 +31,18 @@ public class HourLimitPickerDialog extends DialogPreference {
     public void onClick(DialogInterface dialog, int which) {
         super.onClick(dialog, which);
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            this.initialValue = Integer.parseInt(numberEditText.getText().toString());
+            this.initialValue = getNewHourLimit();
             persistInt(initialValue);
             callChangeListener(initialValue);
+        }
+    }
+
+    private int getNewHourLimit() {
+        Editable text = numberEditText.getText();
+        if (TextUtils.isEmpty(text)) {
+            return 0;
+        } else {
+            return Integer.parseInt(text.toString());
         }
     }
 
