@@ -11,6 +11,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 
+import com.tastybug.timetracker.R;
+
 public class HourLimitPickerDialog extends DialogPreference {
 
     private EditText numberEditText;
@@ -18,6 +20,8 @@ public class HourLimitPickerDialog extends DialogPreference {
 
     public HourLimitPickerDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setPositiveButtonText(R.string.set_limit);
+        setNegativeButtonText(R.string.set_no_limit);
     }
 
     @Override
@@ -33,6 +37,9 @@ public class HourLimitPickerDialog extends DialogPreference {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             this.initialValue = getNewHourLimit();
             persistInt(initialValue);
+            callChangeListener(initialValue);
+        } else {
+            persistInt(0);
             callChangeListener(initialValue);
         }
     }

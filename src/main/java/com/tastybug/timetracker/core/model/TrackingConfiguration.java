@@ -75,10 +75,6 @@ public class TrackingConfiguration extends Entity {
         this.roundingStrategy = roundingStrategy;
     }
 
-    public boolean hasAlteringRoundingStrategy() {
-        return roundingStrategy != Rounding.Strategy.NO_ROUNDING;
-    }
-
     public Optional<Integer> getHourLimit() {
         return Optional.fromNullable(hourLimit);
     }

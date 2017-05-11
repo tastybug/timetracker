@@ -28,6 +28,11 @@
     <string name="set_date">Set Date</string>
     <string name="set_no_date">Set NO Date</string>
 
+    <!-- hour limit dialog -->
+    <string name="set_limit">Set Limit</string>
+    <string name="set_no_limit">Set NO Limit</string>
+
+
     <!-- project details -->
     <string name="message_no_project_selected">No project selected!</string>
     <string name="menu_create_custom_tracking_record">Add manual time record</string>
