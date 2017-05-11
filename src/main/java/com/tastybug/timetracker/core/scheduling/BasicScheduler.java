@@ -64,6 +64,6 @@ public abstract class BasicScheduler {
     protected abstract long getReleaseFrequency();
 
     protected long getDebugFrequency() {
-        return 1000 * 20;
+        return 1000 * 60 * 60;
     }
 }
