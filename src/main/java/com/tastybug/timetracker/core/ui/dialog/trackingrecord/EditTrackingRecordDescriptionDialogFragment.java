@@ -41,14 +41,16 @@ public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(TRACKING_RECORD_UUID, trackingRecordUuid);
-        outState.putSerializable(TRACKING_RECORD_DESCRIPTION, getDescriptionFromWidget());
+        if (getDescriptionFromWidget().isPresent()) {
+            outState.putString(TRACKING_RECORD_DESCRIPTION, getDescriptionFromWidget().get());
+        }
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             this.trackingRecordUuid = savedInstanceState.getString(TRACKING_RECORD_UUID);
-            this.descriptionOptional = (Optional<String>) savedInstanceState.getSerializable(TRACKING_RECORD_DESCRIPTION);
+            this.descriptionOptional = Optional.fromNullable(savedInstanceState.getString(TRACKING_RECORD_DESCRIPTION));
         }
 
         if (trackingRecordUuid == null) {
@@ -77,7 +79,11 @@ public class EditTrackingRecordDescriptionDialogFragment extends DialogFragment 
                         dismiss();
                     }
                 });
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        setCancelable(false);
+        return dialog;
     }
 
     private void showTrackingRecordEditingActivity(String trackingRecordUuid) {

@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.extension.testdata.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ public class TestDataGenerationActivity extends AppCompatActivity {
 
     private void showConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.confirm_test_data_creation_dialog_msg))
+        Dialog dialog = builder.setMessage(getString(R.string.confirm_test_data_creation_dialog_msg))
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplication(), R.string.toast_starting_test_data_generator, Toast.LENGTH_SHORT).show();
@@ -37,7 +38,11 @@ public class TestDataGenerationActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         showProjectsActivity();
                     }
-                }).create().show();
+                }).create();
+
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override

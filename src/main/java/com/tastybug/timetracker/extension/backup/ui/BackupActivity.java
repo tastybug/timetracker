@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.extension.backup.ui;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -69,7 +70,7 @@ public class BackupActivity extends AppCompatActivity {
         final byte[] data = getLocalBackupService().getBackupData();
         if (data.length > 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.restore_backup_dialog_title)
+            Dialog dialog = builder.setTitle(R.string.restore_backup_dialog_title)
                     .setMessage(getString(R.string.restore_backup_from_X, DefaultLocaleDateFormatter.dateTime().format(getLastBackupDate())))
                     .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -81,8 +82,10 @@ public class BackupActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             showProjectsActivity();
                         }
-                    });
-            builder.create().show();
+                    }).create();
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
         } else {
             showNoLocalBackupAvailableMessage();
             showProjectsActivity();
@@ -91,7 +94,7 @@ public class BackupActivity extends AppCompatActivity {
 
     private void showConfirmImportFromExternalSourceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.import_data_dialog_title)
+        Dialog dialog = builder.setTitle(R.string.import_data_dialog_title)
                 .setMessage(R.string.import_data_dialog_message)
                 .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -103,8 +106,11 @@ public class BackupActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         showProjectsActivity();
                     }
-                });
-        builder.create().show();
+                }).create();
+
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override
@@ -126,7 +132,7 @@ public class BackupActivity extends AppCompatActivity {
         showProjectsActivity();
     }
 
-    public void showProjectsActivity() {
+    protected void showProjectsActivity() {
         Intent intent = new Intent(getApplicationContext(), ProjectsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.setAction(Intent.ACTION_VIEW);

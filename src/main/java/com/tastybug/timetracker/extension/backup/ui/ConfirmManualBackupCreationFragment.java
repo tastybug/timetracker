@@ -22,7 +22,7 @@ public class ConfirmManualBackupCreationFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.manual_backup_creation_dialog_title)
+        Dialog dialog = builder.setTitle(R.string.manual_backup_creation_dialog_title)
                 .setMessage(getDialogMessage())
                 .setPositiveButton(R.string.manual_backup_submit_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -32,9 +32,13 @@ public class ConfirmManualBackupCreationFragment extends DialogFragment {
                 })
                 .setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        ((BackupActivity)getActivity()).showProjectsActivity();
                         dismiss();
                     }
-                });
-        return builder.create();
+                }).create();
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        setCancelable(false);
+        return dialog;
     }
 }
