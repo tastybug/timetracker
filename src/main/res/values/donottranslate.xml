@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="checkout_reminder_enabled_settings_key">checkout_reminder_enabled_settings_key</string>
     <string name="expiration_warning_enabled_settings_key">expiration_warning_enabled_settings_key</string>
