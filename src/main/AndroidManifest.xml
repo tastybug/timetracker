@@ -51,12 +51,12 @@
                 <data android:mimeType="application/json" />
             </intent-filter>
             <intent-filter>
-                <action android:name="RESTORE_LAST_BACKUP" />
+                <action android:name="com.tastybug.timetracker.restore_last_backup" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
-                <action android:name="CREATE_AND_SHARE_BACKUP" />
+                <action android:name="com.tastybug.timetracker.create_and_share_backup" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
@@ -65,7 +65,7 @@
             android:name=".extension.testdata.ui.TestDataGenerationActivity"
             android:noHistory="true" >
             <intent-filter>
-                <action android:name="GENERATE_TEST_DATA" />
+                <action android:name="com.tastybug.timetracker.generate_test_data" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>

@@ -14,7 +14,7 @@
             <Preference android:title="@string/preference_item_restore_last_backup" android:summary="@string/preference_item_restore_last_backup_summary">
 
                 <intent
-                    android:action="RESTORE_LAST_BACKUP"
+                    android:action="@string/internal_action_restore_last_backup"
                     android:category="android.intent.category.DEFAULT"
                     android:mimeType="text/plain" />
 
@@ -23,7 +23,7 @@
             <Preference android:title="@string/preference_item_create_and_share_backup" android:summary="@string/preference_item_create_and_share_backup_summary">
 
                 <intent
-                    android:action="CREATE_AND_SHARE_BACKUP"
+                    android:action="@string/internal_action_create_and_share_backup"
                     android:category="android.intent.category.DEFAULT"
                     android:mimeType="text/plain" />
 
@@ -73,7 +73,7 @@
             android:enabled="@bool/test_data_generator_accessible">
             <!-- enabled via buildTypes in gradle -->
             <intent
-                android:action="GENERATE_TEST_DATA"
+                android:action="@string/internal_action_generate_test_data"
                 android:category="android.intent.category.DEFAULT"
                 android:mimeType="text/plain" />
 

@@ -42,11 +42,11 @@ public class BackupActivity extends AppCompatActivity {
     }
 
     private boolean isRestorationFromLocal(Intent intent) {
-        return intent.getAction().equals("RESTORE_LAST_BACKUP");
+        return intent.getAction().equals(getString(R.string.internal_action_restore_last_backup));
     }
 
     private boolean isCreateManualBackup(Intent intent) {
-        return intent.getAction().equals("CREATE_AND_SHARE_BACKUP");
+        return intent.getAction().equals(getString(R.string.internal_action_create_and_share_backup));
     }
 
     private LocalBackupService getLocalBackupService() {

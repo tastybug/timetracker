@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- this has to match action names in AndroidManifest.xml -->
+    <!-- cannot use @string/X in manifest when specifying intent filters :( -->
+    <string name="internal_action_restore_last_backup">com.tastybug.timetracker.restore_last_backup</string>
+    <string name="internal_action_create_and_share_backup">com.tastybug.timetracker.create_and_share_backup</string>
+    <string name="internal_action_generate_test_data">com.tastybug.timetracker.generate_test_data</string>
+
+</resources>
