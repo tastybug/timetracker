@@ -13,8 +13,8 @@
         tools:layout="@layout/fragment_project_statistics" />
 
     <View
-        android:layout_width="5dp"
-        android:layout_height="1dp"
+        android:layout_width="100dp"
+        android:layout_height="3dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"
         android:background="#778899" />
