@@ -118,6 +118,28 @@ public class ReportableItemRendererTest {
     }
 
     @Test
+    public void render_will_replace_line_breaks_in_description_with_html_line_breaks() {
+        // given
+        ReportableItem reportableItem = mock(ReportableItem.class);
+        when(reportableItem.getStartDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getEndDate()).thenReturn(mock(Date.class));
+        when(reportableItem.getDuration()).thenReturn(new Duration(0));
+        when(reportableItem.isSameDay()).thenReturn(false);
+        when(reportableItem.getDescription()).thenReturn(Optional.of("\n\n"));
+        when(defaultLocaleDateFormatter.dateTimeFormat(any(Date.class))).thenReturn("aDateAndTime");
+        String expectedHtml = "<div class=\"row\">" +
+                "<div class=\"data twenty\">aDateAndTime - aDateAndTime</div>" +
+                "<div class=\"data twenty\">aDuration</div>" +
+                "<div class=\"data fifty\"><br/><br/></div>" +
+                "</div>";
+
+        // when
+        String factualHtml = renderer.render(reportableItem);
+
+        // then
+        assertEquals(expectedHtml, factualHtml);
+    }
+    @Test
     public void render_sets_placeholder_when_no_description_is_available() {
         // given
         ReportableItem reportableItem = mock(ReportableItem.class);

@@ -2,6 +2,7 @@ package com.tastybug.timetracker.extension.reporting.controller.internal.html;
 
 import android.content.Context;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.ui.util.LocalizedDurationFormatter;
 import com.tastybug.timetracker.extension.reporting.controller.internal.ReportableItem;
@@ -31,7 +32,7 @@ class ReportableItemRenderer {
         return "<div class=\"row\">" +
                 "<div class=\"data twenty\">" + getTimeFrameString(reportableItem) + "</div>" +
                 "<div class=\"data twenty\">" + localizedDurationFormatter.formatDuration(reportableItem.getDuration()) + "</div>" +
-                "<div class=\"data fifty\">" + reportableItem.getDescription().or(context.getString(R.string.report_reportable_item_no_description_placeholder)) + "</div>" +
+                "<div class=\"data fifty\">" + getDescriptionHtml(reportableItem.getDescription()) + "</div>" +
                 "</div>";
     }
 
@@ -54,5 +55,12 @@ class ReportableItemRenderer {
                     + " - "
                     + defaultLocaleDateFormatter.dateTimeFormat(reportableItem.getEndDate());
         }
+    }
+
+    private String getDescriptionHtml(Optional<String> description) {
+        if (!description.isPresent()) {
+            return context.getString(R.string.report_reportable_item_no_description_placeholder);
+        }
+        return description.get().replaceAll("\\n", "<br/>");
     }
 }
