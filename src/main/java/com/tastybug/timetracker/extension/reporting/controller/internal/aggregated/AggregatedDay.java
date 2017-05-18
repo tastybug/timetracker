@@ -104,7 +104,7 @@ class AggregatedDay implements ReportableItem {
         if (aggregatedDescription == null) {
             aggregatedDescription = description;
         } else {
-            aggregatedDescription = aggregatedDescription + " -- " + description;
+            aggregatedDescription = aggregatedDescription + "<br/>" + description;
         }
     }
 
