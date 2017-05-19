@@ -1,13 +1,25 @@
 -dontwarn javax.annotation.**
 -dontwarn javax.inject.**
 -dontwarn sun.misc.Unsafe
-
-# this class contains testibility constructors that break due to obfuscation, which is fine
--dontnote com.tastybug.timetracker.infrastructure.backup.OSFacingBackupAgentHandler
-
--keep class com.tastybug.timetracker.infrastructure.runtime.Application
+-dontwarn com.google.base.**
+-dontwarn com.google.common.**
 
 -keepclassmembers class ** {
     @com.squareup.otto.Subscribe public *;
     @com.squareup.otto.Produce public *;
+}
+
+#-keep public class com.android.vending.licensing.ILicensingService
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="acra_crash_toast_message">Unexpected error. collecting information..</string>
+    <string name="acra_dialog_title">Send Crash Report</string>
+    <string name="acra_dialog_text">An unexpected error occurred forcing the application to stop. Would you like to send an e-mail, containing details on how to fix this?</string>
+    <string name="acra_contribution_thank">Thanks for your contribution!</string>
+    <string name="acra_button_send_mail">Send Mail</string>
+    <string name="acra_button_cancel">No Thanks</string>
+
+</resources>
