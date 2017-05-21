@@ -138,7 +138,7 @@ public class AggregatedDayTest {
         String firstDescription = "Setup of the webserver\nStarted the server";
         String secondDescription = "Installed Apache\nStarted Apache";
         String thirdDescription = "Added webpages to /var/www\nChecked website";
-        String expectedAggregatedDescription = firstDescription + " -- " + secondDescription + " -- " + thirdDescription;
+        String expectedAggregatedDescription = firstDescription + "<br/>" + secondDescription + "<br/>" + thirdDescription;
         first.setDescription(Optional.of(firstDescription));
         second.setDescription(Optional.of(secondDescription));
         third.setDescription(Optional.of(thirdDescription));
