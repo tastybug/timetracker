@@ -1,6 +1,3 @@
-Fachliches Glossar
-==================
-
 Entitäten
 ----------
 
@@ -8,18 +5,16 @@ Entitäten
     * `Titel`
     * `Beschreibung`
     * `Kontrakt Id`: Vom Auftraggeber vergebener Schlüssel, der den Arbeitsauftrag identifiziert und zu Abrechnungszwecken bekannt sein kann.
-    
 * `Zeiterfassungskonfiguration` / `Tracking Configuration`
     * `Projektzeitraum` / `Time Frame`: Start- und Enddatum eines Projekts (jeweils optional)
     * `Maximaler Projektumfang`: eine Höchstdauer für ein Projekt
         * ein Projekt, auf welches mehr gebucht wurde als konfiguriert ist 'OVERBOOKED'
     * `Rundungsstrategie` / `Rounding Strategy`: werden Zeiterfassungen nach Beendigung auf/ab gerundet?
-    
 * `Zeiterfassung` / `TrackingRecord`: eine in den Projektumfang einzahlende Zeiterfassung mit Start und Endedatum
     * Start-,Endedatum der -
     * Dauer der -
     * Beschreibung einer -
-
+    
 Statistiken
 -----------
 
@@ -34,12 +29,7 @@ Warnungen
 
 * `Checkout Erinnerung` / `Checkout Reminder`: Erinnerung bei überlangen Zeiterfassung, diese zu schließen
 
-Views
------
-
-* `Zeiterfassungshistorie` / `TrackingLog`: eine Liste aller TrackingRecords zu einem Projekt in chronologischer Reihenfolge
-
-Begriffe
+Begriffe und Verben
 ------
 
 * `Zeiterfassung` / `Tracking`: das Erfassen einer Zeiteinheit mit Projektbezug
