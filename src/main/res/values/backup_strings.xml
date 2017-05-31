@@ -10,9 +10,6 @@
     <string name="preference_item_create_and_share_backup">Manual Backup</string>
     <string name="preference_item_create_and_share_backup_summary">Create an exportable backup file</string>
 
-    <!-- backup restoration -->
-    <string name="title_restore_last_backup_activity">Backup Restoration</string>
-
     <!-- backup restoration confirmation dialog -->
     <string name="restore_backup_dialog_title">Restore Backup?</string>
     <string name="restore_backup_from_X">Do you want to restore the last known backup from %1$s, REPLACING any and all existing data?\n\nWarning: this will take a few moments to complete!</string>
@@ -21,7 +18,7 @@
     <string name="manual_backup_creation_dialog_title">Manual Backup</string>
     <string name="manual_backup_creation_description_text">This will export your data enabling you to save it in the cloud or transmit using an external application. \n\nTo re-import, simply open the file with this application.</string>
     <string name="manual_backup_submit_button">Backup</string>
-    <string name="extra_text_for_app_X_on_date_Y">"%1$s" data backup from %2$s.</string>
+    <string name="extra_text_for_app_X_on_date_Y">&#8220;%1$s&#8221; data backup from %2$s.</string>
     <string name="backup_activity_title">Data Backup</string>
 
     <!-- import manual backup dialog -->

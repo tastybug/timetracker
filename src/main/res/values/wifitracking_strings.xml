@@ -4,7 +4,6 @@
     <!-- wifi trigger creation dialog -->
     <string name="wifi_trigger_creation_dialog_title">Setup Wi-Fi Tracking</string>
     <string name="wifi_trigger_creation_dialog_intro">Automate your tracking by checking in and out based on the connection to a specific Wi-Fi network.</string>
-    <string name="wifi_trigger_ssid_title">Name Or Pick Wi-Fi network</string>
     <string name="wifi_trigger_ssid_hint">Manual Wi-Fi name</string>
     <string name="wifi_trigger_pick_current_ssid_image_description">Use SSID of the current Wi-Fi network.</string>
     <string name="toast_current_ssid_selected">Current Wi-Fi selected.</string>
