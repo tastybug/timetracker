@@ -20,7 +20,6 @@
     <string name="menu_reopen_project">Re-open Project</string>
     <string name="menu_wifi_tracking_configuration">Wi-Fi Tracking</string>
     <string name="menu_settings">Settings</string>
-    <string name="menu_backup">Backup</string>
 
     <!-- project creation -->
     <string name="hint_project_title">What is it called?</string>
@@ -32,7 +31,6 @@
     <!-- hour limit dialog -->
     <string name="set_limit">Set Limit</string>
     <string name="set_no_limit">Set NO Limit</string>
-
 
     <!-- project details -->
     <string name="message_no_project_selected">No project selected!</string>
@@ -142,11 +140,6 @@
     <string name="sample_until_date_X">Until 24/12/2016</string>
     <string name="sample_app_version_info">More Time, 1.123-abcd1234</string>
 
-    <!-- Test data generation -->
-    <string name="test_data_generation_activity_title">Test Data Generator</string>
-    <string name="confirm_test_data_creation_dialog_msg">Generate test data?</string>
-    <string name="toast_starting_test_data_generator">Starting Generator, you will be sent to dashboard once it is done ..</string>
-
     <!-- project settings -->
     <string name="project_configuration_activity_title">Project Settings</string>
     <string name="general_project__preference_group_title">General</string>
@@ -198,16 +191,7 @@
     <string name="tracking_configuration_prompt_for_description_preference_key">tracking_configuration_prompt_for_description_preference_key</string>
     <string name="tracking_configuration_prompt_for_description_preference_title">Ask for a comment after each session</string>
 
-    <!-- TrackingPlayer Notification -->
-    <string name="tracking_player_check_out_button">Check Out</string>
-    <string name="tracking_player_resume_button">Resume</string>
-    <string name="tracking_player_pause_button">Pause</string>
-    <string name="tracking_player_dismiss_paused_button">Dismiss</string>
-    <string name="tracking_player_switch_project">Switch</string>
-    <string name="tracking_player_tracking_since_X">Tracking since %1$s</string>
-    <string name="tracking_player_paused_since_X">Paused since %1$s</string>
-
-    <!-- settings -->
+    <!-- general settings -->
     <string name="general_group_title">General Settings</string>
     <string name="application_settings_activity_title">Settings</string>
     <string name="libraries_and_trademarks_screen_title">Libraries, Licenses &amp; Trademarks</string>
@@ -222,97 +206,5 @@
     <string name="trademarks_other_summary">All other trademarks belong to their respective owners.</string>
     <string name="application_W_version_X_githash_Y_buildtype_Z">%1$s, %2$s-%3$s (%4$s)</string>
     <string name="about_group_title">About</string>
-    <string name="warnings_group_title">Notifications</string>
-    <string name="checkout_reminder_title">Checkout Reminder</string>
-    <string name="checkout_reminder_summary">Show reminder for overly long tracking sessions.</string>
-    <string name="expiration_warning_title">Project Expiration Warning</string>
-    <string name="expiration_warning_summary">For getting past the 90% time frame mark.</string>
-    <string name="completion_warning_title">Project Completion Warning</string>
-    <string name="completion_warning_summary">For getting past the 90% mark of allotted time.</string>
-    <string name="wifi_tracking_group_title">Wi-Fi Tracking</string>
-    <string name="wifi_tracking_grace_period_in_minutes_label">Grace Period Before Check Out</string>
-    <string name="wifi_tracking_grace_period_X_minutes_summary">Prevent erratic tracking in patchy Wi-Fi networks by only checking out after %1$s minute(s) of uninterrupted disconnection.</string>
-    <string name="wifi_tracking_grace_period_1_minute_label">1 Minute</string>
-    <string name="wifi_tracking_grace_period_5_minutes_label">5 Minutes (recommended)</string>
-    <string name="wifi_tracking_grace_period_10_minutes_label">10 Minutes</string>
-    <string name="wifi_tracking_grace_period_20_minutes_label">20 Minutes</string>
-
-    <!-- warning notifications -->
-    <string name="project_X_completion_warning">%1$s completion warning</string>
-    <string name="more_than_90_percent_completion_reached">More than 90&#37; of allotted hours used.</string>
-    <string name="project_X_expiration_warning">%1$s expiration warning</string>
-    <string name="project_ends_on_X">Project ends on %1$s.</string>
-
-    <!-- html report viewer dialog-->
-    <string name="menu_generate_report">Generate Report</string>
-    <string name="share_report_via">Share Report</string>
-
-    <!-- html report -->
-    <string name="report_title_for_project_X_from_Y_to_Z">%1$s, %2$s-%3$s</string>
-    <string name="report_project_title_label">Project Title</string>
-    <string name="report_project_description_label">Project Description</string>
-    <string name="report_project_contract_id_label">Contract Id / Billing Id</string>
-    <string name="report_date_header">Date</string>
-    <string name="report_amount_header">Amount</string>
-    <string name="report_description_header">Log</string>
-    <string name="report_project_no_description_placeholder" />
-    <string name="report_project_no_contract_id_placeholder" />
-    <string name="report_reportable_item_no_description_placeholder" />
-    <string name="report_total_duration_label">Total Duration</string>
-    <string name="dialog_create_report_time_frame">Report Time Frame</string>
-    <string name="dialog_create_report_first_day_X">From %1$s</string>
-    <string name="dialog_create_report_last_day_X">Until %1$s</string>
-    <string name="dialog_create_report_error_end_before_start">Time frame ends before it starts</string>
-    <string name="dialog_create_report_options">Report Options</string>
-    <string name="dialog_create_report_aggregate_days_option">Aggregate day wise</string>
-
-    <!-- report sharing -->
-    <string name="chooser_title_share_report_via">Share Via ..</string>
-    <string name="report_for_project_X_with_time_frame_Y_to_Z">Time Sheet \"%1$s\": %2$s &#8212; %3$s.</string>
-    <string name="report_for_project_X_with_time_frame_Y_to_Z_message_text">This message contains a comprehensive time sheet for project \"%1$s\", ranging from %2$s until %3$s.\n\nPlease note the attached file.</string>
-
-    <!-- backup settings -->
-    <string name="preference_category_backup">Backup &amp; Data Restoration</string>
-    <string name="preference_item_local_backup_enabled_title">Automated Local Backup</string>
-    <string name="preference_item_local_backup_enabled_summary">Perform nightly backups, stored on this device</string>
-    <string name="preference_item_restore_last_backup">Restore Local Backup</string>
-    <string name="preference_item_restore_last_backup_summary">Restore the last available local backup</string>
-    <string name="preference_item_create_and_share_backup">Manual Backup</string>
-    <string name="preference_item_create_and_share_backup_summary">Create an exportable backup file</string>
-
-    <!-- backup restoration -->
-    <string name="title_restore_last_backup_activity">Backup Restoration</string>
-
-    <!-- backup restoration confirmation dialog -->
-    <string name="restore_backup_dialog_title">Restore Backup?</string>
-    <string name="restore_backup_from_X">Do you want to restore the last known backup from %1$s, REPLACING any and all existing data?\n\nWarning: this will take a few moments to complete!</string>
-
-    <!-- create manual backup dialog -->
-    <string name="manual_backup_creation_dialog_title">Manual Backup</string>
-    <string name="manual_backup_creation_description_text">This will export your data enabling you to save it in the cloud or transmit using an external application. \n\nTo re-import, simply open the file with this application.</string>
-    <string name="manual_backup_submit_button">Backup</string>
-    <string name="extra_text_for_app_X_on_date_Y">"%1$s" data backup from %2$s.</string>
-    <string name="title_landing_activity">Import Backup</string>
-
-    <!-- import manual backup dialog -->
-    <string name="import_data_dialog_title">Import Backup?</string>
-    <string name="import_data_dialog_message">Do you want to import the provided data, REPLACING any and all existing data?\n\nWarning: this will take a few moments to complete!</string>
-    <string name="data_import_starting">Starting now ..</string>
-    <string name="data_import_done">.. done!</string>
-
-    <!-- checkout reminder notification -->
-    <string name="checkout_reminder_notification_title">Checkout Reminder</string>
-    <string name="project_X_is_tracking_since_Y">%1$s is being tracked since %2$s</string>
-
-    <!-- wifi trigger creation dialog -->
-    <string name="wifi_trigger_creation_dialog_title">Setup Wi-Fi Tracking</string>
-    <string name="wifi_trigger_creation_dialog_intro">Automate your tracking by checking in and out based on the connection to a specific Wi-Fi network.</string>
-    <string name="wifi_trigger_ssid_title">Name Or Pick Wi-Fi network</string>
-    <string name="wifi_trigger_ssid_hint">Manual Wi-Fi name</string>
-    <string name="wifi_trigger_pick_current_ssid_image_description">Use SSID of the current Wi-Fi network.</string>
-    <string name="toast_current_ssid_selected">Current Wi-Fi selected.</string>
-    <string name="toast_currently_not_connected_cannot_pick_ssid">Cannot pick current network, not connected!</string>
-    <string name="toast_removed_wifi_trigger">Removed Wi-Fi trigger for this project.</string>
-    <string name="error_no_ssid_specified">No Wi-Fi SSID given!</string>
 
 </resources>

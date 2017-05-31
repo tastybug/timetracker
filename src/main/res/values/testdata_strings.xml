@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- backup settings -->
+    <string name="preference_category_backup">Backup &amp; Data Restoration</string>
+    <string name="preference_item_local_backup_enabled_title">Automated Local Backup</string>
+    <string name="preference_item_local_backup_enabled_summary">Perform nightly backups, stored on this device</string>
+    <string name="preference_item_restore_last_backup">Restore Local Backup</string>
+    <string name="preference_item_restore_last_backup_summary">Restore the last available local backup</string>
+    <string name="preference_item_create_and_share_backup">Manual Backup</string>
+    <string name="preference_item_create_and_share_backup_summary">Create an exportable backup file</string>
+
+    <!-- backup restoration -->
+    <string name="title_restore_last_backup_activity">Backup Restoration</string>
+
+    <!-- backup restoration confirmation dialog -->
+    <string name="restore_backup_dialog_title">Restore Backup?</string>
+    <string name="restore_backup_from_X">Do you want to restore the last known backup from %1$s, REPLACING any and all existing data?\n\nWarning: this will take a few moments to complete!</string>
+
+    <!-- create manual backup dialog -->
+    <string name="manual_backup_creation_dialog_title">Manual Backup</string>
+    <string name="manual_backup_creation_description_text">This will export your data enabling you to save it in the cloud or transmit using an external application. \n\nTo re-import, simply open the file with this application.</string>
+    <string name="manual_backup_submit_button">Backup</string>
+    <string name="extra_text_for_app_X_on_date_Y">"%1$s" data backup from %2$s.</string>
+    <string name="backup_activity_title">Data Backup</string>
+
+    <!-- import manual backup dialog -->
+    <string name="import_data_dialog_title">Import Backup?</string>
+    <string name="import_data_dialog_message">Do you want to import the provided data, REPLACING any and all existing data?\n\nWarning: this will take a few moments to complete!</string>
+    <string name="data_import_starting">Starting now ..</string>
+    <string name="data_import_done">.. done!</string>
+
+    <!-- Test data generation -->
+    <string name="test_data_generation_activity_title">Test Data Generator</string>
+    <string name="confirm_test_data_creation_dialog_msg">Generate test data?</string>
+    <string name="toast_starting_test_data_generator">Starting Generator, you will be sent to dashboard once it is done ..</string>
+
+</resources>

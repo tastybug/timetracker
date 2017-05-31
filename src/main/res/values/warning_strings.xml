@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- warning notifications -->
+    <string name="project_X_completion_warning">%1$s completion warning</string>
+    <string name="more_than_90_percent_completion_reached">More than 90&#37; of allotted hours used.</string>
+    <string name="project_X_expiration_warning">%1$s expiration warning</string>
+    <string name="project_ends_on_X">Project ends on %1$s.</string>
+
+    <!-- checkout reminder notification -->
+    <string name="checkout_reminder_notification_title">Checkout Reminder</string>
+    <string name="project_X_is_tracking_since_Y">%1$s is being tracked since %2$s</string>
+
+    <string name="warnings_group_title">Notifications</string>
+    <string name="checkout_reminder_title">Checkout Reminder</string>
+    <string name="checkout_reminder_summary">Show reminder for overly long tracking sessions.</string>
+    <string name="expiration_warning_title">Project Expiration Warning</string>
+    <string name="expiration_warning_summary">For getting past the 90% time frame mark.</string>
+    <string name="completion_warning_title">Project Completion Warning</string>
+    <string name="completion_warning_summary">For getting past the 90% mark of allotted time.</string>
+
+</resources>

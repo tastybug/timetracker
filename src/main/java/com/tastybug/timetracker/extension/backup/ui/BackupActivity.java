@@ -29,7 +29,7 @@ public class BackupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.title_landing_activity);
+        setTitle(R.string.backup_activity_title);
 
         if (isRestorationFromLocal(getIntent())) {
             showConfirmImportFromLastBackupDialog();

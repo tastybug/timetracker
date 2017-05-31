@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- html report viewer dialog-->
+    <string name="menu_generate_report">Generate Report</string>
+    <string name="share_report_via">Share Report</string>
+
+    <!-- html report -->
+    <string name="report_title_for_project_X_from_Y_to_Z">%1$s, %2$s-%3$s</string>
+    <string name="report_project_title_label">Project Title</string>
+    <string name="report_project_description_label">Project Description</string>
+    <string name="report_project_contract_id_label">Contract Id / Billing Id</string>
+    <string name="report_date_header">Date</string>
+    <string name="report_amount_header">Amount</string>
+    <string name="report_description_header">Log</string>
+    <string name="report_project_no_description_placeholder" />
+    <string name="report_project_no_contract_id_placeholder" />
+    <string name="report_reportable_item_no_description_placeholder" />
+    <string name="report_total_duration_label">Total Duration</string>
+    <string name="dialog_create_report_time_frame">Report Time Frame</string>
+    <string name="dialog_create_report_first_day_X">From %1$s</string>
+    <string name="dialog_create_report_last_day_X">Until %1$s</string>
+    <string name="dialog_create_report_error_end_before_start">Time frame ends before it starts</string>
+    <string name="dialog_create_report_options">Report Options</string>
+    <string name="dialog_create_report_aggregate_days_option">Aggregate day wise</string>
+
+    <!-- report sharing -->
+    <string name="chooser_title_share_report_via">Share Via ..</string>
+    <string name="report_for_project_X_with_time_frame_Y_to_Z">Time Sheet \"%1$s\": %2$s &#8212; %3$s.</string>
+    <string name="report_for_project_X_with_time_frame_Y_to_Z_message_text">This message contains a comprehensive time sheet for project \"%1$s\", ranging from %2$s until %3$s.\n\nPlease note the attached file.</string>
+
+</resources>

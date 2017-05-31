@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- wifi trigger creation dialog -->
+    <string name="wifi_trigger_creation_dialog_title">Setup Wi-Fi Tracking</string>
+    <string name="wifi_trigger_creation_dialog_intro">Automate your tracking by checking in and out based on the connection to a specific Wi-Fi network.</string>
+    <string name="wifi_trigger_ssid_title">Name Or Pick Wi-Fi network</string>
+    <string name="wifi_trigger_ssid_hint">Manual Wi-Fi name</string>
+    <string name="wifi_trigger_pick_current_ssid_image_description">Use SSID of the current Wi-Fi network.</string>
+    <string name="toast_current_ssid_selected">Current Wi-Fi selected.</string>
+    <string name="toast_currently_not_connected_cannot_pick_ssid">Cannot pick current network, not connected!</string>
+    <string name="toast_removed_wifi_trigger">Removed Wi-Fi trigger for this project.</string>
+    <string name="error_no_ssid_specified">No Wi-Fi SSID given!</string>
+
+    <string name="wifi_tracking_group_title">Wi-Fi Tracking</string>
+    <string name="wifi_tracking_grace_period_in_minutes_label">Grace Period Before Check Out</string>
+    <string name="wifi_tracking_grace_period_X_minutes_summary">Prevent erratic tracking in patchy Wi-Fi networks by only checking out after %1$s minute(s) of uninterrupted disconnection.</string>
+    <string name="wifi_tracking_grace_period_1_minute_label">1 Minute</string>
+    <string name="wifi_tracking_grace_period_5_minutes_label">5 Minutes (recommended)</string>
+    <string name="wifi_tracking_grace_period_10_minutes_label">10 Minutes</string>
+    <string name="wifi_tracking_grace_period_20_minutes_label">20 Minutes</string>
+
+</resources>
