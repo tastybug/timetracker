@@ -14,7 +14,7 @@ import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
 
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createOpenProjectDetailsActivityIntent;
+import static com.tastybug.timetracker.core.ui.util.DefaultIntentFactory.createOpenProjectDetailsActivityIntent;
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
 class ReminderNotification {

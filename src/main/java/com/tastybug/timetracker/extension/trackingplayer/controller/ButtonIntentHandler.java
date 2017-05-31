@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.trackingplayer;
+package com.tastybug.timetracker.extension.trackingplayer.controller;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.core.task.tracking.checkin.CheckInTask;
 import com.tastybug.timetracker.core.task.tracking.checkout.CheckOutTask;
 import com.tastybug.timetracker.core.ui.trackingrecordmodification.TrackingRecordModificationActivity;
-import com.tastybug.timetracker.extension.trackingplayer.internal.NotificationModel;
+import com.tastybug.timetracker.extension.trackingplayer.ui.NotificationManager;
 
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logError;
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
@@ -22,7 +22,7 @@ import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInf
  * <p/>
  * This background service only lives as long as the request!
  */
-public class CallbackService extends IntentService {
+public class ButtonIntentHandler extends IntentService {
 
     public static final String OPERATION = "OPERATION";
     public static final String CYCLE_TO_NEXT_PROJECT = "CYCLE_TO_NEXT_PROJECT";
@@ -31,10 +31,10 @@ public class CallbackService extends IntentService {
     public static final String PAUSE_TRACKING_PROJECT = "PAUSE_TRACKING_PROJECT";
     public static final String UNPAUSE_TRACKING_PROJECT = "UNPAUSE_TRACKING_PROJECT";
     public static final String PROJECT_UUID = "PROJECT_UUID";
-    private static final String TAG = CallbackService.class.getSimpleName();
+    private static final String TAG = ButtonIntentHandler.class.getSimpleName();
 
-    public CallbackService() {
-        super(CallbackService.class.getSimpleName());
+    public ButtonIntentHandler() {
+        super(ButtonIntentHandler.class.getSimpleName());
     }
 
     @Override
@@ -83,12 +83,12 @@ public class CallbackService extends IntentService {
 
     private void handleDismissPausedProjectRequested(String projectUuid) {
         removeProjectFromPausedList(projectUuid);
-        new TrackingPlayer(getApplicationContext()).showSomeProjectOrHide();
+        new NotificationManager(getApplicationContext()).showSomeProjectOrHide();
     }
 
     private void handleCycleProjectRequested(String currentProjectUuid) {
         logInfo(TAG, "Cycling to next project coming from " + currentProjectUuid);
-        new TrackingPlayer(getApplicationContext()).cycleProject(currentProjectUuid);
+        new NotificationManager(getApplicationContext()).cycleProject(currentProjectUuid);
     }
 
     private boolean isProjectRequiringDescriptionPromptAfterTracking(String projectUuid) {

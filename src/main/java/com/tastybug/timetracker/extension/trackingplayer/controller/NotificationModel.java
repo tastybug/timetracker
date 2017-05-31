@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.trackingplayer.internal;
+package com.tastybug.timetracker.extension.trackingplayer.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -41,7 +41,7 @@ public class NotificationModel {
         return runningProjects;
     }
 
-    public void addPausedProject(String projectUuid) {
+    void addPausedProject(String projectUuid) {
         SharedPreferences prefs = getPreferences();
         SharedPreferences.Editor editor = prefs.edit();
         Set<String> pausedList = prefs.getStringSet(PAUSED_PROJECTS_KEY, new HashSet<String>());
@@ -50,7 +50,7 @@ public class NotificationModel {
         editor.apply();
     }
 
-    public void removePausedProject(String projectUuid) {
+    void removePausedProject(String projectUuid) {
         SharedPreferences prefs = getPreferences();
         SharedPreferences.Editor editor = prefs.edit();
         Set<String> pausedList = prefs.getStringSet(PAUSED_PROJECTS_KEY, new HashSet<String>());

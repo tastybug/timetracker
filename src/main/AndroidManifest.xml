@@ -72,7 +72,7 @@
         </activity>
 
         <!-- broadcast receivers-->
-        <receiver android:name=".extension.trackingplayer.AfterBootTrackingPlayerVisibilityHandler">
+        <receiver android:name=".extension.trackingplayer.controller.AfterBootTrackingPlayerVisibilityHandler">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -106,7 +106,7 @@
                 <action android:name="com.tastybug.timetracker.APP_START" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".extension.trackingplayer.DomainEventBroadcastReceiver" android:exported="false">
+        <receiver android:name=".extension.trackingplayer.controller.DomainEventBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.tastybug.timetracker.PROJECT_CHANGE" />
                 <category android:name="com.tastybug.timetracker.LIFECYCLE_EVENT" />
@@ -142,7 +142,7 @@
 
         <!-- intent services -->
         <service
-            android:name=".extension.trackingplayer.CallbackService"
+            android:name=".extension.trackingplayer.controller.ButtonIntentHandler"
             android:exported="false" />
         <service
             android:name=".extension.backup.controller.localbackup.scheduling.ScheduledIntentService"

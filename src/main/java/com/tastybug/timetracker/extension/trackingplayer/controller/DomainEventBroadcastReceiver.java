@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.trackingplayer;
+package com.tastybug.timetracker.extension.trackingplayer.controller;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +8,7 @@ import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.task.project.ProjectChangeIntent;
 import com.tastybug.timetracker.core.task.tracking.TrackingRecordChangeIntent;
-import com.tastybug.timetracker.extension.trackingplayer.internal.NotificationModel;
+import com.tastybug.timetracker.extension.trackingplayer.ui.NotificationManager;
 
 import static com.tastybug.timetracker.infrastructure.util.ConditionalLog.logInfo;
 
@@ -47,7 +47,7 @@ public class DomainEventBroadcastReceiver extends BroadcastReceiver {
         // paused projects can be restarted from within the app -> these have to be removed from the
         // list of paused projects manually
         new NotificationModel(context).removePausedProject(projectUuid);
-        new TrackingPlayer(context).showProject(projectUuid);
+        new NotificationManager(context).showProject(projectUuid);
     }
 
     private void handleCheckOut(Context context, String projectUuid) {
@@ -75,11 +75,11 @@ public class DomainEventBroadcastReceiver extends BroadcastReceiver {
         new NotificationModel(context).removePausedProject(projectUuid);
         // we cannot be sure whether the deleted project is being displayed
         // so just to be in the clear we revalidate the TrackingPlayer
-        new TrackingPlayer(context).showSomeProjectOrHide();
+        new NotificationManager(context).showSomeProjectOrHide();
     }
 
     private void handleProjectStopped(Context context, String projectUuid) {
-        TrackingPlayer player = new TrackingPlayer(context);
+        NotificationManager player = new NotificationManager(context);
 
         if (new NotificationModel(context).isProjectPaused(projectUuid)) {
             player.showProject(projectUuid);

@@ -1,34 +1,32 @@
-package com.tastybug.timetracker.extension.trackingplayer.internal;
+package com.tastybug.timetracker.extension.trackingplayer.ui;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.extension.trackingplayer.controller.ButtonIntentHandler;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
 
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createCycleProjectIntent;
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createDismissPausedIntent;
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createOpenProjectDetailsActivityIntent;
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createPauseTrackingIntent;
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createStopTrackingIntent;
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createUnpauseTrackingIntent;
+import static com.tastybug.timetracker.core.ui.util.DefaultIntentFactory.createOpenProjectDetailsActivityIntent;
 
-public class NotificationBuilder {
+class NotificationBuilder {
 
-    Context context;
-    Notification.Builder notificationBuilder;
+    private Context context;
+    private Notification.Builder notificationBuilder;
 
 
-    public NotificationBuilder(Context context) {
+    NotificationBuilder(Context context) {
         this.context = context;
         notificationBuilder = new Notification.Builder(context);
     }
 
-    public NotificationBuilder forProject(Project project) {
+    NotificationBuilder forProject(Project project) {
         notificationBuilder.setContentTitle(project.getTitle())
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setOngoing(true)
@@ -37,7 +35,7 @@ public class NotificationBuilder {
         return this;
     }
 
-    public NotificationBuilder withSwitchFromCurrentProject(Project project) {
+    NotificationBuilder withSwitchFromCurrentProject(Project project) {
         notificationBuilder
                 .addAction(R.drawable.ic_switch_project,
                         context.getString(R.string.tracking_player_switch_project),
@@ -45,10 +43,11 @@ public class NotificationBuilder {
         return this;
     }
 
-    public NotificationBuilder forRunningProject(Project project, TrackingRecord trackingRecord) {
+    NotificationBuilder forRunningProject(Project project, TrackingRecord trackingRecord) {
+        String formattedStart = DefaultLocaleDateFormatter.dateTime().format(trackingRecord.getStart().get());
         notificationBuilder
                 .setContentText(context.getString(R.string.tracking_player_tracking_since_X,
-                        DefaultLocaleDateFormatter.dateTime().format(trackingRecord.getStart().get())))
+                        formattedStart))
                 .setSmallIcon(R.drawable.ic_notification_ongoing)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_check_out_button),
@@ -59,7 +58,7 @@ public class NotificationBuilder {
         return this;
     }
 
-    public NotificationBuilder showNotificationForPaused(Project project) {
+    NotificationBuilder showNotificationForPaused(Project project) {
         TrackingRecord latestRecord = new TrackingRecordDAO(context).getLatestByStartDateForProjectUuid(project.getUuid()).get();
 
         notificationBuilder
@@ -71,7 +70,7 @@ public class NotificationBuilder {
                         createDismissPausedIntent(context, project))
                 .addAction(R.drawable.ic_start_tracking,
                         context.getString(R.string.tracking_player_resume_button),
-                        createUnpauseTrackingIntent(context, project))
+                        createUnPauseTrackingIntent(context, project))
                 .setOngoing(false);
 
         return this;
@@ -80,4 +79,33 @@ public class NotificationBuilder {
     public Notification build() {
         return notificationBuilder.build();
     }
+
+
+    private static PendingIntent createStopTrackingIntent(Context context, Project affectedProject) {
+        return createCallbackIntent(context, affectedProject.getUuid(), ButtonIntentHandler.STOP_TRACKING_PROJECT);
+    }
+
+    private static PendingIntent createCycleProjectIntent(Context context, Project currentProject) {
+        return createCallbackIntent(context, currentProject.getUuid(), ButtonIntentHandler.CYCLE_TO_NEXT_PROJECT);
+    }
+
+    private static PendingIntent createPauseTrackingIntent(Context context, Project currentProject) {
+        return createCallbackIntent(context, currentProject.getUuid(), ButtonIntentHandler.PAUSE_TRACKING_PROJECT);
+    }
+
+    private static PendingIntent createUnPauseTrackingIntent(Context context, Project currentProject) {
+        return createCallbackIntent(context, currentProject.getUuid(), ButtonIntentHandler.UNPAUSE_TRACKING_PROJECT);
+    }
+
+    private static PendingIntent createDismissPausedIntent(Context context, Project affectedProject) {
+        return createCallbackIntent(context, affectedProject.getUuid(), ButtonIntentHandler.DISMISS_PAUSED_PROJECT);
+    }
+
+    private static PendingIntent createCallbackIntent(Context context, String projectUuid, String operation) {
+        Intent intent = new Intent(context, ButtonIntentHandler.class)
+                .putExtra(ButtonIntentHandler.PROJECT_UUID, projectUuid)
+                .putExtra(ButtonIntentHandler.OPERATION, operation);
+        return PendingIntent.getService(context, operation.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
 }

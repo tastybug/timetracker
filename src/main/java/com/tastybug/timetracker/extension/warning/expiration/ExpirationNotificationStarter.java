@@ -14,7 +14,7 @@ import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
 
 import java.util.Date;
 
-import static com.tastybug.timetracker.extension.trackingplayer.internal.CallbackIntentFactory.createOpenProjectDetailsActivityIntent;
+import static com.tastybug.timetracker.core.ui.util.DefaultIntentFactory.createOpenProjectDetailsActivityIntent;
 
 public class ExpirationNotificationStarter {
 
