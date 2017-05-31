@@ -19,4 +19,17 @@
     <string name="wifi_tracking_grace_period_10_minutes_label">10 Minutes</string>
     <string name="wifi_tracking_grace_period_20_minutes_label">20 Minutes</string>
 
+    <string-array name="wifi_tracking_grace_period_labels">
+        <item>@string/wifi_tracking_grace_period_1_minute_label</item>
+        <item>@string/wifi_tracking_grace_period_5_minutes_label</item>
+        <item>@string/wifi_tracking_grace_period_10_minutes_label</item>
+        <item>@string/wifi_tracking_grace_period_20_minutes_label</item>
+    </string-array>
+    <string-array name="wifi_tracking_grace_period_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+    </string-array>
+    
 </resources>

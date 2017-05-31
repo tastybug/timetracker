@@ -196,4 +196,21 @@
     <string name="application_W_version_X_githash_Y_buildtype_Z">%1$s, %2$s-%3$s (%4$s)</string>
     <string name="about_group_title">About</string>
 
+    <string-array name="rounding_strategy_labels">
+        <item>@string/rounding_no_rounding_label</item>
+        <item>@string/rounding_minutes_down</item>
+        <item>@string/rounding_minutes_up</item>
+        <item>@string/rounding_ten_minutes_up</item>
+        <item>@string/rounding_thirty_minutes_up</item>
+        <item>@string/rounding_sixty_minutes_up</item>
+    </string-array>
+    <string-array name="rounding_strategy_values">
+        <item>NO_ROUNDING</item>
+        <item>FULL_MINUTE_DOWN</item>
+        <item>FULL_MINUTE_UP</item>
+        <item>TEN_MINUTES_UP</item>
+        <item>THIRTY_MINUTES_UP</item>
+        <item>SIXTY_MINUTES_UP</item>
+    </string-array>
+
 </resources>
