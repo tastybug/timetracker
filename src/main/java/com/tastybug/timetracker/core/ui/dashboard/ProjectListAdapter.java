@@ -1,12 +1,15 @@
 package com.tastybug.timetracker.core.ui.dashboard;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingConfiguration;
+import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
@@ -60,22 +63,29 @@ class ProjectListAdapter extends BaseAdapter {
         }
         Project project = getProjectAt(position);
         ProjectView projectView = (ProjectView) convertView;
-        projectView.showProject(project,
-                trackingRecordDAO.getLatestByStartDateForProjectUuid(project.getUuid()));
+        if (project.isClosed()) {
+            projectView.showClosedProject(project);
+        } else {
+            projectView.showProject(project,
+                    getLatestByStartDateForProject(project),
+                    getTrackingConfiguration(project),
+                    getProjectDuration(project));
 
-        projectView.renderProjectRemainingTimeFrameInfo(getTrackingConfiguration(project));
-        projectView.renderProjectDurationStatistic(getTrackingConfiguration(project),
-                getDurationStatisticAt(project).getDuration());
-
+        }
 
         return projectView;
     }
 
-    private TrackingConfiguration getTrackingConfiguration(Project project) {
-        return trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
+    private Optional<TrackingRecord> getLatestByStartDateForProject(Project project) {
+        return trackingRecordDAO.getLatestByStartDateForProjectUuid(project.getUuid());
     }
 
-    private ProjectDuration getDurationStatisticAt(Project project) {
+    @NonNull
+    private ProjectDuration getProjectDuration(Project project) {
         return new ProjectDuration(trackingRecordDAO.getByProjectUuid(project.getUuid()));
+    }
+
+    private TrackingConfiguration getTrackingConfiguration(Project project) {
+        return trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
     }
 }

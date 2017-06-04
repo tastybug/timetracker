@@ -15,6 +15,7 @@ import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
+import com.tastybug.timetracker.core.model.statistics.ProjectDuration;
 import com.tastybug.timetracker.core.task.tracking.checkout.CheckOutTask;
 import com.tastybug.timetracker.core.ui.delegate.CheckInPreconditionCheckDelegate;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
@@ -52,66 +53,81 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
     }
 
     public void showProject(Project project,
-                            Optional<TrackingRecord> lastTrackingRecordOpt) {
+                            Optional<TrackingRecord> lastTrackingRecordOpt,
+                            TrackingConfiguration trackingConfiguration,
+                            ProjectDuration projectDuration) {
         this.project = project;
         renderProjectTitle(project);
         renderProjectSummary(lastTrackingRecordOpt);
         renderTrackingControlButton();
+        renderProjectRemainingTimeFrameInfo(trackingConfiguration);
+        renderProjectDurationStatistic(trackingConfiguration, projectDuration.getDuration());
     }
 
-    public void renderProjectDurationStatistic(TrackingConfiguration configuration,
+    public void showClosedProject(Project project) {
+        this.project = project;
+        renderProjectTitle(project);
+        renderProjectSummary(Optional.<TrackingRecord>absent());
+        renderTrackingControlButton();
+        hideProjectRemainingTimeFrameInfo();
+        hideProjectDurationStatistic();
+    }
+
+    private void renderProjectRemainingTimeFrameInfo(TrackingConfiguration trackingConfiguration) {
+        projectRemainingDaysContainer.setVisibility(View.VISIBLE);
+        if (trackingConfiguration.getEnd().isPresent()) {
+            long remainingDays = getEffectiveRemainingProjectDays(trackingConfiguration.getStart(),
+                    trackingConfiguration.getEnd().get());
+            if (remainingDays > 0) {
+                projectRemainingDaysLabel.setText(R.string.label_remaining_days_until_date_Y);
+                projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_X_until_date_Y,
+                        remainingDays,
+                        DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
+            } else {
+                projectRemainingDaysLabel.setText(R.string.label_remaining_days_over);
+                projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_over_since_X,
+                        DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
+            }
+            projectRemainingDaysContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideProjectRemainingTimeFrameInfo() {
+        projectRemainingDaysContainer.setVisibility(View.GONE);
+        projectRemainingDaysContainer.setVisibility(View.GONE);
+    }
+
+    private void renderProjectDurationStatistic(TrackingConfiguration configuration,
                                                Duration duration) {
-        projectDurationContainer.setVisibility(project.isClosed() ? View.GONE : View.VISIBLE);
-
-        if (!project.isClosed()) {
-            projectDurationStatisticLabel.setText(configuration.getHourLimit().isPresent()
-                    ? R.string.duration_label_X_of_Y
-                    : R.string.duration_label_X_no_max);
-            if (configuration.getHourLimit().isPresent()) {
-                if (duration.getStandardHours() < 1) {
-                    projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour_of_X,
-                            configuration.getHourLimit().get()));
-                } else {
-                    projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
-                            duration.getStandardHours(),
-                            configuration.getHourLimit().get()));
-                }
+        projectDurationContainer.setVisibility(View.VISIBLE);
+        projectDurationStatisticLabel.setText(configuration.getHourLimit().isPresent()
+                ? R.string.duration_label_X_of_Y
+                : R.string.duration_label_X_no_max);
+        if (configuration.getHourLimit().isPresent()) {
+            if (duration.getStandardHours() < 1) {
+                projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour_of_X,
+                        configuration.getHourLimit().get()));
             } else {
-                if (duration.getMillis() == 0) {
-                    projectDurationStatisticValue.setText(R.string.duration_zero);
+                projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_of_Y,
+                        duration.getStandardHours(),
+                        configuration.getHourLimit().get()));
+            }
+        } else {
+            if (duration.getMillis() == 0) {
+                projectDurationStatisticValue.setText(R.string.duration_zero);
+            } else {
+                if (duration.getStandardHours() < 1) {
+                    projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour));
                 } else {
-                    if (duration.getStandardHours() < 1) {
-                        projectDurationStatisticValue.setText(getContext().getString(R.string.less_than_one_hour));
-                    } else {
-                        projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
-                                duration.getStandardHours()));
-                    }
+                    projectDurationStatisticValue.setText(getContext().getString(R.string.duration_X_no_max,
+                            duration.getStandardHours()));
                 }
             }
         }
     }
 
-    public void renderProjectRemainingTimeFrameInfo(TrackingConfiguration trackingConfiguration) {
-        projectRemainingDaysContainer.setVisibility(project.isClosed() ? View.GONE : View.VISIBLE);
-        if (!project.isClosed()) {
-            if (trackingConfiguration.getEnd().isPresent()) {
-                long remainingDays = getEffectiveRemainingProjectDays(trackingConfiguration.getStart(),
-                        trackingConfiguration.getEnd().get());
-                if (remainingDays > 0) {
-                    projectRemainingDaysLabel.setText(R.string.label_remaining_days_until_date_Y);
-                    projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_X_until_date_Y,
-                            remainingDays,
-                            DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
-                } else {
-                    projectRemainingDaysLabel.setText(R.string.label_remaining_days_over);
-                    projectRemainingDaysValue.setText(getContext().getString(R.string.remaining_days_over_since_X,
-                            DefaultLocaleDateFormatter.date().format(trackingConfiguration.getEnd().get())));
-                }
-                projectRemainingDaysContainer.setVisibility(View.VISIBLE);
-            } else {
-                projectRemainingDaysContainer.setVisibility(View.GONE);
-            }
-        }
+    private void hideProjectDurationStatistic() {
+        projectDurationContainer.setVisibility(View.GONE);
     }
 
     public void onClick(View v) {
