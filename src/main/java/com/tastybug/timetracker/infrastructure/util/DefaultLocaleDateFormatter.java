@@ -14,8 +14,16 @@ public class DefaultLocaleDateFormatter {
         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
     }
 
+    public static DateFormat dayOfWeek() {
+        return new SimpleDateFormat("EEE", Locale.getDefault());
+    }
+
     public static DateFormat date() {
         return SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT);
+    }
+
+    public static DateFormat dateLong() {
+        return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG);
     }
 
     public static DateFormat time() {

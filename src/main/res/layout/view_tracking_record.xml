@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/time_frame"
+            android:id="@+id/time_frame_dates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sample_local_date"
@@ -21,14 +21,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:text="@string/sample_duration"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_toRightOf="@id/time_frame"
-            android:layout_toEndOf="@id/time_frame"
-            android:layout_alignBaseline="@id/time_frame"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_toEndOf="@id/time_frame_dates"
+            android:layout_alignBaseline="@id/time_frame_dates"
             android:gravity="end" />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/time_frame_day_of_week_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sample_day_of_week"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#e3e3e4" />
+
+        <TextView
+            android:id="@+id/start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/time_frame_day_of_week_start"
+            android:layout_marginStart="10dp"
+            android:text="@string/sample_time"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/holo_green_dark" />
+
+        <TextView
+            android:id="@+id/end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/start_time"
+            android:text="@string/sample_time"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/holo_red_dark" />
+
+        <!--<TextView-->
+            <!--android:id="@+id/effective_duration"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="10dp"-->
+            <!--android:text="@string/sample_duration"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:layout_toEndOf="@id/end_date"-->
+            <!--android:layout_alignBaseline="@id/end_date"-->
+            <!--android:gravity="end" />-->
     </RelativeLayout>
 
     <TextView

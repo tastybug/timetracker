@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.core.ui.projectdetails;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,12 @@ import java.text.DateFormat;
 
 public class TrackingRecordView extends LinearLayout {
 
-    private TextView durationTextView, timeFrameTextView, descriptionTextView;
+    private TextView durationTextView,
+            timeFrameDatesTextView,
+            dayOfWeek,
+            startTime,
+            stopTime,
+            descriptionTextView;
 
     public TrackingRecordView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -28,37 +34,57 @@ public class TrackingRecordView extends LinearLayout {
         inflater.inflate(R.layout.view_tracking_record, this, true);
 
         durationTextView = (TextView) findViewById(R.id.effective_duration);
-        timeFrameTextView = (TextView) findViewById(R.id.time_frame);
+        timeFrameDatesTextView = (TextView) findViewById(R.id.time_frame_dates);
+        dayOfWeek = (TextView) findViewById(R.id.time_frame_day_of_week_start);
+        startTime = (TextView) findViewById(R.id.start_time);
+        stopTime = (TextView) findViewById(R.id.end_time);
         descriptionTextView = (TextView) findViewById(R.id.description);
     }
 
     public void showTrackingRecord(TrackingRecord trackingRecord) {
-        renderTimeFrame(trackingRecord);
+        renderDayOfWeek(trackingRecord);
+        renderTimeFrameDates(trackingRecord);
+        renderTimes(trackingRecord);
         renderDuration(trackingRecord);
         renderDescription(trackingRecord);
     }
 
-    private void renderTimeFrame(TrackingRecord trackingRecord) {
+    private void renderDayOfWeek(TrackingRecord trackingRecord) {
+        dayOfWeek.setText(DefaultLocaleDateFormatter.dayOfWeek().format(trackingRecord.getStart().get()));
+    }
+
+    private void renderTimeFrameDates(TrackingRecord trackingRecord) {
         Preconditions.checkState(trackingRecord.isFinished() || trackingRecord.isRunning(),
                 "TrackingRecord not started yet, this is not supposed to happen!");
         String timeFrameText;
 
+        DateFormat formatter = DefaultLocaleDateFormatter.dateLong();
         if (trackingRecord.isRunning()) {
-            DateFormat ongoingFormatter = DefaultLocaleDateFormatter.dateTime();
-            timeFrameText = getContext().getString(R.string.running_since_X,
-                    ongoingFormatter.format(trackingRecord.getStart().get()));
+            timeFrameText = formatter.format(trackingRecord.getStart().get());
         } else {
-            DateFormat finishedFormatter = DefaultLocaleDateFormatter.date();
             if (isCompletedOnSameDay(trackingRecord)) {
-                timeFrameText = finishedFormatter.format(trackingRecord.getStart().get());
+                timeFrameText = formatter.format(trackingRecord.getStart().get());
             } else {
+                formatter = DefaultLocaleDateFormatter.date();
                 timeFrameText = getContext().getString(R.string.running_from_X_until_Y,
-                        finishedFormatter.format(trackingRecord.getStart().get()),
-                        finishedFormatter.format(trackingRecord.getEnd().get()));
+                        formatter.format(trackingRecord.getStart().get()),
+                        formatter.format(trackingRecord.getEnd().get()));
             }
         }
 
-        timeFrameTextView.setText(timeFrameText);
+        timeFrameDatesTextView.setText(timeFrameText);
+        timeFrameDatesTextView.setTypeface(null, trackingRecord.isRunning() ? Typeface.BOLD : Typeface.NORMAL);
+    }
+
+    private void renderTimes(TrackingRecord trackingRecord) {
+        DateFormat timeFormatter = DefaultLocaleDateFormatter.time();
+        startTime.setText(timeFormatter.format(trackingRecord.getStart().get()));
+        if (trackingRecord.isFinished()) {
+            stopTime.setText(timeFormatter.format(trackingRecord.getEnd().get()));
+            stopTime.setVisibility(View.VISIBLE);
+        } else {
+            stopTime.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void renderDuration(TrackingRecord trackingRecord) {

@@ -121,7 +121,7 @@
     <!-- placeholders -->
     <string name="sample_duration">11:45:00 hrs</string>
     <string name="sample_local_date">16. Maerz 2016</string>
-    <string name="sample_tracking_record_log">This is a first line\nand this one a second</string>
+    <string name="sample_tracking_record_log">* at first I did a thing\n* that other thing took some time as well</string>
     <string name="sample_project_title">A Project Title</string>
     <string name="sample_tracking_record_summary">last: 7:30 &#8212; 19:00 24.12.2016</string>
     <string name="sample_duration_X">7h/140h</string>
@@ -129,6 +129,8 @@
     <string name="sample_from_date_X">From 24/12/2016</string>
     <string name="sample_until_date_X">Until 24/12/2016</string>
     <string name="sample_app_version_info">More Time, 1.123-abcd1234</string>
+    <string name="sample_time">12:15</string>
+    <string name="sample_day_of_week">Wed</string>
 
     <!-- project settings -->
     <string name="project_configuration_activity_title">Project Settings</string>
