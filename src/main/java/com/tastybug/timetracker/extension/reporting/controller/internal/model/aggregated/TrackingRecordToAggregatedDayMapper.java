@@ -1,14 +1,14 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.aggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 
 import java.util.List;
 
-class TrackingRecordToAggregatedDayMapper {
+public class TrackingRecordToAggregatedDayMapper {
 
-    List<AggregatedDay> mapTrackingRecordsToAggregatedDays(List<AggregatedDay> aggregatedDayList,
-                                                           List<TrackingRecord> trackingRecords) {
+    public List<AggregatedDay> mapTrackingRecordsToAggregatedDays(List<AggregatedDay> aggregatedDayList,
+                                                                  List<TrackingRecord> trackingRecords) {
         Preconditions.checkNotNull(aggregatedDayList);
         Preconditions.checkNotNull(trackingRecords);
 

@@ -12,7 +12,7 @@ public class DurationFormatter {
             minutesAbbreviation,
             secondsAbbreviation;
 
-    DurationFormatter() {
+    private DurationFormatter() {
         this("h", "m", "s");
     }
 
@@ -78,7 +78,7 @@ public class DurationFormatter {
 
     }
 
-    protected PeriodFormatter getFormatterForSeconds() {
+    private PeriodFormatter getFormatterForSeconds() {
         return new PeriodFormatterBuilder()
                 .printZeroIfSupported()
                 .appendSeconds()

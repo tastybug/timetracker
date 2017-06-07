@@ -1,37 +1,35 @@
-package com.tastybug.timetracker.extension.reporting.controller;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.core.model.Project;
-import com.tastybug.timetracker.extension.reporting.controller.internal.html.HtmlReport;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class Report implements Serializable {
+public abstract class Report implements Serializable {
 
     private String projectTitle;
     private Date firstDay, lastDay;
-    private HtmlReport htmlReport;
 
-    public Report(Project project, Date firstDay, Date lastDay, HtmlReport htmlReport) {
+    public Report(Project project, Date firstDay, Date lastDay) {
         Preconditions.checkNotNull(project);
         Preconditions.checkNotNull(firstDay);
         Preconditions.checkNotNull(lastDay);
-        Preconditions.checkNotNull(htmlReport);
 
         this.projectTitle = project.getTitle();
         this.firstDay = firstDay;
         this.lastDay = lastDay;
-        this.htmlReport = htmlReport;
     }
 
     public String getProjectTitle() {
         return projectTitle;
     }
 
-    public String getHtml() {
-        return htmlReport.toHtml();
-    }
+    public abstract String getContent();
+
+    public abstract String getMimeType();
+
+    public abstract String getFileExtension();
 
     public Date getFirstDay() {
         return firstDay;

@@ -2,7 +2,7 @@ package com.tastybug.timetracker.extension.reporting.ui.share;
 
 import android.os.Build;
 
-import com.tastybug.timetracker.extension.reporting.controller.Report;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 import com.tastybug.timetracker.infrastructure.filecache.CacheFileWriter;
 
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class ReportCacheFileWriterTest {
         File expectedReportFile = mock(File.class);
         String htmlContent = "zeHtml";
         Report report = mock(Report.class);
-        when(report.getHtml()).thenReturn(htmlContent);
+        when(report.getContent()).thenReturn(htmlContent);
         when(cacheFileWriter.writeToCache(eq(reportCacheFileWriter.getSafeFileName()), eq(reportCacheFileWriter.getExtension()), aryEq(htmlContent.getBytes("UTF-8"))))
                 .thenReturn(expectedReportFile);
 

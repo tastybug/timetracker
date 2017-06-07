@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.extension.reporting.controller.Report;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class ShareReportIntentFactory {
 
         Intent intent = new Intent();
         intent.setAction(ACTION_SEND);
-        intent.setType("text/html");
+        intent.setType(report.getMimeType());
         intent.setFlags(FLAG_GRANT_READ_URI_PERMISSION);
         intent.putExtra(EXTRA_TEXT, getExtraTextForReport(report));
         intent.putExtra(Intent.EXTRA_STREAM, shareableReportUriProvider.getShareableUri(reportFile));

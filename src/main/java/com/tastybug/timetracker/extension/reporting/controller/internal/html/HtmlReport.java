@@ -4,23 +4,36 @@ import android.content.Context;
 
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Date;
 
-public class HtmlReport implements Serializable {
+public class HtmlReport extends Report implements Serializable {
 
     private transient Context context;
     private String template = "";
 
-    HtmlReport(Context context) throws IOException {
-        this(context, new TemplateAssetProvider(context.getAssets()));
+    HtmlReport(Context context,
+               Project project,
+               Date firstDay,
+               Date lastDay) {
+        this(context, new TemplateAssetProvider(context.getAssets()), project, firstDay, lastDay);
     }
 
     HtmlReport(Context context,
-               TemplateAssetProvider templateAssetProvider) throws IOException {
-        this.template = templateAssetProvider.getReportTemplate();
-        this.context = context;
+               TemplateAssetProvider templateAssetProvider,
+               Project project,
+               Date firstDay,
+               Date lastDay) {
+        super(project, firstDay, lastDay);
+        try {
+            this.template = templateAssetProvider.getReportTemplate();
+            this.context = context;
+        } catch(IOException ioe) {
+            throw new RuntimeException("Problem accessing report template.", ioe);
+        }
     }
 
     void insertReportablesList(String html) {
@@ -67,8 +80,16 @@ public class HtmlReport implements Serializable {
         insertStringAtMarker("<!-- ${description_header} -->", context.getString(R.string.report_description_header));
     }
 
-    public String toHtml() {
+    public String getContent() {
         return template;
+    }
+
+    public String getMimeType() {
+        return "text/html";
+    }
+
+    public String getFileExtension() {
+        return "html";
     }
 
     private void insertStringAtMarker(String marker, String value) throws IllegalStateException {

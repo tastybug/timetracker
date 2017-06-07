@@ -25,10 +25,6 @@ class TitleGenerator {
     }
 
     public String getTitle(Project project, Date firstDay, Date lastDay) {
-        Preconditions.checkNotNull(project);
-        Preconditions.checkNotNull(firstDay);
-        Preconditions.checkNotNull(lastDay);
-
         return context.getString(R.string.report_title_for_project_X_from_Y_to_Z,
                 project.getTitle(),
                 dateFormatter.dateFormat(firstDay),

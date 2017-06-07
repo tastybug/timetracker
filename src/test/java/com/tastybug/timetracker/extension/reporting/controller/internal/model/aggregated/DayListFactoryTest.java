@@ -1,4 +1,7 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.aggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated;
+
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated.AggregatedDay;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated.DayListFactory;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

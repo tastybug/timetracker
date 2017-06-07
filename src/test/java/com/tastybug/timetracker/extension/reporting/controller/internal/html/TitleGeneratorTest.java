@@ -35,24 +35,6 @@ public class TitleGeneratorTest {
         //
     }
 
-    @Test(expected = NullPointerException.class)
-    public void getTitle_throws_NPE_on_null_project() {
-        // expect
-        titleGenerator.getTitle(null, new Date(), new Date());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void getTitle_throws_NPE_on_null_firstDay() {
-        // expect
-        titleGenerator.getTitle(new Project(""), null, new Date());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void getTitle_throws_NPE_on_null_lastDay() {
-        // expect
-        titleGenerator.getTitle(new Project(""), new Date(), null);
-    }
-
     @Test
     public void getTitle_returns_proper_title() {
         // given

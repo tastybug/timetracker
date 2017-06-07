@@ -6,6 +6,8 @@ import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.ui.util.LocalizedDurationFormatter;
 import com.tastybug.timetracker.extension.reporting.controller.internal.ReportableItem;
+import com.tastybug.timetracker.extension.reporting.controller.internal.ReportableTotalDurationCalculator;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.nonaggregated.TrackingRecordToReportableMapper;
 
 import org.joda.time.Duration;
 
@@ -16,33 +18,35 @@ import java.util.List;
 
 public class HtmlReportBuilder {
 
+    private TrackingRecordToReportableMapper trackingRecordToReportableMapper = new TrackingRecordToReportableMapper();
+    private ReportableTotalDurationCalculator reportableTotalDurationCalculator;
     private ReportableListRenderer reportableListRenderer;
     private TitleGenerator titleGenerator;
     private LocalizedDurationFormatter localizedDurationFormatter;
 
-    private Project project;
-    private Date firstDay, lastDay;
-    private List<ReportableItem> reportableItems = Collections.emptyList();
-    private List<TrackingRecord> edgeCaseTrackingRecords = Collections.emptyList();
-    private Duration totalDuration = new Duration(0);
-
-    private HtmlReport htmlReport;
+    protected Context context;
+    protected Project project;
+    protected Date firstDay, lastDay;
+    private List<TrackingRecord> trackingRecordList = Collections.emptyList();
 
     public HtmlReportBuilder(Context context) throws IOException {
-        this(new ReportableListRenderer(context),
+        this(context,
+                new ReportableListRenderer(context),
                 new TitleGenerator(context),
                 new LocalizedDurationFormatter(context),
-                new HtmlReport(context));
+                new ReportableTotalDurationCalculator());
     }
 
-    HtmlReportBuilder(ReportableListRenderer reportableListRenderer,
+    HtmlReportBuilder(Context context,
+                      ReportableListRenderer reportableListRenderer,
                       TitleGenerator titleGenerator,
                       LocalizedDurationFormatter localizedDurationFormatter,
-                      HtmlReport htmlReport) {
+                      ReportableTotalDurationCalculator reportableTotalDurationCalculator) {
+        this.context = context;
         this.reportableListRenderer = reportableListRenderer;
         this.titleGenerator = titleGenerator;
         this.localizedDurationFormatter = localizedDurationFormatter;
-        this.htmlReport = htmlReport;
+        this.reportableTotalDurationCalculator = reportableTotalDurationCalculator;
     }
 
     public HtmlReportBuilder withProject(Project project) {
@@ -56,22 +60,17 @@ public class HtmlReportBuilder {
         return this;
     }
 
-    public HtmlReportBuilder withReportablesList(List<ReportableItem> reportableItems) {
-        this.reportableItems = reportableItems;
-        return this;
-    }
-
-    public HtmlReportBuilder withEdgeCases(List<TrackingRecord> trackingRecords) {
-        this.edgeCaseTrackingRecords = trackingRecords;
-        return this;
-    }
-
-    public HtmlReportBuilder withTotalDuration(Duration totalDuration) {
-        this.totalDuration = totalDuration;
+    public HtmlReportBuilder withTrackingRecords(List<TrackingRecord> trackingRecordList) {
+        this.trackingRecordList = trackingRecordList;
         return this;
     }
 
     public HtmlReport build() {
+        List<ReportableItem> reportableItems = generateReportables(trackingRecordList);
+        Duration totalDuration = computeTotalDuration(reportableItems);
+
+        HtmlReport htmlReport = new HtmlReport(context, project, firstDay, lastDay);
+
         htmlReport.insertReportablesList(reportableListRenderer.renderReportablesList(reportableItems));
         htmlReport.insertReportTitle(titleGenerator.getTitle(project, firstDay, lastDay));
         htmlReport.insertProjectTitle(project);
@@ -81,5 +80,13 @@ public class HtmlReportBuilder {
         htmlReport.localizeHeaders();
 
         return htmlReport;
+    }
+
+    protected List<ReportableItem> generateReportables(List<TrackingRecord> trackingRecordList) {
+        return trackingRecordToReportableMapper.mapRecords(trackingRecordList);
+    }
+
+    private Duration computeTotalDuration(List<ReportableItem> reportableItems) {
+        return reportableTotalDurationCalculator.getTotalForList(reportableItems);
     }
 }

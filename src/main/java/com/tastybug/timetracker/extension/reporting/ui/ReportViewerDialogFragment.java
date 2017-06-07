@@ -12,23 +12,23 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.extension.reporting.controller.Report;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 import com.tastybug.timetracker.extension.reporting.ui.share.ShareReportIntentFactory;
 import com.tastybug.timetracker.infrastructure.util.ConditionalLog;
 
 import java.io.IOException;
 
-public class HtmlReportViewerDialogFragment extends DialogFragment {
+public class ReportViewerDialogFragment extends DialogFragment {
 
     private static final String REPORT_MODEL = "REPORT_MODEL";
 
     private Report report;
 
-    public static HtmlReportViewerDialogFragment aDialog(Report report) {
+    public static ReportViewerDialogFragment aDialog(Report report) {
         Bundle b = new Bundle();
         b.putSerializable(REPORT_MODEL, report);
 
-        HtmlReportViewerDialogFragment zeDialog = new HtmlReportViewerDialogFragment();
+        ReportViewerDialogFragment zeDialog = new ReportViewerDialogFragment();
         zeDialog.setArguments(b);
 
         return zeDialog;
@@ -58,7 +58,7 @@ public class HtmlReportViewerDialogFragment extends DialogFragment {
         WebView webview = (WebView) rootView.findViewById(R.id.webView);
         webview.requestFocus(View.FOCUS_DOWN);
         webview.getSettings().setJavaScriptEnabled(false);
-        webview.loadDataWithBaseURL("", report.getHtml(), "text/html", "UTF-8", "");
+        webview.loadDataWithBaseURL("", report.getContent(), report.getMimeType(), "UTF-8", "");
 
         return builder.create();
     }

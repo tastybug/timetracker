@@ -61,6 +61,6 @@ class ReportableItemRenderer {
         if (!description.isPresent()) {
             return context.getString(R.string.report_reportable_item_no_description_placeholder);
         }
-        return description.get().replaceAll("\\n", "<br/>");
+        return description.get().replaceAll("\n", "<br/>");
     }
 }

@@ -1,6 +1,8 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.aggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated;
 
 import com.tastybug.timetracker.core.model.TrackingRecord;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated.AggregatedDay;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated.TrackingRecordToAggregatedDayMapper;
 
 import org.junit.Test;
 

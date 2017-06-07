@@ -22,7 +22,19 @@
     <string name="dialog_create_report_last_day_X">Until %1$s</string>
     <string name="dialog_create_report_error_end_before_start">Time frame ends before it starts</string>
     <string name="dialog_create_report_options">Report Options</string>
+    <string name="dialog_create_report_format">Format</string>
     <string name="dialog_create_report_aggregate_days_option">Aggregate day wise</string>
+    <string name="report_format_html_option">HTML Report</string>
+    <string name="report_format_csv_option">CSV Report</string>
+
+    <!-- csv report-->
+    <string name="csv_header_project_title">ProjectTitle</string>
+    <string name="csv_header_project_contract_id">ContractId</string>
+    <string name="csv_header_project_start_date">From</string>
+    <string name="csv_header_project_end_date">Until</string>
+    <string name="csv_header_project_effective_duration">EffectiveDuration</string>
+    <string name="csv_header_project_description">Description</string>
+    <string name="csv_header_project_date">Date</string>
 
     <!-- report sharing -->
     <string name="chooser_title_share_report_via">Share Via ..</string>

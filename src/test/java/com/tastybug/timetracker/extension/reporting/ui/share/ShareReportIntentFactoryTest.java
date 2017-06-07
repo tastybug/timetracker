@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.tastybug.timetracker.R;
-import com.tastybug.timetracker.extension.reporting.controller.Report;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.nonaggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.nonaggregated;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;

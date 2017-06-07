@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.aggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
@@ -104,7 +104,7 @@ class AggregatedDay implements ReportableItem {
         if (aggregatedDescription == null) {
             aggregatedDescription = description;
         } else {
-            aggregatedDescription = aggregatedDescription + "<br/>" + description;
+            aggregatedDescription = aggregatedDescription + "\n" + description;
         }
     }
 

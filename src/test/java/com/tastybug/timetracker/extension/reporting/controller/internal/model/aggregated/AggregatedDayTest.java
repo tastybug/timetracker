@@ -1,8 +1,9 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.aggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.rounding.Rounding;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated.AggregatedDay;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;

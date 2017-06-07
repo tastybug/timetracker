@@ -4,7 +4,7 @@ import org.joda.time.Duration;
 
 import java.util.List;
 
-public class ReportableTotalDurationHelper {
+public class ReportableTotalDurationCalculator {
 
     public Duration getTotalForList(List<ReportableItem> reportableItems) {
         Duration total = new Duration(0);

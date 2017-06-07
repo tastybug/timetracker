@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,8 +16,9 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.ui.dialog.picker.DatePickerDialogFragment;
-import com.tastybug.timetracker.extension.reporting.controller.Report;
+import com.tastybug.timetracker.extension.reporting.controller.ReportFormat;
 import com.tastybug.timetracker.extension.reporting.controller.ReportService;
+import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.infrastructure.util.ConditionalLog;
 import com.tastybug.timetracker.infrastructure.util.DefaultLocaleDateFormatter;
@@ -27,6 +29,11 @@ import org.joda.time.Interval;
 import java.io.IOException;
 import java.util.Date;
 
+import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.CSV_AGGREGATED;
+import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.CSV_NON_AGGREGATED;
+import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.HTML_AGGREGATED;
+import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.HTML_NON_AGGREGATED;
+
 public class CreateReportDialogFragment extends DialogFragment {
 
     private static final String FIRST_DAY = "FIRST_DAY";
@@ -36,6 +43,7 @@ public class CreateReportDialogFragment extends DialogFragment {
     private DefaultReportTimeFrameProvider defaultReportTimeFrameProvider = new DefaultReportTimeFrameProvider();
     private TextView firstDayTextView, lastDayTextView;
     private CheckBox aggregateDaysCheckBox;
+    private RadioButton htmlFormatRadioButton, csvFormatRadioButton;
 
     private TrackingConfiguration trackingConfiguration;
 
@@ -59,7 +67,6 @@ public class CreateReportDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(prepareView(interval))
-//                    .setTitle(R.string.dialog_create_report_title)
                 .setPositiveButton(R.string.common_create, null)
                 .setNegativeButton(R.string.common_close, null);
         final AlertDialog alertDialog = builder.create();
@@ -92,6 +99,8 @@ public class CreateReportDialogFragment extends DialogFragment {
         firstDayTextView = (TextView) rootView.findViewById(R.id.first_day_value);
         lastDayTextView = (TextView) rootView.findViewById(R.id.last_day_value);
         aggregateDaysCheckBox = (CheckBox) rootView.findViewById(R.id.report_aggregate_days_checkbox);
+        htmlFormatRadioButton = (RadioButton) rootView.findViewById(R.id.report_format_html_radiobutton);
+        csvFormatRadioButton = (RadioButton) rootView.findViewById(R.id.report_format_csv_radiobutton);
 
         firstDayTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +177,13 @@ public class CreateReportDialogFragment extends DialogFragment {
         return aggregateDaysCheckBox.isChecked();
     }
 
+    private ReportFormat getSelectedReportFormat() {
+        boolean aggregated = isAggregateDaysChecked();
+        return htmlFormatRadioButton.isChecked()
+                ? aggregated ? HTML_AGGREGATED : HTML_NON_AGGREGATED
+                : aggregated ? CSV_AGGREGATED : CSV_NON_AGGREGATED;
+    }
+
     void setFirstDay(Date firstDay) {
         firstDayTextView.setText(getString(R.string.dialog_create_report_first_day_X, DefaultLocaleDateFormatter.date().format(firstDay)));
         firstDayTextView.setTag(firstDay);
@@ -185,13 +201,12 @@ public class CreateReportDialogFragment extends DialogFragment {
     private void startReportCreation() {
         Date firstDay = getFirstDayFromWidget();
         Date lastDay = getLastDayFromWidget();
-        boolean aggregateDays = isAggregateDaysChecked();
 
         try {
-            Report report = new ReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), firstDay, lastDay, aggregateDays);
-            HtmlReportViewerDialogFragment
+            Report report = new ReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), firstDay, lastDay, getSelectedReportFormat());
+            ReportViewerDialogFragment
                     .aDialog(report)
-                    .show(getFragmentManager(), HtmlReportViewerDialogFragment.class.getSimpleName());
+                    .show(getFragmentManager(), ReportViewerDialogFragment.class.getSimpleName());
         } catch (IOException ioe) {
             ConditionalLog.logError(getClass().getSimpleName(), "Failed to create report!", ioe);
         }

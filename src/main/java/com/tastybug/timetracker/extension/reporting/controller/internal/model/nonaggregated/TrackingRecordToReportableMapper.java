@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.nonaggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.nonaggregated;
 
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.core.model.TrackingRecord;
@@ -7,10 +7,10 @@ import com.tastybug.timetracker.extension.reporting.controller.internal.Reportab
 import java.util.ArrayList;
 import java.util.List;
 
-class TrackingRecordToReportableMapper {
+public class TrackingRecordToReportableMapper {
 
 
-    List<ReportableItem> mapRecords(List<TrackingRecord> trackingRecords) {
+    public List<ReportableItem> mapRecords(List<TrackingRecord> trackingRecords) {
         Preconditions.checkNotNull(trackingRecords);
 
         List<ReportableItem> simpleReportableList = new ArrayList<>();

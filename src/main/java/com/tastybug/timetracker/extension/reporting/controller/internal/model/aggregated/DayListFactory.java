@@ -1,4 +1,4 @@
-package com.tastybug.timetracker.extension.reporting.controller.internal.aggregated;
+package com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated;
 
 import com.google.common.base.Preconditions;
 
@@ -11,9 +11,9 @@ import java.util.List;
 /**
  * Provides a list of AggregatedDay instances for a given time frame.
  */
-class DayListFactory {
+public class DayListFactory {
 
-    List<AggregatedDay> createList(Date firstDay, Date lastDay) {
+    public List<AggregatedDay> createList(Date firstDay, Date lastDay) {
         Preconditions.checkNotNull(firstDay);
         Preconditions.checkNotNull(lastDay);
         Preconditions.checkArgument(!lastDay.before(firstDay), "Given time frame has end date before start date. Must be equal or greater!");
