@@ -1,19 +1,16 @@
 package com.tastybug.timetracker.core.ui.dashboard;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.Project;
-import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
-import com.tastybug.timetracker.core.model.statistics.ProjectDuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,11 +63,7 @@ class ProjectListAdapter extends BaseAdapter {
         if (project.isClosed()) {
             projectView.showClosedProject(project);
         } else {
-            projectView.showProject(project,
-                    getLatestByStartDateForProject(project),
-                    getTrackingConfiguration(project),
-                    getProjectDuration(project));
-
+            projectView.showProject(project, getLatestByStartDateForProject(project));
         }
 
         return projectView;
@@ -78,14 +71,5 @@ class ProjectListAdapter extends BaseAdapter {
 
     private Optional<TrackingRecord> getLatestByStartDateForProject(Project project) {
         return trackingRecordDAO.getLatestByStartDateForProjectUuid(project.getUuid());
-    }
-
-    @NonNull
-    private ProjectDuration getProjectDuration(Project project) {
-        return new ProjectDuration(trackingRecordDAO.getByProjectUuid(project.getUuid()));
-    }
-
-    private TrackingConfiguration getTrackingConfiguration(Project project) {
-        return trackingConfigurationDAO.getByProjectUuid(project.getUuid()).get();
     }
 }

@@ -101,17 +101,7 @@
     <!-- project view -->
     <string name="current_record_started_at_X">Tracking since %1$s</string>
     <string name="last_record_ended_at_X">Last record ended %1$s</string>
-    <string name="duration_label_X_no_max">Recorded hours:</string>
     <string name="less_than_one_hour">&lt;1h</string>
-    <string name="duration_X_no_max">%1$dh</string>
-    <string name="duration_label_X_of_Y">Recorded hours (/max):</string>
-    <string name="less_than_one_hour_of_X">&lt;1h/%1$dh</string>
-    <string name="duration_X_of_Y">%1$dh/%2$dh</string>
-    <string name="duration_zero">..none yet</string>
-    <string name="label_remaining_days_until_date_Y">Remaining days (end date):</string>
-    <string name="label_remaining_days_over">Remaining days:</string>
-    <string name="remaining_days_X_until_date_Y">%1$d (%2$s)</string>
-    <string name="remaining_days_over_since_X">project over since %1$s</string>
     <string name="project_closed">Project closed.</string>
     <string name="content_description_tracking_button">Start/Stop Button</string>
 
