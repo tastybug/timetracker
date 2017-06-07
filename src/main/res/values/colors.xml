@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="start_date_color">@android:color/holo_green_light</color>
+    <color name="end_date_color">@android:color/holo_red_light</color>
+
+</resources>

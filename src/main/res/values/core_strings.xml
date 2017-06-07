@@ -113,6 +113,7 @@
     <string name="remaining_days_X_until_date_Y">%1$d (%2$s)</string>
     <string name="remaining_days_over_since_X">project over since %1$s</string>
     <string name="project_closed">Project closed.</string>
+    <string name="content_description_tracking_button">Start/Stop Button</string>
 
     <!-- tracking stopped summary snackbar -->
     <string name="snack_X_booked_on_project_Y">%1$s booked on %2$s</string>
@@ -123,7 +124,7 @@
     <string name="sample_local_date">16. Maerz 2016</string>
     <string name="sample_tracking_record_log">* at first I did a thing\n* that other thing took some time as well</string>
     <string name="sample_project_title">A Project Title</string>
-    <string name="sample_tracking_record_summary">last: 7:30 &#8212; 19:00 24.12.2016</string>
+    <string name="sample_recent_record_summary">Last record ended 19:00 24.12.2016</string>
     <string name="sample_duration_X">7h/140h</string>
     <string name="sample_remaining_days_X_until_date_Y">7 (24.12.2016)</string>
     <string name="sample_from_date_X">From 24/12/2016</string>

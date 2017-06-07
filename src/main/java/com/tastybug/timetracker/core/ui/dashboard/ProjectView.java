@@ -2,6 +2,7 @@ package com.tastybug.timetracker.core.ui.dashboard;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,11 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
 
     private Project project;
     private ImageButton trackingStartStopButton;
-    private TextView projectTitleView, lastRecordSummaryView;
+    private TextView projectTitleView, recentRecordSummaryView;
     private TextView projectRemainingDaysLabel, projectRemainingDaysValue;
     private View projectRemainingDaysContainer, projectDurationContainer;
     private TextView projectDurationStatisticLabel, projectDurationStatisticValue;
+    private ColorStateList regularTextColor;
 
     public ProjectView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -40,7 +42,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         inflater.inflate(R.layout.view_project, this, true);
 
         projectTitleView = (TextView) findViewById(R.id.project_title);
-        lastRecordSummaryView = (TextView) findViewById(R.id.project_last_tracking_record_summary);
+        recentRecordSummaryView = (TextView) findViewById(R.id.recent_record_summary);
         trackingStartStopButton = (ImageButton) findViewById(R.id.trackingStartStop);
         projectDurationContainer = findViewById(R.id.project_duration_container);
         projectDurationStatisticLabel = (TextView) findViewById(R.id.project_duration_statistic_label);
@@ -48,6 +50,8 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         projectRemainingDaysContainer = findViewById(R.id.project_remaining_days_container);
         projectRemainingDaysLabel = (TextView) findViewById(R.id.project_remaining_days_label);
         projectRemainingDaysValue = (TextView) findViewById(R.id.project_remaining_days_value);
+
+        regularTextColor = new TextView(context).getTextColors();
 
         trackingStartStopButton.setOnClickListener(this);
     }
@@ -58,7 +62,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
                             ProjectDuration projectDuration) {
         this.project = project;
         renderProjectTitle(project);
-        renderProjectSummary(lastTrackingRecordOpt);
+        renderMostRecentTrackingRecord(lastTrackingRecordOpt);
         renderTrackingControlButton();
         renderProjectRemainingTimeFrameInfo(trackingConfiguration);
         renderProjectDurationStatistic(trackingConfiguration, projectDuration.getDuration());
@@ -67,7 +71,7 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
     public void showClosedProject(Project project) {
         this.project = project;
         renderProjectTitle(project);
-        renderProjectSummary(Optional.<TrackingRecord>absent());
+        renderMostRecentTrackingRecord(Optional.<TrackingRecord>absent());
         renderTrackingControlButton();
         hideProjectRemainingTimeFrameInfo();
         hideProjectDurationStatistic();
@@ -155,19 +159,23 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
 
     }
 
-    private void renderProjectSummary(Optional<TrackingRecord> lastTrackingRecordOpt) {
+    private void renderMostRecentTrackingRecord(Optional<TrackingRecord> lastTrackingRecordOpt) {
         if (project.isClosed()) {
-            lastRecordSummaryView.setText(R.string.project_closed);
+            recentRecordSummaryView.setText(R.string.project_closed);
+            recentRecordSummaryView.setTextColor(regularTextColor);
         } else if (lastTrackingRecordOpt.isPresent()) {
             if (lastTrackingRecordOpt.get().isRunning()) {
-                lastRecordSummaryView.setText(getContext().getString(R.string.current_record_started_at_X,
+                recentRecordSummaryView.setText(getContext().getString(R.string.current_record_started_at_X,
                         DefaultLocaleDateFormatter.dateTime().format(lastTrackingRecordOpt.get().getStart().get())));
+                recentRecordSummaryView.setTextColor(getResources().getColor(R.color.start_date_color));
             } else {
-                lastRecordSummaryView.setText(getContext().getString(R.string.last_record_ended_at_X,
+                recentRecordSummaryView.setText(getContext().getString(R.string.last_record_ended_at_X,
                         DefaultLocaleDateFormatter.dateTime().format(lastTrackingRecordOpt.get().getEnd().get())));
+                recentRecordSummaryView.setTextColor(regularTextColor);
             }
         } else {
-            lastRecordSummaryView.setText("");
+            recentRecordSummaryView.setText("");
+            recentRecordSummaryView.setTextColor(regularTextColor);
         }
     }
 
