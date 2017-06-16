@@ -1,8 +1,10 @@
 package com.tastybug.timetracker.extension.trackingplayer.controller;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.model.TrackingRecord;
@@ -37,6 +39,7 @@ public class ButtonIntentHandler extends IntentService {
         super(ButtonIntentHandler.class.getSimpleName());
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     protected void onHandleIntent(Intent intent) {
         Preconditions.checkNotNull(intent.getExtras().getString(OPERATION));
@@ -62,11 +65,27 @@ public class ButtonIntentHandler extends IntentService {
 
     private void handleStopTrackingRequested(String projectUuid) {
         logInfo(TAG, "Stopping tracking for project " + projectUuid);
-        TrackingRecord runningTrackingRecord = new TrackingRecordDAO(this).getRunning(projectUuid).get();
-        new CheckOutTask(getApplicationContext()).withTrackingRecordUuid(runningTrackingRecord.getUuid()).run();
+        Optional<TrackingRecord> runningTrackingRecordOpt = new TrackingRecordDAO(this).getRunning(projectUuid);
+        if (runningTrackingRecordOpt.isPresent()) {
+            new CheckOutTask(getApplicationContext()).withTrackingRecordUuid(runningTrackingRecordOpt.get().getUuid()).run();
 
-        if (isProjectRequiringDescriptionPromptAfterTracking(projectUuid)) {
-            showTrackingRecordEditingActivity(runningTrackingRecord);
+            if (isProjectRequiringDescriptionPromptAfterTracking(projectUuid)) {
+                showTrackingRecordEditingActivity(runningTrackingRecordOpt.get());
+            }
+        } else {
+            // For some reason, the tracking player sometimes stumbles upon projects that are
+            // actually stopped. In that case simply update the TrackingPlayer.
+            stopProjectManually(this, projectUuid);
+        }
+    }
+
+    private void stopProjectManually(Context context, String projectUuid) {
+        NotificationManager player = new NotificationManager(context);
+
+        if (new NotificationModel(context).isProjectPaused(projectUuid)) {
+            player.showProject(projectUuid);
+        } else {
+            player.showSomeProjectOrHide();
         }
     }
 
