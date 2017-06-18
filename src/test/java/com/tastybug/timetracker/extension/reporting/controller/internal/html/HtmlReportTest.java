@@ -25,32 +25,15 @@ import static org.mockito.Mockito.when;
 public class HtmlReportTest {
 
     private Context context;
-    private TemplateAssetProvider templateAssetProvider;
-
     private HtmlReport htmlReport;
 
     @Before
     public void setup() {
         context = mock(Context.class);
-        templateAssetProvider = mock(TemplateAssetProvider.class);
-        htmlReport = new HtmlReport(context, templateAssetProvider, mock(Project.class), new Date(), new Date());
         when(context.getString(R.string.report_project_no_description_placeholder)).thenReturn("");
         when(context.getString(R.string.report_date_header)).thenReturn("");
         when(context.getString(R.string.report_amount_header)).thenReturn("");
         when(context.getString(R.string.report_description_header)).thenReturn("");
-    }
-
-    @Test
-    public void constructor_gets_template_from_assets_via_provider() throws IOException {
-        // given
-        String expectedTemplate = "expectedTemplate";
-        when(templateAssetProvider.getReportTemplate()).thenReturn(expectedTemplate);
-
-        // when
-        HtmlReport htmlReport = new HtmlReport(context, templateAssetProvider, mock(Project.class), new Date(), new Date());
-
-        // then
-        assertEquals(expectedTemplate, htmlReport.getContent());
     }
 
     @Test
@@ -59,7 +42,8 @@ public class HtmlReportTest {
         when(context.getString(R.string.report_date_header)).thenReturn("DATEHEADER");
         when(context.getString(R.string.report_amount_header)).thenReturn("AMOUNTHEADER");
         when(context.getString(R.string.report_description_header)).thenReturn("DESCRIPTIONHEADER");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${date_header} --> <!-- ${amount_header} --> <!-- ${description_header} -->");
+        String template = "<!-- ${date_header} --> <!-- ${amount_header} --> <!-- ${description_header} -->";
+        htmlReport = new HtmlReport(context, template, mock(Project.class), new Date(), new Date());
 
         // when
         htmlReport.localizeHeaders();
@@ -71,7 +55,8 @@ public class HtmlReportTest {
     @Test
     public void insertReportables_alters_template_correctly() throws IOException {
         // given
-        when(templateAssetProvider.getReportTemplate()).thenReturn("bla <!-- ${reportables_list} --> bla");
+        String template = "bla <!-- ${reportables_list} --> bla";
+        htmlReport = new HtmlReport(context, template, mock(Project.class), new Date(), new Date());
 
         // when
         htmlReport.insertReportablesList("testHtml");
@@ -83,7 +68,7 @@ public class HtmlReportTest {
     @Test(expected = IllegalStateException.class)
     public void insertReportablesList_throws_IllegalState_when_marker_is_not_found_in_template() throws IOException {
         // given
-        when(templateAssetProvider.getReportTemplate()).thenReturn("nothing here");
+        htmlReport = new HtmlReport(context, "nothing here", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertReportablesList("testHtml");
@@ -92,7 +77,7 @@ public class HtmlReportTest {
     @Test
     public void insertTitle_alters_template_correctly() throws IOException {
         // given
-        when(templateAssetProvider.getReportTemplate()).thenReturn("bla <!-- ${title} --> bla");
+        htmlReport = new HtmlReport(context, "bla <!-- ${title} --> bla", mock(Project.class), new Date(), new Date());
 
         // when
         htmlReport.insertReportTitle("testTitle");
@@ -104,7 +89,7 @@ public class HtmlReportTest {
     @Test(expected = IllegalStateException.class)
     public void insertTitle_throws_IllegalState_when_marker_is_not_found_in_template() throws IOException {
         // given
-        when(templateAssetProvider.getReportTemplate()).thenReturn("nothing here");
+        htmlReport = new HtmlReport(context, "nothing here", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertReportTitle("testHtml");
@@ -113,7 +98,7 @@ public class HtmlReportTest {
     @Test(expected = IllegalStateException.class)
     public void insertProjectTitle_throws_IllegalState_when_label_marker_is_not_found_in_template() throws IOException {
         // given
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_title_labelXX} --> <!-- ${project_title} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_title_labelXX} --> <!-- ${project_title} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), Optional.<String>absent(), false));
@@ -123,7 +108,7 @@ public class HtmlReportTest {
     public void insertProjectTitle_throws_IllegalState_when_value_marker_is_not_found_in_template() throws IOException {
         // given
         when(context.getString(R.string.report_project_title_label)).thenReturn("ProjectLabel");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_title_label} --> <!-- ${project_titleXX} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_title_label} --> <!-- ${project_titleXX} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertProjectTitle(new Project("", "A Title", Optional.<String>absent(), Optional.<String>absent(), false));
@@ -133,7 +118,7 @@ public class HtmlReportTest {
     public void insertTotalDuration_throws_IllegalState_when_label_marker_is_not_found_in_template() throws IOException {
         // given
         when(context.getString(R.string.report_total_duration_label)).thenReturn("Laaaabel");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${total_duration_labelXX} --> <!-- ${total_duration} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${total_duration_labelXX} --> <!-- ${total_duration} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertTotalDuration("someValue");
@@ -143,7 +128,7 @@ public class HtmlReportTest {
     public void insertTotalDuration_throws_IllegalState_when_value_marker_is_not_found_in_template() throws IOException {
         // given
         when(context.getString(R.string.report_total_duration_label)).thenReturn("Laabel");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${total_duration_label} --> <!-- ${total_durationXX} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${total_duration_label} --> <!-- ${total_durationXX} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertTotalDuration("someValue");
@@ -153,7 +138,7 @@ public class HtmlReportTest {
     public void insertProjectTitle_sets_project_title_and_a_localized_label() throws IOException {
         // given
         when(context.getString(R.string.report_project_title_label)).thenReturn("ProjectLabel");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_title_label} --> <!-- ${project_title} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_title_label} --> <!-- ${project_title} -->", mock(Project.class), new Date(), new Date());
 
         // when
         htmlReport.insertProjectTitle(new Project("", "MyTitle", Optional.<String>absent(), Optional.<String>absent(), false));
@@ -165,7 +150,7 @@ public class HtmlReportTest {
     @Test(expected = IllegalStateException.class)
     public void insertProjectDescription_throws_IllegalState_when_label_marker_is_not_found_in_template() throws IOException {
         // given
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_description_labelXX} --> <!-- ${project_description} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_description_labelXX} --> <!-- ${project_description} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), Optional.<String>absent(), false));
@@ -175,7 +160,7 @@ public class HtmlReportTest {
     public void insertProjectDescription_throws_IllegalState_when_value_marker_is_not_found_in_template() throws IOException {
         // given
         when(context.getString(R.string.report_project_description_label)).thenReturn("ProjectDescLabel");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_description_label} --> <!-- ${project_descriptionXX} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_description_label} --> <!-- ${project_descriptionXX} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertProjectDescription(new Project("", "A Title", Optional.of("desc"), Optional.<String>absent(), false));
@@ -185,7 +170,7 @@ public class HtmlReportTest {
     public void insertProjectDescription_sets_project_description_and_a_localized_label() throws IOException {
         // given
         when(context.getString(R.string.report_project_description_label)).thenReturn("ProjectDescLabel");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_description_label} --> <!-- ${project_description} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_description_label} --> <!-- ${project_description} -->", mock(Project.class), new Date(), new Date());
 
         // when
         htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.of("desc"), Optional.<String>absent(), false));
@@ -199,7 +184,7 @@ public class HtmlReportTest {
         // given
         when(context.getString(R.string.report_project_description_label)).thenReturn("ProjectDescLabel");
         when(context.getString(R.string.report_project_no_description_placeholder)).thenReturn("NoDescriptionPlaceholder");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_description_label} --> <!-- ${project_description} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_description_label} --> <!-- ${project_description} -->", mock(Project.class), new Date(), new Date());
 
         // when: reporting a project *without* a description
         htmlReport.insertProjectDescription(new Project("", "MyTitle", Optional.<String>absent(), Optional.<String>absent(), false));
@@ -211,7 +196,7 @@ public class HtmlReportTest {
     @Test(expected = IllegalStateException.class)
     public void insertContractId_throws_IllegalState_when_label_marker_is_not_found_in_template() throws IOException {
         // given
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_labelXX} --> <!-- ${project_contract_id} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_contract_id_labelXX} --> <!-- ${project_contract_id} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertContractId(new Project("", "A Title", Optional.of("desc"), Optional.of("contract"), false));
@@ -222,7 +207,7 @@ public class HtmlReportTest {
         // given
         when(context.getString(R.string.report_project_contract_id_label)).thenReturn("ContractIdLabel");
         when(context.getString(R.string.report_project_no_contract_id_placeholder)).thenReturn("Placeholder");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_label} --> <!-- ${project_contract_idXX} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_contract_id_label} --> <!-- ${project_contract_idXX} -->", mock(Project.class), new Date(), new Date());
 
         // expect
         htmlReport.insertContractId(new Project("", "A Title", Optional.of("desc"), Optional.of("contract"), false));
@@ -233,7 +218,7 @@ public class HtmlReportTest {
         // given
         when(context.getString(R.string.report_project_contract_id_label)).thenReturn("ContractIdLabel");
         when(context.getString(R.string.report_project_no_contract_id_placeholder)).thenReturn("Placeholder");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_label} --> <!-- ${project_contract_id} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_contract_id_label} --> <!-- ${project_contract_id} -->", mock(Project.class), new Date(), new Date());
 
         // when
         htmlReport.insertContractId(new Project("", "MyTitle", Optional.<String>absent(), Optional.of("contract"), false));
@@ -247,7 +232,7 @@ public class HtmlReportTest {
         // given
         when(context.getString(R.string.report_project_contract_id_label)).thenReturn("ContractIdLabel");
         when(context.getString(R.string.report_project_no_contract_id_placeholder)).thenReturn("Placeholder");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${project_contract_id_label} --> <!-- ${project_contract_id} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${project_contract_id_label} --> <!-- ${project_contract_id} -->", mock(Project.class), new Date(), new Date());
 
         // when: reporting a project *without* a contract id
         htmlReport.insertContractId(new Project("", "MyTitle", Optional.<String>absent(), Optional.<String>absent(), false));
@@ -259,7 +244,7 @@ public class HtmlReportTest {
     public void insertTotalDuration_inserts_localized_label_and_total_duration_value() throws IOException {
         // given
         when(context.getString(R.string.report_total_duration_label)).thenReturn("TotalDurationLabel");
-        when(templateAssetProvider.getReportTemplate()).thenReturn("<!-- ${total_duration_label} --> <!-- ${total_duration} -->");
+        htmlReport = new HtmlReport(context, "<!-- ${total_duration_label} --> <!-- ${total_duration} -->", mock(Project.class), new Date(), new Date());
 
         // when
         htmlReport.insertTotalDuration("SomeDurationValue");

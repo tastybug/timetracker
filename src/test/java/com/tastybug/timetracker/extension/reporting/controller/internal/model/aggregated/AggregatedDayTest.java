@@ -3,7 +3,6 @@ package com.tastybug.timetracker.extension.reporting.controller.internal.model.a
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.rounding.Rounding;
-import com.tastybug.timetracker.extension.reporting.controller.internal.model.aggregated.AggregatedDay;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -139,7 +138,7 @@ public class AggregatedDayTest {
         String firstDescription = "Setup of the webserver\nStarted the server";
         String secondDescription = "Installed Apache\nStarted Apache";
         String thirdDescription = "Added webpages to /var/www\nChecked website";
-        String expectedAggregatedDescription = firstDescription + "<br/>" + secondDescription + "<br/>" + thirdDescription;
+        String expectedAggregatedDescription = firstDescription + "\n" + secondDescription + "\n" + thirdDescription;
         first.setDescription(Optional.of(firstDescription));
         second.setDescription(Optional.of(secondDescription));
         third.setDescription(Optional.of(thirdDescription));

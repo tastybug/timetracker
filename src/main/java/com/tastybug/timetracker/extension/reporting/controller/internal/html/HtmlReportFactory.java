@@ -5,6 +5,7 @@ import android.content.Context;
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.ui.util.LocalizedDurationFormatter;
+import com.tastybug.timetracker.extension.reporting.controller.internal.ReportFactory;
 import com.tastybug.timetracker.extension.reporting.controller.internal.ReportableItem;
 import com.tastybug.timetracker.extension.reporting.controller.internal.ReportableTotalDurationCalculator;
 import com.tastybug.timetracker.extension.reporting.controller.internal.model.nonaggregated.TrackingRecordToReportableMapper;
@@ -12,11 +13,10 @@ import com.tastybug.timetracker.extension.reporting.controller.internal.model.no
 import org.joda.time.Duration;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class HtmlReportBuilder {
+public class HtmlReportFactory implements ReportFactory {
 
     private TrackingRecordToReportableMapper trackingRecordToReportableMapper = new TrackingRecordToReportableMapper();
     private ReportableTotalDurationCalculator reportableTotalDurationCalculator;
@@ -27,9 +27,8 @@ public class HtmlReportBuilder {
     protected Context context;
     protected Project project;
     protected Date firstDay, lastDay;
-    private List<TrackingRecord> trackingRecordList = Collections.emptyList();
 
-    public HtmlReportBuilder(Context context) throws IOException {
+    public HtmlReportFactory(Context context) {
         this(context,
                 new ReportableListRenderer(context),
                 new TitleGenerator(context),
@@ -37,11 +36,11 @@ public class HtmlReportBuilder {
                 new ReportableTotalDurationCalculator());
     }
 
-    HtmlReportBuilder(Context context,
-                      ReportableListRenderer reportableListRenderer,
-                      TitleGenerator titleGenerator,
-                      LocalizedDurationFormatter localizedDurationFormatter,
-                      ReportableTotalDurationCalculator reportableTotalDurationCalculator) {
+    private HtmlReportFactory(Context context,
+                              ReportableListRenderer reportableListRenderer,
+                              TitleGenerator titleGenerator,
+                              LocalizedDurationFormatter localizedDurationFormatter,
+                              ReportableTotalDurationCalculator reportableTotalDurationCalculator) {
         this.context = context;
         this.reportableListRenderer = reportableListRenderer;
         this.titleGenerator = titleGenerator;
@@ -49,27 +48,11 @@ public class HtmlReportBuilder {
         this.reportableTotalDurationCalculator = reportableTotalDurationCalculator;
     }
 
-    public HtmlReportBuilder withProject(Project project) {
-        this.project = project;
-        return this;
-    }
-
-    public HtmlReportBuilder withTimeFrame(Date firstDay, Date lastDay) {
-        this.firstDay = firstDay;
-        this.lastDay = lastDay;
-        return this;
-    }
-
-    public HtmlReportBuilder withTrackingRecords(List<TrackingRecord> trackingRecordList) {
-        this.trackingRecordList = trackingRecordList;
-        return this;
-    }
-
-    public HtmlReport build() {
-        List<ReportableItem> reportableItems = generateReportables(trackingRecordList);
+    public HtmlReport createReport(Project project, Date firstDay, Date lastDay, List<TrackingRecord> trackingRecords) {
+        List<ReportableItem> reportableItems = generateReportables(project, firstDay, lastDay, trackingRecords);
         Duration totalDuration = computeTotalDuration(reportableItems);
 
-        HtmlReport htmlReport = new HtmlReport(context, project, firstDay, lastDay);
+        HtmlReport htmlReport = new HtmlReport(context, getHtmlTemplate(context), project, firstDay, lastDay);
 
         htmlReport.insertReportablesList(reportableListRenderer.renderReportablesList(reportableItems));
         htmlReport.insertReportTitle(titleGenerator.getTitle(project, firstDay, lastDay));
@@ -82,11 +65,22 @@ public class HtmlReportBuilder {
         return htmlReport;
     }
 
-    protected List<ReportableItem> generateReportables(List<TrackingRecord> trackingRecordList) {
+    protected List<ReportableItem> generateReportables(Project project,
+                                                       Date firstDay,
+                                                       Date lastDay,
+                                                       List<TrackingRecord> trackingRecordList) {
         return trackingRecordToReportableMapper.mapRecords(trackingRecordList);
     }
 
     private Duration computeTotalDuration(List<ReportableItem> reportableItems) {
         return reportableTotalDurationCalculator.getTotalForList(reportableItems);
+    }
+
+    private String getHtmlTemplate(Context context) {
+        try {
+            return new TemplateAssetProvider(context.getAssets()).getReportTemplate();
+        } catch (IOException e) {
+            throw new RuntimeException("Problem accessing report template.", e);
+        }
     }
 }

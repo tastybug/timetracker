@@ -40,6 +40,7 @@ public class ShareReportIntentFactoryTest {
     public void setup() throws IOException {
         when(defaultReport.getFirstDay()).thenReturn(new Date());
         when(defaultReport.getLastDay()).thenReturn(new Date());
+        when(defaultReport.getMimeType()).thenReturn("mime/type");
     }
 
     @Test(expected = NullPointerException.class)
@@ -88,12 +89,12 @@ public class ShareReportIntentFactoryTest {
     }
 
     @Test
-    public void create_produces_intent_with_mime_type_html() throws IOException {
+    public void create_produces_intent_with_mime_type_from_report() throws IOException {
         // when
         Intent intent = subject.create(defaultReport);
 
         // then
-        assertEquals("text/html", intent.getType());
+        assertEquals(defaultReport.getMimeType(), intent.getType());
     }
 
     @Test

@@ -8,11 +8,11 @@ import com.tastybug.timetracker.extension.reporting.controller.internal.model.ag
 
 import java.util.List;
 
-public class AggregatedCsvReportBuilder extends CsvReportBuilder {
+public class AggregatedCsvReportFactory extends CsvReportFactory {
 
     private AggregatedReportablesProvider aggregatedReportablesProvider = new AggregatedReportablesProvider();
 
-    public AggregatedCsvReportBuilder(Context context) {
+    public AggregatedCsvReportFactory(Context context) {
         super(context);
     }
 

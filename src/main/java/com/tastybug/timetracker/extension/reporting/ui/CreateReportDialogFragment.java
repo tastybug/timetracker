@@ -16,8 +16,10 @@ import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.TrackingConfiguration;
 import com.tastybug.timetracker.core.ui.dialog.picker.DatePickerDialogFragment;
-import com.tastybug.timetracker.extension.reporting.controller.ReportFormat;
-import com.tastybug.timetracker.extension.reporting.controller.ReportService;
+import com.tastybug.timetracker.extension.reporting.controller.AggregatedCsvReportService;
+import com.tastybug.timetracker.extension.reporting.controller.AggregatedHtmlReportService;
+import com.tastybug.timetracker.extension.reporting.controller.CsvReportService;
+import com.tastybug.timetracker.extension.reporting.controller.HtmlReportService;
 import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 import com.tastybug.timetracker.infrastructure.otto.OttoProvider;
 import com.tastybug.timetracker.infrastructure.util.ConditionalLog;
@@ -28,11 +30,6 @@ import org.joda.time.Interval;
 
 import java.io.IOException;
 import java.util.Date;
-
-import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.CSV_AGGREGATED;
-import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.CSV_NON_AGGREGATED;
-import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.HTML_AGGREGATED;
-import static com.tastybug.timetracker.extension.reporting.controller.ReportFormat.HTML_NON_AGGREGATED;
 
 public class CreateReportDialogFragment extends DialogFragment {
 
@@ -177,11 +174,8 @@ public class CreateReportDialogFragment extends DialogFragment {
         return aggregateDaysCheckBox.isChecked();
     }
 
-    private ReportFormat getSelectedReportFormat() {
-        boolean aggregated = isAggregateDaysChecked();
-        return htmlFormatRadioButton.isChecked()
-                ? aggregated ? HTML_AGGREGATED : HTML_NON_AGGREGATED
-                : aggregated ? CSV_AGGREGATED : CSV_NON_AGGREGATED;
+    private boolean isHtmlFormatSelected() {
+        return htmlFormatRadioButton.isChecked();
     }
 
     void setFirstDay(Date firstDay) {
@@ -199,17 +193,36 @@ public class CreateReportDialogFragment extends DialogFragment {
     }
 
     private void startReportCreation() {
-        Date firstDay = getFirstDayFromWidget();
-        Date lastDay = getLastDayFromWidget();
+        Date notBefore = getFirstDayFromWidget();
+        Date lastDayInclusive = getLastDayFromWidget();
+        Date notAfter = new DateTime(lastDayInclusive).plusDays(1).toDate();
 
         try {
-            Report report = new ReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), firstDay, lastDay, getSelectedReportFormat());
+            Report report = createRequestedReport(notBefore, notAfter);
             ReportViewerDialogFragment
                     .aDialog(report)
                     .show(getFragmentManager(), ReportViewerDialogFragment.class.getSimpleName());
         } catch (IOException ioe) {
             ConditionalLog.logError(getClass().getSimpleName(), "Failed to create report!", ioe);
         }
+    }
+
+    private Report createRequestedReport(Date notBefore, Date notAfter) throws IOException {
+        Report report;
+        if (isHtmlFormatSelected()) {
+            if (isAggregateDaysChecked()) {
+                report = new AggregatedHtmlReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), notBefore, notAfter);
+            } else {
+                report = new HtmlReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), notBefore, notAfter);
+            }
+        } else {
+            if (isAggregateDaysChecked()) {
+                report = new AggregatedCsvReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), notBefore, notAfter);
+            } else {
+                report = new CsvReportService(getActivity()).createReport(trackingConfiguration.getProjectUuid(), notBefore, notAfter);
+            }
+        }
+        return report;
     }
 
     @Subscribe

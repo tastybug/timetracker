@@ -6,7 +6,6 @@ import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.extension.reporting.controller.internal.model.Report;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,24 +15,13 @@ public class HtmlReport extends Report implements Serializable {
     private String template = "";
 
     HtmlReport(Context context,
-               Project project,
-               Date firstDay,
-               Date lastDay) {
-        this(context, new TemplateAssetProvider(context.getAssets()), project, firstDay, lastDay);
-    }
-
-    HtmlReport(Context context,
-               TemplateAssetProvider templateAssetProvider,
+               String template,
                Project project,
                Date firstDay,
                Date lastDay) {
         super(project, firstDay, lastDay);
-        try {
-            this.template = templateAssetProvider.getReportTemplate();
-            this.context = context;
-        } catch(IOException ioe) {
-            throw new RuntimeException("Problem accessing report template.", ioe);
-        }
+        this.template = template;
+        this.context = context;
     }
 
     void insertReportablesList(String html) {
