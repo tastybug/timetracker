@@ -122,6 +122,17 @@
                 <category android:name="com.tastybug.timetracker.LIFECYCLE_EVENT" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".extension.demodata.controller.FirstRunBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.FIRST_RUN" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".extension.demodata.controller.DemoDataCreatedBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.DEMO_DATA_CREATED" />
+                <category android:name="com.tastybug.timetracker.INFRASTRUCTURAL_EVENT" />
+            </intent-filter>
+        </receiver>
 
         <!-- -->
         <provider

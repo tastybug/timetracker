@@ -13,7 +13,7 @@ public class ProjectCreatedEvent implements LifecycleEvent {
 
     private Project project;
 
-    ProjectCreatedEvent(Project project) {
+    public ProjectCreatedEvent(Project project) {
         this.project = project;
     }
 

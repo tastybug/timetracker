@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="toast_demo_data_successfully_created">Demo data created!</string>
+
+    <string name="demo_project_1_title">Demo: Website Creation Contract</string>
+    <string name="demo_project_1_description">Create a simple website for a local company.</string>
+    <string name="demo_project_1_tracking_record_1_description">Project Kickoff!\n\n* checked out a few hosting service providers\n* client selected a yearly plan, helped with the basic setup\n* discussion regarding site content</string>
+    <string name="demo_project_1_tracking_record_2_description">* planned site theme\n* wrote CSS</string>
+    <string name="demo_project_1_tracking_record_3_description">* created imprint, headers, footer\n* created main site\n* added swirling email gif to contact page</string>
+    <string name="demo_project_1_tracking_record_4_description">Implemented and tested site deployment/update chain</string>
+    <string name="demo_project_1_tracking_record_5_description">Completed project, wrote bill</string>
+
+    <string name="demo_project_2_title">Demo: Application Dev. Project</string>
+    <string name="demo_project_2_description">Yet another application development project..</string>
+    <string name="demo_project_2_contract_id">Contract 11283-abc</string>
+    <string name="demo_project_2_tracking_record_1_description">First meeting with customer:\n* requirement sighting\n* budget planning\n* frameworks selected</string>
+    <string name="demo_project_2_tracking_record_2_description">Created stories, basic backlog sorting</string>
+    <string name="demo_project_2_tracking_record_3_description">First workshop and immediate story grooming with the team</string>
+    <string name="demo_project_2_tracking_record_4_description">First sprint planning:\n* commitment on stories 1, 2 and 4\n* still have to pick a dedicated UI/UX guy for our team</string>
+
+</resources>

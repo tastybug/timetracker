@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.squareup.otto.Subscribe;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
+import com.tastybug.timetracker.core.task.project.create.ProjectCreatedEvent;
 import com.tastybug.timetracker.core.task.tracking.checkin.CheckInEvent;
 import com.tastybug.timetracker.core.task.tracking.checkout.CheckOutEvent;
 import com.tastybug.timetracker.core.task.tracking.create.CreatedTrackingRecordEvent;
@@ -23,7 +24,7 @@ import com.tastybug.timetracker.core.ui.settings.SettingsActivity;
 
 public class ProjectListFragment extends ListFragment {
 
-    private UpdateProjectListOnTrackingEventsHandler updateProjectListOnTrackingEventsHandler;
+    private DomainEventsHandler domainEventsHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,13 +37,13 @@ public class ProjectListFragment extends ListFragment {
         super.onResume();
         setListAdapter(new ProjectListAdapter(getActivity()));
 
-        updateProjectListOnTrackingEventsHandler = new UpdateProjectListOnTrackingEventsHandler();
+        domainEventsHandler = new DomainEventsHandler();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        updateProjectListOnTrackingEventsHandler.stop();
+        domainEventsHandler.stop();
     }
 
     @Override
@@ -88,7 +89,7 @@ public class ProjectListFragment extends ListFragment {
         startActivity(intent);
     }
 
-    private class UpdateProjectListOnTrackingEventsHandler extends AbstractOttoEventHandler {
+    private class DomainEventsHandler extends AbstractOttoEventHandler {
 
         @SuppressWarnings("unused")
         @Subscribe
@@ -111,6 +112,12 @@ public class ProjectListFragment extends ListFragment {
         @SuppressWarnings("unused")
         @Subscribe
         public void handleCheckOut(CheckOutEvent event) {
+            ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
+        }
+
+        @SuppressWarnings("unused")
+        @Subscribe
+        public void handleProjectCreated(ProjectCreatedEvent event) {
             ((ProjectListAdapter) getListAdapter()).notifyDataSetChanged();
         }
     }

@@ -1,6 +1,7 @@
 package com.tastybug.timetracker.core.ui.dashboard;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,7 +10,6 @@ import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingRecord;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
-import com.tastybug.timetracker.core.model.dao.TrackingConfigurationDAO;
 import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 
 import java.util.ArrayList;
@@ -19,18 +19,26 @@ import java.util.List;
 class ProjectListAdapter extends BaseAdapter {
 
     private List<Project> projectArrayList = new ArrayList<>();
-    private Activity activity;
+    private Context context;
 
     private TrackingRecordDAO trackingRecordDAO;
-    private TrackingConfigurationDAO trackingConfigurationDAO;
 
     ProjectListAdapter(Activity activity) {
-        projectArrayList = new ProjectDAO(activity).getAll();
-        Collections.sort(projectArrayList, new ProjectComparator());
-        this.activity = activity;
+        createModel(activity);
+        this.context = activity;
 
         this.trackingRecordDAO = new TrackingRecordDAO(activity);
-        this.trackingConfigurationDAO = new TrackingConfigurationDAO(activity);
+    }
+
+    private void createModel(Context context) {
+        projectArrayList = new ProjectDAO(context).getAll();
+        Collections.sort(projectArrayList, new ProjectComparator());
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+       createModel(context);
     }
 
     @Override
@@ -56,7 +64,7 @@ class ProjectListAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = new ProjectView(activity, null);
+            convertView = new ProjectView(context, null);
         }
         Project project = getProjectAt(position);
         ProjectView projectView = (ProjectView) convertView;

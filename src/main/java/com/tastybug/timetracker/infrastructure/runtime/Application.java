@@ -45,6 +45,7 @@ public class Application extends android.app.Application {
         cleanupCacheFolder();
         broadcastAppStart();
         if (isFirstRun()) {
+            broadcastFirstRun();
             declareFirstRunConsumed();
         }
     }
@@ -60,7 +61,11 @@ public class Application extends android.app.Application {
     }
 
     private void broadcastAppStart() {
-        getApplicationContext().sendBroadcast(new ApplicationStartIntent());
+        getApplicationContext().sendBroadcast(new AppStartPropagationIntent());
+    }
+
+    private void broadcastFirstRun() {
+        getApplicationContext().sendBroadcast(new FirstRunPropagationIntent());
     }
 
     private void initializeDayNightThemeMode() {
