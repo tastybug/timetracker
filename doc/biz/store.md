@@ -3,7 +3,7 @@ English
 
 Title
 -----
-More Time
+Freelancer Pocket Log
 
 Short description
 -----------------
@@ -19,7 +19,7 @@ Deutsch
 
 Title
 -----
-More Time
+Freelancer Pocket Log
 
 Short description
 -----------------

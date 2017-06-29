@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">More Time</string>
+    <string name="app_name">Pocket Log</string>
 
     <!-- common -->
     <string name="common_ok">OK</string>
@@ -119,7 +119,7 @@
     <string name="sample_remaining_days_X_until_date_Y">7 (24.12.2016)</string>
     <string name="sample_from_date_X">From 24/12/2016</string>
     <string name="sample_until_date_X">Until 24/12/2016</string>
-    <string name="sample_app_version_info">More Time, 1.123-abcd1234</string>
+    <string name="sample_app_version_info">Freelancer Pocket Log, 1.123-abcd1234</string>
     <string name="sample_time">12:15</string>
     <string name="sample_day_of_week">Wed</string>
 
