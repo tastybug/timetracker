@@ -67,6 +67,9 @@
 
     <PreferenceCategory android:title="@string/about_group_title">
 
+        <com.tastybug.timetracker.extension.feedback.controller.FeedbackPreference
+            android:title="@string/feedback_preference_title" />
+
         <Preference
             android:key="@string/app_version_info"
             android:title="@string/sample_app_version_info"

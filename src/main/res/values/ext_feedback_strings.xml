@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="feedback_preference_title">♥ Send Feedback</string>
+    <string name="feedback_mail_subject_for_app_name_X_version_Y_hash_Z">Feedback %1$s (%2$s-%3$s)</string>
+    <string name="feedback_mail_body_debug_data_X">Hello,\n\nWhat is your impression, what is missing, what works well?\n\n\n\n%1$s</string>
+
+</resources>
