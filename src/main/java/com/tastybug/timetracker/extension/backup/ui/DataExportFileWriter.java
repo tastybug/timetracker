@@ -15,15 +15,11 @@ class DataExportFileWriter {
         this.cacheFileWriter = new CacheFileWriter(context);
     }
 
-    DataExportFileWriter(CacheFileWriter cacheFileWriter) {
-        this.cacheFileWriter = cacheFileWriter;
-    }
-
     File writeToCache(byte[] data) throws IOException {
         return cacheFileWriter.writeToCache(getSafeFileName(), getExtension(), data);
     }
 
-    String getSafeFileName() {
+    private String getSafeFileName() {
         return "data-export";
     }
 

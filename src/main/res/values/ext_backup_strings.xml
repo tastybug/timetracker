@@ -18,7 +18,7 @@
     <string name="manual_backup_creation_dialog_title">Manual Backup</string>
     <string name="manual_backup_creation_description_text">This will export your data enabling you to save it in the cloud or transmit using an external application. \n\nTo re-import, simply open the file with this application.</string>
     <string name="manual_backup_submit_button">Backup</string>
-    <string name="extra_text_for_app_X_on_date_Y">&#8220;%1$s&#8221; data backup from %2$s.</string>
+    <string name="extra_text_for_backup_app_X_on_date_Y">%1$s Backup %2$s</string>
     <string name="backup_activity_title">Data Backup</string>
 
     <!-- import manual backup dialog -->
