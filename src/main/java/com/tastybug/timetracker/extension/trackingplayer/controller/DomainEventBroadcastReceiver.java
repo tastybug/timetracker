@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.dao.ProjectDAO;
+import com.tastybug.timetracker.core.model.dao.TrackingRecordDAO;
 import com.tastybug.timetracker.core.task.project.ProjectChangeIntent;
 import com.tastybug.timetracker.core.task.tracking.TrackingRecordChangeIntent;
 import com.tastybug.timetracker.extension.trackingplayer.ui.NotificationManager;
@@ -57,6 +58,10 @@ public class DomainEventBroadcastReceiver extends BroadcastReceiver {
     private void handleTrackingRecordUpdate(Context context, String projectUuid, boolean wasStopped) {
         if (wasStopped) {
             handleProjectStopped(context, projectUuid);
+        } else if (isProjectRunning(context, projectUuid)) {
+            // the project is ongoing and there has been a change ..
+            // so lets update the tracking player
+            new NotificationManager(context).showProject(projectUuid);
         }
     }
 
@@ -88,4 +93,7 @@ public class DomainEventBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
+    private boolean isProjectRunning(Context context, String projectUuid) {
+        return new TrackingRecordDAO(context).getRunning(projectUuid).isPresent();
+    }
 }
