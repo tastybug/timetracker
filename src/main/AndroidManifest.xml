@@ -72,9 +72,12 @@
         </activity>
 
         <!-- broadcast receivers-->
-        <receiver android:name=".extension.trackingplayer.controller.AfterBootTrackingPlayerVisibilityHandler">
+        <receiver android:name=".extension.trackingplayer.controller.AfterBootAndAppStartVisibilityHandler">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.tastybug.timetracker.APP_START" />
             </intent-filter>
         </receiver>
         <receiver android:name=".extension.autoclosure.controller.scheduling.SchedulerStarter">
