@@ -2,8 +2,6 @@
 .gradle
 .idea
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
 /build
-/target
 gen-external-apklibs/
+app/build/
