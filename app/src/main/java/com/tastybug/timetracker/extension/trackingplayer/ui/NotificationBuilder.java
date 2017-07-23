@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 
+import com.google.common.base.Optional;
 import com.tastybug.timetracker.R;
 import com.tastybug.timetracker.core.model.Project;
 import com.tastybug.timetracker.core.model.TrackingRecord;
@@ -59,12 +60,18 @@ class NotificationBuilder {
     }
 
     NotificationBuilder showNotificationForPaused(Project project) {
-        TrackingRecord latestRecord = new TrackingRecordDAO(context).getLatestByStartDateForProjectUuid(project.getUuid()).get();
-
-        notificationBuilder
-                .setContentText(context.getString(R.string.tracking_player_paused_since_X,
-                        DefaultLocaleDateFormatter.dateTime().format(latestRecord.getEnd().get())))
-                .setSmallIcon(R.drawable.ic_notification_paused)
+        Optional<TrackingRecord> latestRecordOpt = new TrackingRecordDAO(context).getLatestByStartDateForProjectUuid(project.getUuid());
+        if (latestRecordOpt.isPresent() && latestRecordOpt.get().getEnd().isPresent()) {
+            notificationBuilder = notificationBuilder
+                    .setContentText(context.getString(R.string.tracking_player_paused_since_X,
+                            DefaultLocaleDateFormatter.dateTime().format(latestRecordOpt.get().getEnd().get())));
+        } else {
+            // even though the project is paused, the latest record might have been deleted manually
+            // or altered, so make no assumptions here
+            notificationBuilder = notificationBuilder
+                    .setContentText(context.getString(R.string.tracking_player_currently_paused));
+        }
+        notificationBuilder.setSmallIcon(R.drawable.ic_notification_paused)
                 .addAction(R.drawable.ic_stop_tracking,
                         context.getString(R.string.tracking_player_dismiss_paused_button),
                         createDismissPausedIntent(context, project))
