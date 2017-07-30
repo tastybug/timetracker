@@ -16,7 +16,7 @@ public class ConditionalLog {
     }
 
     public static void logWarn(String tag, String message, String... arguments) {
-        log(Log.WARN, tag, String.format(message, arguments));
+        log(Log.WARN, tag, String.format(message, (Object[])arguments));
     }
 
     public static void logInfo(String tag, String message) {
@@ -24,7 +24,7 @@ public class ConditionalLog {
     }
 
     public static void logInfo(String tag, String message, String... arguments) {
-        log(Log.INFO, tag, String.format(message, arguments));
+        log(Log.INFO, tag, String.format(message, (Object[])arguments));
     }
 
     public static void logDebug(String tag, String message) {

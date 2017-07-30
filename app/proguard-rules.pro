@@ -3,6 +3,8 @@
 -dontwarn sun.misc.Unsafe
 -dontwarn com.google.base.**
 -dontwarn com.google.common.**
+-dontwarn com.opencsv.**
+-dontwarn org.apache.commons.**
 
 -keepclassmembers class ** {
     @com.squareup.otto.Subscribe public *;
