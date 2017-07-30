@@ -19,7 +19,7 @@ import static org.acra.ReportField.PHONE_MODEL;
 import static org.acra.ReportField.STACK_TRACE;
 
 @ReportsCrashes(
-        mailTo = "tastybug@tastybug.com",
+        mailTo = "feedback@pocket-log.com",
         mode = ReportingInteractionMode.DIALOG,
         resToastText = R.string.acra_crash_toast_message, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
         resDialogTitle = R.string.acra_dialog_title,

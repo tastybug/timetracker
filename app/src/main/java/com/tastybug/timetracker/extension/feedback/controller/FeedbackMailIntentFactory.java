@@ -10,7 +10,7 @@ import com.tastybug.timetracker.R;
 
 class FeedbackMailIntentFactory {
 
-    private static final String TO = "tastybug@tastybug.com";
+    private static final String TO = "feedback@pocket-log.com";
 
     FeedbackMailIntentFactory() {}
 
