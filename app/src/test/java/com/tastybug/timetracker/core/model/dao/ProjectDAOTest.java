@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.CLOSED_COLUMN;
@@ -24,11 +23,9 @@ import static com.tastybug.timetracker.core.model.dao.ProjectDAO.CONTRACT_ID_COL
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.DESCRIPTION_COLUMN;
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.TITLE_COLUMN;
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.UUID_COLUMN;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.guava.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Matchers.any;
@@ -61,12 +58,12 @@ public class ProjectDAOTest {
         Project project = projectDAO.get("1").get();
 
         // then
-        assertNotNull(project);
-        assertEquals("1", project.getUuid());
-        assertEquals("title", project.getTitle());
-        assertEquals("desc", project.getDescription().get());
-        assertEquals("ABC/123", project.getContractId().get());
-        assertEquals(true, project.isClosed());
+        assertThat(project).isNotNull();
+        assertThat(project.getUuid()).isEqualTo("1");
+        assertThat(project.getTitle()).isEqualTo("title");
+        assertThat(project.getDescription()).isPresent().contains("desc");
+        assertThat(project.getContractId()).isPresent().contains("ABC/123");
+        assertThat(project.isClosed()).isTrue();
     }
 
     @Test
@@ -80,7 +77,7 @@ public class ProjectDAOTest {
         Project project = projectDAO.get("1").orNull();
 
         // then
-        assertNull(project);
+        assertThat(project).isNull();
     }
 
     @Test
@@ -94,7 +91,7 @@ public class ProjectDAOTest {
         List<Project> projects = projectDAO.getAll();
 
         // then
-        assertEquals(2, projects.size());
+        assertThat(projects.size()).isEqualTo(2);
     }
 
     @Test
@@ -108,7 +105,7 @@ public class ProjectDAOTest {
         List<Project> projects = projectDAO.getAll();
 
         // then
-        assertEquals(0, projects.size());
+        assertThat(projects).isEmpty();
     }
 
     @Test
@@ -120,7 +117,7 @@ public class ProjectDAOTest {
         projectDAO.create(project);
 
         // then
-        assertNotNull(project.getUuid());
+        assertThat(project.getUuid()).isNotNull();
     }
 
     @Test
@@ -133,7 +130,7 @@ public class ProjectDAOTest {
         int updateCount = projectDAO.update(project);
 
         // then
-        assertEquals(1, updateCount);
+        assertThat(updateCount).isEqualTo(1);
     }
 
     @Test
@@ -146,7 +143,7 @@ public class ProjectDAOTest {
         boolean success = projectDAO.delete(project);
 
         // then
-        assertTrue(success);
+        assertThat(success).isTrue();
     }
 
     @Test
@@ -159,7 +156,7 @@ public class ProjectDAOTest {
         boolean success = projectDAO.delete(project.getUuid());
 
         // then
-        assertTrue(success);
+        assertThat(success).isTrue();
     }
 
     @Test
@@ -172,7 +169,7 @@ public class ProjectDAOTest {
         boolean success = projectDAO.delete(project);
 
         // then
-        assertFalse(success);
+        assertThat(success).isFalse();
     }
 
     @Test
@@ -191,24 +188,20 @@ public class ProjectDAOTest {
         assertEquals(project.isClosed(), cv.getAsBoolean(CLOSED_COLUMN));
 
         // and
-        assertEquals(5, cv.size());
+        assertThat(cv.size()).isEqualTo(5);
     }
 
     @Test
     public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(UUID_COLUMN, projectDAO.getPKColumn());
+        assertThat(projectDAO.getPKColumn()).isEqualTo(UUID_COLUMN);
     }
 
     @Test
     public void knowsAllColumns() {
         // expect
-        assertEquals(5, projectDAO.getColumns().length);
-        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(UUID_COLUMN));
-        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.TITLE_COLUMN));
-        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.DESCRIPTION_COLUMN));
-        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.CONTRACT_ID_COLUMN));
-        assertTrue(Arrays.asList(projectDAO.getColumns()).contains(ProjectDAO.CLOSED_COLUMN));
+        assertThat(projectDAO.getColumns().length).isEqualTo(5);
+        assertThat(projectDAO.getColumns()).contains(UUID_COLUMN, TITLE_COLUMN, DESCRIPTION_COLUMN, CONTRACT_ID_COLUMN, CLOSED_COLUMN);
     }
 
     private Cursor aProjectCursor(String uuid, String title, String description, String contractId, boolean closed) {
