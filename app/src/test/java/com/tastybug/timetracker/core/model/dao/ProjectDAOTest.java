@@ -25,9 +25,9 @@ import static com.tastybug.timetracker.core.model.dao.ProjectDAO.TITLE_COLUMN;
 import static com.tastybug.timetracker.core.model.dao.ProjectDAO.UUID_COLUMN;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.guava.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,18 +44,18 @@ public class ProjectDAOTest {
 
     @Before
     public void setup() {
-        when(context.getContentResolver()).thenReturn(resolver);
+        given(context.getContentResolver()).willReturn(resolver);
     }
 
     @Test
     public void canGetExistingProjectById() {
         // given
         Cursor cursor = aProjectCursor("1", "title", "desc", "ABC/123", true);
-        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
+        given(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
 
         // when
-        Project project = projectDAO.get("1").get();
+        Project project = projectDAO.get("1").orNull();
 
         // then
         assertThat(project).isNotNull();
@@ -70,8 +70,8 @@ public class ProjectDAOTest {
     public void gettingNonExistingProjectByIdYieldsNull() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
+        given(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
 
         // when
         Project project = projectDAO.get("1").orNull();
@@ -84,8 +84,8 @@ public class ProjectDAOTest {
     public void getAllWorksForExistingProjects() {
         // given
         Cursor multipleProjects = aCursorWith2Projects();
-        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
-                .thenReturn(multipleProjects);
+        given(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
+                .willReturn(multipleProjects);
 
         // when
         List<Project> projects = projectDAO.getAll();
@@ -98,8 +98,8 @@ public class ProjectDAOTest {
     public void getAllReturnsEmptyListForLackOfEntities() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
-                .thenReturn(noProjects);
+        given(resolver.query(any(Uri.class), eq(ProjectDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
+                .willReturn(noProjects);
 
         // when
         List<Project> projects = projectDAO.getAll();
@@ -124,7 +124,7 @@ public class ProjectDAOTest {
     public void canUpdateProject() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
-        when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
+        given(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).willReturn(1);
 
         // when
         int updateCount = projectDAO.update(project);
@@ -137,7 +137,7 @@ public class ProjectDAOTest {
     public void canDeleteProject() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
-        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
+        given(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).willReturn(1);
 
         // when
         boolean success = projectDAO.delete(project);
@@ -150,7 +150,7 @@ public class ProjectDAOTest {
     public void canDeleteProjectByUuid() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
-        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
+        given(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).willReturn(1);
 
         // when
         boolean success = projectDAO.delete(project.getUuid());
@@ -163,7 +163,7 @@ public class ProjectDAOTest {
     public void deleteReturnsFalseWhenNotSuccessful() {
         // given
         Project project = new Project("1", "title", Optional.<String>absent(), Optional.<String>absent(), false);
-        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
+        given(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).willReturn(0);
 
         // when
         boolean success = projectDAO.delete(project);
@@ -181,11 +181,11 @@ public class ProjectDAOTest {
         ContentValues cv = projectDAO.getContentValues(project);
 
         // then
-        assertEquals(project.getUuid(), cv.getAsString(UUID_COLUMN));
-        assertEquals(project.getTitle(), cv.getAsString(TITLE_COLUMN));
-        assertEquals(project.getDescription().get(), cv.getAsString(DESCRIPTION_COLUMN));
-        assertEquals(project.getContractId().get(), cv.getAsString(CONTRACT_ID_COLUMN));
-        assertEquals(project.isClosed(), cv.getAsBoolean(CLOSED_COLUMN));
+        assertThat(project.getUuid()).isEqualTo(cv.getAsString(UUID_COLUMN));
+        assertThat(project.getTitle()).isEqualTo(cv.getAsString(TITLE_COLUMN));
+        assertThat(project.getDescription()).extractingValue().isEqualTo(cv.getAsString(DESCRIPTION_COLUMN));
+        assertThat(project.getContractId()).extractingValue().isEqualTo(cv.getAsString(CONTRACT_ID_COLUMN));
+        assertThat(project.isClosed()).isEqualTo(cv.getAsBoolean(CLOSED_COLUMN));
 
         // and
         assertThat(cv.size()).isEqualTo(5);
@@ -206,31 +206,31 @@ public class ProjectDAOTest {
 
     private Cursor aProjectCursor(String uuid, String title, String description, String contractId, boolean closed) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getString(0)).thenReturn(uuid);
-        when(cursor.getString(1)).thenReturn(title);
-        when(cursor.getString(2)).thenReturn(description);
-        when(cursor.getString(3)).thenReturn(contractId);
-        when(cursor.getInt(4)).thenReturn(closed ? 1 : 0);
-        when(cursor.moveToFirst()).thenReturn(true);
+        given(cursor.getString(0)).willReturn(uuid);
+        given(cursor.getString(1)).willReturn(title);
+        given(cursor.getString(2)).willReturn(description);
+        given(cursor.getString(3)).willReturn(contractId);
+        given(cursor.getInt(4)).willReturn(closed ? 1 : 0);
+        given(cursor.moveToFirst()).willReturn(true);
 
         return cursor;
     }
 
     private Cursor anEmptyCursor() {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.moveToNext()).thenReturn(false);
+        given(cursor.moveToNext()).willReturn(false);
 
         return cursor;
     }
 
     private Cursor aCursorWith2Projects() {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getInt(0)).thenReturn(1);
-        when(cursor.getString(1)).thenReturn("title");
-        when(cursor.getString(2)).thenReturn("desc");
-        when(cursor.getString(3)).thenReturn("contract");
-        when(cursor.getInt(4)).thenReturn(0);
-        when(cursor.moveToNext()).thenReturn(true, true, false);
+        given(cursor.getInt(0)).willReturn(1);
+        given(cursor.getString(1)).willReturn("title");
+        given(cursor.getString(2)).willReturn("desc");
+        given(cursor.getString(3)).willReturn("contract");
+        given(cursor.getInt(4)).willReturn(0);
+        given(cursor.moveToNext()).willReturn(true, true, false);
 
         return cursor;
     }
