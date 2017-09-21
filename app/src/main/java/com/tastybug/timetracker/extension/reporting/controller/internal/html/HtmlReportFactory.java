@@ -48,14 +48,14 @@ public class HtmlReportFactory implements ReportFactory {
         this.reportableTotalDurationCalculator = reportableTotalDurationCalculator;
     }
 
-    public HtmlReport createReport(Project project, Date firstDay, Date lastDay, List<TrackingRecord> trackingRecords) {
-        List<ReportableItem> reportableItems = generateReportables(project, firstDay, lastDay, trackingRecords);
+    public HtmlReport createReport(Project project, Date notBefore, Date notAfter, List<TrackingRecord> trackingRecords) {
+        List<ReportableItem> reportableItems = generateReportables(project, notBefore, notAfter, trackingRecords);
         Duration totalDuration = computeTotalDuration(reportableItems);
 
-        HtmlReport htmlReport = new HtmlReport(context, getHtmlTemplate(context), project, firstDay, lastDay);
+        HtmlReport htmlReport = new HtmlReport(context, getHtmlTemplate(context), project, notBefore, notAfter);
 
         htmlReport.insertReportablesList(reportableListRenderer.renderReportablesList(reportableItems));
-        htmlReport.insertReportTitle(titleGenerator.getTitle(project, firstDay, lastDay));
+        htmlReport.insertReportTitle(titleGenerator.getTitle(project, notBefore, notAfter));
         htmlReport.insertProjectTitle(project);
         htmlReport.insertProjectDescription(project);
         htmlReport.insertContractId(project);

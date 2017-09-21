@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- html report viewer dialog-->
     <string name="menu_generate_report">Generate Report</string>
+
+    <!-- report viewer dialog-->
     <string name="share_report_via">Share Report</string>
 
     <!-- html report -->
-    <string name="report_title_for_project_X_from_Y_to_Z">%1$s, %2$s-%3$s</string>
+    <string name="report_title_for_project_X_from_Y_to_Z">%1$s (%2$s-%3$s)</string>
     <string name="report_project_title_label">Project Title</string>
-    <string name="report_project_description_label">Project Description</string>
-    <string name="report_project_contract_id_label">Contract Id / Billing Id</string>
+    <string name="report_project_description_label">Description</string>
+    <string name="report_project_contract_id_label">Contract Id</string>
     <string name="report_date_header">Date</string>
     <string name="report_amount_header">Amount</string>
     <string name="report_description_header">Log</string>
@@ -23,7 +24,7 @@
     <string name="dialog_create_report_error_end_before_start">Time frame ends before it starts</string>
     <string name="dialog_create_report_options">Report Options</string>
     <string name="dialog_create_report_format">Format</string>
-    <string name="dialog_create_report_aggregate_days_option">Aggregate day wise</string>
+    <string name="dialog_create_report_aggregate_days_option">Aggregate days</string>
     <string name="report_format_html_option">HTML Report</string>
     <string name="report_format_csv_option">CSV Report</string>
 

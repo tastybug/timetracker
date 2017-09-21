@@ -51,7 +51,7 @@
     <string name="error_date_missing">Please set a date</string>
     <string name="error_time_missing">Please set a time</string>
     <string name="error_end_before_start">This ends before it starts</string>
-    <string name="hint_date">Date..</string>
+    <string name="hint_date">date ..</string>
     <string name="hint_time">.. time</string>
     <string name="label_from">From</string>
     <string name="label_until">Until</string>
@@ -131,7 +131,7 @@
     <string name="project_description_preference_key">project_description_preference_key</string>
     <string name="project_description_preference_title">Project Description</string>
     <string name="project_contract_id_preference_key">project_contract_id_preference_key</string>
-    <string name="project_contract_id_preference_title">Contract Id / Billing Id</string>
+    <string name="project_contract_id_preference_title">Contract Id</string>
     <string name="warning_invalid_title_was_reverted">Invalid title has been reverted</string>
     <string name="warning_invalid_description_was_reverted">Invalid description has been reverted</string>
     <string name="warning_invalid_contract_id_was_reverted">Invalid Contract Id has been reverted</string>
@@ -139,9 +139,9 @@
     <string name="project_limits_subscreen_summary">Hour caps</string>
     <string name="tracking_configuration_hour_limit_preference_key">tracking_configuration_hour_limit_preference_key</string>
     <string name="tracking_configuration_hour_limit_preference_title">Hour Limit</string>
-    <string name="tracking_configuration_hour_limit_preference_summary_none">No Hour Limit</string>
+    <string name="tracking_configuration_hour_limit_preference_summary_none">No hour limit</string>
     <string name="warning_invalid_hour_limit_was_reverted">Invalid hour limit has been reverted</string>
-    <string name="hour_limit_of_X_hours">Project limited to %1$d hours</string>
+    <string name="hour_limit_of_X_hours">Project is limited to %1$d hours</string>
     <string name="tracking_configuration_start_date_preference_key">tracking_configuration_start_date_preference_key</string>
     <string name="tracking_configuration_start_date_preference_title">First Day</string>
     <string name="tracking_configuration_start_date_preference_summary_none">The project starts at no specific date</string>
