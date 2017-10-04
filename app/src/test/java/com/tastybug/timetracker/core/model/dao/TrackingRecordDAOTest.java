@@ -18,22 +18,28 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static com.tastybug.timetracker.core.model.dao.TrackingRecordDAO.COLUMNS;
+import static com.tastybug.timetracker.core.model.dao.TrackingRecordDAO.DESCRIPTION_COLUMN;
+import static com.tastybug.timetracker.core.model.dao.TrackingRecordDAO.END_DATE_COLUMN;
+import static com.tastybug.timetracker.core.model.dao.TrackingRecordDAO.ID_COLUMN;
+import static com.tastybug.timetracker.core.model.dao.TrackingRecordDAO.PROJECT_UUID_COLUMN;
+import static com.tastybug.timetracker.core.model.dao.TrackingRecordDAO.ROUNDING_STRATEGY_COLUMN;
+import static com.tastybug.timetracker.core.model.dao.TrackingRecordDAO.START_DATE_COLUMN;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -55,119 +61,119 @@ public class TrackingRecordDAOTest {
     }
 
     @Test
-    public void canGetExistingTrackingRecordById() {
+    public void can_get_TrackingRecord_by_uuid() {
         // given
         Cursor cursor = aTrackingRecordCursor("uuid", "project-uuid");
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
 
         // when
         TrackingRecord tf = trackingRecordDAO.get("uuid").get();
 
         // then
-        assertNotNull(tf);
-        assertEquals("uuid", tf.getUuid());
-        assertEquals("project-uuid", tf.getProjectUuid());
-        assertNotNull(tf.getStart());
-        assertNotNull(tf.getEnd());
-        assertNotNull(tf.getDescription());
-        assertNotNull(tf.getRoundingStrategy());
+        assertThat(tf).isNotNull();
+        assertThat(tf.getUuid()).isEqualTo("uuid");
+        assertThat(tf.getProjectUuid()).isEqualTo("project-uuid");
+        assertThat(tf.getStart()).isNotNull();
+        assertThat(tf.getEnd()).isNotNull();
+        assertThat(tf.getDescription()).isNotNull();
+        assertThat(tf.getRoundingStrategy()).isNotNull();
     }
 
     @Test
-    public void gettingNonExistingProjectByIdYieldsNull() {
+    public void getting_none_existing_TrackingRecord_yields_empty() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
 
         // when
         TrackingRecord tf = trackingRecordDAO.get("1").orNull();
 
         // then
-        assertNull(tf);
+        assertThat(tf).isNull();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void malformedStartDateStringLeadsToException() {
+    public void illegal_start_date_format_from_database_yields_IllegalArgumentException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", "abc", getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
 
         // when
         trackingRecordDAO.get("1");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void malformedEndDateStringLeadsToException() {
+    public void illegal_end_date_format_from_database_yields_IllegalArgumentException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
 
         // when
         trackingRecordDAO.get("1");
     }
 
     @Test
-    public void getAllWorksForExistingTrackingRecords() {
+    public void can_get_multiple_TrackingRecords_by_getAll() {
         // given
         Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
-                .thenReturn(aCursorWith2TrackingRecords);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
+                .willReturn(aCursorWith2TrackingRecords);
 
         // when
         List<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
 
         // then
-        assertEquals(2, trackingRecords.size());
+        assertThat(trackingRecords.size()).isEqualTo(2);
     }
 
     @Test
-    public void getAllReturnsEmptyListForLackOfEntities() {
+    public void can_get_empty_list_by_getAll() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
-                .thenReturn(noProjects);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), (String) isNull(), (String[]) isNull(), (String) isNull()))
+                .willReturn(noProjects);
 
         // when
         List<TrackingRecord> trackingRecords = trackingRecordDAO.getAll();
 
         // then
-        assertEquals(0, trackingRecords.size());
+        assertThat(trackingRecords).isEmpty();
     }
 
     @Test
-    public void getLatestByStartDateReturnsFirstEntry() {
+    public void can_get_latest_TrackingRecord() {
         // given
         Cursor aCursorWith2TrackingRecords = aCursorWith2TrackingRecords();
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), anyString(), any(String[].class), anyString()))
-                .thenReturn(aCursorWith2TrackingRecords);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), anyString(), any(String[].class), anyString()))
+                .willReturn(aCursorWith2TrackingRecords);
 
         // when
         Optional<TrackingRecord> recordOptional = trackingRecordDAO.getLatestByStartDateForProjectUuid("a project uuid");
 
         // then
-        assertEquals("uuid1", recordOptional.get().getUuid());
+        assertThat(recordOptional.get().getUuid()).isEqualTo("uuid1");
     }
 
     @Test
-    public void getLatestByStartDateReturnsEmptyOptionalOnNoTrackingRecords() {
+    public void getLatestByStartDate_yields_empty_when_no_TrackingRecords_are_found() {
         // given
         Cursor noProjects = anEmptyCursor();
-        when(resolver.query(any(Uri.class), eq(TrackingRecordDAO.COLUMNS), eq("project_uuid=?"), any(String[].class), eq("start_date DESC")))
-                .thenReturn(noProjects);
+        given(resolver.query(any(Uri.class), eq(COLUMNS), eq("project_uuid=?"), any(String[].class), eq("start_date DESC")))
+                .willReturn(noProjects);
 
         // when
         Optional<TrackingRecord> recordOptional = trackingRecordDAO.getLatestByStartDateForProjectUuid("a project uuid");
 
         // then
-        assertFalse(recordOptional.isPresent());
+        assertThat(recordOptional.isPresent()).isFalse();
     }
 
     @Test
-    public void canCreateTrackingRecord() {
+    public void create_TrackingRecord_inserts_via_ContentResolver() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
 
@@ -175,73 +181,74 @@ public class TrackingRecordDAOTest {
         trackingRecordDAO.create(trackingRecord);
 
         // then
-        assertNotNull(trackingRecord.getUuid());
+        verify(resolver).insert(any(Uri.class), any(ContentValues.class));
     }
 
     @Test
-    public void canUpdateTrackingRecord() {
+    public void update_TrackingRecord_updates_via_ContentResolver() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
-        when(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).thenReturn(1);
+        given(resolver.update(any(Uri.class), any(ContentValues.class), any(String.class), any(String[].class))).willReturn(1234);
 
         // when
         int updateCount = trackingRecordDAO.update(trackingRecord);
 
         // then
-        assertEquals(1, updateCount);
+        assertThat(updateCount).isEqualTo(1234);
     }
 
     @Test
     public void canDeleteTrackingRecord() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
-        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(1);
+        given(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).willReturn(1);
 
         // when
         boolean success = trackingRecordDAO.delete(trackingRecord);
 
         // then
-        assertTrue(success);
+        assertThat(success).isTrue();
     }
 
     @Test
     public void deleteReturnsFalseWhenNotSuccessful() {
         // given
         TrackingRecord trackingRecord = new TrackingRecord();
-        when(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).thenReturn(0);
+        given(resolver.delete(any(Uri.class), any(String.class), any(String[].class))).willReturn(0);
 
         // when
         boolean success = trackingRecordDAO.delete(trackingRecord);
 
         // then
-        assertFalse(success);
+        assertThat(success).isFalse();
     }
 
     @Test
     public void providesCorrectPrimaryKeyColumn() {
         // expect
-        assertEquals(TrackingRecordDAO.ID_COLUMN, trackingRecordDAO.getPKColumn());
+        assertThat(trackingRecordDAO.getPKColumn()).isEqualTo(ID_COLUMN);
     }
 
     @Test
     public void knowsAllColumns() {
         // expect
-        assertEquals(6, trackingRecordDAO.getColumns().length);
-        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.ID_COLUMN));
-        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.PROJECT_UUID_COLUMN));
-        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.START_DATE_COLUMN));
-        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.END_DATE_COLUMN));
-        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.DESCRIPTION_COLUMN));
-        assertTrue(Arrays.asList(trackingRecordDAO.getColumns()).contains(TrackingRecordDAO.ROUNDING_STRATEGY_COLUMN));
+        assertThat(trackingRecordDAO.getColumns()).containsOnly(
+                ID_COLUMN,
+                PROJECT_UUID_COLUMN,
+                START_DATE_COLUMN,
+                END_DATE_COLUMN,
+                DESCRIPTION_COLUMN,
+                ROUNDING_STRATEGY_COLUMN
+        );
     }
 
     @Test(expected = NullPointerException.class)
     public void gettingAllTrackingRecordsByNullProjectUuidYieldsException() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2", getIso8601DateFormatter().format(new LocalDate().toDate()), "abc");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
-                .thenReturn(cursor);
-        when(cursor.moveToNext()).thenReturn(true);
+        given(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), any(String.class)))
+                .willReturn(cursor);
+        given(cursor.moveToNext()).willReturn(true);
 
         // when
         trackingRecordDAO.getByProjectUuid(null);
@@ -251,57 +258,57 @@ public class TrackingRecordDAOTest {
     public void canGetTrackingRecordsByProjectUuid() {
         // given
         Cursor cursor = aTrackingRecordCursor("1", "2");
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
-        when(cursor.moveToNext()).thenReturn(true, false);
+        given(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
+        given(cursor.moveToNext()).willReturn(true, false);
 
         // when
         ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getByProjectUuid("1");
 
         // then
-        assertEquals(1, trackingRecords.size());
-        assertEquals("1", trackingRecords.get(0).getUuid());
-        assertEquals("2", trackingRecords.get(0).getProjectUuid());
-        assertNotNull(trackingRecords.get(0).getStart());
-        assertNotNull(trackingRecords.get(0).getEnd());
+        assertThat(trackingRecords.size()).isEqualTo(1);
+        assertThat(trackingRecords.get(0).getUuid()).isEqualTo("1");
+        assertThat(trackingRecords.get(0).getProjectUuid()).isEqualTo("2");
+        assertThat(trackingRecords.get(0).getStart()).isNotNull();
+        assertThat(trackingRecords.get(0).getEnd()).isNotNull();
     }
 
     @Test
     public void gettingTrackingRecordsByUnknownProjectUuidYieldsEmptyList() {
         // given
         Cursor cursor = anEmptyCursor();
-        when(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
-                .thenReturn(cursor);
+        given(resolver.query(any(Uri.class), any(String[].class), any(String.class), any(String[].class), (String) isNull()))
+                .willReturn(cursor);
 
         // when
         ArrayList<TrackingRecord> trackingRecords = trackingRecordDAO.getByProjectUuid("1");
 
         // then
-        assertTrue(trackingRecords.isEmpty());
+        assertThat(trackingRecords).isEmpty();
     }
 
     private Cursor aTrackingRecordCursor(String uuid, String projectUuid) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getString(0)).thenReturn(uuid);
-        when(cursor.getString(1)).thenReturn(projectUuid);
-        when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
-        when(cursor.getString(4)).thenReturn(null);
-        when(cursor.getString(5)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
-        when(cursor.moveToFirst()).thenReturn(true);
+        given(cursor.getString(0)).willReturn(uuid);
+        given(cursor.getString(1)).willReturn(projectUuid);
+        given(cursor.getString(2)).willReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        given(cursor.getString(3)).willReturn(getIso8601DateFormatter().format(new LocalDate().plusDays(1).toDate()));
+        given(cursor.getString(4)).willReturn(null);
+        given(cursor.getString(5)).willReturn(Rounding.Strategy.NO_ROUNDING.name());
+        given(cursor.moveToFirst()).willReturn(true);
 
         return cursor;
     }
 
     private Cursor aTrackingRecordCursor(String uuid, String projectUuid, String startDateString, String endDateString) {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getString(0)).thenReturn(uuid);
-        when(cursor.getString(1)).thenReturn(projectUuid);
-        when(cursor.getString(2)).thenReturn(startDateString);
-        when(cursor.getString(3)).thenReturn(endDateString);
-        when(cursor.getString(4)).thenReturn(null);
-        when(cursor.getString(5)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
-        when(cursor.moveToFirst()).thenReturn(true);
+        given(cursor.getString(0)).willReturn(uuid);
+        given(cursor.getString(1)).willReturn(projectUuid);
+        given(cursor.getString(2)).willReturn(startDateString);
+        given(cursor.getString(3)).willReturn(endDateString);
+        given(cursor.getString(4)).willReturn(null);
+        given(cursor.getString(5)).willReturn(Rounding.Strategy.NO_ROUNDING.name());
+        given(cursor.moveToFirst()).willReturn(true);
 
         return cursor;
     }
@@ -315,14 +322,14 @@ public class TrackingRecordDAOTest {
 
     private Cursor aCursorWith2TrackingRecords() {
         Cursor cursor = mock(Cursor.class);
-        when(cursor.getString(0)).thenReturn("uuid1", "uuid2");
-        when(cursor.getString(1)).thenReturn("project_uuid1", "project_uuid2");
-        when(cursor.getString(2)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(cursor.getString(3)).thenReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
-        when(cursor.getString(4)).thenReturn(null);
-        when(cursor.getString(5)).thenReturn(Rounding.Strategy.NO_ROUNDING.name());
-        when(cursor.moveToNext()).thenReturn(true, true, false);
-        when(cursor.moveToFirst()).thenReturn(true);
+        given(cursor.getString(0)).willReturn("uuid1", "uuid2");
+        given(cursor.getString(1)).willReturn("project_uuid1", "project_uuid2");
+        given(cursor.getString(2)).willReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        given(cursor.getString(3)).willReturn(getIso8601DateFormatter().format(new LocalDate().toDate()));
+        given(cursor.getString(4)).willReturn(null);
+        given(cursor.getString(5)).willReturn(Rounding.Strategy.NO_ROUNDING.name());
+        given(cursor.moveToNext()).willReturn(true, true, false);
+        given(cursor.moveToFirst()).willReturn(true);
 
         return cursor;
     }
