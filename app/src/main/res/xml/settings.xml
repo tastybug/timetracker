@@ -101,6 +101,11 @@
                         android:action="android.intent.action.VIEW"
                         android:data="http://www.joda.org/joda-time/license.html" />
                 </Preference>
+                <Preference android:title="@string/opencsv_library_title">
+                    <intent
+                        android:action="android.intent.action.VIEW"
+                        android:data="http://opencsv.sourceforge.net/license.html" />
+                </Preference>
 
             </PreferenceCategory>
 

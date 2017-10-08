@@ -179,6 +179,7 @@
     <string name="guava_library_title">Guava (Apache License 2.0)</string>
     <string name="otto_library_title">Otto (Apache License 2.0)</string>
     <string name="joda_library_title">Joda-Time (Apache License 2.0)</string>
+    <string name="opencsv_library_title">OpenCSV (Apache License 2.0)</string>
     <string name="trademarks_group_title">Trademarks</string>
     <string name="trademark_android_title">Android, Google, Google Drive</string>
     <string name="trademark_android_summary">Android, Google and Google Drive are trademarks of Google Corporation.</string>
