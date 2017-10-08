@@ -135,8 +135,6 @@
     <string name="warning_invalid_title_was_reverted">Invalid title has been reverted</string>
     <string name="warning_invalid_description_was_reverted">Invalid description has been reverted</string>
     <string name="warning_invalid_contract_id_was_reverted">Invalid Contract Id has been reverted</string>
-    <string name="project_limits_subscreen_title">Limitations</string>
-    <string name="project_limits_subscreen_summary">Hour caps</string>
     <string name="tracking_configuration_hour_limit_preference_key">tracking_configuration_hour_limit_preference_key</string>
     <string name="tracking_configuration_hour_limit_preference_title">Hour Limit</string>
     <string name="tracking_configuration_hour_limit_preference_summary_none">No hour limit</string>
@@ -157,8 +155,8 @@
     <string name="project_not_closed_summary">Project is open for Check Ins</string>
     <string name="project_not_closable_summary">Project currently tracking - cannot close now.</string>
     <string name="advanced_project_preference_group_title">Advanced</string>
-    <string name="project_lifecycle_subscreen_title">Lifecycle</string>
-    <string name="project_lifecycle_subscreen_summary">First &amp; Last Day, Project Archival</string>
+    <string name="project_lifecycle_sub_screen_title">Lifecycle</string>
+    <string name="project_lifecycle_sub_screen_summary">First &amp; Last Day, Hour Cap, Archival</string>
 
     <string name="project_after_checkout_subscreen_title">After Check Out</string>
     <string name="project_after_checkout_subscreen_summary">Rounding, Notifications</string>
