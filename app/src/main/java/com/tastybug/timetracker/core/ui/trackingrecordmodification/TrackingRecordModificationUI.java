@@ -49,12 +49,12 @@ class TrackingRecordModificationUI {
     View inflateWidgets(LayoutInflater inflater, ViewGroup container, final FragmentManager fragmentManager) {
         View rootView = inflater.inflate(R.layout.fragment_tracking_record_editing, container);
 
-        startDateEditText = (EditText) rootView.findViewById(R.id.start_date);
-        startTimeEditText = (EditText) rootView.findViewById(R.id.start_time);
-        endDateEditText = (EditText) rootView.findViewById(R.id.end_date);
-        endTimeEditText = (EditText) rootView.findViewById(R.id.end_time);
-        descriptionEditText = (EditText) rootView.findViewById(R.id.tracking_record_description);
-        roundingStrategySpinner = (Spinner) rootView.findViewById(R.id.rounding_strategy_spinner);
+        startDateEditText = rootView.findViewById(R.id.start_date);
+        startTimeEditText = rootView.findViewById(R.id.start_time);
+        endDateEditText = rootView.findViewById(R.id.end_date);
+        endTimeEditText = rootView.findViewById(R.id.end_time);
+        descriptionEditText = rootView.findViewById(R.id.tracking_record_description);
+        roundingStrategySpinner = rootView.findViewById(R.id.rounding_strategy_spinner);
 
 
         startDateEditText.setOnClickListener(new View.OnClickListener() {

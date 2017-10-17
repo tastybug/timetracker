@@ -42,11 +42,11 @@ class ProjectStatisticsUI {
                         View.OnClickListener toggleButtonListener) {
         View rootView = inflater.inflate(R.layout.fragment_project_statistics, container);
 
-        expirationTextView = (TextView) rootView.findViewById(R.id.expiration_statistic_text);
-        completionTextView = (TextView) rootView.findViewById(R.id.completion_statistic_text);
-        expirationProgressBar = (ProgressBar) rootView.findViewById(R.id.expiration_progressbar);
-        completionProgressBar = (ProgressBar) rootView.findViewById(R.id.completion_progressbar);
-        trackingStartStopButton = (ImageButton) rootView.findViewById(R.id.trackingStartStop);
+        expirationTextView = rootView.findViewById(R.id.expiration_statistic_text);
+        completionTextView = rootView.findViewById(R.id.completion_statistic_text);
+        expirationProgressBar = rootView.findViewById(R.id.expiration_progressbar);
+        completionProgressBar = rootView.findViewById(R.id.completion_progressbar);
+        trackingStartStopButton = rootView.findViewById(R.id.trackingStartStop);
         trackingStartStopButton.setOnClickListener(toggleButtonListener);
 
         return rootView;

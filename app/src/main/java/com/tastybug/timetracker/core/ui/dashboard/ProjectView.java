@@ -32,9 +32,9 @@ public class ProjectView extends LinearLayout implements View.OnClickListener {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_project, this, true);
 
-        projectTitleView = (TextView) findViewById(R.id.project_title);
-        recentRecordSummaryView = (TextView) findViewById(R.id.recent_record_summary);
-        trackingStartStopButton = (ImageButton) findViewById(R.id.trackingStartStop);
+        projectTitleView = findViewById(R.id.project_title);
+        recentRecordSummaryView = findViewById(R.id.recent_record_summary);
+        trackingStartStopButton = findViewById(R.id.trackingStartStop);
 
         regularTextColor = new TextView(context).getTextColors();
 
