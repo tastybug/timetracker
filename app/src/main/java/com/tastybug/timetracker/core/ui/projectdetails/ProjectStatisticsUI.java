@@ -145,7 +145,10 @@ class ProjectStatisticsUI {
             if (statistic.isExpired()) {
                 expirationTextView.setText(context.getString(R.string.expiration_statistic_project_ended_on_X, endDateString));
             } else {
-                expirationTextView.setText(context.getString(R.string.expiration_statistic_X_days_remaining_until_end_date_Y, statistic.getRemainingDays().get(), endDateString));
+                expirationTextView.setText(context.getString(R.string.expiration_statistic_X_work_days_of_total_Y_days_remaining_until_end_date_Z,
+                        statistic.getRemainingWorkDays().get(),
+                        statistic.getRemainingDays().get(),
+                        endDateString));
             }
         } else {
             expirationTextView.setText("");

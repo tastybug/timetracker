@@ -3,15 +3,18 @@ package com.tastybug.timetracker.core.model.statistics;
 import com.google.common.base.Optional;
 import com.tastybug.timetracker.core.model.TrackingConfiguration;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
 
 import java.util.Date;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("ConstantConditions")
 public class ExpirationTest {
 
     @Test(expected = NullPointerException.class)
@@ -177,4 +180,68 @@ public class ExpirationTest {
         // then
         assertFalse(remainingDays.isPresent());
     }
+
+    @Test
+    public void getRemainingWorkDays_returns_correctly_when_project_is_pending() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
+        configuration.setEndAsInclusive(Optional.of(new LocalDate(2016, 12, 31).toDate()));
+        Date now = new LocalDate(2016, 12, 22).toDate();
+        Expiration expiration = new Expiration(configuration, now);
+
+        // when
+        Optional<Integer> remainingWorkdays = expiration.getRemainingWorkDays();
+
+        // then
+        assertThat(remainingWorkdays.get()).isEqualTo(5);
+    }
+
+    @Test
+    public void getRemainingWorkDays_returns_correctly_when_project_is_ongoing() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
+        configuration.setEndAsInclusive(Optional.of(new LocalDate(2016, 12, 31).toDate()));
+        Date now = new LocalDate(2016, 12, 27).toDate();
+        Expiration expiration = new Expiration(configuration, now);
+
+        // when
+        Optional<Integer> remainingWorkdays = expiration.getRemainingWorkDays();
+
+        // then
+        assertThat(remainingWorkdays.get()).isEqualTo(4);
+    }
+
+    @Test
+    public void remainingWorkDays_returns_0_when_project_is_expired() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
+        configuration.setEndAsInclusive(Optional.of(new LocalDate(2016, 12, 31).toDate()));
+        Date now = new LocalDate(2017, 1, 1).toDate();
+        Expiration expiration = new Expiration(configuration, now);
+
+        // when
+        Optional<Integer> remainingWorkdays = expiration.getRemainingWorkDays();
+
+        // then
+        assertThat(remainingWorkdays.get()).isEqualTo(0);
+    }
+
+    @Test
+    public void remainingWorkDays_returns_absent_meaning_cannot_be_calculated_when_no_end_date_is_set() {
+        // given
+        TrackingConfiguration configuration = new TrackingConfiguration("project-uuid");
+        configuration.setStart(Optional.of(new LocalDate(2016, 12, 24).toDate()));
+        Date now = new LocalDate(2017, 1, 1).toDate();
+        Expiration expiration = new Expiration(configuration, now);
+
+        // when
+        Optional<Integer> remainingWorkdays = expiration.getRemainingWorkDays();
+
+        // then
+        assertThat(remainingWorkdays.isPresent()).isFalse();
+    }
+
 }

@@ -136,6 +136,10 @@ public class TrackingConfiguration extends Entity {
         }
     }
 
+    public boolean hasCompleteTimeFrame() {
+        return getStart().isPresent() && getEnd().isPresent();
+    }
+
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("uuid", getUuid())

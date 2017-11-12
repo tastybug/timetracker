@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="@string/expiration_statistic_X_days_remaining_until_end_date_Y"
+            android:text="@string/expiration_statistic_X_work_days_of_total_Y_days_remaining_until_end_date_Z"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_alignBottom="@+id/expiration_progressbar"
             android:layout_toRightOf="@+id/expiration_progressbar"

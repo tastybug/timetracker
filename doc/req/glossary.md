@@ -44,3 +44,7 @@ Begriffe und Verben
     * `Toleranzzeit` / `Grace Period`: Ruhezeitraum nach dem Verlassen eines WLAN Netzes, der vergehen muss, damit das WiFi-Checkout erfolgt. Verhindert erratische Zeiterfassung bei schlechter Netzqualität.
 * `Daten zurücksetzen` / `Restore Backup`: Wiederherstellung eines lokalen Backups.
 * `Automatische lokale Datensicherung` / `Automatic Local Backup`: Der Mechanismus, welcher jeden Tag eine lokal gespeicherte Datensicherung erstellt.
+* `Ausstehend` / `Pending`: Ein Projekt ist ausstehend, wenn der Projektzeitraum noch nicht begonnen hat (braucht ein Startdatum)
+* `Im Gange` / `Ongoing`: Ein Projekt ist im Gange, wenn das Projektenddatum noch nicht erreicht ist (braucht ein Endedatum)
+* `Abgelaufen` / `Expired`: Ein Projekt ist abgelaufen, wenn das Projektenddatum erreicht ist (braucht ein Endedatum)
+

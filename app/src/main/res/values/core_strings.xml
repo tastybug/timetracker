@@ -35,7 +35,7 @@
 
     <!-- project statistics -->
     <string name="expiration_statistic_project_ended_on_X">Expired on %1$s.</string>
-    <string name="expiration_statistic_X_days_remaining_until_end_date_Y">Expires in %1$d days (until %2$s)</string>
+    <string name="expiration_statistic_X_work_days_of_total_Y_days_remaining_until_end_date_Z">Remaining %1$dd/%2$dd until %3$s</string>
     <string name="completion_statistic_X_recorded">Completed %1$sh</string>
     <string name="completion_statistic_X_of_Y_recorded">Completed %1$sh/%2$dh</string>
     <string name="nothing_recorded_yet">Nothing recorded yet ..</string>
