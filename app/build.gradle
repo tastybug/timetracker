@@ -61,7 +61,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.0.1'
     compile 'commons-io:commons-io:2.5'
     compile 'ch.acra:acra:4.9.2'
-    compile 'com.opencsv:opencsv:3.9'
+    compile('com.opencsv:opencsv:3.9') {
+        exclude module: 'commons-logging'
+    }
     testCompile 'org.assertj:assertj-core:3.5.2'
     testCompile 'org.assertj:assertj-guava:3.1.0'
     testCompile 'junit:junit:4.12'
