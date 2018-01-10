@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tastybug/timetracker.svg?branch=master)](https://travis-ci.org/tastybug/timetracker)
+
 # Pocket Log: simple time tracking for Freelancers
  
 Pocket Log is a pretty simple Android app that allows time tracking for a number of projects with
