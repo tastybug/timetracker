@@ -31,10 +31,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("../timetracker.keystore")
-            storePassword TIMETRACKER_RELEASE_STORE_PASSWORD // ~/.gradle/gradle.properties
-            keyAlias "timetracker"
-            keyPassword TIMETRACKER_RELEASE_KEY_PASSWORD // ~/.gradle/gradle.properties
+//            storeFile file("../timetracker.keystore")
+//            storePassword TIMETRACKER_RELEASE_STORE_PASSWORD // ~/.gradle/gradle.properties
+//            keyAlias "timetracker"
+//            keyPassword TIMETRACKER_RELEASE_KEY_PASSWORD // ~/.gradle/gradle.properties
         }
     }
     buildTypes {
