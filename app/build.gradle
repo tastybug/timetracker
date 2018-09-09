@@ -10,12 +10,12 @@ def getGitHash = { ->
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.tastybug.timetracker"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 102
         versionName "1.02"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
